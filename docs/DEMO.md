@@ -20,3 +20,26 @@
 - [移动端恢复](screenshots/recovered-mobile.png)：刷新后登录恢复。
 
 录屏状态VIDEO_NOT_RECORDED。端口占用或运行失败时保留错误，不能把历史截图称为现场成功。不要对公网开放测试控制接口。退出后等待本次进程/schema清理，按首页只停止本项目容器。
+
+
+## T14-P0本地购物闭环
+
+本节仅适用于包含T14-P0改动的本地开发分支，不代表公开main已经发布这些改动。可沿用上述工作流创建订单，然后在同一个订单详情页付款；普通购物车也使用完全相同的详情页。
+
+1. buyer1登录 → 商品加入购物车 → “生成购买提案” → 阅读购买快照 → “确认并创建订单”。订单此时是PENDING_PAYMENT，尚未付款。
+2. 在订单详情点击醒目的“模拟付款”。核对服务端支付快照中的订单编号、金额、CNY、有效期及提案状态。
+3. 单独点击“批准并模拟付款”。这会创建支付提案自己的Confirmation，与购买确认分开。页面查询原提案内的支付回执，再GET订单，显示SUCCEEDED与最新PAID状态；后续若已发货则仍显示真实最新状态。
+4. 拒绝只记录reject；后端DECLINED不等于已支付。订单/提案过期或版本变化必须按服务端状态处理，重新准备的新快照仍需再次确认。
+5. 连接中断时点击“核对付款结果”；已有approve可在核对后显式“继续已批准的模拟付款”，沿用原Key。刷新后重新登录同一买家会恢复本标签页的非秘密付款引用并只读查询，不自动执行付款。JWT仍只在内存。
+
+在新的独立环境启动本分支（端口占用先辨认，不停止既有演示）：
+
+```sh
+docker compose -p agentmall-payment-local -f compose.ci.yaml -f compose.payment-local.yaml build runner
+docker compose -p agentmall-payment-local -f compose.ci.yaml -f compose.payment-local.yaml up -d --wait postgres
+docker compose -p agentmall-payment-local -f compose.ci.yaml -f compose.payment-local.yaml run --rm runner python scripts/demo.py --seconds 900
+```
+
+宿主浏览器打开 http://127.0.0.1:5184 ，OpenAPI为 http://127.0.0.1:8014/docs 。脚本打印的5174是容器内部地址，本覆盖配置映射为宿主5184。数据库是本目录专有 `.t14-p0/demo-postgres-data`，宿主55438；不使用历史55432/55433/55434及现有8001/5174演示。测试项目与本演示项目不得同时占用这组新端口；先完成测试清理再启动。结束后只对agentmall-payment-local执行相同两个-f文件的down，不加-v，不清理他人数据。
+
+模拟付款的浏览器/独立SQL断言见[payment.spec.ts](../frontend/tests/payment.spec.ts)。本轮不录制视频，VIDEO_NOT_RECORDED；Fixture浏览器闭环通过也不等于真实支付或真实模型质量验收。

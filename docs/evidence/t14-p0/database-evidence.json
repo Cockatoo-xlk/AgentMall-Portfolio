@@ -1,0 +1,2566 @@
+{
+  "classification": "SYNTHETIC_TEST_DATA / REVIEWED_PUBLIC_EVIDENCE",
+  "oracle": "backend/tests/web_e2e_server.py __test/facts, independent psycopg connection after browser operations; not SQLAlchemy identity map",
+  "assertions": "frontend/tests/payment.spec.ts; each scenario has actual database count/row assertions, afterEach provider counters zero",
+  "scenarios": {
+    "agent-order-payment-succeeded": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 27,
+      "order_rows": [
+        {
+          "id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+          "proposal_id": "53725f0c-460e-4923-8d29-6c2b7e90ffbb",
+          "status": "PAID",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:39:48.885469+00:00",
+          "paid_at": "2026-10-31T15:24:49.377274+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "53725f0c-460e-4923-8d29-6c2b7e90ffbb",
+          "origin_request_id": "9481159c-f165-59e4-a921-6f8a2c97289c",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:48.011939+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "15f48b56-8f7d-45bb-a337-30446b02e412",
+          "origin_request_id": "d37e5ce9-4227-4a6d-8139-9198ce4f077a",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:49.202851+00:00",
+          "payload_hash": "ac587b1f20408cb9f2ac942eba907b5527b33449ff45ad7735a2f18b72b9e022"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "627b390b-93a6-4bec-8d6e-b245f374ce19",
+          "proposal_id": "53725f0c-460e-4923-8d29-6c2b7e90ffbb",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:48.885469+00:00",
+          "result_ref": "6465b6fb-7ee8-498d-9622-5b4e74a41655"
+        },
+        {
+          "id": "57249487-5557-4ecb-ae84-e5e9ee0aa407",
+          "proposal_id": "15f48b56-8f7d-45bb-a337-30446b02e412",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:49.377274+00:00",
+          "result_ref": "6465b6fb-7ee8-498d-9622-5b4e74a41655"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "313387c8-946a-4ab6-918d-7f7b1933a456",
+          "order_id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+          "action_id": "15f48b56-8f7d-45bb-a337-30446b02e412",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "5eb478d6-7e96-4bdf-8999-c5fd949c081c",
+          "action_id": "53725f0c-460e-4923-8d29-6c2b7e90ffbb",
+          "operation": "execute_checkout",
+          "key": "t09:execute:53725f0c-460e-4923-8d29-6c2b7e90ffbb",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+            "action_id": "53725f0c-460e-4923-8d29-6c2b7e90ffbb",
+            "created_at": "2026-10-31T15:24:48.885469Z",
+            "resource_id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "4ee53fe3-0c70-4795-8416-e7b6b5422e8b",
+          "action_id": "15f48b56-8f7d-45bb-a337-30446b02e412",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:d37e5ce9-4227-4a6d-8139-9198ce4f077a",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+            "action_id": "15f48b56-8f7d-45bb-a337-30446b02e412",
+            "created_at": "2026-10-31T15:24:49.377274Z",
+            "payment_id": "313387c8-946a-4ab6-918d-7f7b1933a456",
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+            "total_cents": 29900,
+            "order_status": "PAID"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "6acb543e-0c9b-473c-83c0-bd2326c7eb46",
+          "aggregate_id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+          "action_id": "53725f0c-460e-4923-8d29-6c2b7e90ffbb",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "a5953613-d534-4a7f-8f9b-f17ef9bec504",
+          "aggregate_id": "6465b6fb-7ee8-498d-9622-5b4e74a41655",
+          "action_id": "15f48b56-8f7d-45bb-a337-30446b02e412",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [
+        {
+          "id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "thread_id": "b4aa3486-1f66-4a7b-826b-68bbe0bfb9b8",
+          "status": "COMPLETED"
+        }
+      ],
+      "run_event_rows": [
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 1,
+          "event_type": "run_created",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 2,
+          "event_type": "run_activated",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 3,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 4,
+          "event_type": "model_start",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 5,
+          "event_type": "model_end",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 6,
+          "event_type": "route_decision",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 7,
+          "event_type": "handoff",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 8,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 9,
+          "event_type": "model_start",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 10,
+          "event_type": "model_end",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 11,
+          "event_type": "model_start",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 12,
+          "event_type": "model_end",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 13,
+          "event_type": "model_context",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 14,
+          "event_type": "tool",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 15,
+          "event_type": "model_context",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 16,
+          "event_type": "model_final",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 17,
+          "event_type": "specialist_result",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 18,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 19,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 20,
+          "event_type": "model_start",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 21,
+          "event_type": "model_end",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 22,
+          "event_type": "route_decision",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 23,
+          "event_type": "handoff",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 24,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 25,
+          "event_type": "model_start",
+          "agent": "order"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 26,
+          "event_type": "model_end",
+          "agent": "order"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 27,
+          "event_type": "model_context",
+          "agent": "order"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 28,
+          "event_type": "tool",
+          "agent": "order"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 29,
+          "event_type": "specialist_result",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 30,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 31,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 32,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 33,
+          "event_type": "run_state",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 34,
+          "event_type": "resume_received",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 35,
+          "event_type": "run_activated",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 36,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 37,
+          "event_type": "business_receipt",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 38,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 39,
+          "event_type": "model_start",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 40,
+          "event_type": "model_end",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 41,
+          "event_type": "route_decision",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 42,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 43,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 44,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "81a377fb-3158-4a06-834d-808eb24143db",
+          "seq": 45,
+          "event_type": "run_state",
+          "agent": null
+        }
+      ],
+      "raw_facts_sha256": "47c81b73ca904f54115752679362c2823cc99eb61d7494be2a94a5ec99e6a864"
+    },
+    "payment-confirmation": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "d0a52228-229d-4478-8b1a-0454def617c9",
+          "proposal_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "status": "PENDING_PAYMENT",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 1,
+          "expires_at": "2026-10-31T15:39:25.967889+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "origin_request_id": "8bdc7bed-d1e3-47a5-b95b-c444f5d63671",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:25.857015+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "e160aecb-2beb-48e8-a5c3-3fb21290e138",
+          "origin_request_id": "cf391b9a-f5c1-4236-9e7f-be0bb3607838",
+          "action_type": "MOCK_PAYMENT",
+          "status": "PENDING",
+          "expires_at": "2026-10-31T15:29:26.093206+00:00",
+          "payload_hash": "7592d28d5723212f8661ad704c67724b68f402ffa22ffeb723c482f8c8f08587"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "4d18334c-3520-4882-b996-e565946c400b",
+          "proposal_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:25.967889+00:00",
+          "result_ref": "d0a52228-229d-4478-8b1a-0454def617c9"
+        }
+      ],
+      "payment_rows": [],
+      "receipt_rows": [
+        {
+          "id": "10be9fbd-3d8c-4bec-9332-f1330a58ad7a",
+          "action_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "operation": "execute_checkout",
+          "key": "web:order:bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+            "action_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+            "created_at": "2026-10-31T15:24:25.967889Z",
+            "resource_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+            "total_cents": 29900
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "e93c050e-2316-4cf8-a16b-e5c608d9edb5",
+          "aggregate_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+          "action_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "9af50c999e7dc1492cdd762e36ffdd7c94eee895a0f287202f5bb94c6b20a5c7"
+    },
+    "payment-declined": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 1,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "8564a52f-c61e-4e9b-b7e8-bd767f001e19",
+          "proposal_id": "c79f0361-5a9a-45a5-9685-3ab8d1fb852b",
+          "status": "PENDING_PAYMENT",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 1,
+          "expires_at": "2026-10-31T15:39:27.734386+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "c79f0361-5a9a-45a5-9685-3ab8d1fb852b",
+          "origin_request_id": "01fd12c4-8fae-49d5-b1ab-4740011b960f",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:27.720150+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "576ca8cd-b985-44a1-b751-9d0e6a8339a5",
+          "origin_request_id": "aff93122-26e2-40f6-9aec-eaa2984e129a",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:28.474746+00:00",
+          "payload_hash": "0e24df8e9357400689174cdbc90a49ce93a5fef7e994af7bb9cfa06a0223067f"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "cf5cbe49-24df-4424-a020-a98e90378103",
+          "proposal_id": "c79f0361-5a9a-45a5-9685-3ab8d1fb852b",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:27.734386+00:00",
+          "result_ref": "8564a52f-c61e-4e9b-b7e8-bd767f001e19"
+        },
+        {
+          "id": "94645e51-ea68-497b-bdd7-870034db9eab",
+          "proposal_id": "576ca8cd-b985-44a1-b751-9d0e6a8339a5",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:28.600799+00:00",
+          "result_ref": "8564a52f-c61e-4e9b-b7e8-bd767f001e19"
+        }
+      ],
+      "payment_rows": [],
+      "receipt_rows": [
+        {
+          "id": "58f7665f-01b4-41f3-8c66-d0d0ba646864",
+          "action_id": "c79f0361-5a9a-45a5-9685-3ab8d1fb852b",
+          "operation": "execute_checkout",
+          "key": "58a3e195-375d-4616-984f-7b0e98e0de29",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "8564a52f-c61e-4e9b-b7e8-bd767f001e19",
+            "action_id": "c79f0361-5a9a-45a5-9685-3ab8d1fb852b",
+            "created_at": "2026-10-31T15:24:27.734386Z",
+            "resource_id": "8564a52f-c61e-4e9b-b7e8-bd767f001e19",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "aed3180f-3f4f-445a-8ae7-7aa0e5163bb8",
+          "action_id": "576ca8cd-b985-44a1-b751-9d0e6a8339a5",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:aff93122-26e2-40f6-9aec-eaa2984e129a",
+          "result": {
+            "status": "DECLINED",
+            "currency": "CNY",
+            "order_id": "8564a52f-c61e-4e9b-b7e8-bd767f001e19",
+            "action_id": "576ca8cd-b985-44a1-b751-9d0e6a8339a5",
+            "created_at": "2026-10-31T15:24:28.600799Z",
+            "payment_id": null,
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "8564a52f-c61e-4e9b-b7e8-bd767f001e19",
+            "total_cents": 29900,
+            "order_status": "PENDING_PAYMENT"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "0292a6a0-7642-4105-b1dc-d145e1aced47",
+          "aggregate_id": "8564a52f-c61e-4e9b-b7e8-bd767f001e19",
+          "action_id": "c79f0361-5a9a-45a5-9685-3ab8d1fb852b",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "bad775b4-5b36-4e5b-9f31-c4bb22ec192c",
+          "aggregate_id": "8564a52f-c61e-4e9b-b7e8-bd767f001e19",
+          "action_id": "576ca8cd-b985-44a1-b751-9d0e6a8339a5",
+          "event_type": "PAYMENT_DECLINED"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "58c3d6c716d92af65c36aeae339b0b1b9fcbf2662a568e97888300215694cff2"
+    },
+    "payment-expired": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 3,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+          "proposal_id": "7522dcbf-6f19-4d6c-9850-be26becdd64c",
+          "status": "EXPIRED",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:39:30.865590+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "7522dcbf-6f19-4d6c-9850-be26becdd64c",
+          "origin_request_id": "d8fe303d-bed5-4d36-9f3f-4a22b1ae62a4",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:30.852892+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "2e0d4c7f-e06a-4df8-961c-f7b667fe5690",
+          "origin_request_id": "70278422-914c-4c19-b455-982dfb24ee3a",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:43:30.981436+00:00",
+          "payload_hash": "23ddf73d9d30d56f0aebc3553c14607bb30b10af6c313ce6f925bfbce7a1bc84"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "2e5ab3c1-9c21-42a1-9169-cc6a15b235fd",
+          "proposal_id": "7522dcbf-6f19-4d6c-9850-be26becdd64c",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:30.865590+00:00",
+          "result_ref": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0"
+        },
+        {
+          "id": "eadacc2b-6087-4c47-8be6-f94918176ece",
+          "proposal_id": "2e0d4c7f-e06a-4df8-961c-f7b667fe5690",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:39:31.874068+00:00",
+          "result_ref": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0"
+        }
+      ],
+      "payment_rows": [],
+      "receipt_rows": [
+        {
+          "id": "d0f80069-b937-4432-9507-b8bcab68b4d6",
+          "action_id": "7522dcbf-6f19-4d6c-9850-be26becdd64c",
+          "operation": "execute_checkout",
+          "key": "198c8cfa-fb54-44bf-8dcf-e8d06a2058f8",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+            "action_id": "7522dcbf-6f19-4d6c-9850-be26becdd64c",
+            "created_at": "2026-10-31T15:24:30.865590Z",
+            "resource_id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "9ed080b1-8694-4d89-9717-b92bf61b647c",
+          "action_id": "2e0d4c7f-e06a-4df8-961c-f7b667fe5690",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:70278422-914c-4c19-b455-982dfb24ee3a",
+          "result": {
+            "status": "EXPIRED",
+            "currency": "CNY",
+            "order_id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+            "action_id": "2e0d4c7f-e06a-4df8-961c-f7b667fe5690",
+            "created_at": "2026-10-31T15:39:31.874068Z",
+            "payment_id": null,
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+            "total_cents": 29900,
+            "order_status": "EXPIRED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "7426a428-2031-4c4c-9a56-b9eb54eeca56",
+          "aggregate_id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+          "action_id": "7522dcbf-6f19-4d6c-9850-be26becdd64c",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "18d06a04-ba12-45cd-8aa1-d8328c851550",
+          "aggregate_id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+          "action_id": "7522dcbf-6f19-4d6c-9850-be26becdd64c",
+          "event_type": "ORDER_EXPIRED"
+        },
+        {
+          "id": "f7c7d2a3-8086-42f3-9a38-b7eefcaa3880",
+          "aggregate_id": "4dfd4659-ee0c-4063-9bc5-c3a436082ce0",
+          "action_id": "2e0d4c7f-e06a-4df8-961c-f7b667fe5690",
+          "event_type": "PAYMENT_EXPIRED"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "c6292f53899598871096e3cddfd85f53b1d2e6aa891177e31ec3020d98544c25"
+    },
+    "payment-lost-response-recovered": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+          "proposal_id": "e29b60a4-f2e0-4ff2-9b19-83acf5e178f0",
+          "status": "PAID",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:39:35.581638+00:00",
+          "paid_at": "2026-10-31T15:24:36.554330+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "e29b60a4-f2e0-4ff2-9b19-83acf5e178f0",
+          "origin_request_id": "d612ce11-5141-4f7b-a272-116f56d9578c",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:35.569079+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "d7a4812f-ae9e-4dac-9b94-88ff2ecaa4fd",
+          "origin_request_id": "8006f471-e7d9-4b0e-be6f-fcc616ff6dd1",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:36.414152+00:00",
+          "payload_hash": "75e379f60e36fdfcefe0a2cd1cba9e3a4f036f6f122150848b27169eb235c9dc"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "d0c26e8c-605b-41cc-943a-7ad5afb8ffc0",
+          "proposal_id": "e29b60a4-f2e0-4ff2-9b19-83acf5e178f0",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:35.581638+00:00",
+          "result_ref": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335"
+        },
+        {
+          "id": "7a2624e6-1506-40d5-b6ed-b364270aa0aa",
+          "proposal_id": "d7a4812f-ae9e-4dac-9b94-88ff2ecaa4fd",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:36.554330+00:00",
+          "result_ref": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "70272434-c938-49bc-b1c0-d06f2ce2e651",
+          "order_id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+          "action_id": "d7a4812f-ae9e-4dac-9b94-88ff2ecaa4fd",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "432b7abe-0818-4984-a4cf-8ca6ee5ad169",
+          "action_id": "e29b60a4-f2e0-4ff2-9b19-83acf5e178f0",
+          "operation": "execute_checkout",
+          "key": "729458c2-dee5-43a7-b042-f3dd84a230f2",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+            "action_id": "e29b60a4-f2e0-4ff2-9b19-83acf5e178f0",
+            "created_at": "2026-10-31T15:24:35.581638Z",
+            "resource_id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "2c4d83fd-42cc-413d-9ce6-e1b4cdaa1ce7",
+          "action_id": "d7a4812f-ae9e-4dac-9b94-88ff2ecaa4fd",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:8006f471-e7d9-4b0e-be6f-fcc616ff6dd1",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+            "action_id": "d7a4812f-ae9e-4dac-9b94-88ff2ecaa4fd",
+            "created_at": "2026-10-31T15:24:36.554330Z",
+            "payment_id": "70272434-c938-49bc-b1c0-d06f2ce2e651",
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+            "total_cents": 29900,
+            "order_status": "PAID"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "2c1de718-e45f-4855-812f-8f6bbae4b53c",
+          "aggregate_id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+          "action_id": "e29b60a4-f2e0-4ff2-9b19-83acf5e178f0",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "8e0e4127-3db7-441c-a284-90bf25d18fb8",
+          "aggregate_id": "bdcf3a9b-402a-4cc1-9f5c-0bc5aeb66335",
+          "action_id": "d7a4812f-ae9e-4dac-9b94-88ff2ecaa4fd",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "2e0efe7ef8bfbc422d733f4ace03fe45e8c77a58ba9c585dae9b5ad410eefe11"
+    },
+    "payment-mobile-confirmation": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+          "proposal_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "status": "PENDING_PAYMENT",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 1,
+          "expires_at": "2026-10-31T15:39:50.395752+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "origin_request_id": "609d2c77-6534-4da0-8cd9-f48d4d723252",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:50.376082+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "c6eec180-a7ff-4cae-9d7e-e0dddbdcf0f1",
+          "origin_request_id": "1584e97f-93a4-4768-a834-4d1a0c9d8251",
+          "action_type": "MOCK_PAYMENT",
+          "status": "PENDING",
+          "expires_at": "2026-10-31T15:29:51.248672+00:00",
+          "payload_hash": "a41d3abb2f5424d9be0811d18d130b8e15997a11b76eba28f18a4e0fc168e75b"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "4e32ded4-10ed-4ef7-9a06-9cab7ba6af98",
+          "proposal_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:50.395752+00:00",
+          "result_ref": "aea2d12f-071a-4761-a894-7fc08196a0c3"
+        }
+      ],
+      "payment_rows": [],
+      "receipt_rows": [
+        {
+          "id": "5d31e3e7-420b-4293-91d7-5254843ea3b8",
+          "action_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "operation": "execute_checkout",
+          "key": "7504a231-d835-479f-946d-ab227f575226",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+            "action_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+            "created_at": "2026-10-31T15:24:50.395752Z",
+            "resource_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+            "total_cents": 29900
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "ffe8ef7d-bf1e-4cc0-b388-3446b28b5d40",
+          "aggregate_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+          "action_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "a926bff6f2e6bce22228c9282012b3748a67ddfae6cbfedf804846814cb9c194"
+    },
+    "payment-mobile-succeeded": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+          "proposal_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "status": "PAID",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:39:50.395752+00:00",
+          "paid_at": "2026-10-31T15:24:51.467578+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "origin_request_id": "609d2c77-6534-4da0-8cd9-f48d4d723252",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:50.376082+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "c6eec180-a7ff-4cae-9d7e-e0dddbdcf0f1",
+          "origin_request_id": "1584e97f-93a4-4768-a834-4d1a0c9d8251",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:51.248672+00:00",
+          "payload_hash": "a41d3abb2f5424d9be0811d18d130b8e15997a11b76eba28f18a4e0fc168e75b"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "4e32ded4-10ed-4ef7-9a06-9cab7ba6af98",
+          "proposal_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:50.395752+00:00",
+          "result_ref": "aea2d12f-071a-4761-a894-7fc08196a0c3"
+        },
+        {
+          "id": "ec049823-a732-4296-a61d-01ab398a7a11",
+          "proposal_id": "c6eec180-a7ff-4cae-9d7e-e0dddbdcf0f1",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:51.467578+00:00",
+          "result_ref": "aea2d12f-071a-4761-a894-7fc08196a0c3"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "7915afce-ad3b-4bf9-a5c8-cc9fd0783a6d",
+          "order_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+          "action_id": "c6eec180-a7ff-4cae-9d7e-e0dddbdcf0f1",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "5d31e3e7-420b-4293-91d7-5254843ea3b8",
+          "action_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "operation": "execute_checkout",
+          "key": "7504a231-d835-479f-946d-ab227f575226",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+            "action_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+            "created_at": "2026-10-31T15:24:50.395752Z",
+            "resource_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "05320644-265e-46d1-802b-5b0666b43a04",
+          "action_id": "c6eec180-a7ff-4cae-9d7e-e0dddbdcf0f1",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:1584e97f-93a4-4768-a834-4d1a0c9d8251",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+            "action_id": "c6eec180-a7ff-4cae-9d7e-e0dddbdcf0f1",
+            "created_at": "2026-10-31T15:24:51.467578Z",
+            "payment_id": "7915afce-ad3b-4bf9-a5c8-cc9fd0783a6d",
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+            "total_cents": 29900,
+            "order_status": "PAID"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "ffe8ef7d-bf1e-4cc0-b388-3446b28b5d40",
+          "aggregate_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+          "action_id": "bb0f69ba-2ccd-4fe5-b45d-476c644958c0",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "d029bd90-e5c5-4a72-88c5-9bac72dc104d",
+          "aggregate_id": "aea2d12f-071a-4761-a894-7fc08196a0c3",
+          "action_id": "c6eec180-a7ff-4cae-9d7e-e0dddbdcf0f1",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "7d9bab7f9fc3116a844cad38954836df0b77ce0a6815838ced245fbf146d273f"
+    },
+    "payment-outcome-reconciled": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "proposal_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "status": "PAID",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:39:37.515245+00:00",
+          "paid_at": "2026-10-31T15:24:38.504199+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "origin_request_id": "1234530e-5e6b-4735-a5e1-2ce73d3eff34",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:37.502079+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "origin_request_id": "397d0dea-5333-49b6-8b31-1bb1b4a9e0d5",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:38.363416+00:00",
+          "payload_hash": "37232de4377a1d652f6abd0bdd94c62ba8cda3da3549c67d8434bf0acd2b36a7"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "aecee73f-528d-4e84-b4dd-d8434cdd7009",
+          "proposal_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:37.515245+00:00",
+          "result_ref": "6792d112-dc3f-4777-ac08-f869a64de6ba"
+        },
+        {
+          "id": "bdf128cb-2402-44f4-acb4-68709c9ab958",
+          "proposal_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:38.504199+00:00",
+          "result_ref": "6792d112-dc3f-4777-ac08-f869a64de6ba"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "5a34a12a-1b8b-46ee-bf08-5051db36327f",
+          "order_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "76b734ac-824d-4db0-9131-39deceda8834",
+          "action_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "operation": "execute_checkout",
+          "key": "b7796a6e-11a9-4824-aa46-e16bf1ee5e6f",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "action_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+            "created_at": "2026-10-31T15:24:37.515245Z",
+            "resource_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "b96d7692-59c4-44c4-a83e-fded88b481d4",
+          "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:397d0dea-5333-49b6-8b31-1bb1b4a9e0d5",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+            "created_at": "2026-10-31T15:24:38.504199Z",
+            "payment_id": "5a34a12a-1b8b-46ee-bf08-5051db36327f",
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "total_cents": 29900,
+            "order_status": "PAID"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "a1e44563-609b-400c-8692-a1360aa5b53b",
+          "aggregate_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "action_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "05c46a79-9ca0-4317-a500-2d4c0978d7b4",
+          "aggregate_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "70f75d1c1d465a1b09a73aaccc822417058d55ee142c89b6755dd0e0535440b3"
+    },
+    "payment-outcome-unknown": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "proposal_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "status": "PAID",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:39:37.515245+00:00",
+          "paid_at": "2026-10-31T15:24:38.504199+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "origin_request_id": "1234530e-5e6b-4735-a5e1-2ce73d3eff34",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:37.502079+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "origin_request_id": "397d0dea-5333-49b6-8b31-1bb1b4a9e0d5",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:38.363416+00:00",
+          "payload_hash": "37232de4377a1d652f6abd0bdd94c62ba8cda3da3549c67d8434bf0acd2b36a7"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "aecee73f-528d-4e84-b4dd-d8434cdd7009",
+          "proposal_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:37.515245+00:00",
+          "result_ref": "6792d112-dc3f-4777-ac08-f869a64de6ba"
+        },
+        {
+          "id": "bdf128cb-2402-44f4-acb4-68709c9ab958",
+          "proposal_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:38.504199+00:00",
+          "result_ref": "6792d112-dc3f-4777-ac08-f869a64de6ba"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "5a34a12a-1b8b-46ee-bf08-5051db36327f",
+          "order_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "76b734ac-824d-4db0-9131-39deceda8834",
+          "action_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "operation": "execute_checkout",
+          "key": "b7796a6e-11a9-4824-aa46-e16bf1ee5e6f",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "action_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+            "created_at": "2026-10-31T15:24:37.515245Z",
+            "resource_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "b96d7692-59c4-44c4-a83e-fded88b481d4",
+          "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:397d0dea-5333-49b6-8b31-1bb1b4a9e0d5",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+            "created_at": "2026-10-31T15:24:38.504199Z",
+            "payment_id": "5a34a12a-1b8b-46ee-bf08-5051db36327f",
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+            "total_cents": 29900,
+            "order_status": "PAID"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "a1e44563-609b-400c-8692-a1360aa5b53b",
+          "aggregate_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "action_id": "0863a4c2-9f55-45ae-b75d-51a5d2a430d3",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "05c46a79-9ca0-4317-a500-2d4c0978d7b4",
+          "aggregate_id": "6792d112-dc3f-4777-ac08-f869a64de6ba",
+          "action_id": "f3857630-48ec-47fe-9bee-74663d159cb5",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "70f75d1c1d465a1b09a73aaccc822417058d55ee142c89b6755dd0e0535440b3"
+    },
+    "payment-reject-recovered": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "a7936810-02f8-4118-a2d3-4827a146609f",
+          "proposal_id": "1c66c619-4c81-4686-b47d-fedebe94d6e8",
+          "status": "PENDING_PAYMENT",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 1,
+          "expires_at": "2026-10-31T15:40:09.105216+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "1c66c619-4c81-4686-b47d-fedebe94d6e8",
+          "origin_request_id": "43bba96e-a684-47d7-9324-448cbc410ccc",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:30:09.086664+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "34fd4e72-976d-4bdf-af6a-1559501cfac7",
+          "origin_request_id": "a920dbc1-039d-4c9f-9c09-e63a8839d8eb",
+          "action_type": "MOCK_PAYMENT",
+          "status": "REJECTED",
+          "expires_at": "2026-10-31T15:30:09.986945+00:00",
+          "payload_hash": "b4e9fe74d5b38ef4ec9f08c6577197d46c90b9929c072d702caa4e11cbeadbab"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "a47fa7c0-fc78-42de-9ccc-b61d6820d346",
+          "proposal_id": "1c66c619-4c81-4686-b47d-fedebe94d6e8",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:25:09.105216+00:00",
+          "result_ref": "a7936810-02f8-4118-a2d3-4827a146609f"
+        },
+        {
+          "id": "fdee95d7-a3c6-4515-9b21-02f133b1fe23",
+          "proposal_id": "34fd4e72-976d-4bdf-af6a-1559501cfac7",
+          "decision": "reject",
+          "consumed_at": null,
+          "result_ref": null
+        }
+      ],
+      "payment_rows": [],
+      "receipt_rows": [
+        {
+          "id": "e2b750b5-49e1-4588-8878-974b01e54bb3",
+          "action_id": "1c66c619-4c81-4686-b47d-fedebe94d6e8",
+          "operation": "execute_checkout",
+          "key": "899c8f45-c1da-4e0f-a695-4e6c1b72b4d6",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "a7936810-02f8-4118-a2d3-4827a146609f",
+            "action_id": "1c66c619-4c81-4686-b47d-fedebe94d6e8",
+            "created_at": "2026-10-31T15:25:09.105216Z",
+            "resource_id": "a7936810-02f8-4118-a2d3-4827a146609f",
+            "total_cents": 29900
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "0ed5c389-ab09-46bc-ada2-ddc203fe8a99",
+          "aggregate_id": "a7936810-02f8-4118-a2d3-4827a146609f",
+          "action_id": "1c66c619-4c81-4686-b47d-fedebe94d6e8",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "7ea0098b5b11a6755b3185d8fe9533ec8e104a326cccf19c59177e872377ecc4"
+    },
+    "payment-storage-failure-recovered": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+          "proposal_id": "919e27f9-8747-4021-963b-ded89de453e1",
+          "status": "PAID",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:40:11.315717+00:00",
+          "paid_at": "2026-10-31T15:25:12.364362+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "919e27f9-8747-4021-963b-ded89de453e1",
+          "origin_request_id": "06720f02-dc9f-415b-be3e-60056e7c6cf7",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:30:11.290964+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "c013755f-7183-4f37-be61-302fece3449a",
+          "origin_request_id": "9c750320-d39e-46a6-badf-cd2df2e1a90a",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:30:12.206692+00:00",
+          "payload_hash": "eb2720d348c3f7a9ded5d840213b7a36f7eb94d3dfbd29d165be54e292a5150d"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "ddd08e48-8091-4bbc-9c77-9fac235fdad3",
+          "proposal_id": "919e27f9-8747-4021-963b-ded89de453e1",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:25:11.315717+00:00",
+          "result_ref": "2b19ed54-317e-4f79-b6f5-cc011cca472e"
+        },
+        {
+          "id": "88488f97-0402-4d04-bcc5-ecd8606ee581",
+          "proposal_id": "c013755f-7183-4f37-be61-302fece3449a",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:25:12.364362+00:00",
+          "result_ref": "2b19ed54-317e-4f79-b6f5-cc011cca472e"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "20c61ab8-2b18-4f2a-b2be-8c9307f3d329",
+          "order_id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+          "action_id": "c013755f-7183-4f37-be61-302fece3449a",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "488d713c-225d-4719-afd5-cdfbcf3e1723",
+          "action_id": "919e27f9-8747-4021-963b-ded89de453e1",
+          "operation": "execute_checkout",
+          "key": "c84b309d-3715-4520-8faa-2da7ce1a4110",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+            "action_id": "919e27f9-8747-4021-963b-ded89de453e1",
+            "created_at": "2026-10-31T15:25:11.315717Z",
+            "resource_id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "4b084b87-bd50-4fd1-bf3d-ed2b86f14aa2",
+          "action_id": "c013755f-7183-4f37-be61-302fece3449a",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:9c750320-d39e-46a6-badf-cd2df2e1a90a",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+            "action_id": "c013755f-7183-4f37-be61-302fece3449a",
+            "created_at": "2026-10-31T15:25:12.364362Z",
+            "payment_id": "20c61ab8-2b18-4f2a-b2be-8c9307f3d329",
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+            "total_cents": 29900,
+            "order_status": "PAID"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "b312c761-6ac7-4f4f-b344-b0aac9cf5846",
+          "aggregate_id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+          "action_id": "919e27f9-8747-4021-963b-ded89de453e1",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "81bfdf1e-566d-4ff4-b0eb-40b3f4869e76",
+          "aggregate_id": "2b19ed54-317e-4f79-b6f5-cc011cca472e",
+          "action_id": "c013755f-7183-4f37-be61-302fece3449a",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "f13780d9d2e04d11092cdc16263ebf2eda9d4e2275851699bfbf9c2ef44cc364"
+    },
+    "payment-succeeded": {
+      "schema": "test_deb4a5089e33433b98a88b1c78836567",
+      "checkpoint_schema": "cp_8a6cddfb8f514b36a74640f95de2d029",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "order_rows": [
+        {
+          "id": "d0a52228-229d-4478-8b1a-0454def617c9",
+          "proposal_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "status": "PAID",
+          "total_cents": 29900,
+          "currency": "CNY",
+          "version": 2,
+          "expires_at": "2026-10-31T15:39:25.967889+00:00",
+          "paid_at": "2026-10-31T15:24:26.709437+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "origin_request_id": "8bdc7bed-d1e3-47a5-b95b-c444f5d63671",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:25.857015+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+        },
+        {
+          "id": "e160aecb-2beb-48e8-a5c3-3fb21290e138",
+          "origin_request_id": "cf391b9a-f5c1-4236-9e7f-be0bb3607838",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T15:29:26.093206+00:00",
+          "payload_hash": "7592d28d5723212f8661ad704c67724b68f402ffa22ffeb723c482f8c8f08587"
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "4d18334c-3520-4882-b996-e565946c400b",
+          "proposal_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:25.967889+00:00",
+          "result_ref": "d0a52228-229d-4478-8b1a-0454def617c9"
+        },
+        {
+          "id": "25aa8d36-b38a-41ab-bb40-2cd48310c282",
+          "proposal_id": "e160aecb-2beb-48e8-a5c3-3fb21290e138",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T15:24:26.709437+00:00",
+          "result_ref": "d0a52228-229d-4478-8b1a-0454def617c9"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "7a6f1fdf-6d8c-491e-80e0-bebba2faadbc",
+          "order_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+          "action_id": "e160aecb-2beb-48e8-a5c3-3fb21290e138",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "10be9fbd-3d8c-4bec-9332-f1330a58ad7a",
+          "action_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "operation": "execute_checkout",
+          "key": "web:order:bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+            "action_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+            "created_at": "2026-10-31T15:24:25.967889Z",
+            "resource_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+            "total_cents": 29900
+          }
+        },
+        {
+          "id": "5615dcbe-5069-4f9a-a7a3-18061a3b66ef",
+          "action_id": "e160aecb-2beb-48e8-a5c3-3fb21290e138",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:cf391b9a-f5c1-4236-9e7f-be0bb3607838",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+            "action_id": "e160aecb-2beb-48e8-a5c3-3fb21290e138",
+            "created_at": "2026-10-31T15:24:26.709437Z",
+            "payment_id": "7a6f1fdf-6d8c-491e-80e0-bebba2faadbc",
+            "action_type": "MOCK_PAYMENT",
+            "resource_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+            "total_cents": 29900,
+            "order_status": "PAID"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "e93c050e-2316-4cf8-a16b-e5c608d9edb5",
+          "aggregate_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+          "action_id": "bb695474-4a1a-4bf4-bca8-498f9d4e119d",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "7a22b2ef-ff2e-49f3-9ab5-eb5cd67d1c75",
+          "aggregate_id": "d0a52228-229d-4478-8b1a-0454def617c9",
+          "action_id": "e160aecb-2beb-48e8-a5c3-3fb21290e138",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "7de891cb22734db6472e9c5c4c4772a0c43bf320155af06381c8a846b41f4795"
+    }
+  },
+  "standalone_demo": {
+    "schema": "test_03fdb25bb7e446a8997e04fef6523af4",
+    "checkpoint_schema": "cp_57cc55156761492c8218e49f5ccc8bf9",
+    "fixture_mode": "fake-model-real-fastapi-postgresql",
+    "provider_http_requests": 0,
+    "real_model_calls": 0,
+    "blocked_external_attempts": 0,
+    "orders": 1,
+    "proposals": 2,
+    "confirmations": 2,
+    "reserved": 0,
+    "receipts": 2,
+    "events": 2,
+    "checkpoint_rows": 0,
+    "order_rows": [
+      {
+        "id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+        "proposal_id": "6849e506-b1c4-4b9a-8d68-42c27cc8344a",
+        "status": "PAID",
+        "total_cents": 29900,
+        "currency": "CNY",
+        "version": 2,
+        "expires_at": "2026-10-31T16:22:29.947392+00:00",
+        "paid_at": "2026-10-31T16:07:30.329252+00:00"
+      }
+    ],
+    "proposal_rows": [
+      {
+        "id": "6849e506-b1c4-4b9a-8d68-42c27cc8344a",
+        "origin_request_id": "81dea145-25f9-4be6-8cbb-afc85448a863",
+        "action_type": "CHECKOUT",
+        "status": "EXECUTED",
+        "expires_at": "2026-10-31T16:12:29.818949+00:00",
+        "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78"
+      },
+      {
+        "id": "2b0a3d1a-c56a-40b8-9d4a-d270fe79f3ee",
+        "origin_request_id": "e3c569c8-b4d7-480a-a906-45c5d72c8f7a",
+        "action_type": "MOCK_PAYMENT",
+        "status": "EXECUTED",
+        "expires_at": "2026-10-31T16:12:30.049029+00:00",
+        "payload_hash": "7c7fd6246b0202b050f87867f6407c8ebfb38f5196972688047104458bb89791"
+      }
+    ],
+    "confirmation_rows": [
+      {
+        "id": "fc9eec9d-b97a-4b97-92e6-e530844a0fdd",
+        "proposal_id": "6849e506-b1c4-4b9a-8d68-42c27cc8344a",
+        "decision": "approve",
+        "consumed_at": "2026-10-31T16:07:29.947392+00:00",
+        "result_ref": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63"
+      },
+      {
+        "id": "09792bd4-6f41-4002-bde7-1806339dd6a8",
+        "proposal_id": "2b0a3d1a-c56a-40b8-9d4a-d270fe79f3ee",
+        "decision": "approve",
+        "consumed_at": "2026-10-31T16:07:30.329252+00:00",
+        "result_ref": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63"
+      }
+    ],
+    "payment_rows": [
+      {
+        "id": "4fafd0f2-ca56-4f53-85cf-1af7f792367f",
+        "order_id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+        "action_id": "2b0a3d1a-c56a-40b8-9d4a-d270fe79f3ee",
+        "status": "SUCCEEDED",
+        "amount_cents": 29900,
+        "provider": "mock"
+      }
+    ],
+    "receipt_rows": [
+      {
+        "id": "954b0bde-4906-4084-b171-e491c812cb4e",
+        "action_id": "6849e506-b1c4-4b9a-8d68-42c27cc8344a",
+        "operation": "execute_checkout",
+        "key": "web:order:6849e506-b1c4-4b9a-8d68-42c27cc8344a",
+        "result": {
+          "status": "PENDING_PAYMENT",
+          "currency": "CNY",
+          "order_id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+          "action_id": "6849e506-b1c4-4b9a-8d68-42c27cc8344a",
+          "created_at": "2026-10-31T16:07:29.947392Z",
+          "resource_id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+          "total_cents": 29900
+        }
+      },
+      {
+        "id": "f85a9367-45f3-4085-9dd3-6bcfc992a8a4",
+        "action_id": "2b0a3d1a-c56a-40b8-9d4a-d270fe79f3ee",
+        "operation": "execute_mock_payment",
+        "key": "web:payment:execute:e3c569c8-b4d7-480a-a906-45c5d72c8f7a",
+        "result": {
+          "status": "SUCCEEDED",
+          "currency": "CNY",
+          "order_id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+          "action_id": "2b0a3d1a-c56a-40b8-9d4a-d270fe79f3ee",
+          "created_at": "2026-10-31T16:07:30.329252Z",
+          "payment_id": "4fafd0f2-ca56-4f53-85cf-1af7f792367f",
+          "action_type": "MOCK_PAYMENT",
+          "resource_id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+          "total_cents": 29900,
+          "order_status": "PAID"
+        }
+      }
+    ],
+    "event_rows": [
+      {
+        "id": "b30ffa7e-0da3-4331-aca8-912c7f743b59",
+        "aggregate_id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+        "action_id": "6849e506-b1c4-4b9a-8d68-42c27cc8344a",
+        "event_type": "ORDER_CREATED"
+      },
+      {
+        "id": "ce9c3bbc-7077-4760-9813-e7727d3d327e",
+        "aggregate_id": "c1e95c00-daaa-43e6-a7c0-de2ebadd3d63",
+        "action_id": "2b0a3d1a-c56a-40b8-9d4a-d270fe79f3ee",
+        "event_type": "ORDER_PAID"
+      }
+    ],
+    "product_rows": [
+      {
+        "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+        "on_hand": 19,
+        "reserved": 0
+      },
+      {
+        "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+        "on_hand": 20,
+        "reserved": 0
+      },
+      {
+        "id": "e5635304-5562-5b76-80ae-2f577488e404",
+        "on_hand": 20,
+        "reserved": 0
+      }
+    ],
+    "run_rows": [],
+    "run_event_rows": [],
+    "raw_facts_sha256": "fd4e02d0e892513c2392410a6c881df03a407a9c303a1cd3292192df8c4c18b1"
+  },
+  "unknown_then_reconciled_same_order_and_payment": true,
+  "business_domain_files_changed": false
+}

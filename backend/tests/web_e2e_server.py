@@ -303,12 +303,15 @@ class Harness:
                 "refund_rows": "SELECT id, case_id, status FROM refunds ORDER BY created_at",
                 "ticket_rows": "SELECT id, order_id, status, resolution, version "
                 "FROM support_tickets ORDER BY created_at",
-                "proposal_rows": "SELECT id, actor_id, origin_request_id, status, expires_at, "
-                "payload_hash, canonical_payload FROM action_proposals ORDER BY created_at,id",
+                "proposal_rows": "SELECT id, actor_id, origin_request_id, action_type, status, "
+                "expires_at, payload_hash, canonical_payload FROM action_proposals "
+                "ORDER BY created_at,id",
                 "order_rows": "SELECT * FROM orders ORDER BY created_at,id",
                 "confirmation_rows": "SELECT * FROM confirmations ORDER BY created_at,id",
-                "receipt_rows": "SELECT id, action_id, actor_id, result FROM idempotency_requests "
-                "WHERE action_id IS NOT NULL ORDER BY created_at,id",
+                "payment_rows": "SELECT id, order_id, action_id, status, amount_cents, provider "
+                "FROM payments ORDER BY created_at,id",
+                "receipt_rows": "SELECT id, action_id, actor_id, operation, key, result "
+                "FROM idempotency_requests WHERE action_id IS NOT NULL ORDER BY created_at,id",
                 "event_rows": "SELECT * FROM business_events ORDER BY occurred_at,id",
                 "product_rows": "SELECT id, name, category, price_cents, on_hand, reserved, "
                 "active, attributes FROM products ORDER BY id",
@@ -359,6 +362,9 @@ class Harness:
                     )
                 )
             )
+        from agentmall.payments.service import MockPaymentAdapter
+
+        self.app.state.mock_payment_adapter = MockPaymentAdapter()
         self.mode, self.offset = "proposal", timedelta(0)
         self.workflow_mode = "purchase"
         self.answer_failure_used = False
@@ -428,6 +434,15 @@ def mount_controls(harness):
         model_config = ConfigDict(extra="forbid")
         product_id: UUID
 
+    class PaymentModeRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        result: Literal["SUCCEEDED", "DECLINED"]
+
+    class OrderConditionRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        order_id: UUID
+        condition: Literal["near_expiry", "expire", "stale_version"]
+
     router = APIRouter(prefix="/__test", dependencies=[Depends(authorize)])
 
     @router.get("/health")
@@ -458,6 +473,57 @@ def mount_controls(harness):
     async def workflow_mode(payload: WorkflowMode):
         harness.workflow_mode = payload.mode
         return {"mode": payload.mode}
+
+    @router.post("/payment-mode")
+    async def payment_mode(payload: PaymentModeRequest):
+        from agentmall.payments.service import MockPaymentAdapter
+
+        harness.app.state.mock_payment_adapter = MockPaymentAdapter(payload.result)
+        return {"result": payload.result}
+
+    @router.post("/order-condition")
+    async def order_condition(payload: OrderConditionRequest):
+        # The immutable order expiry is never changed. Server time is anchored in
+        # PostgreSQL and advanced locally for this one isolated test process.
+        with harness.db.begin() as connection:
+            if payload.condition == "stale_version":
+                changed = (
+                    connection.execute(
+                        text(
+                            "UPDATE orders SET version=version+1 WHERE id=:id "
+                            "AND status='PENDING_PAYMENT' RETURNING id,version,expires_at"
+                        ),
+                        {"id": payload.order_id},
+                    )
+                    .mappings()
+                    .one_or_none()
+                )
+            else:
+                changed = (
+                    connection.execute(
+                        text(
+                            "SELECT id,version,expires_at,clock_timestamp() AS db_now "
+                            "FROM orders WHERE id=:id AND status='PENDING_PAYMENT'"
+                        ),
+                        {"id": payload.order_id},
+                    )
+                    .mappings()
+                    .one_or_none()
+                )
+            if changed is None:
+                raise HTTPException(404, "Unknown pending synthetic order")
+            if payload.condition != "stale_version":
+                extra = timedelta(seconds=-60 if payload.condition == "near_expiry" else 1)
+                harness.offset = max(
+                    harness.offset, changed["expires_at"] - changed["db_now"] + extra
+                )
+        return {
+            "condition": payload.condition,
+            "order_id": payload.order_id,
+            "version": changed["version"],
+            "expires_at": changed["expires_at"],
+            "server_clock_offset_seconds": harness.offset.total_seconds(),
+        }
 
     @router.post("/reset")
     async def reset():
@@ -607,6 +673,9 @@ async def isolated_app():
             # Process-local test seam; immutable proposal rows and DB triggers remain intact.
             cleanup.enter_context(patch.object(actions, "database_now", test_clock))
             cleanup.enter_context(patch.object(orders, "database_now", test_clock))
+            from agentmall.payments import service as payments
+
+            cleanup.enter_context(patch.object(payments, "database_now", test_clock))
             async with app.state.sessions.begin() as session:
                 await seed(session, settings)
             from retrieval_helpers import index

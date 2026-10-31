@@ -16,6 +16,14 @@
 
 [三项工程案例](docs/ENGINEERING_CASES.md) · [实际架构](docs/ARCHITECTURE.md) · [结果及限制](docs/RESULTS.md) · [候选来源与排除边界](SNAPSHOT.md)
 
+## 本地T14-P0候选：网页模拟付款
+
+本开发分支在订单详情 `/orders/:id` 提供“模拟付款”：准备支付快照 → 用户单独批准/拒绝 → 真实后端模拟支付回执与订单查询。购物车和持久化Agent工作流创建的订单均走同一页面；不发生真实扣款，付款不会复用购买确认。响应丢失先核对原提案与订单，保持原request_id/Key，不自动重新付款。
+
+这是尚未Push的本地候选，不代表已发布main已更新。隔离启动及完整操作见[本地购物闭环演示](docs/DEMO.md#t14-p0本地购物闭环)，使用独立端口5184/8014/55438，保留既有演示。
+
+本地验收及已保留的失败见[T14-P0报告](docs/evidence/t14-p0/report.md)：真实PostgreSQL离线后端644 passed / 14 skipped、Vitest55 passed、Playwright60 passed。仅Fixture模型与模拟资金，未执行新的远程CI。
+
 ## 无 API Key 的 Quick Start
 
 准备 Docker 引擎及 Compose，在仓库根目录执行。首次必须使用本目录自己的新 PGDATA，端口冲突先辨认归属，不终止未知服务。镜像安装锁定依赖和浏览器，不读取个人 .env 或下载 BGE 权重。

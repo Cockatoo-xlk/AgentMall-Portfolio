@@ -67,6 +67,14 @@ const receiptBase = {
 }
 
 describe('order lifecycle display', () => {
+  it('offers a separate mock payment action only for a pending order', () => {
+    for (const status of ['PENDING_PAYMENT', 'PAID', 'CANCELLED', 'EXPIRED', 'SHIPPED', 'DELIVERED', 'REFUNDED'] as OrderStatus[]) {
+      resource.data = { ...order, status }
+      const html = render(<OrderDetail />)
+      expect(html.includes('>模拟付款</button>')).toBe(status === 'PENDING_PAYMENT')
+      expect(html).toContain('不发生真实扣款')
+    }
+  })
   it.each([
     ['PENDING_PAYMENT', '待支付'],
     ['PAID', '已支付'],

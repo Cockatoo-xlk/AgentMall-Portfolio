@@ -1,0 +1,60 @@
+{
+  "source": "Final full regression, retries0; copied unmodified",
+  "fixture": true,
+  "real_models": false,
+  "video": "NOT_RECORDED",
+  "screenshots": [
+    {
+      "file": "screenshots/payment-confirmation.png",
+      "bytes": 167908,
+      "sha256": "a188d2fae1752f59ac1268a7e2bdd7b182b16ad29d2a9346519751b0d2d59d5c",
+      "width": 1280,
+      "height": 1841,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "review": "Visually inspected; synthetic names/order IDs only, no token/address/real identity; existing Lucide/Feather notices retained"
+    },
+    {
+      "file": "screenshots/payment-succeeded.png",
+      "bytes": 193916,
+      "sha256": "1ad3d7b741bdcaef3708236fb90fa38ed11985dd18172764599b7ed06dcbae0c",
+      "width": 1280,
+      "height": 2050,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "review": "Visually inspected; synthetic names/order IDs only, no token/address/real identity; existing Lucide/Feather notices retained"
+    },
+    {
+      "file": "screenshots/payment-outcome-unknown.png",
+      "bytes": 202987,
+      "sha256": "c5ed4342223d0b13bfb262c43dd43604df2270b3541216567bffd7f933cdb11c",
+      "width": 1280,
+      "height": 2070,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "review": "Visually inspected; synthetic names/order IDs only, no token/address/real identity; existing Lucide/Feather notices retained"
+    },
+    {
+      "file": "screenshots/payment-mobile-succeeded.png",
+      "bytes": 162550,
+      "sha256": "e29494e10d9cca73bb90a5862c37b98284383c6dc5edbd6545d1d225ec3a3864",
+      "width": 390,
+      "height": 2245,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "review": "Visually inspected; synthetic names/order IDs only, no token/address/real identity; existing Lucide/Feather notices retained"
+    }
+  ]
+}

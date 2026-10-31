@@ -6,6 +6,7 @@ import { useMounted, useResource } from '../state/useResource'
 import { errorMessage } from '../api/client'
 import { addressLabel, formatDate, money, orderStatusLabel } from '../api/format'
 import type { Order, Page } from '../api/types'
+import MockPaymentPanel from '../components/MockPaymentPanel'
 export function OrderDetail() {
   const { id } = useParams()
   const {
@@ -31,6 +32,10 @@ export function OrderDetail() {
         </button>
       </main>
     )
+  return <OrderDetails initialOrder={order} reload={reload} />
+}
+function OrderDetails({ initialOrder, reload }: { initialOrder: Order; reload: () => void }) {
+  const [order, setOrder] = useState(initialOrder)
   return (
     <main className="page narrow-page">
       <div className="order-success">
@@ -38,9 +43,11 @@ export function OrderDetail() {
         <span className="eyebrow">ORDER CONFIRMED</span>
         <h1>订单已创建</h1>
         <p>
-          已取得服务端订单信息，当前状态：<strong>{orderStatusLabel(order.status)}</strong>。
+          最近一次服务端查询的订单状态：
+          <strong>{orderStatusLabel(order.status)}</strong>。
         </p>
       </div>
+      <MockPaymentPanel key={order.id} order={order} onOrderRead={setOrder} />
       <section className="panel stack">
         <div className="section-heading">
           <h2>订单详情</h2>
@@ -77,7 +84,7 @@ export function OrderDetail() {
           <span>订单金额</span>
           <strong className="price">{money(order.total_cents)}</strong>
         </div>
-        <div className="notice">本页展示订单信息。模拟支付、取消和物流操作请使用受控 API。</div>
+        <div className="muted">所有金额均为合成演示数据。取消和物流操作仍使用受控 API。</div>
         <div className="inline">
           <Link className="button primary" to="/orders">
             查看我的订单

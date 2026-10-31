@@ -272,3 +272,61 @@ async def test_normal_application_has_no_test_routes(env):
 def test_cli_rejects_non_loopback_bind(host):
     with pytest.raises(ValueError, match="loopback"):
         harness_module().validate_host(host)
+
+
+async def test_payment_controls_are_loopback_keyed_and_reset_adapter(harness):
+    instance, client = harness
+    assert (
+        await client.post("/__test/payment-mode", json={"result": "DECLINED"})
+    ).status_code == 403
+    assert (
+        await client.post("/__test/payment-mode", headers=KEY, json={"result": "BAD"})
+    ).status_code == 422
+    assert (
+        await client.post("/__test/payment-mode", headers=KEY, json={"result": "DECLINED"})
+    ).status_code == 200
+    assert instance.app.state.mock_payment_adapter.result == "DECLINED"
+    assert (await facts(client))["payment_rows"] == []
+    missing = await client.post(
+        "/__test/order-condition",
+        headers=KEY,
+        json={"order_id": str(uuid4()), "condition": "expire"},
+    )
+    assert missing.status_code == 404
+    await client.post("/__test/reset", headers=KEY, json={})
+    assert instance.app.state.mock_payment_adapter.result == "SUCCEEDED"
+
+
+async def test_payment_control_expiry_uses_real_db_and_domain_receipt(harness):
+    from checkout_helpers import confirm
+    from lifecycle_helpers import create_order, execute_action, prepare_action
+
+    _, client = harness
+    buyer = await login(client)
+    products = (await client.get("/api/v1/products", headers=buyer)).json()["items"]
+    order = await create_order(client, buyer, products[0]["id"])
+    before = await facts(client)
+    near = await client.post(
+        "/__test/order-condition",
+        headers=KEY,
+        json={"order_id": order["id"], "condition": "near_expiry"},
+    )
+    assert near.status_code == 200
+    proposal = await prepare_action(client, buyer, order, "payment")
+    confirmation = await confirm(client, buyer, proposal)
+    changed = await client.post(
+        "/__test/order-condition",
+        headers=KEY,
+        json={"order_id": order["id"], "condition": "expire"},
+    )
+    assert changed.status_code == 200
+    response = await execute_action(client, buyer, order, proposal, confirmation, "payment")
+    assert response.status_code == 200, response.text
+    assert response.json()["status"] == "EXPIRED"
+    after = await facts(client)
+    assert after["order_rows"][0]["status"] == "EXPIRED"
+    assert after["payment_rows"] == []
+    assert after["reserved"] == 0
+    assert sum(p["on_hand"] for p in before["product_rows"]) == sum(
+        p["on_hand"] for p in after["product_rows"]
+    )

@@ -1,0 +1,16 @@
+{
+  "project": "agentmall-t14-p0",
+  "compose_override": "services:\n  postgres:\n    volumes: !override\n      - ./.t14-p0/postgres-data:/var/lib/postgresql/data\n    ports: !override\n      - \"127.0.0.1:55438:55433\"\n      - \"127.0.0.1:8014:18001\"\n      - \"127.0.0.1:5184:15174\"\n  runner:\n    volumes: !override\n      - ./.t14-p0/final-ci:/work/.t13/outputs\n      - ./.t14-p0/final-playwright:/work/frontend/test-results\n    environment:\n      AGENTMALL_PAYMENT_EVIDENCE_DIR: /work/.t13/outputs/screenshots/payment\n",
+  "override_sha256": "60ef8bf6cee4a9bc6123068c741034a5af9a30c461d0a323fa959d2a3b5c9a89",
+  "independent_demo_project": "agentmall-payment-local",
+  "demo_override_sha256": "f9882f05fe0a944c4a583942069f2f5a4c40a0dd73a6a2aace13365c0be2fd43",
+  "local_docker_engine_bytes": 2053644288,
+  "runner_declared_limit": "4GiB",
+  "runner_effective_engine_limit": "~1.913GiB",
+  "shm_declared_mib": 256,
+  "samples": 68,
+  "sampled_peak_runner_mib": 1134.59,
+  "sampled_peak_shm_kib": 4,
+  "sampling_is_not_a_guaranteed_peak": true,
+  "no_automatic_resource_changes": true
+}
