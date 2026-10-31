@@ -19,4 +19,4 @@ AgentMall原创源码、文档和合成项目素材由权利人Cockatoo-xlk选�
 
 本次`THIRD_PARTY_SOURCE_SCOPE_REVIEW=PASS`，仅指已清点源码/文档/截图范围及保留声明。包锁元数据并非全平台合规证明：R4未安装的可选GPU/平台包可能仍标UNKNOWN，当前没有其文件被分发；未来新增vendoring、dist、wheel、镜像或模型权重时重新审核，不能沿用本次结论。
 
-[本轮分发范围证据](docs/evidence/r5-third-party-scope.json)记录实际文件、第三方许可哈希和范围。尚未公开上传，PUBLICATION_AUTHORIZED=NO、PUBLIC_RELEASE_NOT_RUN。
+[本轮分发范围证据](docs/evidence/r5-third-party-scope.json)记录R5源码审核时的实际文件、第三方许可哈希和许可范围。

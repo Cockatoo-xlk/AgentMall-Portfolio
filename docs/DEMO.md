@@ -9,7 +9,7 @@
 | 1:15–1:50 | 阅读快照，点击“批准并继续工作流”，查看订单 | 原Run Resume；新增PENDING_PAYMENT订单，不等于已付款 |
 | 1:50–3:30 | 复制启动输出的delivered_order_id；新Run输入“订单<该UUID>质量问题想退掉，再帮我推荐一款500元以内静音键盘，准备购买，送演示宿舍。” | 第一次批准创建REQUESTED Case；第二张购买提案用新的confirmation再次批准；退款数仍0 |
 | 3:30–4:15 | 刷新，重新登录同一买家，恢复原Thread | 数据库重建事件与真实资源，不新建原业务动作 |
-| 4:15–4:45 | 说明失败、费用和许可边界 | UNKNOWN Usage、PARTIAL保留；无真实资金，未公开发布 |
+| 4:15–4:45 | 说明失败、费用和许可边界 | UNKNOWN Usage、PARTIAL保留；无真实资金，也无生产负载或SLA验证 |
 
 返回/重复确认/回包丢失的真实浏览器与SQL断言见[return_replace.spec.ts](../frontend/tests/return_replace.spec.ts)。网络不确定先GET核对原Thread/Proposal/Order/Case，保持原request_id，不自动重做业务。
 

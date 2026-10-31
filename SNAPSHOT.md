@@ -1,6 +1,6 @@
 # 独立源码候选的来源与边界
 
-来源固定研发Commit：7cabcca55d600341b26972a46de757f26a50f044。文件由已跟踪Git对象白名单导出，未clone、未复制.git或任何原Git提交历史；本目录没有新的Git根提交、作者元数据或remote。R4候选原293文件保持不变，本目录是其新的R5审核副本；R5仅更新许可和审阅文档，不冒称历史原件。
+来源固定研发Commit：7cabcca55d600341b26972a46de757f26a50f044。文件由已跟踪Git对象白名单导出，未clone、未复制原.git或任何原Git提交历史；本作品版在已审核快照之上建立独立、无父提交的Git根，不携带原Private仓库的提交历史。R4原293文件候选及R5审核副本均为独立阶段产物；R5仅更新许可和审阅文档，不冒称历史原件。
 
 保留完整Backend/Frontend源码、原迁移与锁、原测试、合成Seed/政策、evals Python执行器及数据和冻结Manifest、离线CI及隔离Demo。原生产逻辑/Prompt/Oracle/Tool Schema/任务数据字节不变，没有为公开展示降低测试要求。
 
@@ -20,4 +20,4 @@
 
 Manifest保留原字节、SHA和已过期授权边界，只可作为历史声明或合成测试输入。创建新的Manifest需要新身份/来源和明确标记，不将本候选当作原实验重新执行入口。此目录没有新Live授权，默认演示和测试全部使用Fixture/Mock。原40题不重新跑封存实验。
 
-导出清单、源blob/内容SHA与排除列表保留在Private交付证据；公开副本的独立运行与隐私结果见[结果](docs/RESULTS.md)。权利人已选择项目MIT及版权署名，详见[LICENSE](LICENSE)和[COPYRIGHT](COPYRIGHT.md)；不包含公开上传授权。PUBLICATION_AUTHORIZED=NO、PUBLIC_RELEASE_NOT_RUN。
+导出清单、源blob/内容SHA与排除列表保留在Private交付证据；公开副本的独立运行与隐私结果见[结果](docs/RESULTS.md)。权利人已选择项目MIT及版权署名，详见[LICENSE](LICENSE)和[COPYRIGHT](COPYRIGHT.md)。本文记录源码来源、排除范围和R5审核事实；独立公开仓库的实际发布与远程CI状态须以对应GitHub记录核验。
