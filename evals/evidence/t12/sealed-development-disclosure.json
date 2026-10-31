@@ -1,0 +1,161 @@
+{
+  "first_manifest_sha256": "33ffcb4d4f064fce141d8d91f0e2193cfafb54df55441c3c5a256ccfa2bc13be",
+  "source_archive": "evals/evidence/t12/frozen-source.tar.gz",
+  "source_archive_sha256": "76dee092231c175c890cd2083f1a0341630cfb9d54d2a8cf02842af2f8a8636b",
+  "sealed_passes": 1,
+  "first_results_preserved": true,
+  "test_set_participated_in_development": true,
+  "reason": "First sealed run exposed post-confirmation fault finishing and deterministic fixture adapter/clock defects; targeted regression repairs only, no replacement sealed score.",
+  "failures": [
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_A3_01-0-single.json",
+      "violations": [
+        {
+          "rule": "RESOURCE_DELTA",
+          "label": "BUSINESS_RULE",
+          "detail": {
+            "table": "payments",
+            "expected": 0,
+            "actual": 1
+          }
+        },
+        {
+          "rule": "ORIGINAL_ORDER_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_B1_04-0-single.json",
+      "violations": [
+        {
+          "rule": "RESOURCE_DELTA",
+          "label": "BUSINESS_RULE",
+          "detail": {
+            "table": "refunds",
+            "expected": 1,
+            "actual": 0
+          }
+        },
+        {
+          "rule": "ORIGINAL_ORDER_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        },
+        {
+          "rule": "WRONG_BUSINESS_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        },
+        {
+          "rule": "MERCHANT_REVIEW_FAILED",
+          "label": "ORACLE_OR_FIXTURE"
+        }
+      ]
+    },
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_B1_04-0-multi.json",
+      "violations": [
+        {
+          "rule": "RESOURCE_DELTA",
+          "label": "BUSINESS_RULE",
+          "detail": {
+            "table": "refunds",
+            "expected": 1,
+            "actual": 0
+          }
+        },
+        {
+          "rule": "ORIGINAL_ORDER_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        },
+        {
+          "rule": "WRONG_BUSINESS_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        },
+        {
+          "rule": "MERCHANT_REVIEW_FAILED",
+          "label": "ORACLE_OR_FIXTURE"
+        }
+      ]
+    },
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_E1_04-0-single.json",
+      "violations": [
+        {
+          "rule": "WRONG_BUSINESS_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        },
+        {
+          "rule": "SCRIPTED_TICKET_FAILED",
+          "label": "ORACLE_OR_FIXTURE"
+        }
+      ]
+    },
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_A2_05-0-single.json",
+      "violations": [
+        {
+          "rule": "RUN_STATE",
+          "label": "RECOVERY_CHECKPOINT",
+          "detail": null
+        },
+        {
+          "rule": "UNEXPECTED_CLARIFICATION",
+          "label": "ORACLE_OR_FIXTURE"
+        }
+      ]
+    },
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_A2_04-0-single.json",
+      "violations": [
+        {
+          "rule": "RUN_STATE",
+          "label": "RECOVERY_CHECKPOINT",
+          "detail": null
+        },
+        {
+          "rule": "UNEXPECTED_CLARIFICATION",
+          "label": "ORACLE_OR_FIXTURE"
+        }
+      ]
+    },
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_A3_01-0-multi.json",
+      "violations": [
+        {
+          "rule": "RESOURCE_DELTA",
+          "label": "BUSINESS_RULE",
+          "detail": {
+            "table": "payments",
+            "expected": 0,
+            "actual": 1
+          }
+        },
+        {
+          "rule": "ORIGINAL_ORDER_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "file": "evals/results/t12-sealed-fixture-once/eval_test_E1_04-0-multi.json",
+      "violations": [
+        {
+          "rule": "WRONG_BUSINESS_STATE",
+          "label": "BUSINESS_RULE",
+          "detail": null
+        },
+        {
+          "rule": "SCRIPTED_TICKET_FAILED",
+          "label": "ORACLE_OR_FIXTURE"
+        }
+      ]
+    }
+  ]
+}

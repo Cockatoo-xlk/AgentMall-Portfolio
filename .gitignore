@@ -1,0 +1,53 @@
+.env
+.env.*
+!.env.example
+!.env.rag.example
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+backend/dist/
+
+# Local verification output
+backend/.*.log
+*.log
+*.db
+*.sqlite
+*.sqlite3
+pgdata/
+
+# T04 project-local frontend tooling and private browser traces
+frontend/node_modules/
+frontend/dist/
+frontend/.npm-cache/
+frontend/.cache/
+frontend/test-results/
+frontend/playwright-report/
+.npm-cache/
+
+# T07 local model/runtime caches
+.models/
+.ml-cache/
+
+# Private, immutable Live experiment records: publish reviewed summaries only.
+/evals/live/
+/evals/results/t12-live-pilot-01/
+/evals/results/t12-live-retest-01/
+/evals/evidence/t12-live-retest-01/
+
+# Owned T13 reproduction workspaces and local command output.
+/.t13/
+
+# T13 local full Fixture traces; only reviewed aggregate evidence is committed.
+/evals/results/t13-dev-fixture/
+/evals/results/t13-dev-fixture-v2/
+
+# T13-R1 owned diagnostics and raw Fixture evidence.
+/.t13-r1/
+/evals/results/t13-r1-dev-fixture/
+
+# T13-R2 private publication audit working files.
+/.t13-r2/

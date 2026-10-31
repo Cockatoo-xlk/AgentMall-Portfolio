@@ -1,0 +1,17 @@
+{
+  "id": "c60ca55a-fba5-58c8-b48f-a73c35122c16",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "未来退货条款",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v2",
+  "valid_from": "2035-01-01T00:00:00+00:00",
+  "valid_to": null,
+  "source_uri": "fixture://policies/future.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "未来版本演示：签收后14日内退货。本条款不适用于demo-v1订单，不改变现有资格规则。"
+    }
+  ]
+}

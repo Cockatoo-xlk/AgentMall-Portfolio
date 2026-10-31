@@ -1,0 +1,56 @@
+{
+  "status": "FINAL_OFFLINE_CI_VERIFIED",
+  "platform": "Independent Linux ARM64 Debian container; not a new GitHub Ubuntu amd64 run",
+  "tested_image_tree_sha256": "af70ac34a2bbaa62473e4623e5d7d2133bea4072586adeedbfcbff79846ab45a",
+  "project_license": "MIT",
+  "copyright_holder": "Cockatoo-xlk",
+  "owner_rights": "CONFIRMED",
+  "backend": {
+    "collected": 656,
+    "passed": 642,
+    "skipped": 14,
+    "warnings": 3,
+    "elapsed_seconds": 234.92,
+    "skip_reasons": [
+      "SKIPPED [1] backend/tests/test_eval_monitor_policy.py:50: Raw private Live evidence not present; synthetic regression still required",
+      "SKIPPED [10] backend/tests/test_live_preflight.py:270: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+      "SKIPPED [1] backend/tests/test_multiagent_integration.py:27: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+      "SKIPPED [1] backend/tests/test_multiagent_integration.py:85: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+      "SKIPPED [1] backend/tests/test_retrieval_ingest.py:114: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    ],
+    "exit_code": 0
+  },
+  "vitest_passed": 38,
+  "playwright_passed": 43,
+  "bootstrap": {
+    "postgres": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "pgvector": "0.8.7",
+    "revision": "0006",
+    "seed_before_after": [
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        12
+      ]
+    ],
+    "migration_check": "PASS",
+    "owned_probe_schemas_cleaned": true,
+    "paid_requests": 0
+  },
+  "model_mode": "Fixture and MockTransport only, no paid model requests",
+  "public_git_initialized": false,
+  "publication_authorized": false,
+  "not_run": [
+    "Public upload/new root commit",
+    "Remote Actions for final directory",
+    "Live models",
+    "sealed40 evaluation",
+    "cloud/production/load/SLA",
+    "Standalone Demo rerun (full Playwright includes real UI/SQL flows)"
+  ],
+  "final_test_scope": "Same tested executable/fixture/lock bytes; post-test updates only documentation/evidence",
+  "source_distribution_gate": "PUBLIC_SNAPSHOT_READY_FOR_OWNER_APPROVAL"
+}

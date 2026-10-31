@@ -1,0 +1,6 @@
+{
+  "manifest_sha256": "33ffcb4d4f064fce141d8d91f0e2193cfafb54df55441c3c5a256ccfa2bc13be",
+  "run_id": "t12-sealed-fixture-once",
+  "claimed_at": "2026-10-30T10:56:59.686133+00:00",
+  "meaning": "one sealed pass, including incomplete/failed execution"
+}

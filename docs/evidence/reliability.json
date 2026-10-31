@@ -1,0 +1,37 @@
+{
+  "kind": "historical_reviewed_aggregate_not_new_snapshot_test",
+  "R1": {
+    "mac_backend_passed": 656,
+    "linux_arm64_passed": 642,
+    "linux_skipped": 14,
+    "vitest": 38,
+    "playwright": 43,
+    "controlled_interleaving": "R1 fixed sibling cancellation journal window and test observer barrier deadline; no arbitrary SIGKILL exactly-once claim"
+  },
+  "T11_B01": {
+    "inventory": 10,
+    "requests": 50,
+    "orders_pending_payment": 10,
+    "insufficient_stock": 40,
+    "other_errors": 0,
+    "peak_in_flight": 12,
+    "observed_business_connections": 12,
+    "final_on_hand": 10,
+    "final_reserved": 10
+  },
+  "T11_matrix": {
+    "cases": 22,
+    "final_invariant_violations": 0,
+    "deliberate_corruptions_detected": 5
+  },
+  "limitations": [
+    "Synthetic business, mock payment/refund",
+    "No production SLA/load claim",
+    "Raw historical failure logs omitted, not rewritten"
+  ],
+  "sources": {
+    "evals/evidence/t11/final-cases/B01.json": "daa962584283b6d24e0e368156f12150b46c2eeb883815d21b0a0da7f20a5f24",
+    "docs/evidence/t13-r1/report.md": "20d7160714a7f9389459f823f3d8d92e261143bd06dc75fd8d5107625b71e44c",
+    "docs/evidence/t13-r1/t09-rca.json": "2d07f45a78a764cc0eeecbff29c1d72c5eb8028e70f4deb252c3ee7e0681f94b"
+  }
+}

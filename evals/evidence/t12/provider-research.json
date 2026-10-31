@@ -1,0 +1,38 @@
+{
+  "provider": "DeepSeek",
+  "requested_model_id": "deepseek-flash",
+  "documented_revision": "DeepSeek-V4.1-Flash-1017",
+  "immutable_revision_pinning": "UNSUPPORTED",
+  "seed": "UNSUPPORTED",
+  "checked_at_utc": "2026-10-30T10:27:32.703961+00:00",
+  "sources": [
+    "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+    "https://api-docs.deepseek.com/guides/tool_calls/",
+    "https://api-docs.deepseek.com/guides/thinking_mode/",
+    "https://api-docs.deepseek.com/api/create-chat-completion/"
+  ],
+  "currency": "CNY",
+  "unit_tokens": 1000000,
+  "peak_input_cache_miss": "2",
+  "peak_input_cache_hit": "0.04",
+  "peak_output": "8",
+  "off_peak_input_cache_miss": "1",
+  "off_peak_input_cache_hit": "0.02",
+  "off_peak_output": "4",
+  "reservation_policy": "peak cache-miss prices for every request; no cache discounts assumed",
+  "thinking": {
+    "type": "disabled"
+  },
+  "tool_protocol": "OpenAI-format chat completions; function schemas; tool_call_id; all calls validated",
+  "sdk_versions": {
+    "langchain-deepseek": "1.1.1",
+    "langchain-core": "1.7.1",
+    "openai": "3.41.0",
+    "httpx": "0.28.1",
+    "langgraph": "1.2.18",
+    "langgraph-checkpoint-postgres": "3.2.0"
+  },
+  "actual_live_requests": 0,
+  "status": "DOCUMENTATION_VERIFIED_LIVE_NOT_RUN",
+  "limitations": "Mutable service alias, not an immutable model snapshot; require a fresh price check before future Live authorization"
+}

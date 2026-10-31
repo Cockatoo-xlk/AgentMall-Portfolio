@@ -1,0 +1,35 @@
+{
+  "provenance": "Reviewed aggregate from preserved two-live comparison; not new runs or raw episodes",
+  "first": {
+    "single_success": 1,
+    "multi_success": 4,
+    "tasks_per_architecture": 5,
+    "model_requests": 43,
+    "input_tokens": 92638,
+    "output_tokens": 8277,
+    "peak_estimated_cny": "0.251492"
+  },
+  "second": {
+    "single_success": 5,
+    "multi_success": 4,
+    "tasks_per_architecture": 5,
+    "model_requests": 53,
+    "input_tokens": 130259,
+    "output_tokens": 10159,
+    "peak_estimated_cny": "0.341790",
+    "failed_episode": "Multi eval_dev_B2_01",
+    "status": "PARTIAL / HANDOFF_CONSTRAINT_CHANGED",
+    "legal_effect": "REQUESTED case only, no replacement order",
+    "outer_exit": 130,
+    "child_exit": -2
+  },
+  "limitations": [
+    "Same development tasks, not independent holdout",
+    "Original40tasks participated in development",
+    "Actual platform bill UNKNOWN",
+    "No third live after L6",
+    "Specific rejected historical ToolCall drift fields UNKNOWN"
+  ],
+  "new_paid_requests": 0,
+  "source_sha256": "c00e0819b1c6d8f80cab9405842ecb24cbebfaf2bdeab68aafb63935a19e91c6"
+}

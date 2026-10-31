@@ -1,0 +1,17 @@
+{
+  "id": "7fca7cec-93c0-58a8-b472-d1b080c0980e",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "非本人订单",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v1",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": null,
+  "source_uri": "fixture://policies/ownership.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "只能查询和申请本人订单的售后；他人的订单编号不授予访问权限。店铺范围也必须匹配。"
+    }
+  ]
+}

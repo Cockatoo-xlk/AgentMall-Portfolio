@@ -1,0 +1,17 @@
+{
+  "id": "c6fc9e50-0ed5-5908-84a8-0e6dab1bc675",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "失效运费条款",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v1",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": "2022-01-01T00:00:00+00:00",
+  "source_uri": "fixture://policies/expired.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "已失效演示条款：退货运费补贴固定金额，不适用于当前订单。"
+    }
+  ]
+}

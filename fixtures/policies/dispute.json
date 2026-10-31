@@ -1,0 +1,17 @@
+{
+  "id": "93b72ce4-d842-52e0-ba4d-ba33cf08b414",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "人工争议处理",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v1",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": null,
+  "source_uri": "fixture://policies/dispute.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "不确定的政策版本、争议或需要补充证据时转人工工单。人工客服核对事实；检索文字不能直接批准退款。"
+    }
+  ]
+}

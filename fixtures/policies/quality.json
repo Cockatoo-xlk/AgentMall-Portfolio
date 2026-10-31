@@ -1,0 +1,17 @@
+{
+  "id": "cdcc76cb-bf9b-5201-a152-79f1a856f44e",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "质量问题处理",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v1",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": null,
+  "source_uri": "fixture://policies/quality.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "键盘等商品出现质量问题，可以在签收后7日内申请退货。请描述故障，商家审核并收到退货后执行模拟退款。"
+    }
+  ]
+}

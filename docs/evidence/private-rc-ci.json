@@ -1,0 +1,228 @@
+{
+  "mode": "REMOTE_CI_VERIFIED_PRIVATE_RC_NOT_PUBLIC_CANDIDATE",
+  "run_id": 41170933236,
+  "attempt": 1,
+  "date": "2026-10-31",
+  "commit": "7cabcca55d600341b26972a46de757f26a50f044",
+  "os": "Ubuntu 24.04",
+  "architecture": "amd64/x86_64",
+  "architecture_evidence": [
+    "Python linux-24.04-x64 archive",
+    "Node linux-x64 archive",
+    "PostgreSQL service x86_64-pc-linux-gnu log"
+  ],
+  "versions": {
+    "python": "3.12.10",
+    "uv": "0.9.18",
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "postgres": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "pgvector": "0.8.7"
+  },
+  "bootstrap": {
+    "mode": "FRESH_EMPTY_DATABASE_BOOTSTRAP",
+    "revision": "0006",
+    "seed_before_after": [
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        12
+      ]
+    ],
+    "migration_check": "PASS",
+    "owned_probe_schemas_cleaned": true,
+    "paid_requests": 0
+  },
+  "checkpoint_setup": "successful bootstrap calls official setup_checkpoint, cleans its owned probe schema",
+  "pytest": {
+    "passed": 642,
+    "failed": 0,
+    "skipped": 14,
+    "elapsed_seconds": 578.69,
+    "skip_reasons": [
+      {
+        "count": 1,
+        "file": "backend/tests/test_eval_monitor_policy.py",
+        "line": 50,
+        "reason": "Raw private Live evidence not present; synthetic regression still required"
+      },
+      {
+        "count": 10,
+        "file": "backend/tests/test_live_preflight.py",
+        "line": 270,
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "count": 1,
+        "file": "backend/tests/test_multiagent_integration.py",
+        "line": 27,
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "count": 1,
+        "file": "backend/tests/test_multiagent_integration.py",
+        "line": 85,
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "count": 1,
+        "file": "backend/tests/test_retrieval_ingest.py",
+        "line": 114,
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      }
+    ]
+  },
+  "vitest_passed": 38,
+  "playwright_passed": 43,
+  "critical_modules_observed": [
+    "test_commit_then_crash.py",
+    "test_recovery_interleavings.py",
+    "test_thread_concurrency.py",
+    "integration/test_business_invariants.py",
+    "integration/test_crash_matrix.py",
+    "test_trace_redaction.py",
+    "test_retest_admission.py",
+    "test_eval_oracles.py"
+  ],
+  "steps": [
+    {
+      "name": "Set up job",
+      "conclusion": "success"
+    },
+    {
+      "name": "Initialize containers",
+      "conclusion": "success"
+    },
+    {
+      "name": "Check out source",
+      "conclusion": "success"
+    },
+    {
+      "name": "Set up Python",
+      "conclusion": "success"
+    },
+    {
+      "name": "Set up uv",
+      "conclusion": "success"
+    },
+    {
+      "name": "Set up Node",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install locked Python dependencies without BGE extras",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install locked frontend dependencies",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install Playwright Chromium and Linux dependencies",
+      "conclusion": "success"
+    },
+    {
+      "name": "Initialize fresh owned PostgreSQL and verify migration/seed/checkpoint",
+      "conclusion": "success"
+    },
+    {
+      "name": "Ruff check",
+      "conclusion": "success"
+    },
+    {
+      "name": "Ruff format check",
+      "conclusion": "success"
+    },
+    {
+      "name": "PostgreSQL, checkpoint, invariants, oracle and provider protocol tests",
+      "conclusion": "success"
+    },
+    {
+      "name": "Frontend typecheck",
+      "conclusion": "success"
+    },
+    {
+      "name": "Frontend lint",
+      "conclusion": "success"
+    },
+    {
+      "name": "Frontend unit tests",
+      "conclusion": "success"
+    },
+    {
+      "name": "Frontend build",
+      "conclusion": "success"
+    },
+    {
+      "name": "Real FastAPI, PostgreSQL and checkpoint with fixture model E2E",
+      "conclusion": "success"
+    },
+    {
+      "name": "Write bounded public CI summary",
+      "conclusion": "success"
+    },
+    {
+      "name": "Upload only public status summary",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Set up Node",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Set up uv",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Set up Python",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Check out source",
+      "conclusion": "success"
+    },
+    {
+      "name": "Stop containers",
+      "conclusion": "success"
+    },
+    {
+      "name": "Complete job",
+      "conclusion": "success"
+    }
+  ],
+  "artifact": {
+    "name": "ci-offline-core-summary",
+    "size_in_bytes": 386,
+    "expired": false,
+    "members": [
+      "ci-summary.json"
+    ],
+    "summary": {
+      "mode": "CI_OFFLINE_CORE",
+      "real_bge": "NOT_RUN: 13 marked cases require project-local weights",
+      "model": "FIXTURE_MODEL_AND_MOCK_PROVIDER_ONLY",
+      "checks": {
+        "PYTHON_DEPS": "success",
+        "NODE_DEPS": "success",
+        "CHROMIUM": "success",
+        "BOOTSTRAP": "success",
+        "RUFF": "success",
+        "FORMAT": "success",
+        "PYTEST": "success",
+        "TYPECHECK": "success",
+        "LINT": "success",
+        "VITEST": "success",
+        "BUILD": "success",
+        "PLAYWRIGHT": "success"
+      }
+    },
+    "archive_sha256": "fc0a79df14052c5f027be116959fd24e20dec697717ff95eec9d8a089bff1b87"
+  },
+  "real_chat_provider_requests": 0,
+  "provider_evidence_basis": "No provider secrets in workflow; Fake/MockTransport boundary in source and tests; bootstrap paid_requests0. Not a platform bill or independent packet capture.",
+  "raw_log_sha256": "712d3951fde1583a161f017338af9cb7a3da5d3c3897725f1de6c2055fd7b746",
+  "raw_logs_publicly_included": false
+}

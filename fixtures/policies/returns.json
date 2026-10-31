@@ -1,0 +1,17 @@
+{
+  "id": "41052670-ddab-5179-99ca-5f83b6a3d879",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "普通退货政策",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v1",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": null,
+  "source_uri": "fixture://policies/returns.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "普通退货：签收后7日内可以因不再需要申请退货。仅受理本人订单，是否符合资格由售后服务判断。"
+    }
+  ]
+}

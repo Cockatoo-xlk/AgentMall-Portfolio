@@ -1,0 +1,22 @@
+{
+  "scope": "SOURCE_DOCUMENTATION_SYNTHETIC_DATA_AND_THREE_REVIEWED_SCREENSHOTS_ONLY",
+  "review_result": "PASS_FOR_DECLARED_SOURCE_SCOPE",
+  "owner_original_rights": "CONFIRMED_BY_OWNER",
+  "project_license": "MIT",
+  "third_party_licenses_overridden": false,
+  "actual_third_party_license_file": "docs/third-party/lucide-react-LICENSE.txt",
+  "third_party_library_sources_or_binaries_vendored": false,
+  "lightningcss": "MPL reference only, no library files",
+  "caniuse_lite": "CC-BY reference only, no dataset files",
+  "psycopg_binary": "LGPL reference only, no library/libpq/OpenSSL files",
+  "screenshots": "Three reviewed synthetic Fixture images; derived icon attributions preserved",
+  "future_distribution_not_reviewed": [
+    "dist",
+    "wheel",
+    "Docker images",
+    "GPU optional binaries",
+    "browser binaries",
+    "BGE/model weights"
+  ],
+  "publication_authorized": false
+}

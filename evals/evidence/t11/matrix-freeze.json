@@ -1,0 +1,7 @@
+{
+  "sha256": "6e0a86f1a4e03e92d8a4dcb5b7216c8e77eab79250d7b67f41e1d2bb04532957",
+  "cases": 22,
+  "baseline": "355b050bb0f0f714c28d85e4362038e7a2d2338b",
+  "status": "FROZEN_BEFORE_NEW_TEST_EXECUTION",
+  "expectations_revision": 1
+}

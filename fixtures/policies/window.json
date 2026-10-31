@@ -1,0 +1,17 @@
+{
+  "id": "f9f0dd1e-3f52-569e-86f5-ad2faf517319",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "签收日期与售后期限",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v1",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": null,
+  "source_uri": "fixture://policies/window.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "售后期限从订单实际签收时间起计算，共7日，恰好7日仍在期限内。未签收或超过期限不适用此规则。"
+    }
+  ]
+}

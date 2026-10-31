@@ -1,0 +1,82 @@
+{
+  "status": "PUBLIC_SNAPSHOT_TESTED",
+  "platform": "Linux ARM64 Debian container; independently installed, not original Private Ubuntu amd64 CI",
+  "tested_image_initial_tree_sha256": "e91d29f568a2d8bdd7ae29fb7fc2a1c7001135292493ccccf956736c50dccd0a",
+  "backend": {
+    "collected": 656,
+    "passed": 642,
+    "skipped": 14,
+    "warnings": 3,
+    "elapsed_seconds": 238.7,
+    "exit_code": 0,
+    "skip_reasons": [
+      "SKIPPED [1] backend/tests/test_eval_monitor_policy.py:50: Raw private Live evidence not present; synthetic regression still required",
+      "SKIPPED [10] backend/tests/test_live_preflight.py:270: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+      "SKIPPED [1] backend/tests/test_multiagent_integration.py:27: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+      "SKIPPED [1] backend/tests/test_multiagent_integration.py:85: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+      "SKIPPED [1] backend/tests/test_retrieval_ingest.py:114: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    ]
+  },
+  "vitest_passed": 38,
+  "playwright_passed": 43,
+  "full_ci_exit_code": 0,
+  "fresh_no_cache_build_exit_code": 0,
+  "demo": {
+    "mode": "INDEPENDENT_SNAPSHOT_FIXTURE_BROWSER_DEMO",
+    "two_independent_confirmations": true,
+    "refresh_relogin_recovery": "PASS",
+    "initial_orders": 1,
+    "final_orders": 2,
+    "cases": 1,
+    "case_status": "REQUESTED",
+    "refunds": 0,
+    "checkpoint_rows": 41,
+    "run_event_count": 69,
+    "provider_http_requests": 0,
+    "real_model_calls": 0
+  },
+  "demo_server_exit_code": 0,
+  "extra_paid_requests": 0,
+  "not_run": [
+    "Candidate new remote CI",
+    "Live DeepSeek",
+    "sealed40 evaluation",
+    "cloud/production/load/SLA",
+    "video recording"
+  ],
+  "initial_unsuccessful_checks": [
+    {
+      "name": "export selected negative DSNs",
+      "classification": "EXPORTER_GUARD_OVERREJECTION",
+      "resolution": "12 tests now pass; original product fixtures preserved, scoped reviewed negatives admitted, no candidate created by failed exports"
+    },
+    {
+      "name": "fresh-database-before",
+      "exit_code": 2,
+      "classification": "TEST_HARNESS_FAILURE",
+      "reason": "psql default5432, dedicated PG uses55433",
+      "resolution": "explicit-p55433 succeeded"
+    },
+    {
+      "name": "original-format",
+      "exit_code": 1,
+      "classification": "DELIVERY_FORMAT",
+      "resolution": "moved test receives root Ruff80 width; formatted and final check passed"
+    },
+    {
+      "name": "candidate-demo-browser",
+      "exit_code": 1,
+      "classification": "TEST_HARNESS_FAILURE",
+      "reason": "host urllib inherited proxy; localhost health RemoteDisconnected",
+      "resolution": "ProxyHandler({}) for local health; same owned demo, first browser never dispatched; corrected UI/SQL check passed"
+    }
+  ],
+  "source_and_tests_changed_after_build": false,
+  "docs_only_post_build_changes": [
+    "THIRD_PARTY_NOTICES.md",
+    "docs/third-party/lucide-react-LICENSE.txt",
+    "docs/evidence/candidate-verification.json",
+    "docs/RESULTS.md"
+  ],
+  "historical_private_remote_is_separate": true
+}

@@ -1,0 +1,17 @@
+{
+  "id": "1ab93ab7-82a5-54f2-be0a-35787f66733b",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "已退款订单",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v1",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": null,
+  "source_uri": "fixture://policies/refunded.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "已退款订单不能重复退款，也不能再申请相同退货。退款记录是判断已退款状态的依据。"
+    }
+  ]
+}

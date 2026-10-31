@@ -1,0 +1,17 @@
+{
+  "id": "2dfde5f7-7505-5def-a121-ff67722a7c07",
+  "store_id": "00000000-0000-0000-0000-000000000001",
+  "title": "旧版退货条款",
+  "kind": "policy",
+  "visibility": "public",
+  "version": "demo-v0",
+  "valid_from": "2020-01-01T00:00:00+00:00",
+  "valid_to": "2022-01-01T00:00:00+00:00",
+  "source_uri": "fixture://policies/old.json",
+  "sections": [
+    {
+      "id": "1",
+      "text": "旧版本演示：签收后3日内退货。这是历史合成条款，不适用于demo-v1订单。"
+    }
+  ]
+}

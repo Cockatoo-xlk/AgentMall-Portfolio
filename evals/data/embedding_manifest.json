@@ -1,0 +1,40 @@
+{
+  "model_id": "BAAI/bge-small-zh-v1.5",
+  "revision": "7999e1d3359715c523056ef9478215996d62a620",
+  "dimension": 512,
+  "license": "MIT",
+  "source": "https://huggingface.co/BAAI/bge-small-zh-v1.5/tree/7999e1d3359715c523056ef9478215996d62a620",
+  "files": {
+    "config.json": {
+      "sha256": "3853a7979202c348751b753e36f579c41d8da7d36af617d3d907e1fc9b441f2a",
+      "size_bytes": 776
+    },
+    "model.safetensors": {
+      "sha256": "354763b9b1357bc9c44f62c6be2276321081ed2567773608c0d0785b61d5a026",
+      "size_bytes": 95827648
+    },
+    "special_tokens_map.json": {
+      "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+      "size_bytes": 125
+    },
+    "tokenizer.json": {
+      "sha256": "48cea5d44424912a6fd1ea647bf4fe50b55ab8b1e5879c3275f80e339e8fae26",
+      "size_bytes": 439125
+    },
+    "tokenizer_config.json": {
+      "sha256": "e6f3b96db926a37d4039995fbf5ad17de158dfb8f6343d607e4dbaad18d75f5a",
+      "size_bytes": 367
+    },
+    "vocab.txt": {
+      "sha256": "45bbac6b341c319adc98a532532882e91a9cefc0329aa57bac9ae761c27b291c",
+      "size_bytes": 109540
+    }
+  },
+  "query_prefix": "为这个句子生成表示以用于检索相关文章：",
+  "document_prefix": "",
+  "pooling": "CLS",
+  "normalization": "L2",
+  "max_length": 512,
+  "device": "cpu",
+  "dtype": "float32"
+}

@@ -1,0 +1,44 @@
+# Only for a new, explicitly owned project: agentmall-t13. No historical volumes.
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg17-bookworm@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
+    command: ["postgres", "-p", "55433", "-c", "max_connections=80"]
+    environment:
+      POSTGRES_USER: agentmall
+      POSTGRES_PASSWORD: "713f1b802a344cf28f099c7ef6099b46"
+      POSTGRES_DB: agentmall_test
+    volumes:
+      - ./.t13/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:55434:55433"
+      # Container-only demo proxies forward to loopback application listeners.
+      - "127.0.0.1:8001:18001"
+      - "127.0.0.1:5174:15174"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p 55433 -U agentmall -d agentmall_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    mem_limit: 1536m
+  runner:
+    profiles: ["tools"]
+    build:
+      context: .
+      dockerfile: scripts/ci/Dockerfile
+    network_mode: "service:postgres"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      AGENTMALL_CI_DB_PASSWORD: "713f1b802a344cf28f099c7ef6099b46"
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      AGENTMALL_EVIDENCE_DIR: /work/.t13/outputs/screenshots/purchase
+      AGENTMALL_WORKFLOW_EVIDENCE_DIR: /work/.t13/outputs/screenshots/workflow
+    volumes:
+      - ./.t13/ci-evidence:/work/.t13/outputs
+    shm_size: 256m
+    mem_limit: 4g
+    init: true
+    command: ["python", "scripts/ci/run.py"]
