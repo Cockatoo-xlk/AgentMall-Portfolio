@@ -43,3 +43,33 @@ docker compose -p agentmall-payment-local -f compose.ci.yaml -f compose.payment-
 宿主浏览器打开 http://127.0.0.1:5184 ，OpenAPI为 http://127.0.0.1:8014/docs 。脚本打印的5174是容器内部地址，本覆盖配置映射为宿主5184。数据库是本目录专有 `.t14-p0/demo-postgres-data`，宿主55438；不使用历史55432/55433/55434及现有8001/5174演示。测试项目与本演示项目不得同时占用这组新端口；先完成测试清理再启动。结束后只对agentmall-payment-local执行相同两个-f文件的down，不加-v，不清理他人数据。
 
 模拟付款的浏览器/独立SQL断言见[payment.spec.ts](../frontend/tests/payment.spec.ts)。本轮不录制视频，VIDEO_NOT_RECORDED；Fixture浏览器闭环通过也不等于真实支付或真实模型质量验收。
+
+## T14-P1本地购物车结算
+
+在T14-P1独立worktree使用新项目及新端口，先确认端口归属，不能停止现有演示来腾出端口：
+
+```sh
+docker compose -p agentmall-t14-p1 -f compose.ci.yaml -f compose.cart-local.yaml build runner
+docker compose -p agentmall-t14-p1 -f compose.ci.yaml -f compose.cart-local.yaml up -d --wait postgres
+docker compose -p agentmall-t14-p1 -f compose.ci.yaml -f compose.cart-local.yaml run --rm runner python scripts/demo.py --seconds 900
+```
+
+宿主网页5185、API8015、数据库55439；脚本打印的5174为容器内部地址。PGDATA只属于本worktree的`.t14-p1/postgres-data`，不能与其他目录共享。`compose.cart-local.yaml`只调整本轮资源、端口和本地输出；没有调整全局Docker或远程CI配置。默认Playwright仍使用原端口及浏览器；新增managed模式允许本机完整Chromium headless连接本轮容器服务。
+
+买家登录 → 加入A → 生成提案 → 确认并创建订单：此时订单待支付、购物车已由服务器消费，徽标为0。再独立确认模拟付款，购物车仍为空。若在提案之后修改数量、重新加入A或新增B，订单仍可采用原快照，但购物车保留并显示核对提示。Agent独立商品下单保留已有购物车。提案页恢复出已完成回执时也主动核对购物车，无需先打开订单详情。
+
+页面刷新后需重新登录。查询购物车失败时数量显示待核对，不显示虚假的空车；重读服务端状态，不重复下单。源码及真实SQL断言见[cart_checkout.spec.ts](../frontend/tests/cart_checkout.spec.ts)。保留`VIDEO_NOT_RECORDED`、Fixture模型及合成资金标识。
+
+离线CI可使用相同隔离配置运行runner，命令及分阶段资源限制以[T14-P1验收](evidence/t14-p1/report.md)为准。输出位于`.t14-p1/manual-ci`和`manual-playwright`；已有日志时脚本拒绝覆盖。结束后只对获确认属于本worktree的`agentmall-t14-p1`项目执行相同配置的down，不加-v，不清理他人数据。
+
+
+本轮完整浏览器回归采用下列分离方式：先启动上述独占PostgreSQL，安装锁定的本机前端依赖及项目内Chromium，再运行：
+
+```sh
+npm --prefix frontend ci
+cd frontend
+PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/ms-playwright" npx playwright install chromium
+AGENTMALL_E2E_MANAGED_DEMO=1 NO_PROXY=127.0.0.1,localhost npm run test:e2e
+```
+
+managed模式由Playwright启动并回收固定名称的`agentmall-t14-p1-native-servers`，禁止复用已有网页服务。FastAPI、真实数据库与Checkpoint仍在本轮容器网络内使用受保护的55433；宿主只通过8015/5185访问。1 worker、0 retries、全部场景和断言保留。Mac headless shell最小探针曾渲染0帧并点击超时，改用同版本完整Chromium headless后探针和完整回归通过；没有force点击或关闭交互检查。不要同时运行手动演示和managed测试。此配置须先检查新端口空闲及本机资源，不修改其他演示环境。

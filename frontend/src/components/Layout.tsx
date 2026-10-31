@@ -14,7 +14,7 @@ import { useCart } from '../state/Cart'
 export default function Layout() {
   const { user, logout, expired } = useAuth()
   const { cart, notice, error } = useCart()
-  const count = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+  const count = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? (user?.role === 'buyer' ? '—' : 0)
   const merchant = user?.role === 'merchant'
   return (
     <div className="app-shell">
@@ -47,7 +47,7 @@ export default function Layout() {
               <NavLink to="/cart">
                 <ShoppingBag size={16} />
                 购物车
-                <span className="cart-count" aria-label={`${count} 件商品`}>
+                <span className="cart-count" aria-label={count === '—' ? '购物车数量待核对' : `${count} 件商品`}>
                   {count}
                 </span>
               </NavLink>

@@ -306,6 +306,9 @@ class Harness:
                 "proposal_rows": "SELECT id, actor_id, origin_request_id, action_type, status, "
                 "expires_at, payload_hash, canonical_payload FROM action_proposals "
                 "ORDER BY created_at,id",
+                "cart_rows": "SELECT id,user_id,store_id,version FROM carts ORDER BY id",
+                "cart_item_rows": "SELECT id,cart_id,store_id,product_id,quantity "
+                "FROM cart_items ORDER BY cart_id,product_id",
                 "order_rows": "SELECT * FROM orders ORDER BY created_at,id",
                 "confirmation_rows": "SELECT * FROM confirmations ORDER BY created_at,id",
                 "payment_rows": "SELECT id, order_id, action_id, status, amount_cents, provider "
@@ -365,6 +368,7 @@ class Harness:
         from agentmall.payments.service import MockPaymentAdapter
 
         self.app.state.mock_payment_adapter = MockPaymentAdapter()
+        self.checkout_failure = False
         self.mode, self.offset = "proposal", timedelta(0)
         self.workflow_mode = "purchase"
         self.answer_failure_used = False
@@ -434,6 +438,10 @@ def mount_controls(harness):
         model_config = ConfigDict(extra="forbid")
         product_id: UUID
 
+    class CheckoutFailureRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        enabled: bool
+
     class PaymentModeRequest(BaseModel):
         model_config = ConfigDict(extra="forbid")
         result: Literal["SUCCEEDED", "DECLINED"]
@@ -473,6 +481,11 @@ def mount_controls(harness):
     async def workflow_mode(payload: WorkflowMode):
         harness.workflow_mode = payload.mode
         return {"mode": payload.mode}
+
+    @router.post("/checkout-failure")
+    async def checkout_failure(payload: CheckoutFailureRequest):
+        harness.checkout_failure = payload.enabled
+        return {"enabled": payload.enabled}
 
     @router.post("/payment-mode")
     async def payment_mode(payload: PaymentModeRequest):
@@ -673,6 +686,14 @@ async def isolated_app():
             # Process-local test seam; immutable proposal rows and DB triggers remain intact.
             cleanup.enter_context(patch.object(actions, "database_now", test_clock))
             cleanup.enter_context(patch.object(orders, "database_now", test_clock))
+            order_event = orders.write_order_event
+
+            async def test_order_event(*args, **kwargs):
+                await order_event(*args, **kwargs)
+                if getattr(harness, "checkout_failure", False):
+                    raise RuntimeError("Fixture checkout precommit rollback")
+
+            cleanup.enter_context(patch.object(orders, "write_order_event", test_order_event))
             from agentmall.payments import service as payments
 
             cleanup.enter_context(patch.object(payments, "database_now", test_clock))

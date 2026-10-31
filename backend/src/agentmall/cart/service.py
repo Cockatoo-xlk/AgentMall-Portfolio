@@ -1,10 +1,11 @@
 from uuid import uuid4
 
-from sqlalchemy import func, select
+from pydantic import ValidationError
+from sqlalchemy import delete, func, select
 from sqlalchemy.dialects.postgresql import insert
 
 from agentmall.cart.models import Cart, CartItem
-from agentmall.cart.schemas import CartDTO, CartItemDTO, SetQuantity
+from agentmall.cart.schemas import CartDTO, CartItemDTO, CheckoutCartSource, SetQuantity
 from agentmall.catalog.models import Product
 from agentmall.identity.service import ActorContext, require_buyer
 from agentmall.infra.errors import DomainError, not_found
@@ -119,3 +120,62 @@ async def set_cart_quantity(session, actor: ActorContext, product_id, quantity, 
     cart.version += 1
     await session.flush()
     return await snapshot(session, actor, cart)
+
+
+async def lock_checkout_cart(session, actor, source):
+    """Acquire cart before idempotency/proposal/product locks for cart checkout.
+
+    CartItem INSERT has an implicit product FK KEY SHARE lock. Cart preparation
+    can lock an existing proposal on duplicate-origin recovery. Cart must precede
+    both, while the existing key/proposal/confirmation/sorted-products order stays.
+    """
+    if source is None:
+        return None, None
+    require_buyer(actor)
+    try:
+        source = CheckoutCartSource.model_validate(source)
+    except ValidationError as error:
+        raise DomainError(409, "STALE_PROPOSAL", "购物车来源快照无效，请重新生成提案") from error
+    if source.user_id != actor.user_id or source.store_id != actor.store_id:
+        raise not_found()
+    cart = await session.scalar(
+        select(Cart)
+        .where(
+            Cart.id == source.cart_id,
+            Cart.user_id == actor.user_id,
+            Cart.store_id == actor.store_id,
+        )
+        .with_for_update()
+        .execution_options(populate_existing=True)
+    )
+    return source, cart
+
+
+async def consume_checkout_cart(session, actor, source, items, cart):
+    """Consume an already-locked cart, atomically with the order; replay skips it."""
+    if source is None:
+        return "NOT_APPLICABLE"
+    if cart is None or cart.version != source.version:
+        return "SKIPPED_CART_CHANGED"
+    rows = list(
+        await session.scalars(
+            select(CartItem)
+            .where(CartItem.cart_id == cart.id, CartItem.store_id == actor.store_id)
+            .order_by(CartItem.product_id)
+            .with_for_update()
+        )
+    )
+    quoted = {i["product_id"]: i["quantity"] for i in items}
+    if {str(i.product_id): i.quantity for i in rows} != quoted:
+        return "SKIPPED_CART_CHANGED"
+    # Delete the quoted products only, never unconditionally clear a user's cart.
+    await session.execute(
+        delete(CartItem).where(
+            CartItem.cart_id == cart.id,
+            CartItem.store_id == actor.store_id,
+            CartItem.product_id.in_([i.product_id for i in rows]),
+        )
+    )
+    cart.version += 1
+    await session.flush()
+    return "CONSUMED"

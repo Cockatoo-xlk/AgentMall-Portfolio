@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -35,3 +35,16 @@ class CartDTO(BaseModel):
     store_id: UUID
     version: int
     items: list[CartItemDTO]
+
+
+class CheckoutCartSource(BaseModel):
+    """Server-verified provenance stored inside the immutable proposal hash."""
+
+    model_config = ConfigDict(extra="forbid")
+    cart_id: UUID
+    user_id: UUID
+    store_id: UUID
+    version: Version
+
+
+CartConsumption = Literal["CONSUMED", "SKIPPED_CART_CHANGED", "NOT_APPLICABLE"]

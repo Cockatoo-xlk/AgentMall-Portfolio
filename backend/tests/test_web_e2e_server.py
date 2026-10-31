@@ -330,3 +330,47 @@ async def test_payment_control_expiry_uses_real_db_and_domain_receipt(harness):
     assert sum(p["on_hand"] for p in before["product_rows"]) == sum(
         p["on_hand"] for p in after["product_rows"]
     )
+
+
+async def test_cart_checkout_fault_control_is_keyed_and_atomic(harness):
+    from checkout_helpers import confirm, execute, prepare
+
+    _, client = harness
+    assert (
+        await client.post("/__test/checkout-failure", json={"enabled": True})
+    ).status_code == 403
+    buyer = await login(client)
+    product = (await client.get("/api/v1/products", headers=buyer)).json()["items"][0]["id"]
+    cart = (await client.get("/api/v1/cart", headers=buyer)).json()
+    cart = (
+        await client.put(
+            f"/api/v1/cart/items/{product}",
+            headers=buyer,
+            json={"quantity": 1, "expected_version": cart["version"]},
+        )
+    ).json()
+    p = await prepare(
+        client,
+        buyer,
+        body={
+            "request_id": str(uuid4()),
+            "address_label": "demo_dorm",
+            "cart_id": cart["id"],
+            "expected_cart_version": 1,
+        },
+    )
+    c = await confirm(client, buyer, p)
+    assert (
+        await client.post("/__test/checkout-failure", headers=KEY, json={"enabled": True})
+    ).status_code == 200
+    with pytest.raises(RuntimeError, match="Fixture checkout precommit rollback"):
+        await execute(client, buyer, p, c)
+    after = await facts(client)
+    assert after["orders"] == after["reserved"] == 0
+    assert after["cart_rows"][0]["version"] == 1
+    assert after["cart_item_rows"][0]["quantity"] == 1
+    assert (
+        await client.post("/__test/checkout-failure", headers=KEY, json={"enabled": False})
+    ).status_code == 200
+    assert (await execute(client, buyer, p, c)).status_code == 201
+    assert (await facts(client))["cart_item_rows"] == []

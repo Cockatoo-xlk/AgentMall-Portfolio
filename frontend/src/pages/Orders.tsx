@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { PackageCheck, PackageSearch, ArrowUpRight } from 'lucide-react'
 import { useAuth } from '../state/Auth'
+import { useCart } from '../state/Cart'
 import { useMounted, useResource } from '../state/useResource'
 import { errorMessage } from '../api/client'
 import { addressLabel, formatDate, money, orderStatusLabel } from '../api/format'
@@ -36,6 +37,14 @@ export function OrderDetail() {
 }
 function OrderDetails({ initialOrder, reload }: { initialOrder: Order; reload: () => void }) {
   const [order, setOrder] = useState(initialOrder)
+  const { refreshAfterCheckout } = useCart()
+  const checked = useRef<string | null>(null)
+  useEffect(() => {
+    if (checked.current === order.proposal_id) return
+    checked.current = order.proposal_id
+    // Same page handles normal checkout, recovered receipts and Agent-created orders.
+    void refreshAfterCheckout(order.proposal_id)
+  }, [order.proposal_id, refreshAfterCheckout])
   return (
     <main className="page narrow-page">
       <div className="order-success">

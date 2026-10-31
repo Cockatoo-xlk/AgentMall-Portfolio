@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
+import { API_ORIGIN } from './environment'
 import type { APIRequestContext, Page } from '@playwright/test'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import type { ActionReceipt, MockPaymentReceipt, Order } from '../src/api/types'
-const API = 'http://127.0.0.1:8001/api/v1'
+const API = API_ORIGIN + '/api/v1'
 const controlKey = { 'X-E2E-Key': 'agentmall-local-e2e' }
 const password = 'AgentMall-demo-2026!'
 const evidence = path.resolve(process.env.AGENTMALL_PAYMENT_EVIDENCE_DIR ?? 'test-results/payment')
@@ -47,10 +48,10 @@ async function control(
 ): Promise<Facts> {
   const r =
     data === undefined
-      ? await request.get('http://127.0.0.1:8001/__test' + endpoint, {
+      ? await request.get(API_ORIGIN + '/__test' + endpoint, {
           headers: controlKey,
         })
-      : await request.post('http://127.0.0.1:8001/__test' + endpoint, {
+      : await request.post(API_ORIGIN + '/__test' + endpoint, {
           headers: controlKey,
           data,
         })

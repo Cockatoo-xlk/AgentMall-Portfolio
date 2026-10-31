@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { MemoryRouter } from 'react-router'
 import { AuthProvider } from '../state/Auth'
+import { CartProvider } from '../state/Cart'
 import { OrderDetail } from '../pages/Orders'
 import ConfirmationCard from './ConfirmationCard'
 import type { Order, OrderStatus, Proposal } from '../api/types'
@@ -19,7 +20,7 @@ beforeEach(() => {
 function render(element: React.ReactNode) {
   return renderToStaticMarkup(
     <MemoryRouter>
-      <AuthProvider>{element}</AuthProvider>
+      <AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>
     </MemoryRouter>,
   )
 }

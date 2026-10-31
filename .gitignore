@@ -54,3 +54,6 @@ frontend/playwright-report/
 
 # T14-P0 owned local verification and raw synthetic traces.
 /.t14-p0/
+
+# T14-P1 local test resources and private raw receipts
+/.t14-p1/

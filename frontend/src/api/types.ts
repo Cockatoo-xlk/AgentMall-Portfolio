@@ -61,7 +61,9 @@ interface ReceiptBase {
   currency: 'CNY'
   created_at: string
 }
+export type CartConsumption = 'CONSUMED' | 'SKIPPED_CART_CHANGED' | 'NOT_APPLICABLE'
 export interface Receipt extends ReceiptBase {
+  cart_consumption?: CartConsumption | null
   status: 'PENDING_PAYMENT'
 }
 export interface MockPaymentReceipt extends ReceiptBase {
@@ -114,6 +116,7 @@ interface ProposalBase {
 export interface CheckoutProposal extends ProposalBase {
   action_type: 'CHECKOUT'
   canonical_payload: {
+    cart_source?: { cart_id: string; user_id: string; store_id: string; version: number }
     items: SnapshotItem[]
     total_cents: number
     currency: 'CNY'

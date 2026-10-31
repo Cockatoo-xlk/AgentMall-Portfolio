@@ -1,0 +1,47 @@
+{
+  "source": "Final complete 74-test run, unmodified PNG copies",
+  "fixture": true,
+  "paid_models": false,
+  "video": "VIDEO_NOT_RECORDED",
+  "screenshots": [
+    {
+      "file": "screenshots/cart-consumed-before-payment.png",
+      "sha256": "c7f2fa08bb729bcac42cbee09ead5640ccfef852e3dd0c2241f4f6d9260b702f",
+      "bytes": 131796,
+      "width": 1280,
+      "height": 1550,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "review": "Visually inspected by executor; synthetic IDs/items/address labels only; no credentials or private identity; existing third-party icon notices retained"
+    },
+    {
+      "file": "screenshots/cart-preserved-add_b.png",
+      "sha256": "d1d59f38ae644337f8fc48eeb1843328a6dab8447b3d20c00efb419782515291",
+      "bytes": 112100,
+      "width": 390,
+      "height": 1662,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "review": "Visually inspected by executor; synthetic IDs/items/address labels only; no credentials or private identity; existing third-party icon notices retained"
+    },
+    {
+      "file": "screenshots/cart-read-unknown.png",
+      "sha256": "b498cb1f244fff3245fdbef2ed7d3cf0fd838b51f8428ed55368f6c1da5fd252",
+      "bytes": 132445,
+      "width": 1280,
+      "height": 1550,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "review": "Visually inspected by executor; synthetic IDs/items/address labels only; no credentials or private identity; existing third-party icon notices retained"
+    }
+  ]
+}
