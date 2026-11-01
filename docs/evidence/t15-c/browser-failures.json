@@ -1,0 +1,44 @@
+[
+  {
+    "file": "cart_checkout.spec.ts",
+    "title": "cart checkout: failed cart refresh keeps order success and unknown quantity until GET recovery",
+    "actual_status": "failed",
+    "classification": "ENVIRONMENT_SUSPECT_UNRESOLVED_PER_CASE",
+    "disposition": "retain original evidence; full suite not accepted"
+  },
+  {
+    "file": "playground.spec.ts",
+    "title": "playground: mobile SDK return and replacement keep two independent confirmations",
+    "actual_status": "timedOut",
+    "classification": "ENVIRONMENT_SUSPECT_UNRESOLVED_PER_CASE",
+    "disposition": "retain original evidence; full suite not accepted"
+  },
+  {
+    "file": "playground.spec.ts",
+    "title": "playground: model cannot invent missing user quantity to create checkout",
+    "actual_status": "failed",
+    "classification": "ENVIRONMENT_SUSPECT_UNRESOLVED_PER_CASE",
+    "disposition": "retain original evidence; full suite not accepted"
+  },
+  {
+    "file": "return_replace.spec.ts",
+    "title": "return_replace: refresh requires login and rebuilds known Thread from seq zero",
+    "actual_status": "failed",
+    "classification": "ENVIRONMENT_SUSPECT_UNRESOLVED_PER_CASE",
+    "disposition": "retain original evidence; full suite not accepted"
+  },
+  {
+    "file": "return_replace.spec.ts",
+    "title": "return_replace: unsubmitted Resume retry retains request ID after reads",
+    "actual_status": "timedOut",
+    "classification": "ENVIRONMENT_SUSPECT_UNRESOLVED_PER_CASE",
+    "disposition": "retain original evidence; full suite not accepted"
+  },
+  {
+    "file": "return_replace.spec.ts",
+    "title": "return_replace: two clarification interrupts use distinct requests and new input",
+    "actual_status": "failed",
+    "classification": "ENVIRONMENT_SUSPECT_UNRESOLVED_PER_CASE",
+    "disposition": "retain original evidence; full suite not accepted"
+  }
+]

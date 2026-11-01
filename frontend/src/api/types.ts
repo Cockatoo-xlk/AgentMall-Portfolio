@@ -106,6 +106,7 @@ export type ActionReceipt =
   | ReturnReceipt
   | RefundReceipt
 interface ProposalBase {
+  server_time?: string | null
   proposal_id: string
   payload_hash: string
   schema_version: number

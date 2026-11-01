@@ -1,10 +1,10 @@
 # 独立源码候选的来源与边界
 
-以下导出方式、字节不变和三张截图描述的是R4/R5历史起点。T14-P0/P1是在公开独立历史上的后续功能修订，不能把这些历史起点声明解释为当前候选源码从未变化。
+以下导出方式、字节不变和三张截图描述的是R4/R5历史起点。T14-P0/P1/R1-A与T15-A/C是在公开独立历史上的后续修订，不能把这些历史起点声明解释为当前候选源码从未变化。
 
 来源固定研发Commit：7cabcca55d600341b26972a46de757f26a50f044。文件由已跟踪Git对象白名单导出，未clone、未复制原.git或任何原Git提交历史；本作品版在已审核快照之上建立独立、无父提交的Git根，不携带原Private仓库的提交历史。R4原293文件候选及R5审核副本均为独立阶段产物；R5仅更新许可和审阅文档，不冒称历史原件。
 
-保留完整Backend/Frontend源码、原迁移与锁、原测试、合成Seed/政策、evals Python执行器及数据和冻结Manifest、离线CI及隔离Demo。原生产逻辑/Prompt/Oracle/Tool Schema/任务数据字节不变，没有为公开展示降低测试要求。
+保留完整Backend/Frontend源码、原迁移与锁、原测试、合成Seed/政策、evals Python执行器及数据和冻结Manifest、离线CI及隔离Demo。R4/R5初始导出时生产逻辑/Prompt/Oracle/Tool Schema/任务数据字节不变；此声明仅指初始导出，后续功能修订以各自提交/测试为准，没有为公开展示降低测试要求。
 
 明确保留的历史声明：
 
@@ -25,4 +25,6 @@ Manifest保留原字节、SHA和已过期授权边界，只可作为历史声明
 导出清单、源blob/内容SHA与排除列表保留在Private交付证据；公开副本的独立运行与隐私结果见[结果](docs/RESULTS.md)。权利人已选择项目MIT及版权署名，详见[LICENSE](LICENSE)和[COPYRIGHT](COPYRIGHT.md)。本文记录源码来源、排除范围和R5审核事实；独立公开仓库的实际发布与远程CI状态须以对应GitHub记录核验。
 
 
-T14发布候选保留原公开独立根、已有文档提交、P0模拟付款及P1购物车生命周期提交，并仅追加本轮公开文档和审核材料；没有混入原Private研发历史。当前截图共10张，第三方边界见[声明](THIRD_PARTY_NOTICES.md)。P0/P1原验收及Frozen Manifest保持原样；历史Manifest不被重封存为新源码的Live授权。当前源码对应关系、文件清单和本地验证限制见[T14-R1-A](docs/evidence/t14-r1-a/report.md)，本候选仍等待权利人批准最终SHA后才能上传。
+T14发布候选保留原公开独立根、已有文档提交、P0模拟付款及P1购物车生命周期提交，并仅追加本轮公开文档和审核材料；没有混入原Private研发历史。当前截图共10张，第三方边界见[声明](THIRD_PARTY_NOTICES.md)。P0/P1原验收及Frozen Manifest保持原样；历史Manifest不被重封存为新源码的Live授权。当前源码对应关系、文件清单和本地验证限制见[T14-R1-A](docs/evidence/t14-r1-a/report.md)，后续上传状态以获批SHA和GitHub回执为准，此历史描述不授予上传权限。
+
+T15-C复用上述公开父链，增加服务端提案时钟、展示交互与脱敏B1摘要。B1真实Smoke绑定历史617cdf29和旧源码指纹；当前源码改变后Live=NOT_RUN，未重封存旧Manifest、未复用历史授权。原`.playground`账本、授权及完整Checkpoint不随本作品分发。本轮公开内容审查见[T15-C](docs/evidence/t15-c/publication-audit.json)，新的发布须另行批准准确SHA。

@@ -37,3 +37,4 @@ evals/results/t13-r1-dev-fixture
 # Private Live Playground state, approvals, budgets and local verification
 .playground/
 .t15-a/
+.t15-c/

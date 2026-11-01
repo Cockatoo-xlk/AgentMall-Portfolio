@@ -2,7 +2,7 @@
 
 一个面向 Backend / Agent / AI Application 工程岗位的合成电商作品。React 中文商城连接真实 FastAPI、PostgreSQL 和 LangGraph：用户可以自己选购，也可以让 Agent 检索商品、检查订单与售后事实、准备操作提案，最终由用户独立确认、确定性领域服务提交事务。
 
-**当前本地发布候选包含完整模拟购买闭环：购物车 → 购买提案 → 确认下单 → 独立确认模拟付款 → 查询订单与回执。** 默认模型为明确标记的 Fixture Model，商品、账号、地址及资金均为合成数据，不发生真实扣款，也不需要付费模型 Key。本候选尚未上传；[已发布 main](https://github.com/Cockatoo-xlk/AgentMall-Portfolio) 保持原版本，等待权利人审核最终 SHA。
+**源码包含完整模拟购买闭环：购物车 → 购买提案 → 确认下单 → 独立确认模拟付款 → 查询订单与回执。** 默认模型为明确标记的 Fixture Model，商品、账号、地址及资金均为合成数据，不发生真实扣款，也不需要付费模型 Key。[公开仓库](https://github.com/Cockatoo-xlk/AgentMall-Portfolio)的具体版本、发布状态与远程 CI 以对应 Commit 的回执为准，不能从本文推断。
 
 ## 可以验证的能力
 
@@ -16,7 +16,11 @@
 
 [三项工程案例](docs/ENGINEERING_CASES.md) · [实际架构](docs/ARCHITECTURE.md) · [结果及限制](docs/RESULTS.md) · [3–5分钟演示](docs/DEMO.md)
 
-本地开发版新增[Live Playground 显式入口](docs/LIVE_PLAYGROUND.md)，复用现有持久化工作流和独立人工确认。本轮只验证真实 DeepSeek SDK 的离线 MockTransport 接线；真实付费 Smoke 尚未授权、未运行，默认 Fixture/模型关闭边界保留。
+[Live Playground](docs/LIVE_PLAYGROUND.md)复用同一持久化工作流与独立人工确认。**历史提交 `617cdf29` 已完成一次真实 DeepSeek Multi-Agent 浏览器 Smoke**：Supervisor → Shopping检索 → Order提案 → 本人确认 → 唯一待付款订单，7次Provider回执、50条持久事件，实际平台账单UNKNOWN。[脱敏摘要](docs/evidence/t15-c/b1-public-summary.json)只描述该单次指定场景；本版本新增交互后源码指纹变化，**当前源码 Live 验收为 NOT_RUN**，没有复用旧授权。默认Fixture/模型关闭边界保留。
+
+[运行与恢复手册](docs/REAL_AGENT_DEMO.md) · [3–5分钟录屏脚本](docs/DEMO_RECORDING_SCRIPT.md) · [最终发布审核清单](docs/RELEASE_CHECKLIST.md) · [T15-C本地验收](docs/evidence/t15-c/report.md)
+
+**T15-C本地结果：后端713 passed/14 skipped、Vitest80 passed；Playwright81 passed/6 failed（新增3项均通过），Docker时钟回退已复现，当前发布准入BLOCKED。** 未放宽JWT/价格Guard或增加skip/retry；须修复环境后完成浏览器回归，不能称已全面通过。详见[T15-C回执](docs/evidence/t15-c/report.md)。
 
 [T15-A 本地离线回归](docs/evidence/t15-a/report.md)：后端711 passed/14 skipped、Vitest71 passed、Playwright84 passed；均为分阶段本地结果，不能代替真实 DeepSeek 或远程 CI 验证。
 
@@ -49,14 +53,14 @@ docker compose -p agentmall-portfolio -f compose.ci.yaml run --rm runner python 
 
 [T14-P1证据及数据库终态](docs/evidence/t14-p1/report.md)保留成功与失败；[本轮发布前核对](docs/evidence/t14-r1-a/report.md)复用经哈希验证的回执。14项跳过仅13个真实 BGE 权重依赖和1个未公开私有 Live 原件比较，核心事务、T09恢复/SIGKILL、T10 Trace、T11并发和T12预算/权限/Oracle没有扩大跳过。
 
-本机约1.91GiB、无swap的 Docker 引擎曾在单容器完整流程中 OOM、退出143，因此**不声称单容器整套 CI 通过**。最终完整检查集合分阶段完成；这不是新的 GitHub Ubuntu amd64 远程 CI 回执。该候选尚未运行远程 CI，既有发布版与 Private RC 的成绩另见[结果索引](docs/RESULTS.md)，不能代替当前 SHA 的远程结果。
+本机约1.91GiB、无swap的 Docker 引擎曾在单容器完整流程中 OOM、退出143，因此**不声称单容器整套 CI 通过**。最终完整检查集合分阶段完成；这不是新的 GitHub Ubuntu amd64 远程 CI 回执。上述历史候选和T15-C本地结果均不替代新版远程 CI，既有发布版与 Private RC 的成绩另见[结果索引](docs/RESULTS.md)，不能代替当前 SHA 的远程结果。
 
 ## 已知限制与许可
 
 旧 P0 演示 runner 在 P1 期间结束，原因 **UNKNOWN**；用户确认没有手动关闭，本轮也没有向它发出停止/重启命令，不能据此保证共享引擎运行时完全未受影响。四个旧 PostgreSQL 容器及受保护文件核对一致，完整限制保留在 P1 报告。
 
-两轮真实 DeepSeek Pilot 使用同一开发任务集：Single **1/5→5/5**，Multi **4/5→4/5**；第二轮 Multi B2 仍失败/PARTIAL，原始中断记录保留。43/53请求及冻结估算不等于平台实际账单（**UNKNOWN**）；原40题已参与开发，不是独立 Holdout，不能据此推导泛化提升或架构总体优劣。L6后没有第三次 Live，本候选没有新的付费模型实验；历史 Frozen Manifest 没有重封存来描述新源码。
+两轮真实 DeepSeek Pilot 使用同一开发任务集：Single **1/5→5/5**，Multi **4/5→4/5**；第二轮 Multi B2 仍失败/PARTIAL，原始中断记录保留。43/53请求及冻结估算不等于平台实际账单（**UNKNOWN**）；原40题已参与开发，不是独立 Holdout，不能据此推导泛化提升或架构总体优劣。L6后没有第三次开发集Pilot；历史B1只有一次指定Smoke；T15-C无新付费请求，历史 Frozen Manifest 没有重封存来描述新源码。
 
 进程内 Journal 不保证任意 SIGKILL 下外部模型调用 exactly-once；本地和远程 CI 都不是生产负载、SLA或容灾证明。没有真实支付/退款、云部署或生产验收，`VIDEO_NOT_RECORDED`。源码和文档不代替个人贡献说明，AI辅助范围需按事实披露。
 
-项目原创内容采用[MIT](LICENSE)，Copyright (c) 2026 Cockatoo-xlk；[权利人决定](docs/LICENSE_DECISION.md)、[COPYRIGHT](COPYRIGHT.md)和[第三方声明](THIRD_PARTY_NOTICES.md)说明归属。公开作品版建立独立 Git 根，不携带原 Private 研发历史、原始 Live 账本、授权记录或模型权重；[候选来源与排除边界](SNAPSHOT.md)仍保留。未来发布二进制、镜像或模型需另行审查。本阶段仅本地候选准备，上传、Actions、Release及部署均需各自明确授权。
+项目原创内容采用[MIT](LICENSE)，Copyright (c) 2026 Cockatoo-xlk；[权利人决定](docs/LICENSE_DECISION.md)、[COPYRIGHT](COPYRIGHT.md)和[第三方声明](THIRD_PARTY_NOTICES.md)说明归属。公开作品版建立独立 Git 根，不携带原 Private 研发历史、原始 Live 账本、授权记录或模型权重；[候选来源与排除边界](SNAPSHOT.md)仍保留。未来发布二进制、镜像或模型需另行审查。源码交付与上传、Actions、Release、部署相互独立；这些远程操作均需各自明确授权。

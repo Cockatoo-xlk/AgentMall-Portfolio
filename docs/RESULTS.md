@@ -25,3 +25,9 @@
 ## R5最终审核副本
 
 R5新的独占数据库和无缓存构建已完成完整离线CI：后端642passed/14skipped、Vitest38、Playwright43，总流程退出0；[本轮回执](evidence/r5-verification.json)绑定实际测试内容树，不能当作新的远程CI。R5阶段的项目源码范围已通过本地人工审核门禁（PUBLIC_SNAPSHOT_READY_FOR_OWNER_APPROVAL），项目MIT已由权利人选择；R4与原Private远程成绩继续保留各自身份。该阶段性审核不替代作品版后续的GitHub发布及CI回执。
+
+## T15-B1历史真实运行与T15-C候选
+
+[经过审阅的B1汇总](evidence/t15-c/b1-public-summary.json)：历史617cdf29，真实deepseek-flash单场景7请求，12,048输入/1,109输出，费用估算上界¥0.032968而实际账单UNKNOWN；用户本人确认后唯一PENDING_PAYMENT订单、付款0、持久事件50、Checkpoint done。没有Single/Multi公平质量比较或泛化结论。
+
+[T15-C验收](evidence/t15-c/report.md)是新源码的本地离线回归及发布审计。源码指纹变化后Live=NOT_RUN，远程CI=NOT_RUN；旧B1授权、账本与历史Manifest保持不变。

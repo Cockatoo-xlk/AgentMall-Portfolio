@@ -1,3 +1,5 @@
+本页保留历史Fixture演示步骤；当前录制请先读[Real Agent手册](REAL_AGENT_DEMO.md)和[3–5分钟脚本](DEMO_RECORDING_SCRIPT.md)。T15-B1仅在旧617cdf29提交完成一次真实场景，新版本Live仍NOT_RUN；VIDEO_NOT_RECORDED。
+
 # 3–5分钟合成业务演示
 
 按[首页](../README.md)启动隔离Compose及 `scripts/demo.py --prepare-return --seconds 900`。这是Fixture Model + 真实FastAPI/PostgreSQL/Checkpoint，准备订单由脚本独立确认并模拟付款，不是模型自主支付。
@@ -24,7 +26,7 @@
 
 ## T14-P0本地购物闭环
 
-本节仅适用于包含T14-P0改动的本地开发分支，不代表公开main已经发布这些改动。可沿用上述工作流创建订单，然后在同一个订单详情页付款；普通购物车也使用完全相同的详情页。
+本节仅适用于包含T14-P0改动的本地开发分支，公开main是否包含这些改动应以具体提交为准。可沿用上述工作流创建订单，然后在同一个订单详情页付款；普通购物车也使用完全相同的详情页。
 
 1. buyer1登录 → 商品加入购物车 → “生成购买提案” → 阅读购买快照 → “确认并创建订单”。订单此时是PENDING_PAYMENT，尚未付款。
 2. 在订单详情点击醒目的“模拟付款”。核对服务端支付快照中的订单编号、金额、CNY、有效期及提案状态。

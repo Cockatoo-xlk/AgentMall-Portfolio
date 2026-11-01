@@ -73,7 +73,19 @@ export class ApiClient {
         throw new ApiError(response.status, code, response.status >= 500 && method !== 'GET')
       }
       try {
-        return (await response.json()) as T
+        const data = await response.json()
+        const serverTime = response.headers.get('X-Server-Time')
+        // Fresh GET metadata stays outside canonical snapshot and idempotent response JSON.
+        if (
+          method === 'GET' &&
+          /^\/proposals\/[^/?]+$/.test(path) &&
+          serverTime &&
+          data &&
+          typeof data === 'object' &&
+          !Array.isArray(data)
+        )
+          return { ...data, server_time: serverTime } as T
+        return data as T
       } catch {
         throw new ApiError(0, 'INVALID_RESPONSE', method !== 'GET')
       }

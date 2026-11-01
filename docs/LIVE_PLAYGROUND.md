@@ -1,6 +1,6 @@
 # 本机 Live Playground
 
-T15-A 接入真实 `ChatDeepSeek` SDK；本阶段只执行 MockTransport 离线验证，**没有真实 DeepSeek 请求，LIVE_AGENT_VERIFIED=NOT_RUN**。现有 Fixture 演示和普通 FastAPI 启动不自动变成 Live。打开 `/agent/workspace`，服务端状态区分 Fixture、MODEL_DISABLED、SDK MockTransport 和 Live；前端环境变量不能授予 Live 身份。
+T15-A接入真实 `ChatDeepSeek` SDK，最初只执行MockTransport离线验证；之后历史提交617cdf29完成[T15-B1单次真实Smoke](evidence/t15-c/b1-public-summary.json)。本版本源码已变化，**当前源码LIVE_AGENT_VERIFIED=NOT_RUN**；不能复用已结束的B1许可。现有 Fixture 演示和普通 FastAPI 启动不自动变成 Live。打开 `/agent/workspace`，服务端状态区分 Fixture、MODEL_DISABLED、SDK MockTransport 和 Live；前端环境变量不能授予 Live 身份。
 
 ## 边界与调用链
 
@@ -35,9 +35,9 @@ PYTHONPATH=. backend/.venv/bin/python -m agentmall.playground --describe
 
 仅输出模型、建议上限、源码指纹及 NOT_GRANTED，不生成授权、Live 账本或请求。无配置、未显式启用、旧 T12 授权、过期价格、源码变化都会 NO_GO。`--check` 只检查本地策略/授权/数据库标记，不加载 Key；BGE 可加载性、Key 和客户端检查仍属于实际启动门禁。
 
-## 首次真实启动的准备步骤（需另行批准，不是本轮执行回执）
+## 历史T15-A启动方案（保留原实现边界，新运行须遵循当前手册）
 
-详细场景和费用见 [首次 Smoke 待批准方案](evidence/t15-a/live-smoke-proposal.md)。目前没有有效新授权、Live 环境、正式 Live 账本或当前目录的已验证 BGE 安装；不能直接声称该入口已经真实运行。
+详细场景和费用见 [首次 Smoke 待批准方案](evidence/t15-a/live-smoke-proposal.md)。原T15-A时此计划未执行；其后B0/B1在独立环境完成真实验证。本版本或新的工作副本没有可复用的B1授权，实际新环境/新价格/新策略必须重新准入。操作说明见[当前安全运行与恢复手册](REAL_AGENT_DEMO.md)。
 
 1. 检查 Docker 内存余量、55441/8017/5187 端口和项目身份。不得停止已有演示或修改全局 Docker 资源；余量不足就停止。独立项目固定 `agentmall-playground-local`，数据仅 `.playground/postgres-data`。
 2. 在本工作副本使用锁定的 embedding extra 和经 `evals/data/embedding_manifest.json` 核验的公开 BGE Revision `7999e1d3359715c523056ef9478215996d62a620`。模型只读挂载 `.models`；缺失不会自动下载或改用 Fixture。构建镜像或分发模型另受第三方许可证要求约束。
@@ -74,3 +74,5 @@ AGENTMALL_API_TARGET=http://127.0.0.1:8017 npm run dev -- --port 5187 --strictPo
 MockTransport 测试使用真实 SDK、真实 FastAPI、PG17、领域服务及官方 Checkpointer；模型响应是合成 HTTP fixture，不能据此证明模型能力。该入口的默认完整回归继续使用原 Fixture，只有显式 `/__test/sdk-mode` 切到标明 MOCK_TRANSPORT 的真实 SDK。外网连接和真实 Key 读取被测试边界阻断。
 
 原冻结评测与两轮 Live 证据不变；它们绑定旧源码，不能作为 T15-A 新源码的付费授权或 Live 成绩。最终命令、数量、失败和资源证据见 [T15-A 报告](evidence/t15-a/report.md)。
+
+T15-C新增GET响应头X-Server-Time（客户端展示为server_time）及提案倒计时，未改变不可变购买快照或领域确认事务。[当前手册](REAL_AGENT_DEMO.md)优先解释新版本的停止、授权和恢复；本节历史命令不能替代新价格/源码/环境检查。

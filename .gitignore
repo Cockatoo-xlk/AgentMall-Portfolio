@@ -61,3 +61,8 @@ frontend/playwright-report/
 # Private Live Playground state, approvals, budgets and local verification
 .playground/
 .t15-a/
+
+# T15-C isolated offline validation and private evidence audits
+/.t15-c/
+.superpowers/
+/test-results/
