@@ -1,0 +1,54 @@
+{
+  "status": "PASS_FOR_DECLARED_SOURCE_SCOPE",
+  "project_license": "MIT",
+  "copyright_holder": "Cockatoo-xlk",
+  "source_rights": "OWNER_CONFIRMED_IN_PRIOR_AUTHORIZATION_CONTEXT",
+  "license_unchanged_sha256": "60a188615aeca76765ce4e87f9768ff8e47c1f2d16d4286be7513750d3f05b06",
+  "public_author": {
+    "name": "Cockatoo-xlk",
+    "email": "239146463+Cockatoo-xlk@users.noreply.github.com"
+  },
+  "identity_approval": "Existing user approval; no new license/identity inferred",
+  "third_party_notice_sha256": "7138fcffddbf87f9c6099eb65210e7dd4e8cf7464d9fe6518ca3538f04230629",
+  "lucide_feather_complete_license_sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+  "dependencies_changed": false,
+  "third_party_original_licenses_preserved": [
+    "ISC/Feather MIT",
+    "MPL-2.0",
+    "CC-BY-4.0",
+    "LGPL-3.0-only"
+  ],
+  "distribution": "Source, synthetic data/policy/tests and reviewed public evidence/images only",
+  "binaries_models_containers_installations": "NOT_DISTRIBUTED; future separate review required",
+  "images": {
+    "total": 10,
+    "historical_base": 3,
+    "p0": 4,
+    "p1": 3,
+    "seven_new_pngs_rechecked": "screenshot-audit.json",
+    "historical_images_not_rewritten": true
+  },
+  "private_local_evidence": [
+    "Original Private Live ledgers/authorizations/Episodes/checkpoints are not in public Git history",
+    "This worktree .t13/t14-r1-a contains ignored raw logs, audit helpers/tool binaries and caches; not staged"
+  ],
+  "reviewed_public_evidence": [
+    "P0/P1 whitelisted synthetic database facts, command/receipt hashes, reviewed PNGs",
+    "This gate redacted findings and bounded review metadata"
+  ],
+  "synthetic_test_data": [
+    "Public buyer1/buyer2/merchant and AgentMall-demo-2026! are disposable demo accounts, not real personal credentials",
+    "Workflow/Compose DB password and JWT key are explicit ephemeral local/CI synthetic values, not production secrets",
+    "E2E_KEY is a public control label, not access control for deployment"
+  ],
+  "sensitive_or_unknown_in_upload_scope": 0,
+  "test_control_boundary": {
+    "test_executable_only": "backend/tests/web_e2e_server.py; create_app does not mount __test",
+    "network": "Loopback middleware, CLI host validation and public test key; owned agentmall_test/test_/cp_ only",
+    "offline": "Provider key-name filtering and non-loopback transport/socket rejection; no paid model constructed",
+    "risk": "Never expose this demo/test harness or reuse public credentials on a public interface/production database",
+    "existing_tests": "test_normal_application_has_no_test_routes, loopback/key and rollback controls are included in unchanged P1 full suite"
+  },
+  "review_scope_limit": "Pattern and manual source/data/image review plus owner rights confirmation; not a legal warranty or proof against all undiscoverable secrets",
+  "real_local_resource_metadata": "Opaque historical AgentMall-owned container IDs/project labels are reviewed local execution-resource references, not synthetic executions, host hardware/MAC identifiers, credentials or authorization tokens. They remain in historical proofs with their original hashes."
+}

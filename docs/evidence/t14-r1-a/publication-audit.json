@@ -1,0 +1,36 @@
+{
+  "status": "PUBLIC_RELEASE_CANDIDATE_READY_FOR_OWNER_APPROVAL",
+  "approved_upload": false,
+  "checks": {
+    "history": "PASS",
+    "license": "PASS_FOR_DECLARED_SOURCE_SCOPE",
+    "docs": "PASS",
+    "ci": "STATIC_COMPATIBLE_REMOTE_CI_NOT_RUN",
+    "protected_files": "PROTECTED_FILES_HISTORY_CONFIG_PRESERVED"
+  },
+  "p0_p1_audited_changed_paths": 70,
+  "p0_p1_historical_file_versions": 100,
+  "reachable_p1_blobs_audited": 382,
+  "runtime_or_ci_modifications_this_task": false,
+  "existing_file_revisions": [
+    "README.md",
+    "COPYRIGHT.md",
+    "THIRD_PARTY_NOTICES.md",
+    "SNAPSHOT.md"
+  ],
+  "remaining_gates": [
+    "Owner approval of exact final commit SHA",
+    "New authorization for one ordinary push to existing main and automatic Actions",
+    "Actual Ubuntu amd64 CI outcome; not run here"
+  ],
+  "known_limitations": [
+    "P1 single-container OOM/143, split verification only",
+    "P0 demo exit UNKNOWN",
+    "Private raw-ref digest differs from older P1 baseline; internal metadata observed; exact old diff/writer UNKNOWN; source/object closure/index preserved",
+    "Same-dev-set Live pilots, no independent holdout, actual billing UNKNOWN",
+    "No real payment, production/SLA/cloud deployment validation; no video"
+  ],
+  "snapshot_hash_strategy": "Public payload inventory excludes this gate directory; full all-committed-file inventory and commit/tree SHA recorded locally after commit, outside the hashed tree.",
+  "paid_requests": 0,
+  "github_write_operations": []
+}

@@ -1,0 +1,113 @@
+{
+  "changed_png_versions": [
+    {
+      "revision": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "file": "docs/evidence/t14-p0/screenshots/payment-confirmation.png",
+      "blob": "67c235f6161e0ffc7a62a03425f7af8692063b83",
+      "bytes": 167908,
+      "sha256": "a188d2fae1752f59ac1268a7e2bdd7b182b16ad29d2a9346519751b0d2d59d5c",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "width": 1280,
+      "height": 1841,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    },
+    {
+      "revision": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "file": "docs/evidence/t14-p0/screenshots/payment-mobile-succeeded.png",
+      "blob": "6749b59beb43cc913b01fbc9d37762f81bc2e37a",
+      "bytes": 162550,
+      "sha256": "e29494e10d9cca73bb90a5862c37b98284383c6dc5edbd6545d1d225ec3a3864",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "width": 390,
+      "height": 2245,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    },
+    {
+      "revision": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "file": "docs/evidence/t14-p0/screenshots/payment-outcome-unknown.png",
+      "blob": "0c362d163ce57b8394b85bf6440bf0e33c5cd6cb",
+      "bytes": 202987,
+      "sha256": "c5ed4342223d0b13bfb262c43dd43604df2270b3541216567bffd7f933cdb11c",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "width": 1280,
+      "height": 2070,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    },
+    {
+      "revision": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "file": "docs/evidence/t14-p0/screenshots/payment-succeeded.png",
+      "blob": "46ef436fc6e5fc77abc14d62da71a84ee6b053d1",
+      "bytes": 193916,
+      "sha256": "1ad3d7b741bdcaef3708236fb90fa38ed11985dd18172764599b7ed06dcbae0c",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "width": 1280,
+      "height": 2050,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    },
+    {
+      "revision": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "file": "docs/evidence/t14-p1/screenshots/cart-consumed-before-payment.png",
+      "blob": "5be6288e2c7c283584cb4300c7a407bd35b7acb0",
+      "bytes": 131796,
+      "sha256": "c7f2fa08bb729bcac42cbee09ead5640ccfef852e3dd0c2241f4f6d9260b702f",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "width": 1280,
+      "height": 1550,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    },
+    {
+      "revision": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "file": "docs/evidence/t14-p1/screenshots/cart-preserved-add_b.png",
+      "blob": "1eb9d23050e72909d3470b264655f4303559d0c3",
+      "bytes": 112100,
+      "sha256": "d1d59f38ae644337f8fc48eeb1843328a6dab8447b3d20c00efb419782515291",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "width": 390,
+      "height": 1662,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    },
+    {
+      "revision": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "file": "docs/evidence/t14-p1/screenshots/cart-read-unknown.png",
+      "blob": "549459bf196fd1a1f31b3823e88633388716b469",
+      "bytes": 132445,
+      "sha256": "b498cb1f244fff3245fdbef2ed7d3cf0fd838b51f8428ed55368f6c1da5fd252",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "width": 1280,
+      "height": 1550,
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    }
+  ],
+  "privacy_review": "PASS_VISUALLY_REVIEWED_7_PNGS",
+  "source_only_no_new_third_party_dependencies": true,
+  "reviewed_content": "Synthetic product, demo_dorm label and random test order/action/payment IDs; Fixture notices visible. No credentials, real names/addresses, personal email or workstation path.",
+  "historical_caption": "P0 payment images precede P1 cart-consumption fix; P0 badge1 is historical, not a claim about current P1 behavior."
+}
