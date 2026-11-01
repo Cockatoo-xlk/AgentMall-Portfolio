@@ -1,0 +1,96 @@
+{
+  "private": {
+    "head": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33",
+    "tracked_files_checked": 2074,
+    "changed_files": [],
+    "status": "CLEAN",
+    "git_config_unchanged": true,
+    "old_private_objects_and_index_unchanged": true,
+    "normal_refs_stable_since_observation": true,
+    "normal_packed_and_loose_ref_files_predate_p1_start": true,
+    "raw_refs_vs_older_p1_baseline": {
+      "match": false,
+      "older_digest": "80bf5da1a9ae8e08016a6986e3ca299faa1206a2ac7e65abd510f208d07cfae6",
+      "observed_digest": "7b116ca98597349fc6f69525b3c1f4c5cd05133c3fc45f5ae0aa7fd7f761e56d",
+      "classification": "OLDER_BASELINE_INTERNAL_REF_DRIFT_DISCLOSED",
+      "newer_codex_internal_ref_files_before_r1_baseline": 2,
+      "normal_refs_observed": 22,
+      "exact_old_textual_diff": "UNKNOWN: only the older digest was retained",
+      "writer_attribution": "UNKNOWN; namespace is refs/codex/turn-diffs",
+      "rewritten_or_deleted_for_audit": false,
+      "not_a_claim_of_all_raw_refs_byte_identity": true
+    }
+  },
+  "public": {
+    "head": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "tracked_files_checked": 297,
+    "changed_files": [],
+    "status": "CLEAN",
+    "git_config_unchanged": true
+  },
+  "p0": {
+    "head": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+    "tracked_files_checked": 321,
+    "changed_files": [],
+    "status": "CLEAN",
+    "git_config_unchanged": true
+  },
+  "p1": {
+    "head": "d81de4adc125c9ce019434fb338a52fe5282070c",
+    "tracked_files_checked": 346,
+    "changed_files": [],
+    "status": "CLEAN",
+    "git_config_unchanged": true
+  },
+  "r5": {
+    "files": 297,
+    "content_tree_sha256": "8da9a5c18674520dab92195c279a5faf86c7f710fafe7575697ee0309e687508",
+    "unchanged": true
+  },
+  "original_protected_groups": {
+    "original_203": {
+      "checked": 203,
+      "unchanged": true
+    },
+    "expanded_1479": {
+      "checked": 1479,
+      "unchanged": true
+    },
+    "protected_files": {
+      "checked": 1595,
+      "unchanged": true
+    }
+  },
+  "existing_containers": [
+    {
+      "name": "/agentmall-payment-local-runner-run-e6669786aad5",
+      "state": "ABSENT_AS_KNOWN_AFTER_P1",
+      "cause": "UNKNOWN",
+      "owner_did_not_manually_stop": true,
+      "stopped_or_restarted_by_r1a": false
+    },
+    {
+      "name": "/agentmall-payment-local-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    },
+    {
+      "name": "/agentmall-portfolio-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    },
+    {
+      "name": "/agentmall-rag-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    },
+    {
+      "name": "/agentmall-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    }
+  ],
+  "r1a_containers_or_schemas_started": false,
+  "paid_model_calls": 0,
+  "status": "PROTECTED_FILES_HISTORY_CONFIG_PRESERVED"
+}

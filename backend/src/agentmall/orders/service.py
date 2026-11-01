@@ -15,6 +15,7 @@ from agentmall.actions.service import (
     owned_proposal,
     payload_hash,
 )
+from agentmall.cart.service import consume_checkout_cart, lock_checkout_cart
 from agentmall.catalog.models import Product
 from agentmall.identity.service import require_buyer
 from agentmall.infra.audit import write_order_event
@@ -68,7 +69,12 @@ async def execute_confirmed_action(
 
 async def _execute_checkout(session, actor, action_id, confirmation_id, idempotency_key):
     # Authorization precedes replay. Neither an opaque confirmation id nor a key is authority.
-    await owned_proposal(session, actor, action_id)
+    initial = await owned_proposal(session, actor, action_id)
+    if payload_hash(initial.canonical_payload) != initial.payload_hash:
+        raise conflict("STALE_PROPOSAL")
+    source, cart = await lock_checkout_cart(
+        session, actor, initial.canonical_payload.get("cart_source")
+    )
     digest = payload_hash(
         {
             "schema_version": 1,
@@ -133,9 +139,10 @@ async def _execute_checkout(session, actor, action_id, confirmation_id, idempote
             .with_for_update()
         )
     }
+    cart_consumption = await consume_checkout_cart(session, actor, source, items, cart)
     now = await database_now(
         session
-    )  # Actual time AFTER lock waits, never transaction-start now().
+    )  # Actual time AFTER product AND cart lock waits, never transaction-start now().
     if now >= proposal.expires_at:
         raise conflict("STALE_PROPOSAL")
     for item in items:
@@ -190,6 +197,7 @@ async def _execute_checkout(session, actor, action_id, confirmation_id, idempote
     confirmation.consumed_at = now
     confirmation.result_ref = order.id
     receipt = ActionReceipt(
+        cart_consumption=cart_consumption,
         action_id=proposal.id,
         resource_id=order.id,
         order_id=order.id,

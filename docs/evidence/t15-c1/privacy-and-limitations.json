@@ -1,0 +1,12 @@
+{
+  "real_provider_keys_loaded": false,
+  "raw_jwt_tokens_logged": false,
+  "cookies_logged": false,
+  "observer_only_records": "numeric iat/nbf/exp and exact validator now/leeway/outcome; no sub,auth header,signature,key or raw body",
+  "preparation_issue": "A private admission helper Settings validation error emitted a truncated fragment of its newly generated disposable synthetic JWT signing string. No real key/JWT was involved; that test container was removed and string was not reused. Raw failure log remains0600 and ignored, never copied into public evidence. Helper fixed by reading non-secret issuer/audience defaults only.",
+  "old_failures_preserved": true,
+  "five_historical_root_causes_not_individually_proven": true,
+  "shared_old_vm_not_fixed": true,
+  "no_new_live_quality_claim": true,
+  "no_remote_ci_claim": true
+}

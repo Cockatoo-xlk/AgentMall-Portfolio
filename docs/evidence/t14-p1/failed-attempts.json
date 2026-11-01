@@ -1,0 +1,237 @@
+{
+  "all_recorded_attempts": "command-receipts.json",
+  "wrong_image_run": {
+    "receipt": {
+      "name": "full-offline-ci",
+      "command": [
+        "docker",
+        "compose",
+        "-p",
+        "agentmall-t14-p1",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t14-p1/compose-owned.yaml",
+        "run",
+        "--name",
+        "agentmall-t14-p1-final-run",
+        "--rm",
+        "runner"
+      ],
+      "exit_code": 143,
+      "started_unix": 1793469358.829081,
+      "elapsed_seconds": 191.85,
+      "log": ".t14-p1/full-offline-ci.log",
+      "log_sha256": "e18f2cbee7d956720ca19ef2b2ba41fe9393af50efc644406581782b693ab3d7"
+    },
+    "status": "STOPPED_NOT_P1_EVIDENCE",
+    "archive": ".t14-p1/wrong-image-ci/"
+  },
+  "verified_image_container_ci": {
+    "receipt": {
+      "name": "full-offline-ci-verified-image",
+      "command": [
+        "docker",
+        "compose",
+        "-p",
+        "agentmall-t14-p1",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t14-p1/compose-owned.yaml",
+        "run",
+        "--name",
+        "agentmall-t14-p1-final-verified",
+        "--rm",
+        "runner"
+      ],
+      "exit_code": 143,
+      "started_unix": 1793469621.930766,
+      "elapsed_seconds": 352.372,
+      "log": ".t14-p1/full-offline-ci-verified-image.log",
+      "log_sha256": "7c61f7179b5011c5c87ede99a092d134adb9c092bf67717959fd265c05d5580c"
+    },
+    "resources": {
+      "command_exit": 143,
+      "samples": 468,
+      "actual_limits": {
+        "memory_bytes": 1342177280,
+        "shm_bytes": 268435456,
+        "image_id": "sha256:92198d01042bbb849c1f67c31d997c80c718e963749d969a2286a98d077e359c",
+        "node_options": [
+          "NODE_OPTIONS=--max-old-space-size=512"
+        ]
+      },
+      "guard": {
+        "reason": "OWN_OOM_OBSERVED",
+        "memory_current_bytes": 901193728,
+        "available_kib": 391828,
+        "oom_kill": 1
+      },
+      "resource_changes_during_run": false,
+      "resource_log_sha256": "58de770ddc8648ad52a9ea483bd80d22e69286009795f76ad7c98a62fcd0310f"
+    },
+    "status": "Backend/static passed; browser incomplete due own OOM; not whole-command success"
+  },
+  "fresh_container_browser": {
+    "receipt": {
+      "name": "delivery-playwright",
+      "command": [
+        "docker",
+        "compose",
+        "-p",
+        "agentmall-t14-p1",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t14-p1/compose-owned.yaml",
+        "run",
+        "--name",
+        "agentmall-t14-p1-browser-final",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && npm --prefix frontend run test:e2e"
+      ],
+      "exit_code": 143,
+      "started_unix": 1793470882.3550541,
+      "elapsed_seconds": 26.476,
+      "log": ".t14-p1/delivery-playwright.log",
+      "log_sha256": "cdc9b2ef24746d44bc0c715333f4b10e19fd1501ae5ca1276487d402f1ac777b"
+    },
+    "resources": {
+      "command_exit": 143,
+      "samples": 32,
+      "actual_limits": {
+        "memory_bytes": 1342177280,
+        "shm_bytes": 268435456,
+        "image_id": "sha256:439ef687302ce2124cbed07a658df89645b9a49e55148c8c37c18de2ef5c7dff",
+        "node_options": [
+          "NODE_OPTIONS=--max-old-space-size=512"
+        ]
+      },
+      "guard": {
+        "reason": "OWN_OOM_OBSERVED",
+        "memory_current_bytes": 1060593664,
+        "available_kib": 202652,
+        "oom_kill": 1
+      },
+      "resource_changes_during_run": false,
+      "resource_log_sha256": "ae97e23a1fb4ee5657eab1151168c565b5b0806fd43fad214daf569ab587f794"
+    },
+    "status": "OOM_STOPPED_NOT_FULL_PASS"
+  },
+  "native_shell": {
+    "receipt": {
+      "name": "native-playwright-full",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_MANAGED_DEMO=1",
+        "NO_PROXY=127.0.0.1,localhost",
+        "no_proxy=127.0.0.1,localhost",
+        "HF_HUB_OFFLINE=1",
+        "TRANSFORMERS_OFFLINE=1",
+        "PLAYWRIGHT_BROWSERS_PATH=<LOCAL_WORKTREE>/frontend/.cache/ms-playwright",
+        "AGENTMALL_CART_EVIDENCE_DIR=<LOCAL_WORKTREE>/.t14-p1/native-evidence/cart",
+        "AGENTMALL_PAYMENT_EVIDENCE_DIR=<LOCAL_WORKTREE>/.t14-p1/native-evidence/payment",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=<LOCAL_WORKTREE>/.t14-p1/native-evidence/workflow",
+        "AGENTMALL_EVIDENCE_DIR=<LOCAL_WORKTREE>/.t14-p1/native-evidence/purchase",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "--output",
+        "<LOCAL_WORKTREE>/.t14-p1/native-playwright"
+      ],
+      "exit_code": 130,
+      "started_unix": 1793473067.128614,
+      "elapsed_seconds": 75.951,
+      "log": ".t14-p1/native-playwright-full.log",
+      "log_sha256": "2ee300d94e6925efefcdb4ddbfa68ec813d72db623ca7d67724bcc036af6454e"
+    },
+    "stats": {
+      "startTime": "2026-10-31T18:57:47.410Z",
+      "duration": 75637.12999999999,
+      "expected": 0,
+      "skipped": 72,
+      "unexpected": 2,
+      "flaky": 0
+    },
+    "status": "Stopped after login click/frame failure; not business success or full regression",
+    "minimal_probe": {
+      "name": "native-browser-raf-probe",
+      "command": [
+        "env",
+        "PLAYWRIGHT_BROWSERS_PATH=<LOCAL_WORKTREE>/frontend/.cache/ms-playwright",
+        "node",
+        ".t14-p1/native-browser-probe.cjs"
+      ],
+      "exit_code": 1,
+      "started_unix": 1793473164.483649,
+      "elapsed_seconds": 6.761,
+      "log": ".t14-p1/native-browser-raf-probe.log",
+      "log_sha256": "b763019943950323f6f82e12cdb407842e66f8b25c4d6080ec2e5d37749a1b8a"
+    },
+    "observed_frames": 0,
+    "probe_click": "TIMEOUT",
+    "full_chromium_probe": {
+      "name": "native-browser-full-raf-probe",
+      "command": [
+        "env",
+        "PLAYWRIGHT_BROWSERS_PATH=<LOCAL_WORKTREE>/frontend/.cache/ms-playwright",
+        "node",
+        ".t14-p1/native-browser-full-probe.cjs"
+      ],
+      "exit_code": 0,
+      "started_unix": 1793473188.198806,
+      "elapsed_seconds": 4.147,
+      "log": ".t14-p1/native-browser-full-raf-probe.log",
+      "log_sha256": "ea9b4443ad32866eb8698e70dedfc1919c5f8e0fbe57be72bf7fec26c5584187"
+    },
+    "full_chromium_observed_frames": 70,
+    "full_chromium_click": "PASS"
+  },
+  "native_checkpoint_bootstrap": {
+    "receipt": {
+      "name": "native-bootstrap",
+      "command": [
+        "backend/.venv/bin/python",
+        ".t14-p1/native-bootstrap.py"
+      ],
+      "exit_code": 1,
+      "started_unix": 1793472452.855617,
+      "elapsed_seconds": 19.869,
+      "log": ".t14-p1/native-bootstrap.log",
+      "log_sha256": "82221b16c32274cc413eef3bc772a58d12a9c73a8685323dd8ae5dc1cf8f7457"
+    },
+    "reason": "Existing Checkpoint guard rejects host55439; guard left unchanged. Final backend remains container loopback55433"
+  },
+  "node_low_heap": "128/256 MiB compiler OOM failures retained; final own Node budget512, no global settings changed",
+  "partial_original_resource_samples": {
+    "source": "Observed tool output before probe-helper filename reuse",
+    "original_resource_samples": 21,
+    "original_full_resource_log_available": false,
+    "limitation": "Local probe helper reused its sample output name on bounded run; original command log and receipt remain intact. Only the following previously observed final two samples are recoverable. This does not affect any P0 evidence.",
+    "samples": [
+      {
+        "time": 1793466887.3145301,
+        "memory_current_bytes": 963526656,
+        "oom_kill": 0,
+        "shm_used_kib": 0
+      },
+      {
+        "time": 1793466888.030029,
+        "memory_current_bytes": 1007984640,
+        "oom_kill": 1,
+        "shm_used_kib": 0
+      }
+    ],
+    "interpretation": "Ancestor/VM OOM killed a process in the unchanged-image runner during Target crashed; cgroup max/oom counters remained0, Docker oom events0."
+  },
+  "resource_sample_loss": "Initial 21-sample resource file accidentally overwritten by helper filename reuse; exact observed last2 excerpts retained. Original command/log retained; full original samples unavailable. No claim that every raw sample survives.",
+  "review_red_green": "review.md",
+  "protection_audit_harness_correction": "First script looked for standalone P0 facts only under .t14-p0. Original curator points to .t13/ci-evidence/t14-payment-demo/demo-facts.json; same original hash matches. Failed receipt retained; no original file modified."
+}

@@ -1,0 +1,17 @@
+{
+  "repository": "Cockatoo-xlk/AgentMall-Portfolio",
+  "repository_id": 1440814247,
+  "visibility": "public",
+  "default_branch": "main",
+  "metadata_read_method": "GitHub connector get_repo (read only)",
+  "initial_main_sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+  "main_read_method": "git ls-remote --exit-code origin refs/heads/main; connector branch search omits SHA",
+  "git_remote_modified": false,
+  "github_writes": false,
+  "remote_ci_triggered": false,
+  "authorization": "NOT_GRANTED_FOR_PUSH_OR_ACTIONS",
+  "observed_date": "2026-11-01 Asia/Shanghai",
+  "latest_main_sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+  "latest_observed_at": "2026-11-01T13:07:00.878608+08:00",
+  "main_unchanged": true
+}

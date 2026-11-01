@@ -1,0 +1,358 @@
+{
+  "private": {
+    "checked_files": 2074,
+    "changed_files": [],
+    "head": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33",
+    "expected_head": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33",
+    "refs_sha256": "80bf5da1a9ae8e08016a6986e3ca299faa1206a2ac7e65abd510f208d07cfae6",
+    "objects_sha256": "a55c367cc118709693fc23a08c7ec06a7a53fa7bba43fa5f85d26a014a29a23d",
+    "config_sha256": "6ca7fe121ddd928e89ceaff177e16319341f3ba4c2f920d91c9469e2d21e56bf",
+    "index_sha256": "a1f267cea6ab8e3d15d92825668fee69e073e92baca12fd2b34fc7f4317387f5"
+  },
+  "published": {
+    "checked_files": 297,
+    "changed_files": [],
+    "head": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "expected_head": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "main": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf"
+  },
+  "p0": {
+    "checked_files": 321,
+    "changed_files": [],
+    "head": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+    "expected_head": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+  },
+  "protected_groups": {
+    "original_203": {
+      "checked": 203,
+      "changed": []
+    },
+    "expanded_1479": {
+      "checked": 1479,
+      "changed": []
+    },
+    "protected_files": {
+      "checked": 1595,
+      "changed": []
+    }
+  },
+  "r5": {
+    "files": 297,
+    "tree_sha256": "8da9a5c18674520dab92195c279a5faf86c7f710fafe7575697ee0309e687508",
+    "unchanged": true
+  },
+  "p0_hash_bound_raw_evidence": {
+    "command_logs": [
+      {
+        "file": ".t14-p0/demo-browser-smoke-diagnosed.log",
+        "sha256": "960cede0a79903d6562e224cfba4b25b5699a4761130552f42ad3821cba2fe45"
+      },
+      {
+        "file": ".t14-p0/demo-browser-smoke.log",
+        "sha256": "f63ea0b9ee95acbca7c037059c76bfd70fa8778a54b2e031804e1d5f31be693b"
+      },
+      {
+        "file": ".t14-p0/demo-compose-config.log",
+        "sha256": "6c5a963c116a68d1a5ccbdc5ccdf45d156c326bdee5af672fcb386504ba0064d"
+      },
+      {
+        "file": ".t14-p0/demo-entry-smoke-controlled.log",
+        "sha256": "6409854161b59bf84edb74efb921cad83b1613fa90d2f5690d5aa13b1f299c45"
+      },
+      {
+        "file": ".t14-p0/demo-entry-smoke-diagnosed.log",
+        "sha256": "c444a8bb4f808243183257ca67fdd3e071ad40460b1922736a329fba31586d1c"
+      },
+      {
+        "file": ".t14-p0/demo-entry-smoke.log",
+        "sha256": "b804875347f8bdaaf5ad213791a9033697e6983ba2e242e62d2061b09464ed8e"
+      },
+      {
+        "file": ".t14-p0/demo-image-build.log",
+        "sha256": "604a917c683ebdd34ad2e6820391e5297801f33fda55a4faa71f16b2ec174c7a"
+      },
+      {
+        "file": ".t14-p0/demo-postgres-up.log",
+        "sha256": "d77d2ae16607616f23cd09c3071f380f7a4aadc327b8229e0bea5f8920f9e805"
+      },
+      {
+        "file": ".t14-p0/demo-project-down.log",
+        "sha256": "33e4b9b7fceda43ddff5cb9b44fb5e26ef568d63484804605bc993a91e53796a"
+      },
+      {
+        "file": ".t14-p0/final-compose-config.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "file": ".t14-p0/final-delivery-check.log",
+        "sha256": "3ed27f9ad1f3652ff8d7e0a8f889da28d5910a0e5e028fd2405f508f285ad78e"
+      },
+      {
+        "file": ".t14-p0/final-diff-check.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "file": ".t14-p0/final-image-build.log",
+        "sha256": "e18e7a166f8961fb4c7df5f8f8d78a099756258423c40cf83bb6edab94334e64"
+      },
+      {
+        "file": ".t14-p0/final-reviewed-image-build.log",
+        "sha256": "d3dac9037b58615b667b01cd36280e10de0f6bfdc31b305ab4ad71204a84a5b0"
+      },
+      {
+        "file": ".t14-p0/final-staged-diff-check.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "file": ".t14-p0/format-current-green.log",
+        "sha256": "b29c9bb7eee2f7e3ed1c0ae5cbcc936cffb8ed78f5a461f826df61ae9f145bc4"
+      },
+      {
+        "file": ".t14-p0/frontend-lint-green.log",
+        "sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+      },
+      {
+        "file": ".t14-p0/full-offline-ci-final.log",
+        "sha256": "a612e06ed5b036f6744c2e98803fc5e7b58a1dfe6f4de4eb9dbafb496b9babce"
+      },
+      {
+        "file": ".t14-p0/full-offline-ci.log",
+        "sha256": "d4f141005bfcf8b2f2114060f1cc3fe40a3017727d676232d373ffd92e22c1d9"
+      },
+      {
+        "file": ".t14-p0/image-baseline-build.log",
+        "sha256": "6774327b6ad316b097d84b101dd5addee641a88203375242c58530a75f5e4681"
+      },
+      {
+        "file": ".t14-p0/lint-initial.log",
+        "sha256": "e1d98e4086370926362f52fb72a616133b8a73f29bd5cec6a82c3e683763a5c8"
+      },
+      {
+        "file": ".t14-p0/payment-causal-read-green.log",
+        "sha256": "27a647174f4ed3e92fff8a33e58a9d9b3f03b5895233976c939a53c121022ddc"
+      },
+      {
+        "file": ".t14-p0/payment-causal-read-red.log",
+        "sha256": "1012ad097a1db02092b760e0446ded512d0a2568dc0293fc4e7c2f9a200f9608"
+      },
+      {
+        "file": ".t14-p0/payment-e2e-green.log",
+        "sha256": "17dc06e0af787471396e0df3f4b7c7cba439c397b09513d40fb1839ea61941de"
+      },
+      {
+        "file": ".t14-p0/payment-e2e-initial.log",
+        "sha256": "498e4610418b2ac35c768a3e1d54d006eec3a6699d65b6f3f070540444d77d80"
+      },
+      {
+        "file": ".t14-p0/payment-e2e-red.log",
+        "sha256": "8b8c24abdf72cf6f19d4ece1db87063ea7788f01d59e520cca6ef3e5401f4d2d"
+      },
+      {
+        "file": ".t14-p0/payment-harness-green.log",
+        "sha256": "72d62a618b1fa90907c320342d1943bd78884128ade5229aa7251febad9ee22e"
+      },
+      {
+        "file": ".t14-p0/payment-harness-red.log",
+        "sha256": "44f9dcc258960a571ddcf5b0172d9319d019d5b6dadd43db54db45444ac5d99b"
+      },
+      {
+        "file": ".t14-p0/payment-refinement-tests.log",
+        "sha256": "ced23288123444d84e18054eb3d9f63b1971b09d5bd2056380db9bbf1c5788f8"
+      },
+      {
+        "file": ".t14-p0/payment-storage-red.log",
+        "sha256": "6f04519bc61345070428cd079b72b1df7208a1ea65eb0ac61c5559b59c9f9957"
+      },
+      {
+        "file": ".t14-p0/payment-vitest-green.log",
+        "sha256": "182fe9183ea045ab55c438f51831f98cf8f10625edd1cdafdea77875c249301e"
+      },
+      {
+        "file": ".t14-p0/postgres-up.log",
+        "sha256": "8c62f4b36f3eb94d10367889d466eb1cf8cbfca125f1ecb15718d80f8cb074fa"
+      },
+      {
+        "file": ".t14-p0/review-recovery-green.log",
+        "sha256": "ad01edcdf7e4c133bafa968181e46761d32f44f9dc27c1a8b3d5d744ce3d55ec"
+      },
+      {
+        "file": ".t14-p0/review-recovery-red.log",
+        "sha256": "dfb04745c00b826e6b9673fc10b382141ae1c66b92b2aed7f4794615fdcae052"
+      },
+      {
+        "file": ".t14-p0/ruff-current-green.log",
+        "sha256": "a074eb7ab206e449af609e9193471edde30a90b2c36f5df3958c9f5d4370d33c"
+      },
+      {
+        "file": ".t14-p0/ruff-format-feature.log",
+        "sha256": "37ab2093964d33945ba2afdc1e39c76b4175538ddf7918e6f4b5c80ecdecf9ff"
+      },
+      {
+        "file": ".t14-p0/ruff-wrap-final-green.log",
+        "sha256": "b9a87885e6a6ee0c214779a8e6cf8af05d6ed5a75e6377175a1d0464f0192966"
+      },
+      {
+        "file": ".t14-p0/test-project-down.log",
+        "sha256": "fedcf6413181688194dcc2c5991ee4d78338a08bc54dd5327e042c3ead84f5d4"
+      },
+      {
+        "file": ".t14-p0/typecheck-initial.log",
+        "sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+      },
+      {
+        "file": ".t14-p0/vitest-baseline-container.log",
+        "sha256": "ac2bfa8049794eafbaae442a547aa2ed62280219db4b37ac04ef3cd354effdfc"
+      },
+      {
+        "file": ".t14-p0/vitest-initial-green.log",
+        "sha256": "50e1ba8da1eaf7d77a6d2102d67a73a5471f9c107eb8f735b8b5438fbc3cd193"
+      },
+      {
+        "file": ".t14-p0/vitest-red.log",
+        "sha256": "b11f8fee98af7f27273b78803a3e9c7200cf6f41f14d481ddc3c9f759cb47082"
+      }
+    ],
+    "full_ci_steps": [
+      {
+        "file": ".t14-p0/final-ci/bootstrap.txt",
+        "sha256": "e7b948b1bdd2cf042835d52dea2cb9a93e8b3650002b84d4d320372c598e2da3"
+      },
+      {
+        "file": ".t14-p0/final-ci/ruff.txt",
+        "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+      },
+      {
+        "file": ".t14-p0/final-ci/format.txt",
+        "sha256": "a8974443d12f9736423157c869f658ab1b4fc18c2ff99f12bf2cb579052f9e5b"
+      },
+      {
+        "file": ".t14-p0/final-ci/pytest.txt",
+        "sha256": "d693b7826ee59d2b54307e63a1993659c6f652682457b1be4e4ca8d9738826a8"
+      },
+      {
+        "file": ".t14-p0/final-ci/typecheck.txt",
+        "sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+      },
+      {
+        "file": ".t14-p0/final-ci/lint.txt",
+        "sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+      },
+      {
+        "file": ".t14-p0/final-ci/build.txt",
+        "sha256": "7b86efc8d816266311923cde1de7fbc7a30b25e5ca3ccd039e7adfb926cff23b"
+      },
+      {
+        "file": ".t14-p0/final-ci/vitest.txt",
+        "sha256": "156b53a8ef5e87dd6da89aa0b31911708af47fc040d8cb36ad5a53758c3ca05e"
+      },
+      {
+        "file": ".t14-p0/final-ci/playwright.txt",
+        "sha256": "3fcb6a17d875fd36f8e8cba7b104265ec11368aca97956d00d1957ddbdbad53c"
+      }
+    ],
+    "database_facts": [
+      {
+        "name": "agent-order-payment-succeeded",
+        "file": ".t14-p0/final-ci/screenshots/payment/agent-order-payment-succeeded.json",
+        "sha256": "47c81b73ca904f54115752679362c2823cc99eb61d7494be2a94a5ec99e6a864"
+      },
+      {
+        "name": "payment-confirmation",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-confirmation.json",
+        "sha256": "9af50c999e7dc1492cdd762e36ffdd7c94eee895a0f287202f5bb94c6b20a5c7"
+      },
+      {
+        "name": "payment-declined",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-declined.json",
+        "sha256": "58c3d6c716d92af65c36aeae339b0b1b9fcbf2662a568e97888300215694cff2"
+      },
+      {
+        "name": "payment-expired",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-expired.json",
+        "sha256": "c6292f53899598871096e3cddfd85f53b1d2e6aa891177e31ec3020d98544c25"
+      },
+      {
+        "name": "payment-lost-response-recovered",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-lost-response-recovered.json",
+        "sha256": "2e0efe7ef8bfbc422d733f4ace03fe45e8c77a58ba9c585dae9b5ad410eefe11"
+      },
+      {
+        "name": "payment-mobile-confirmation",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-mobile-confirmation.json",
+        "sha256": "a926bff6f2e6bce22228c9282012b3748a67ddfae6cbfedf804846814cb9c194"
+      },
+      {
+        "name": "payment-mobile-succeeded",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-mobile-succeeded.json",
+        "sha256": "7d9bab7f9fc3116a844cad38954836df0b77ce0a6815838ced245fbf146d273f"
+      },
+      {
+        "name": "payment-outcome-reconciled",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-outcome-reconciled.json",
+        "sha256": "70f75d1c1d465a1b09a73aaccc822417058d55ee142c89b6755dd0e0535440b3"
+      },
+      {
+        "name": "payment-outcome-unknown",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-outcome-reconciled.json",
+        "sha256": "70f75d1c1d465a1b09a73aaccc822417058d55ee142c89b6755dd0e0535440b3"
+      },
+      {
+        "name": "payment-reject-recovered",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-reject-recovered.json",
+        "sha256": "7ea0098b5b11a6755b3185d8fe9533ec8e104a326cccf19c59177e872377ecc4"
+      },
+      {
+        "name": "payment-storage-failure-recovered",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-storage-failure-recovered.json",
+        "sha256": "f13780d9d2e04d11092cdc16263ebf2eda9d4e2275851699bfbf9c2ef44cc364"
+      },
+      {
+        "name": "payment-succeeded",
+        "file": ".t14-p0/final-ci/screenshots/payment/payment-succeeded.json",
+        "sha256": "7de891cb22734db6472e9c5c4c4772a0c43bf320155af06381c8a846b41f4795"
+      },
+      {
+        "name": "standalone_demo",
+        "file": ".t13/ci-evidence/t14-payment-demo/demo-facts.json",
+        "sha256": "fd4e02d0e892513c2392410a6c881df03a407a9c303a1cd3292192df8c4c18b1"
+      }
+    ],
+    "scope": "Only previously hash-bound raw files; unbound raw files are not retrospectively claimed byte-verified"
+  },
+  "preexisting_containers": [
+    {
+      "id": "a34d54075d49bacf98f766888667041d69e214247b72944f9a04ee9e2735a6b0",
+      "name": "/agentmall-payment-local-runner-run-e6669786aad5",
+      "state": "ABSENT",
+      "exit_cause": "UNKNOWN",
+      "owner_reply": "Owner did not manually stop it",
+      "no_task_command_targeted_it": true
+    },
+    {
+      "id": "02598fba8ff9c335d0ecb5fd8710bf4b251a8cd00a50b0c73cf5ae1845ee6ca8",
+      "name": "/agentmall-payment-local-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    },
+    {
+      "id": "82e6c6c63c5b10dbfe43eb71e19b88b24c8496e796ec220c45828c950c74a6bf",
+      "name": "/agentmall-portfolio-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    },
+    {
+      "id": "e6ebeb01e6879bc3b38bf421b3b91a9550410e2152af5ee32b5f4ab1940e64a3",
+      "name": "/agentmall-rag-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    },
+    {
+      "id": "7d11054c039ac63901495d0cffbfa86d00cc7e880fe9b50a2aa860bce5b08c2c",
+      "name": "/agentmall-postgres-1",
+      "identity_started_at_mounts_ports_unchanged": true,
+      "running": true
+    }
+  ],
+  "file_integrity": "PASS",
+  "runtime_integrity": "LIMITATION_P0_RUNNER_EXIT_UNKNOWN"
+}

@@ -1,0 +1,55 @@
+{
+  "test_database_before_down": {
+    "owned_schemas": 0,
+    "other_sessions": 0,
+    "advisory_locks": 0
+  },
+  "demo_database_before_down": {
+    "owned_schemas": 0,
+    "other_sessions": 0,
+    "advisory_locks": 0
+  },
+  "owned_containers_remaining": 0,
+  "owned_compose_projects_stopped": [
+    "agentmall-t14-p0",
+    "agentmall-payment-local"
+  ],
+  "down_exit_codes": [
+    0,
+    0
+  ],
+  "owned_pgdata": {
+    "removed": [
+      "postgres-data",
+      "demo-postgres-data"
+    ],
+    "owned_containers_remaining": 0,
+    "original_volumes_touched": false
+  },
+  "existing_containers": [
+    {
+      "name": "/agentmall-portfolio-postgres-1",
+      "id": "82e6c6c63c5b10dbfe43eb71e19b88b24c8496e796ec220c45828c950c74a6bf",
+      "running": true,
+      "unchanged": true
+    },
+    {
+      "name": "/agentmall-rag-postgres-1",
+      "id": "e6ebeb01e6879bc3b38bf421b3b91a9550410e2152af5ee32b5f4ab1940e64a3",
+      "running": true,
+      "unchanged": true
+    },
+    {
+      "name": "/agentmall-postgres-1",
+      "id": "7d11054c039ac63901495d0cffbfa86d00cc7e880fe9b50a2aa860bce5b08c2c",
+      "running": true,
+      "unchanged": true
+    }
+  ],
+  "original_volumes_reset": false,
+  "raw_evidence_retained_ignored": [
+    ".t14-p0/",
+    ".t13/ci-evidence/"
+  ],
+  "source_worktree_retained_for_owner": true
+}

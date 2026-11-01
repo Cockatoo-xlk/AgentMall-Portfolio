@@ -4,7 +4,7 @@ AgentMall原创源码、文档和合成项目素材由权利人Cockatoo-xlk选�
 
 ## 本次实际分发的材料
 
-本地最终审核目录仅包含项目源码、合成数据/政策、迁移、测试、依赖锁、构建配方、说明文档、脱敏摘要和三张Fixture截图。原始Git历史、Live账本/授权/对话、私有Checkpoint、本地.env、模型权重、node_modules、site-packages、dist、浏览器和Docker镜像层不在目录中。已逐文件清点；没有把未来构建产物纳入本次源码分发审查。
+本源码分发范围包含项目源码、合成数据/政策、迁移、测试、依赖锁、构建配方、说明文档、脱敏摘要及15张经审查的合成UI截图（R5三张、P0四张、P1三张Fixture，以及T15-A五张SDK MockTransport离线截图）。可达Git历史来自公开独立根及必要修订，不包含原Private研发历史。Live原始账本/授权/对话、私有Checkpoint、本地.env、模型权重、node_modules、site-packages、dist、浏览器和Docker镜像层不在本源码分发文件中。没有把未来构建产物纳入本次源码分发审查。
 
 | 组件或素材 | 目录中的实际内容与许可处理 |
 |---|---|
@@ -20,3 +20,18 @@ AgentMall原创源码、文档和合成项目素材由权利人Cockatoo-xlk选�
 本次`THIRD_PARTY_SOURCE_SCOPE_REVIEW=PASS`，仅指已清点源码/文档/截图范围及保留声明。包锁元数据并非全平台合规证明：R4未安装的可选GPU/平台包可能仍标UNKNOWN，当前没有其文件被分发；未来新增vendoring、dist、wheel、镜像或模型权重时重新审核，不能沿用本次结论。
 
 [本轮分发范围证据](docs/evidence/r5-third-party-scope.json)记录R5源码审核时的实际文件、第三方许可哈希和许可范围。
+
+## T14-P0本地补充材料
+
+T14-P0增加四张[模拟付款Fixture截图](docs/evidence/t14-p0/screenshots.json)，均来自合成数据、真实本地服务与Fake Model测试，逐张进行了隐私及PNG元数据检查。页面中的Lucide/Feather图标继续保留上表完整许可及署名；截图没有被当成上游图标的自有授权。本轮未新增第三方包、权重、分发镜像或安装目录；R5三张历史截图及其证据保持原样。
+
+
+## T14-P1及本地发布候选补充
+
+T14-P1另有三张[购物车Fixture截图](docs/evidence/t14-p1/screenshots.json)，包括待支付时已消费购物车、变化后保留商品的移动页面及查询失败的未知数量提示。本轮重新逐张检查P0/P1七张PNG，没有附带文本或EXIF元数据、真实身份/地址、凭据或模型原始对话。P0四张属于修复购物车之前的历史验收，不能用其旧徽标状态声称当前P1行为；原图和哈希保持不变。
+
+这些截图继续使用项目合成商品插画与已有Lucide/Feather图标，原完整许可/署名文件保持原样。本轮未新增产品依赖或第三方素材，也未复制第三方源码、模型权重、wheel、浏览器或构建镜像进入拟提交树。项目内安装的审计工具及依赖缓存留在忽略目录，不属于本次源码分发。当前范围仍为SOURCE_ONLY；未来分发安装后的Psycopg、Lightning CSS、caniuse-lite数据、镜像或二进制时分别重审相应LGPL/MPL/CC-BY及捆绑许可义务。
+
+## T15源码与截图范围
+
+T15-A五张[SDK MockTransport截图](docs/evidence/t15-a/screenshots.json)展示离线合成Provider响应、独立人工确认、恢复和超时UNKNOWN，并非真实DeepSeek调用截图。T15-D1核验全部15张及其可达历史Blob，检查PNG元数据并逐张审阅可见内容；未发现Key、JWT、个人路径、真实身份或未经审阅的第三方图片。旧截图保持原字节与哈希，不把历史界面当成最新Live验收。[本阶段许可与截图审查](docs/evidence/t15-d1/license-and-images.json)保留具体范围。Python/Node锁文件及原Lucide/Feather完整许可未变，没有新增第三方分发物。

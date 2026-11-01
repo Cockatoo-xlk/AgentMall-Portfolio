@@ -1,0 +1,17 @@
+{
+  "node": "v24.21.0",
+  "npm": "11.19.0",
+  "python": "Python 3.12.10",
+  "packages": {
+    "langchain-deepseek": "1.1.1",
+    "langchain-openai": "1.7.3",
+    "openai": "3.41.0",
+    "httpx": "0.28.1",
+    "langgraph-checkpoint-postgres": "3.2.0",
+    "sqlalchemy": "2.0.55",
+    "psycopg": "3.3.6",
+    "ruff": "0.17.3"
+  },
+  "backend_platform": "Linux Docker ARM64, Python3.12.10",
+  "browser_platform": "macOS ARM64, Chromium1248 headless full channel"
+}

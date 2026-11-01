@@ -1,0 +1,376 @@
+{
+  "principle": "Classify each separately; never attribute all6 to environment, never invent missing JWT fields",
+  "original_attribution": [
+    {
+      "case_id": "C1-H1",
+      "title": "cart checkout: failed cart refresh keeps order success and unknown quantity until GET recovery",
+      "file": "cart_checkout.spec.ts",
+      "old_start": "2026-11-01T12:29:49.856Z",
+      "old_duration_ms": 5904,
+      "old_http_status": "NOT_RECORDED; UI auth-expired implies401 via ApiClient source",
+      "old_error_code": "NOT_RECORDED; current handler uses UNAUTHORIZED for401",
+      "old_jwt_iat_nbf_exp": "NOT_RECORDED",
+      "old_sign_verify_times": "NOT_RECORDED",
+      "classification": "JWT时钟异常（同用例自然复现确认）",
+      "subclassification": "Authentication-invalid UI, JWT time anomaly suspected but exact original validator exception absent",
+      "not_proven": [
+        "No browser/driver-specific error evidenced",
+        "No invalid business effect evidenced; cannot prove historical per-request root cause"
+      ],
+      "business_database_final": {
+        "orders": 0,
+        "proposals": 0,
+        "confirmations": 0,
+        "reserved": 0,
+        "events": 0,
+        "checkpoint_rows": 0,
+        "real_model_calls": 0,
+        "provider_http_requests": 0,
+        "run_states": [],
+        "payment_states": [],
+        "order_states": [],
+        "case_states": [],
+        "refund_count": 0,
+        "cart_versions": [
+          1
+        ],
+        "cart_item_count": 1
+      },
+      "clock_steps_during_case": [
+        {
+          "time": "2026-11-01T20:29:50+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2074ms off)"
+        }
+      ],
+      "same_case_rerun_policy": "fresh diagnostic observations separately labeled, never backfilled as historical measurements",
+      "stable_full_suite_result": {
+        "title": "cart checkout: failed cart refresh keeps order success and unknown quantity until GET recovery",
+        "file": "cart_checkout.spec.ts",
+        "status": "expected",
+        "attempts": 1,
+        "actual": [
+          "passed"
+        ]
+      },
+      "old_fact_evidence_sha256": "fe3d7527d21f7ec705b47f910d385368a01e59f14ffb82fa521f75b1edb0aa3f",
+      "classification_limit": "Original old-run JWT timestamps absent; values below belong to C1 observed reproduction, not retrofilled historical data",
+      "observed_reproduction": {
+        "http_status": 401,
+        "error_type": "ImmatureSignatureError",
+        "api_error_code": "UNAUTHORIZED inferred from unchanged handler; error body not captured in observer",
+        "issued_claims": {
+          "iat": 1793539662.037904,
+          "exp": 1793540562.037904
+        },
+        "validated_claims": {
+          "iat": 1793539662,
+          "exp": 1793540562
+        },
+        "validation_now": 1793539660.596954,
+        "iat_minus_validation_seconds": 1.403045892715454,
+        "leeway": 0,
+        "endpoint": "/api/v1/cart",
+        "business": "No order/quote/confirmation in original failure; cart remains intact"
+      }
+    },
+    {
+      "case_id": "C1-H2",
+      "title": "playground: mobile SDK return and replacement keep two independent confirmations",
+      "file": "playground.spec.ts",
+      "old_start": "2026-11-01T12:30:59.667Z",
+      "old_duration_ms": 30070,
+      "old_http_status": "NOT_RECORDED; UI auth-expired implies401 via ApiClient source",
+      "old_error_code": "NOT_RECORDED; current handler uses UNAUTHORIZED for401",
+      "old_jwt_iat_nbf_exp": "NOT_RECORDED",
+      "old_sign_verify_times": "NOT_RECORDED",
+      "classification": "原因未确定（历史单请求证据不足；同源码稳定环境通过）",
+      "subclassification": "Authentication-invalid UI, JWT time anomaly suspected but exact original validator exception absent",
+      "not_proven": [
+        "No browser/driver-specific error evidenced",
+        "No invalid business effect evidenced; cannot prove historical per-request root cause"
+      ],
+      "business_database_final": {
+        "orders": 1,
+        "proposals": 2,
+        "confirmations": 2,
+        "reserved": 0,
+        "events": 4,
+        "checkpoint_rows": 0,
+        "real_model_calls": 0,
+        "provider_http_requests": 0,
+        "run_states": [],
+        "payment_states": [
+          "SUCCEEDED"
+        ],
+        "order_states": [
+          "DELIVERED"
+        ],
+        "case_states": [],
+        "refund_count": 0,
+        "cart_versions": [
+          0
+        ],
+        "cart_item_count": 0
+      },
+      "clock_steps_during_case": [
+        {
+          "time": "2026-11-01T20:31:00+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2076ms off)"
+        },
+        {
+          "time": "2026-11-01T20:31:10+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2076ms off)"
+        },
+        {
+          "time": "2026-11-01T20:31:20+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2076ms off)"
+        }
+      ],
+      "same_case_rerun_policy": "fresh diagnostic observations separately labeled, never backfilled as historical measurements",
+      "stable_full_suite_result": {
+        "title": "playground: mobile SDK return and replacement keep two independent confirmations",
+        "file": "playground.spec.ts",
+        "status": "expected",
+        "attempts": 1,
+        "actual": [
+          "passed"
+        ]
+      },
+      "old_fact_evidence_sha256": "a7746d4e5e50d631e04feefc70f5951e31cff4c211496707f9722bee927a7765",
+      "observed_reproduction": "This case passed in observed old-env diagnostic; do not use it to approve the known-unstable VM"
+    },
+    {
+      "case_id": "C1-H3",
+      "title": "playground: model cannot invent missing user quantity to create checkout",
+      "file": "playground.spec.ts",
+      "old_start": "2026-11-01T12:31:29.980Z",
+      "old_duration_ms": 472,
+      "old_http_status": 500,
+      "old_error_code": "INTERNAL_ERROR (captured response), PRICE_EXPIRED (server traceback)",
+      "old_jwt_iat_nbf_exp": "NOT_RECORDED",
+      "old_sign_verify_times": "NOT_RECORDED",
+      "classification": "原因未确定（历史单请求证据不足；同源码稳定环境通过）",
+      "subclassification": "Price guard initialization error; clock rollback correlation, no historical price-age measurement",
+      "not_proven": [
+        "No browser/driver-specific error evidenced",
+        "No invalid business effect evidenced; cannot prove historical per-request root cause"
+      ],
+      "business_database_final": {
+        "orders": 0,
+        "proposals": 0,
+        "confirmations": 0,
+        "reserved": 0,
+        "events": 0,
+        "checkpoint_rows": 0,
+        "real_model_calls": 0,
+        "provider_http_requests": 0,
+        "run_states": [],
+        "payment_states": [],
+        "order_states": [],
+        "case_states": [],
+        "refund_count": 0,
+        "cart_versions": [],
+        "cart_item_count": 0
+      },
+      "clock_steps_during_case": [
+        {
+          "time": "2026-11-01T20:31:30+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2080ms off)"
+        }
+      ],
+      "same_case_rerun_policy": "fresh diagnostic observations separately labeled, never backfilled as historical measurements",
+      "stable_full_suite_result": {
+        "title": "playground: model cannot invent missing user quantity to create checkout",
+        "file": "playground.spec.ts",
+        "status": "expected",
+        "attempts": 1,
+        "actual": [
+          "passed"
+        ]
+      },
+      "old_fact_evidence_sha256": "6c4e9379eb65f7ed74c523545ea12e8e1b8bb9c9a48edfbc2a758cbceba1359d",
+      "observed_reproduction": "This case passed in observed old-env diagnostic; do not use it to approve the known-unstable VM"
+    },
+    {
+      "case_id": "C1-H4",
+      "title": "return_replace: refresh requires login and rebuilds known Thread from seq zero",
+      "file": "return_replace.spec.ts",
+      "old_start": "2026-11-01T12:32:08.858Z",
+      "old_duration_ms": 6625,
+      "old_http_status": "NOT_RECORDED; UI auth-expired implies401 via ApiClient source",
+      "old_error_code": "NOT_RECORDED; current handler uses UNAUTHORIZED for401",
+      "old_jwt_iat_nbf_exp": "NOT_RECORDED",
+      "old_sign_verify_times": "NOT_RECORDED",
+      "classification": "原因未确定（历史单请求证据不足；同源码稳定环境通过）",
+      "subclassification": "Authentication-invalid UI, JWT time anomaly suspected but exact original validator exception absent",
+      "not_proven": [
+        "No browser/driver-specific error evidenced",
+        "No invalid business effect evidenced; cannot prove historical per-request root cause"
+      ],
+      "business_database_final": {
+        "orders": 1,
+        "proposals": 1,
+        "confirmations": 1,
+        "reserved": 1,
+        "events": 1,
+        "checkpoint_rows": 27,
+        "real_model_calls": 0,
+        "provider_http_requests": 0,
+        "run_states": [
+          "COMPLETED"
+        ],
+        "payment_states": [],
+        "order_states": [
+          "PENDING_PAYMENT"
+        ],
+        "case_states": [],
+        "refund_count": 0,
+        "cart_versions": [
+          0
+        ],
+        "cart_item_count": 0
+      },
+      "clock_steps_during_case": [
+        {
+          "time": "2026-11-01T20:32:10+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2078ms off)"
+        }
+      ],
+      "same_case_rerun_policy": "fresh diagnostic observations separately labeled, never backfilled as historical measurements",
+      "stable_full_suite_result": {
+        "title": "return_replace: refresh requires login and rebuilds known Thread from seq zero",
+        "file": "return_replace.spec.ts",
+        "status": "expected",
+        "attempts": 1,
+        "actual": [
+          "passed"
+        ]
+      },
+      "old_fact_evidence_sha256": "7d089becde33048f29b6e70b70dd46acbdcdf6595ffa13deb9c898cea7e1fbf9",
+      "observed_reproduction": "This case passed in observed old-env diagnostic; do not use it to approve the known-unstable VM"
+    },
+    {
+      "case_id": "C1-H5",
+      "title": "return_replace: unsubmitted Resume retry retains request ID after reads",
+      "file": "return_replace.spec.ts",
+      "old_start": "2026-11-01T12:32:19.972Z",
+      "old_duration_ms": 30078,
+      "old_http_status": "NOT_RECORDED; UI auth-expired implies401 via ApiClient source",
+      "old_error_code": "NOT_RECORDED; current handler uses UNAUTHORIZED for401",
+      "old_jwt_iat_nbf_exp": "NOT_RECORDED",
+      "old_sign_verify_times": "NOT_RECORDED",
+      "classification": "原因未确定（历史单请求证据不足；同源码稳定环境通过）",
+      "subclassification": "Authentication-invalid UI, JWT time anomaly suspected but exact original validator exception absent",
+      "not_proven": [
+        "No browser/driver-specific error evidenced",
+        "No invalid business effect evidenced; cannot prove historical per-request root cause"
+      ],
+      "business_database_final": {
+        "orders": 0,
+        "proposals": 0,
+        "confirmations": 0,
+        "reserved": 0,
+        "events": 0,
+        "checkpoint_rows": 0,
+        "real_model_calls": 0,
+        "provider_http_requests": 0,
+        "run_states": [],
+        "payment_states": [],
+        "order_states": [],
+        "case_states": [],
+        "refund_count": 0,
+        "cart_versions": [
+          0
+        ],
+        "cart_item_count": 0
+      },
+      "clock_steps_during_case": [
+        {
+          "time": "2026-11-01T20:32:20+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2077ms off)"
+        },
+        {
+          "time": "2026-11-01T20:32:30+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2078ms off)"
+        },
+        {
+          "time": "2026-11-01T20:32:40+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2078ms off)"
+        }
+      ],
+      "same_case_rerun_policy": "fresh diagnostic observations separately labeled, never backfilled as historical measurements",
+      "stable_full_suite_result": {
+        "title": "return_replace: unsubmitted Resume retry retains request ID after reads",
+        "file": "return_replace.spec.ts",
+        "status": "expected",
+        "attempts": 1,
+        "actual": [
+          "passed"
+        ]
+      },
+      "old_fact_evidence_sha256": "dae66ffe2cd9184e4ab33cfccf395895ce861ca6bfae21215644ba57bbcd513d",
+      "observed_reproduction": "This case passed in observed old-env diagnostic; do not use it to approve the known-unstable VM"
+    },
+    {
+      "case_id": "C1-H6",
+      "title": "return_replace: two clarification interrupts use distinct requests and new input",
+      "file": "return_replace.spec.ts",
+      "old_start": "2026-11-01T12:33:19.695Z",
+      "old_duration_ms": 6382,
+      "old_http_status": "NOT_RECORDED; UI auth-expired implies401 via ApiClient source",
+      "old_error_code": "NOT_RECORDED; current handler uses UNAUTHORIZED for401",
+      "old_jwt_iat_nbf_exp": "NOT_RECORDED",
+      "old_sign_verify_times": "NOT_RECORDED",
+      "classification": "原因未确定（历史单请求证据不足；同源码稳定环境通过）",
+      "subclassification": "Authentication-invalid UI, JWT time anomaly suspected but exact original validator exception absent",
+      "not_proven": [
+        "No browser/driver-specific error evidenced",
+        "No invalid business effect evidenced; cannot prove historical per-request root cause"
+      ],
+      "business_database_final": {
+        "orders": 0,
+        "proposals": 0,
+        "confirmations": 0,
+        "reserved": 0,
+        "events": 0,
+        "checkpoint_rows": 5,
+        "real_model_calls": 0,
+        "provider_http_requests": 0,
+        "run_states": [
+          "WAITING_INPUT"
+        ],
+        "payment_states": [],
+        "order_states": [],
+        "case_states": [],
+        "refund_count": 0,
+        "cart_versions": [
+          0
+        ],
+        "cart_item_count": 0
+      },
+      "clock_steps_during_case": [
+        {
+          "time": "2026-11-01T20:33:20+08:00",
+          "msg": "Time sync: guest clock adjusted (was 2079ms off)"
+        }
+      ],
+      "same_case_rerun_policy": "fresh diagnostic observations separately labeled, never backfilled as historical measurements",
+      "stable_full_suite_result": {
+        "title": "return_replace: two clarification interrupts use distinct requests and new input",
+        "file": "return_replace.spec.ts",
+        "status": "expected",
+        "attempts": 1,
+        "actual": [
+          "passed"
+        ]
+      },
+      "old_fact_evidence_sha256": "76497acdefc7a21ccfc369294dc7f9520d1cfb9e5b1f4de312c5c3231aa94dc4",
+      "observed_reproduction": "This case passed in observed old-env diagnostic; do not use it to approve the known-unstable VM"
+    }
+  ],
+  "observed_diagnostic_result": {
+    "first_attempt": "6passes but observer patched parent not API child; instrumentation harness failure, not admission",
+    "corrected_observer": "5passes/1failure,JWTiat rollback measured forH1; not a release score"
+  },
+  "stable_full_suite": "all6 passed once as part of complete87, no retries"
+}

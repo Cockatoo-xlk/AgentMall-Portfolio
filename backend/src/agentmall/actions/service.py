@@ -192,6 +192,7 @@ async def prepare_checkout(
             raise conflict()
         await complete_key(session, key, {"proposal_id": str(existing.id)})
         return await get_proposal(session, actor, existing.id), False
+    cart_source = None
     if request.items is not None:
         source_items = normalized["items"]
     else:
@@ -203,11 +204,18 @@ async def prepare_checkout(
                 Cart.store_id == actor.store_id,
             )
             .with_for_update()
+            .execution_options(populate_existing=True)
         )
         if cart is None:
             raise not_found()
         if cart.version != request.expected_cart_version:
             raise conflict("STALE_CART")
+        cart_source = {
+            "cart_id": str(cart.id),
+            "user_id": str(cart.user_id),
+            "store_id": str(cart.store_id),
+            "version": cart.version,
+        }
         source_items = [
             {"product_id": str(item.product_id), "quantity": item.quantity}
             for item in await session.scalars(
@@ -256,6 +264,8 @@ async def prepare_checkout(
         "address_label": request.address_label,
         "policy_version": "demo-v1",
     }
+    if cart_source is not None:
+        payload["cart_source"] = cart_source
     now = await database_now(session)
     pid = await session.scalar(
         insert(ActionProposal)

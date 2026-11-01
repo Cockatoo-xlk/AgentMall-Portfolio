@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "markdown_files": 30,
+  "local_links_checked": 196,
+  "broken_links": [],
+  "d1_changed_files_checked": 25,
+  "new_private_path_or_secret_shape_matches": 0,
+  "git_and_docker_private_exclusions": "PASS",
+  "runtime_existing_tests_locks_workflow_diff": "empty",
+  "payload_files": 440,
+  "payload_tree_sha256": "9ac63c50c5af2269564c58a95686a604ea1069df2d1e3f33bbcdca747a7be8f2",
+  "mermaid": "Both diagrams parsed and rendered in local Chromium; see mermaid receipt"
+}

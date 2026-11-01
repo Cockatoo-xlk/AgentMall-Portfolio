@@ -1,0 +1,67 @@
+{
+  "review_count": 1,
+  "method": "Independent read-only code review, followed by local MockTransport RED/GREEN reproduction; no paid or infrastructure operations by reviewer",
+  "findings": [
+    {
+      "id": "T15-REVIEW-1",
+      "priority": "P1",
+      "problem": "Forced Supervisor route missing could enter historical schema-repair paid loop",
+      "fix": "Validate forced tool_choice before settlement; fail with full reservation and global halt",
+      "red_case": "test_review_protocol_errors_halt_before_sdk_parse_or_automatic_repair[forced_route]",
+      "status": "FIXED"
+    },
+    {
+      "id": "T15-REVIEW-2",
+      "priority": "P1",
+      "problem": "Unvalidated nested SDK fields could fail outside transport while ledger remained settled",
+      "fix": "Validate nested usage details/reasoning, rebuild SDK response by nested whitelist, preserve actual sanitized response identity",
+      "red_cases": [
+        "usage_details",
+        "reasoning"
+      ],
+      "status": "FIXED"
+    }
+  ],
+  "red_receipt": {
+    "name": "review-protocol-red",
+    "command": [
+      "backend/.venv/bin/python",
+      "-m",
+      "pytest",
+      "backend/tests/test_playground_budget.py",
+      "-k",
+      "review_protocol",
+      "-q"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 1.335,
+    "log": ".t15-a/review-protocol-red.log",
+    "log_sha256": "8525ad86547a338638fbccfaf7189376124d0ab76b041d9954c91d26d34cb9ea"
+  },
+  "green_receipt": {
+    "name": "playground-unit-final",
+    "command": [
+      "backend/.venv/bin/python",
+      "-m",
+      "pytest",
+      "backend/tests/test_playground_budget.py",
+      "backend/tests/test_playground_entry.py",
+      "-q",
+      "-k",
+      "not unmarked and not fresh_owned"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 2.234,
+    "log": ".t15-a/playground-unit-final.log",
+    "log_sha256": "ab6d89ebd725f12687a262e6f51778212e344df7f594783ca131ec10be240a1a"
+  },
+  "green_counts": {
+    "passed": 28,
+    "deselected_pg_cases_run_separately": 2
+  },
+  "harness_failures_preserved": [
+    "entry-budget-unit-final: test Settings missing required fields",
+    "review-protocol-green and sdk-entry-postgres-green: synthetic JWT shorter than existing 32-character requirement; corrected test fixture only"
+  ],
+  "limits": "Reviewer static analysis is not real provider, network or crash verification. Full offline regression is reported separately."
+}

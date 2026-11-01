@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { Clock3, ShieldCheck } from 'lucide-react'
 import { useAuth } from '../state/Auth'
+import { useCart } from '../state/Cart'
 import { useMounted, useResource } from '../state/useResource'
 import { confirmAndExecute, readOutcome } from '../api/checkout'
 import { ApiError, errorMessage } from '../api/client'
@@ -23,6 +24,20 @@ export default function ConfirmationCard({
     [now, setNow] = useState(Date.now())
   const [requote, setRequote] = useState(false)
   const lock = useRef(false)
+  const { refreshAfterCheckout } = useCart()
+  const refreshedCart = useRef<string | null>(null)
+  useEffect(() => {
+    const proposal = resource.data
+    if (
+      proposal?.action_type !== 'CHECKOUT' ||
+      !proposal.result ||
+      refreshedCart.current === proposal.proposal_id
+    )
+      return
+    refreshedCart.current = proposal.proposal_id
+    // A persisted receipt is already a known order, even before opening its details.
+    void refreshAfterCheckout(proposal.proposal_id)
+  }, [resource.data, refreshAfterCheckout])
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(timer)

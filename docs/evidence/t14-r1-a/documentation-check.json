@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "markdown_files": 17,
+  "relative_links_checked": 117,
+  "broken_links": [],
+  "privacy_findings_in_new_material": [],
+  "existing_source_scope_runtime_files_unchanged": 278,
+  "source_changes_this_task": false,
+  "expected_existing_file_revisions": [
+    "COPYRIGHT.md",
+    "README.md",
+    "SNAPSHOT.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "all_other_changes_under": "docs/evidence/t14-r1-a/",
+  "payload_inventory_sha256": "c81039725eb7fab7b330eddf04b9fd4e17be89299f5c408baed0f25a39a0b5aa",
+  "excluded_from_git": [
+    ".git",
+    ".t13/",
+    "node_modules",
+    "backend/.venv",
+    "dist",
+    "raw logs",
+    "databases",
+    "model weights",
+    "browsers",
+    "tool binaries"
+  ],
+  "self_reference_strategy": "Full final all-file inventory is external local ignored evidence, generated after commit"
+}

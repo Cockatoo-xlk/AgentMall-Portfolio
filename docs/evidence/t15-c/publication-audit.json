@@ -1,0 +1,41 @@
+{
+  "status": "PUBLIC_CONTENT_AUDIT_PASS_RELEASE_GATE_BLOCKED",
+  "final_commit_audit": "Index reviewed before local commit; exact commit object receipt retained locally afterward",
+  "scope": "all reachable independent public-version blobs, including superseded versions from P0/P1/R1-A/T15-A; candidate files also scanned",
+  "historical_blobs": 453,
+  "base": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+  "reviewed_commits": [
+    "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+    "d81de4adc125c9ce019434fb338a52fe5282070c",
+    "c06c5841af36a631b69462c035d6410f732af0db",
+    "617cdf29a4353673bbfe141d5c87eec1ce665ec3"
+  ],
+  "findings": [],
+  "classifications": {
+    "SYNTHETIC_TEST_DATA": "Public demo/test passwords, Fixture/MockTransport protocol data, synthetic SVG and screenshots; unsuitable for production",
+    "PRIVATE_LOCAL_EVIDENCE": "All .playground and .t15-c budgets/authorizations/checkpoints/raw traces excluded from Git and build context",
+    "REVIEWED_PUBLIC_EVIDENCE": "Only B1 allowlisted aggregates and reviewed stage summaries",
+    "SENSITIVE_OR_UNKNOWN": "No unresolved candidate found in this scan; automated patterns are not a proof against all secrets"
+  },
+  "licenses": "MIT Cockatoo-xlk unchanged; third-party notices retained; no dependency/lock/media additions or binary/model distribution",
+  "key_environment_read": false,
+  "history_rewritten": false,
+  "remote_write_operations": [],
+  "paid_requests": 0,
+  "remote_ci": "NOT_RUN",
+  "original_evidence": "Preservation hashes verified at end; no raw Live material staged",
+  "media": {
+    "tracked_png_files": 15,
+    "new_pngs_committed": 0,
+    "historical_media_review": "Existing synthetic Fixture/Mock screenshots retained byte-for-byte; provenance in notices and prior stage reports",
+    "metadata": "All15 files only standard image chunks, no EXIF/text chunks"
+  },
+  "current_scan": {
+    "historical_blobs": 453,
+    "unresolved_findings": 0,
+    "private_test_results_excluded": true,
+    "candidate_files_before_gate_inventory": 429
+  },
+  "release_gate": "BLOCKED_ENVIRONMENT_CLOCK (not a secret/license finding)",
+  "publication_authorization": "NOT_GRANTED"
+}

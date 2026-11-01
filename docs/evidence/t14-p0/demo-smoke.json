@@ -1,0 +1,40 @@
+{
+  "status": "LOCAL_DEMO_CART_TO_PAID_VERIFIED",
+  "entry": "docker compose -p agentmall-payment-local -f compose.ci.yaml -f compose.payment-local.yaml run --rm runner python scripts/demo.py --seconds 90",
+  "browser_script": "Local ignored .t14-p0/payment-smoke.mjs, headless Chromium real UI; browser shared the demo network namespace",
+  "host_probes": [
+    {
+      "url": "http://127.0.0.1:5184",
+      "status": 200,
+      "bytes": 638
+    },
+    {
+      "url": "http://127.0.0.1:8014/openapi.json",
+      "status": 200,
+      "bytes": 68362
+    },
+    {
+      "url": "http://127.0.0.1:8014/__test/health",
+      "status": 200,
+      "bytes": 290
+    },
+    {
+      "internal_probe_exit": 0,
+      "stdout": "{\"http://127.0.0.1:5174\": 200, \"http://127.0.0.1:15174\": 200, \"http://127.0.0.1:18001/openapi.json\": 200}\n",
+      "stderr": ""
+    }
+  ],
+  "server_exit": 0,
+  "browser_exit": 0,
+  "db_summary": {
+    "orders": 1,
+    "order_status": "PAID",
+    "payments": 1,
+    "confirmation_count": 2,
+    "provider_http_requests": 0,
+    "real_model_calls": 0
+  },
+  "video": "NOT_RECORDED",
+  "current_demo_process": "STOPPED_AND_CLEANED",
+  "old_demo_untouched": true
+}

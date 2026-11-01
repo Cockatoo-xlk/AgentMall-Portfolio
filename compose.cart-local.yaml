@@ -1,0 +1,19 @@
+# New local T14-P1 project only: -p agentmall-t14-p1 with compose.ci.yaml.
+# Existing Private/P0 database mounts and ports are never reused.
+services:
+  postgres:
+    volumes: !override
+      - ./.t14-p1/postgres-data:/var/lib/postgresql/data
+    ports: !override
+      - "127.0.0.1:55439:55433"
+      - "127.0.0.1:8015:18001"
+      - "127.0.0.1:5185:15174"
+  runner:
+    mem_limit: 1280m
+    volumes: !override
+      - ./.t14-p1/manual-ci:/work/.t13/outputs
+      - ./.t14-p1/manual-playwright:/work/frontend/test-results
+    environment:
+      NODE_OPTIONS: --max-old-space-size=512
+      MALLOC_ARENA_MAX: "2"
+      AGENTMALL_CART_EVIDENCE_DIR: /work/.t13/outputs/screenshots/cart

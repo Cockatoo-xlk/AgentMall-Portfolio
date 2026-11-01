@@ -1,0 +1,19 @@
+# Local offline tests only. Use -p agentmall-t15-a-tests with compose.ci.yaml.
+services:
+  postgres:
+    volumes: !override
+      - ./.t15-a/postgres-data:/var/lib/postgresql/data
+    ports: !override
+      - "127.0.0.1:55440:55433"
+      - "127.0.0.1:8016:18001"
+  runner:
+    build:
+      context: .
+      dockerfile: scripts/ci/Playground.Dockerfile
+    mem_limit: 640m
+    environment:
+      NODE_OPTIONS: --max-old-space-size=512
+      MALLOC_ARENA_MAX: "2"
+    volumes: !override
+      - ./.t15-a/ci:/work/.t13/outputs
+      - ./.t15-a/browser:/work/frontend/test-results

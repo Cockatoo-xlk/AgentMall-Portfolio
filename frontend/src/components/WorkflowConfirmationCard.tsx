@@ -7,6 +7,8 @@ import type { Operation, Run, Thread } from '../api/agentWorkflow'
 import type { Proposal } from '../api/types'
 import WorkflowResources from './WorkflowResources'
 import { money } from '../api/format'
+import { expiryLabel } from '../api/proposalExpiry'
+import { useProposalExpiry } from '../state/useProposalExpiry'
 export default function WorkflowConfirmationCard({
   run,
   onThread,
@@ -23,6 +25,7 @@ export default function WorkflowConfirmationCard({
     error,
     reload,
   } = useResource<Proposal>(`/proposals/${pending.proposal_id}`)
+  const expiry = useProposalExpiry(proposal, reload)
   const key = operationKey(`${user!.store_id}:${user!.user_id}`, run.thread_id, pending)
   const operation = useRef<Operation | null>(readOperation(key, run))
   const guard = useRef(false)
@@ -30,7 +33,8 @@ export default function WorkflowConfirmationCard({
   const [notice, setNotice] = useState('')
   const [retry, setRetry] = useState(Boolean(operation.current))
   async function submit(decision: 'approve' | 'reject') {
-    if (guard.current || !proposal) return
+    if (guard.current || !proposal || (expiry.elapsed && !retry && !proposal.confirmation))
+      return
     guard.current = true
     setBusy(true)
     setNotice('')
@@ -87,7 +91,9 @@ export default function WorkflowConfirmationCard({
                   </li>
                 ))}
               </ul>
-              <p className="workflow-total">合计 {money(proposal.canonical_payload.total_cents)}</p>
+              <p className="workflow-total">
+                合计 {money(proposal.canonical_payload.total_cents)}
+              </p>
               <p>
                 地址：{proposal.canonical_payload.address_label} · 政策{' '}
                 {proposal.canonical_payload.policy_version}
@@ -118,7 +124,26 @@ export default function WorkflowConfirmationCard({
               ]}
             />
           )}
-          <p className="muted">服务端有效期：{new Date(proposal.expires_at).toLocaleString()}</p>
+          <p className="muted">
+            服务端有效期：{new Date(proposal.expires_at).toLocaleString()}
+          </p>
+          {proposal.status === 'PENDING' && !proposal.confirmation && !proposal.result && (
+            <div
+              className={`notice ${expiry.elapsed ? 'warning' : ''}`}
+              data-testid="proposal-countdown"
+            >
+              <p>
+                服务端有效期倒计时（估计）：<strong>{expiryLabel(expiry.remaining)}</strong>
+              </p>
+              <p>
+                {expiry.elapsed
+                  ? '倒计时结束，已暂停新确认并查询服务端状态。请核对，未自动重新报价。'
+                  : expiry.remaining === null
+                    ? '服务端时间待核对，请刷新提案状态；不会使用本机时钟决定授权。'
+                    : '以服务端核验为准；倒计时不会延长提案或自动批准。'}
+              </p>
+            </div>
+          )}
           {proposal.status === 'EXPIRED' ? (
             <div className="notice warning">
               <p>提案已过期，需要新提案和重新确认。</p>
@@ -142,14 +167,14 @@ export default function WorkflowConfirmationCard({
                 <>
                   <button
                     className="button primary"
-                    disabled={busy}
+                    disabled={busy || expiry.elapsed}
                     onClick={() => void submit('approve')}
                   >
                     批准并继续工作流
                   </button>
                   <button
                     className="button secondary"
-                    disabled={busy}
+                    disabled={busy || expiry.elapsed}
                     onClick={() => void submit('reject')}
                   >
                     拒绝并继续工作流

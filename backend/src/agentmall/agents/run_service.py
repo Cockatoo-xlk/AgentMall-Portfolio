@@ -71,6 +71,9 @@ def model_identity(app, mode):
         }
         for role, model in models.items()
     }
+    provider = getattr(app.state, "playground", None)
+    if provider is not None:
+        identities["playground"] = provider.identity
     return "sha256:" + fingerprint(identities)
 
 
@@ -223,6 +226,16 @@ class NodeStore:
 
 
 async def activate(app, actor, run_id, thread, connection, resume_payload=None):
+    # Ephemeral transport scope only; graph state, budgets, epoch and checkpoints stay unchanged.
+    if getattr(app.state, "playground", None) is None:
+        return await _activate(app, actor, run_id, thread, connection, resume_payload)
+    from agentmall.playground.context import CallScope, call_scope
+
+    with call_scope(CallScope(run_id, thread.id, actor.user_id, actor.store_id)):
+        return await _activate(app, actor, run_id, thread, connection, resume_payload)
+
+
+async def _activate(app, actor, run_id, thread, connection, resume_payload=None):
     sessions = app.state.sessions
     async with sessions.begin() as session:
         run = await session.scalar(select(AgentRun).where(AgentRun.id == run_id).with_for_update())

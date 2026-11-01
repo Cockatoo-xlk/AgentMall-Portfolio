@@ -1,0 +1,23 @@
+{
+  "project": "agentmall-t14-p1",
+  "database_before_down": {
+    "database": "agentmall_test",
+    "schemas": [],
+    "other_sessions": 0,
+    "advisory_locks": 0
+  },
+  "owned_containers_remaining": 0,
+  "down_exit_code": 0,
+  "owned_pgdata_removed": true,
+  "raw_evidence_retained_ignored": true,
+  "historical_pgdata_or_volumes_removed": false,
+  "p0_demo_runner_exit_cause": "UNKNOWN",
+  "owner_did_not_manually_stop_p0_runner": true,
+  "owned_host_ports_closed": {
+    "8015": true,
+    "5185": true,
+    "55439": true
+  },
+  "owned_native_chromium_processes_remaining": 0,
+  "process_check_correction": "Initial command-text grep matched its own shell source. Final check matches executable comm prefix only; no process was terminated by that check."
+}

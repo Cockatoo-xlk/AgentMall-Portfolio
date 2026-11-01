@@ -1,0 +1,156 @@
+{
+  "classification": "REVIEWED_PUBLIC_EVIDENCE",
+  "scope": "One owner-authorized synthetic quiet-keyboard Multi-Agent browser smoke on historical source only",
+  "historical_source_commit": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+  "historical_source_sha256": "ee0f6927f30687892159b39272148e8859fe61f406a0e5aa7c48cb5766766687",
+  "source_date": "2026-11-01",
+  "current_candidate_live_status": "NOT_RUN_SOURCE_CHANGED",
+  "model": "deepseek-flash",
+  "provider_mode": "LIVE_DEEPSEEK",
+  "model_calls": 7,
+  "roles": {
+    "supervisor": 3,
+    "shopping": 2,
+    "order": 2,
+    "aftersales": 0,
+    "single": 0
+  },
+  "http_status_counts": {
+    "200": 7
+  },
+  "input_tokens": 12048,
+  "output_tokens": 1109,
+  "unknown_usage_calls": 0,
+  "estimated_upper_cost_cny": "0.032968",
+  "actual_platform_bill": "UNKNOWN",
+  "provider_request_id": "UNKNOWN",
+  "events": 50,
+  "handoffs": [
+    "shopping:find_products",
+    "order:prepare_checkout"
+  ],
+  "tools": [
+    "retrieve_products",
+    "get_product",
+    "get_product",
+    "prepare_checkout"
+  ],
+  "human_confirmation": "independent buyer browser decision; no order or Confirmation before it",
+  "order": {
+    "count": 1,
+    "status": "PENDING_PAYMENT",
+    "total_cents": 19900,
+    "currency": "CNY",
+    "product": "synthetic quiet K68",
+    "payments": 0,
+    "business_events": 1
+  },
+  "checkpoint": {
+    "final_next": "done",
+    "pending_writes": 0,
+    "rows": 30,
+    "epoch": 2
+  },
+  "memory_peak_mib": 762,
+  "oom_kill": 0,
+  "budget_live_window_seconds": 457.386,
+  "limits": {
+    "model_calls": 12,
+    "cost_cny": 5,
+    "wall_seconds": 600
+  },
+  "raw_material_published": false,
+  "known_limits": [
+    "one scenario, no general quality or architecture comparison",
+    "no payment performed",
+    "actual platform bill and provider header request ID UNKNOWN",
+    "new source requires new policy/fingerprint/owner-paid authorization and Live verification",
+    "T14/T15 earlier OOM and failed attempts remain historical evidence"
+  ],
+  "receipts": [
+    {
+      "role": "supervisor",
+      "http_status": 200,
+      "model": "deepseek-flash",
+      "response_id_sha256": "a1d534f79fb3b6708afb6abaca1d306894bcc9e9d7324525dafa6e0db5176c2e",
+      "usage": {
+        "input_tokens": 2137,
+        "output_tokens": 207,
+        "total_tokens": 2344
+      },
+      "estimated_upper_cny": "0.00593"
+    },
+    {
+      "role": "shopping",
+      "http_status": 200,
+      "model": "deepseek-flash",
+      "response_id_sha256": "de6c636ae41a702ffe77d909a32f4dc40b36d5802cce07b2ed37f5aba116d487",
+      "usage": {
+        "input_tokens": 839,
+        "output_tokens": 77,
+        "total_tokens": 916
+      },
+      "estimated_upper_cny": "0.002294"
+    },
+    {
+      "role": "shopping",
+      "http_status": 200,
+      "model": "deepseek-flash",
+      "response_id_sha256": "eea0b36f76699ebfdac5c7732a6da8d9d4f2827e656b08bc6ab32ae925c53274",
+      "usage": {
+        "input_tokens": 1404,
+        "output_tokens": 240,
+        "total_tokens": 1644
+      },
+      "estimated_upper_cny": "0.004728"
+    },
+    {
+      "role": "supervisor",
+      "http_status": 200,
+      "model": "deepseek-flash",
+      "response_id_sha256": "c4f27f80e64222bb07989b328f6b8759e4d309eca4a1e6a363cbae82a4a21319",
+      "usage": {
+        "input_tokens": 2394,
+        "output_tokens": 310,
+        "total_tokens": 2704
+      },
+      "estimated_upper_cny": "0.007268"
+    },
+    {
+      "role": "order",
+      "http_status": 200,
+      "model": "deepseek-flash",
+      "response_id_sha256": "17da8dce32adad3a6c124d35114964a686018d871bdbec32eebe33c2046439ee",
+      "usage": {
+        "input_tokens": 1039,
+        "output_tokens": 128,
+        "total_tokens": 1167
+      },
+      "estimated_upper_cny": "0.003102"
+    },
+    {
+      "role": "order",
+      "http_status": 200,
+      "model": "deepseek-flash",
+      "response_id_sha256": "820f3ba8549ab89c6f48a460b4c241db892d34561054ea04b90796e24da7645d",
+      "usage": {
+        "input_tokens": 1508,
+        "output_tokens": 115,
+        "total_tokens": 1623
+      },
+      "estimated_upper_cny": "0.003936"
+    },
+    {
+      "role": "supervisor",
+      "http_status": 200,
+      "model": "deepseek-flash",
+      "response_id_sha256": "12f57134956ee5dd28d3f141252808ed1fec21a3ed0097f01de666fd9167118c",
+      "usage": {
+        "input_tokens": 2727,
+        "output_tokens": 32,
+        "total_tokens": 2759
+      },
+      "estimated_upper_cny": "0.00571"
+    }
+  ]
+}

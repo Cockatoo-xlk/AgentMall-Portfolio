@@ -1,0 +1,324 @@
+{
+  "status": "Original rollback reproduced; new isolated environment admitted and continuously observed",
+  "measurement": "simultaneous host+guest wall/monotonic nanoseconds; paired PING offset uncertainty bounds; no clock adjustments by test operator",
+  "frozen_admission_contract": {
+    "frozen_before_measurement": true,
+    "duration_seconds": 60,
+    "old_context": "colima",
+    "new_context": "colima-agentmall-t15-c1",
+    "major_wall_back_ns": -1000000,
+    "major_residual_absolute_ns": 100000000,
+    "monotonic_back_forbidden": true,
+    "max_offset_mid_range_ns": 100000000,
+    "admission_requires_no_major_anomalies": true,
+    "whole_suite_runs_per_admitted_environment": 1,
+    "retry": 0,
+    "skip_expansion": false,
+    "security_guard_relaxation": false
+  },
+  "measurements": {
+    "original-admission": {
+      "admitted": false,
+      "elapsed_seconds": 60.753264291,
+      "thresholds": {
+        "major_wall_back_ns": -1000000,
+        "major_residual_absolute_ns": 100000000,
+        "monotonic_back_forbidden": true,
+        "offset_change_upper_bound_ns": 100000000
+      },
+      "targets": {
+        "host": {
+          "samples": 5107,
+          "first_wall_minus_mono_ns": 1793220091979547834,
+          "last_wall_minus_mono_ns": 1793220091978509084,
+          "minimum_wall_delta_ns": 10031000,
+          "minimum_mono_delta_ns": 10030708,
+          "maximum_abs_residual_ns": 20542,
+          "offset_mid_range_ns": 219000,
+          "raw_sha256": "cedadef63c33c47f27f23b56f63a31a52840ecbb75fdd8de3cddfa3a4a98b662",
+          "major_anomaly_count": 0,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Darwin",
+            "release": "25.6.0",
+            "machine": "arm64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1.0000000000000002e-06
+            },
+            "monotonic_clock": {
+              "implementation": "mach_absolute_time()",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 4.166666666666667e-08
+            },
+            "cpu_affinity": null
+          }
+        },
+        "guest": {
+          "samples": 5155,
+          "first_wall_minus_mono_ns": 1793222883117206087,
+          "last_wall_minus_mono_ns": 1793222883083939762,
+          "minimum_wall_delta_ns": -2130516138,
+          "minimum_mono_delta_ns": 10068875,
+          "maximum_abs_residual_ns": 2140995675,
+          "offset_mid_range_ns": 2141899345,
+          "raw_sha256": "232ccca657fbcfe743ab6999ee6afdb947cfad2c744c2bd72098946d15b370e2",
+          "major_anomaly_count": 12,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Linux",
+            "release": "6.8.0-117-generic",
+            "machine": "aarch64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1e-09
+            },
+            "monotonic_clock": {
+              "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 1e-09
+            },
+            "cpu_affinity": [
+              0,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "independent-admission": {
+      "admitted": true,
+      "elapsed_seconds": 60.646017958,
+      "thresholds": {
+        "major_wall_back_ns": -1000000,
+        "major_residual_absolute_ns": 100000000,
+        "monotonic_back_forbidden": true,
+        "offset_change_upper_bound_ns": 100000000
+      },
+      "targets": {
+        "host": {
+          "samples": 5064,
+          "first_wall_minus_mono_ns": 1793220091977741459,
+          "last_wall_minus_mono_ns": 1793220091976702292,
+          "minimum_wall_delta_ns": 10069000,
+          "minimum_mono_delta_ns": 10069709,
+          "maximum_abs_residual_ns": 30041,
+          "offset_mid_range_ns": 216500,
+          "raw_sha256": "3b1016a9c2baaadaa75fc75c3de16e7ea94bfb91d47504b40542d0ad0c72706f",
+          "major_anomaly_count": 0,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Darwin",
+            "release": "25.6.0",
+            "machine": "arm64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1.0000000000000002e-06
+            },
+            "monotonic_clock": {
+              "implementation": "mach_absolute_time()",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 4.166666666666667e-08
+            },
+            "cpu_affinity": null
+          }
+        },
+        "guest": {
+          "samples": 5075,
+          "first_wall_minus_mono_ns": 1793538798556796662,
+          "last_wall_minus_mono_ns": 1793538798556797079,
+          "minimum_wall_delta_ns": 10148334,
+          "minimum_mono_delta_ns": 10148417,
+          "maximum_abs_residual_ns": 718458,
+          "offset_mid_range_ns": 1223353,
+          "raw_sha256": "8ac5d24c64c4c8f988b90e8379ecf4719876b34c2996152dc73d644a92c4d43c",
+          "major_anomaly_count": 0,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Linux",
+            "release": "6.8.0-117-generic",
+            "machine": "aarch64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1e-09
+            },
+            "monotonic_clock": {
+              "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 1e-09
+            },
+            "cpu_affinity": [
+              0,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "independent-during-tests": {
+      "admitted": true,
+      "elapsed_seconds": 600.594589292,
+      "thresholds": {
+        "major_wall_back_ns": -1000000,
+        "major_residual_absolute_ns": 100000000,
+        "monotonic_back_forbidden": true,
+        "offset_change_upper_bound_ns": 100000000
+      },
+      "targets": {
+        "host": {
+          "samples": 50978,
+          "first_wall_minus_mono_ns": 1793220091969793750,
+          "last_wall_minus_mono_ns": 1793220091959463625,
+          "minimum_wall_delta_ns": 10035000,
+          "minimum_mono_delta_ns": 10035125,
+          "maximum_abs_residual_ns": 171333,
+          "offset_mid_range_ns": 653500,
+          "raw_sha256": "df1b8df7d5794eb4827496ad6e29c05f29f187499ecfade0429e75997f5878e8",
+          "major_anomaly_count": 0,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Darwin",
+            "release": "25.6.0",
+            "machine": "arm64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1.0000000000000002e-06
+            },
+            "monotonic_clock": {
+              "implementation": "mach_absolute_time()",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 4.166666666666667e-08
+            },
+            "cpu_affinity": null
+          }
+        },
+        "guest": {
+          "samples": 52830,
+          "first_wall_minus_mono_ns": 1793538798556796746,
+          "last_wall_minus_mono_ns": 1793538798556797496,
+          "minimum_wall_delta_ns": 10047209,
+          "minimum_mono_delta_ns": 10047167,
+          "maximum_abs_residual_ns": 1656666,
+          "offset_mid_range_ns": 11814728,
+          "raw_sha256": "e4e672ef9fc185be359d40b674141e0f08a7354efbbe86eeccba3b9bd585479e",
+          "major_anomaly_count": 0,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Linux",
+            "release": "6.8.0-117-generic",
+            "machine": "aarch64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1e-09
+            },
+            "monotonic_clock": {
+              "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 1e-09
+            },
+            "cpu_affinity": [
+              0,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "independent-e2e-window": {
+      "admitted": true,
+      "elapsed_seconds": 486.451394416,
+      "thresholds": {
+        "major_wall_back_ns": -1000000,
+        "major_residual_absolute_ns": 100000000,
+        "monotonic_back_forbidden": true,
+        "offset_change_upper_bound_ns": 100000000
+      },
+      "targets": {
+        "host": {
+          "samples": 41258,
+          "first_wall_minus_mono_ns": 1793220091956790125,
+          "last_wall_minus_mono_ns": 1793220091948424084,
+          "minimum_wall_delta_ns": 10040000,
+          "minimum_mono_delta_ns": 10040166,
+          "maximum_abs_residual_ns": 103166,
+          "offset_mid_range_ns": 267000,
+          "raw_sha256": "e65348d71263fd72e5e3a3525682cf9a52147f180f24141d30a47ce9091ba6eb",
+          "major_anomaly_count": 0,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Darwin",
+            "release": "25.6.0",
+            "machine": "arm64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1.0000000000000002e-06
+            },
+            "monotonic_clock": {
+              "implementation": "mach_absolute_time()",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 4.166666666666667e-08
+            },
+            "cpu_affinity": null
+          }
+        },
+        "guest": {
+          "samples": 42490,
+          "first_wall_minus_mono_ns": 1793538798556796705,
+          "last_wall_minus_mono_ns": 1793538798556797121,
+          "minimum_wall_delta_ns": 10050292,
+          "minimum_mono_delta_ns": 10050375,
+          "maximum_abs_residual_ns": 238542,
+          "offset_mid_range_ns": 8637770,
+          "raw_sha256": "7072d9f0409481073ad398c396bf2a057069a2a80539e1b319847ad61833f973",
+          "major_anomaly_count": 0,
+          "clock_info": {
+            "python": "3.12.10",
+            "system": "Linux",
+            "release": "6.8.0-117-generic",
+            "machine": "aarch64",
+            "wall_clock": {
+              "implementation": "clock_gettime(CLOCK_REALTIME)",
+              "monotonic": false,
+              "adjustable": true,
+              "resolution": 1e-09
+            },
+            "monotonic_clock": {
+              "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+              "monotonic": true,
+              "adjustable": false,
+              "resolution": 1e-09
+            },
+            "cpu_affinity": [
+              0,
+              1
+            ]
+          }
+        }
+      }
+    }
+  },
+  "new_vm_startup": "One normal guest-agent -113ms initialization sync before admission; no step during admitted measurements",
+  "old_vm_hostagent": "Read-only historical host-agent messages show2.1s periodic guest-clock adjustments during all6 old failure intervals",
+  "root_limit": "Underlying reason for old VM drift not repaired; it remains outside accepted verification environment"
+}

@@ -1,0 +1,23 @@
+{
+  "status": "PASS_WITH_EXPLICIT_EVIDENCE_LIMITS",
+  "baseline": "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+  "ancestry_scanned": {
+    "commits": 8,
+    "unique_blobs": 508,
+    "file_version_occurrences": 2900
+  },
+  "private_paths_in_reachable_trees": 0,
+  "personal_absolute_path_matches": 0,
+  "real_keys_jwts_cookies_found": 0,
+  "raw_private_checkpoint_or_conversations_found": 0,
+  "sensitive_or_unknown_unresolved": 0,
+  "synthetic_test_data": "Public example/CI DB strings, demo passwords, runtime Bearer concatenation and fake secret redaction controls. Not production credentials.",
+  "reviewed_public_evidence": "Explicitly reviewed redacted JSON/Markdown, all15 synthetic screenshots and original public records; limited historical B1 summary only.",
+  "private_local_evidence": "All .playground/.t15-c/.t15-c1/.t15-d1/raw env, logs, diagnostic scripts, temporary test signing material, model weights and databases remain ignored and untracked. None added by D1.",
+  "sensitive_or_unknown": "No unresolved item within scanned scope; never infer privacy from deleting only final HEAD.",
+  "test_control_boundary": "Only offline harness registers /__test, requires loopback and synthetic control label, blocks provider env/network. Live factory uses normal create_app without test controls. Default Demo uses synthetic public accounts and test API: never expose to public network/production.",
+  "scope": "All historical reachable blobs plus human review of matches and15 PNGs; D1 final staged documentation reviewed before commit. Exact full postcommit file hashes and complete final history audit in local ignored sidecars to avoid circular hashing.",
+  "production_security_or_dependency_changes": 0,
+  "remote_writes": 0,
+  "real_model_calls": 0
+}

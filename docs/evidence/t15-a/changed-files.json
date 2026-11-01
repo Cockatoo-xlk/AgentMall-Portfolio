@@ -1,0 +1,292 @@
+{
+  "base_commit": "c06c5841af36a631b69462c035d6410f732af0db",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 628,
+      "sha256": "d695413a9c598e06a971e919e2c0a1f98f15936a2cd286807fae90418b525707"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 1289,
+      "sha256": "fcf2fcedf024f5d7b7d327b2da4770890625b0a69a189bee44690b35a2cf6e3f"
+    },
+    {
+      "path": "README.md",
+      "bytes": 7833,
+      "sha256": "5520de3382b003e1853ad5ffd5881c09100d42fa1bfb766eabe8dad00952df12"
+    },
+    {
+      "path": "backend/src/agentmall/agents/routes.py",
+      "bytes": 3857,
+      "sha256": "8b6ffe6cf9c527a6f18702ef5951fe5c2d180a0a9ab5d7229b7085113bdf650b"
+    },
+    {
+      "path": "backend/src/agentmall/agents/run_service.py",
+      "bytes": 24431,
+      "sha256": "6e0078e541b8ed1884b9a96780d313d87be250c9ff3f4e3e892d7e661804886b"
+    },
+    {
+      "path": "backend/src/agentmall/playground/__init__.py",
+      "bytes": 89,
+      "sha256": "7c1949b4ba2fd850bda6b5babf255a209516aa6080d8622a05c1efaa1298546e"
+    },
+    {
+      "path": "backend/src/agentmall/playground/__main__.py",
+      "bytes": 68,
+      "sha256": "abb5a8b684d3b03cc64ac0c1b52450d44e1927b53e2e3de187274b233ac9c1be"
+    },
+    {
+      "path": "backend/src/agentmall/playground/app.py",
+      "bytes": 4306,
+      "sha256": "69976aac02977508d56a97ced8cad6ce2f520a7ff386a433b1121e23d5502cfa"
+    },
+    {
+      "path": "backend/src/agentmall/playground/cli.py",
+      "bytes": 4456,
+      "sha256": "30968c1f1d5cba5155460e72f0db7c3240643e77f74f204942be35598a118873"
+    },
+    {
+      "path": "backend/src/agentmall/playground/context.py",
+      "bytes": 748,
+      "sha256": "c39fcc1c9c225c9cffa1a2d6f1a05a852f905f426b2ca7f17167a86ea484982a"
+    },
+    {
+      "path": "backend/src/agentmall/playground/environment.py",
+      "bytes": 5644,
+      "sha256": "36f0413e7bc2d6a4f968adba799f6f34658c2da6a2b87aa895dd4fe2b23df304"
+    },
+    {
+      "path": "backend/src/agentmall/playground/lease.py",
+      "bytes": 883,
+      "sha256": "15ab42526604d3af3997470d55c5187a485bc2077f9df598ead8bc0713f365ed"
+    },
+    {
+      "path": "backend/src/agentmall/playground/ledger.py",
+      "bytes": 13296,
+      "sha256": "8ee093a17cf2b9957b0b7c6bec8f6e35607a3d514060bbc98c970c3b4e1986db"
+    },
+    {
+      "path": "backend/src/agentmall/playground/policy.py",
+      "bytes": 4656,
+      "sha256": "186fc55f05d0039b6bd8955b37f6508978e7ba71651a31264dd1d0c5ebc28b76"
+    },
+    {
+      "path": "backend/src/agentmall/playground/provider.py",
+      "bytes": 9726,
+      "sha256": "04337dce1e55fea9c56d5db05b7e778c427d608e82968f810c6cd45816a59a8f"
+    },
+    {
+      "path": "backend/src/agentmall/playground/runtime.py",
+      "bytes": 2343,
+      "sha256": "7e984180a754351fbba38abd17b570d5a6cfcca8c98828ed81911ba3c3650863"
+    },
+    {
+      "path": "backend/tests/playground_helpers.py",
+      "bytes": 6068,
+      "sha256": "031c4cd2cbc03531e4903284fafd857a1ca52be944f925bb713fa64e63a70070"
+    },
+    {
+      "path": "backend/tests/test_playground_budget.py",
+      "bytes": 13422,
+      "sha256": "df0cc38e3160bbdd8f8bfeb990623a34f19f4bfa3dd081518cd01cd1e8dd32d4"
+    },
+    {
+      "path": "backend/tests/test_playground_entry.py",
+      "bytes": 6752,
+      "sha256": "cb8766c1c95c52aefb3a6307d73ab3f376da552cd1d79c955693aee6c3418eeb"
+    },
+    {
+      "path": "backend/tests/test_playground_integration.py",
+      "bytes": 8240,
+      "sha256": "5e4f1da69e47adbff467a5e036eaa49a46a1db826ee1a67623b8edc666e2b86b"
+    },
+    {
+      "path": "backend/tests/web_e2e_server.py",
+      "bytes": 32101,
+      "sha256": "cdde91a91d827265404b1400524854b13250d73ff6845824bdac0c84c9370c93"
+    },
+    {
+      "path": "compose.playground-tests.yaml",
+      "bytes": 578,
+      "sha256": "e52bead9d87637fb5ce4cfaf798cc6a01c9e8b628186ecacb6f6d1afc68ba61a"
+    },
+    {
+      "path": "compose.playground.yaml",
+      "bytes": 1875,
+      "sha256": "d137f495b87672afbf677918a02caa009777b786f31ab8099ba689d80231996a"
+    },
+    {
+      "path": "docs/LIVE_PLAYGROUND.md",
+      "bytes": 8402,
+      "sha256": "8523a05cd6a5e423dc25fa61d5dbeea7030e67c292a676d153adc82912853d0b"
+    },
+    {
+      "path": "docs/evidence/t15-a/database-and-sdk-evidence.json",
+      "bytes": 38780,
+      "sha256": "5da1f087665860b4e239898a361b4ef4c557624769025d33691357d0c52cbf87"
+    },
+    {
+      "path": "docs/evidence/t15-a/failed-attempts.json",
+      "bytes": 5877,
+      "sha256": "1ccd625a88d9b780a734e746da7e16176962e69d59238fdde3ed3bd6991f2f7e"
+    },
+    {
+      "path": "docs/evidence/t15-a/historical-integrity.json",
+      "bytes": 1388,
+      "sha256": "405134d7c19f8438e7c588f16e55047c4b7ca87e938946b8289a758a69a84f76"
+    },
+    {
+      "path": "docs/evidence/t15-a/live-smoke-proposal.md",
+      "bytes": 3633,
+      "sha256": "b1f371c7a3e90a28200518351b69f41e54a94de7d2cefc053506b55cc29cc72e"
+    },
+    {
+      "path": "docs/evidence/t15-a/provider-reference.json",
+      "bytes": 1013,
+      "sha256": "57d350e5c75c4c018d64b8e030c84dda0d6f40e0871057dd6b552093d3e8682a"
+    },
+    {
+      "path": "docs/evidence/t15-a/report.md",
+      "bytes": 12724,
+      "sha256": "1abaeec8012d34cee218176f9a3263c946de9c28d642707633b032f54169dfa9"
+    },
+    {
+      "path": "docs/evidence/t15-a/resource-cleanup.json",
+      "bytes": 1846,
+      "sha256": "bedb7d390516d139cdb7fd7702346d9927ac64758f0de23083733292232271a7"
+    },
+    {
+      "path": "docs/evidence/t15-a/resource-measurements.json",
+      "bytes": 626,
+      "sha256": "10e09dc313936bc0edcb3d4ad41dc71c55e31efecc150e5f3ede375ec5007921"
+    },
+    {
+      "path": "docs/evidence/t15-a/review.json",
+      "bytes": 2414,
+      "sha256": "841de43d79e9eff5baeaa096e2e5a66027f52f1edd996076d0183de6df91a8c6"
+    },
+    {
+      "path": "docs/evidence/t15-a/run-events-example.json",
+      "bytes": 17839,
+      "sha256": "4da3fddcb31c2e0db08bb95153bc25c54f36b3d99d417e1f20f72b5ea68c2962"
+    },
+    {
+      "path": "docs/evidence/t15-a/screenshots.json",
+      "bytes": 1904,
+      "sha256": "87980e2b69a55155c03b43361dc785441fac7d8c5d313b624628e61b099cd382"
+    },
+    {
+      "path": "docs/evidence/t15-a/screenshots/purchase-restored.png",
+      "bytes": 308439,
+      "sha256": "f5362dde8dadfbed4c7eedc46a5d466615401538405b8461497120d58e34a694"
+    },
+    {
+      "path": "docs/evidence/t15-a/screenshots/purchase-waiting.png",
+      "bytes": 345931,
+      "sha256": "aecc1f39bac340477b3ad73eaa1a512710df28fc6f94870fd1af4f8be13a3208"
+    },
+    {
+      "path": "docs/evidence/t15-a/screenshots/return-replacement-mobile.png",
+      "bytes": 384760,
+      "sha256": "5806c1d5a072f5c8e9581ed4da9cd855d3e0b48f74483e7daac925443b764d02"
+    },
+    {
+      "path": "docs/evidence/t15-a/screenshots/separate-payment.png",
+      "bytes": 210287,
+      "sha256": "0f66cdca36b706d0e46ef66de08e3110b83cc4784c5268be075c48749d02e22c"
+    },
+    {
+      "path": "docs/evidence/t15-a/screenshots/timeout.png",
+      "bytes": 305975,
+      "sha256": "de04bafab569c3743d76b10bbec7337a76b1f233131712ee0be9314f01514e16"
+    },
+    {
+      "path": "docs/evidence/t15-a/source-identity.json",
+      "bytes": 571,
+      "sha256": "3ec86f77d99221c59af6b20fc0d905389317d7109dff55573c585857995f816a"
+    },
+    {
+      "path": "docs/evidence/t15-a/test-matrix.json",
+      "bytes": 2493,
+      "sha256": "07b4abb14510cca25a07c259949232570f0075d544c552eabde59604f8451e94"
+    },
+    {
+      "path": "docs/evidence/t15-a/versions.json",
+      "bytes": 462,
+      "sha256": "f624a4b922fbe0b98777f19752cd3b4c880c72a953dddbc0546534188726f526"
+    },
+    {
+      "path": "docs/plans/t15-a-live-playground.md",
+      "bytes": 3637,
+      "sha256": "9a913d8120edeadfd83a4f6b651e2583a2cd80ff2c715318afb04b132b25134d"
+    },
+    {
+      "path": "frontend/playwright.config.ts",
+      "bytes": 2373,
+      "sha256": "cf5c249b4998416768f5e421513f6a2ed0105b17adcb81923a2b6783ccc3a9fd"
+    },
+    {
+      "path": "frontend/src/api/providerRuntime.test.ts",
+      "bytes": 2275,
+      "sha256": "bd530a8d317303dfc646fd6c5203f170601675d3ae30dee8d755c5769d679c23"
+    },
+    {
+      "path": "frontend/src/api/providerRuntime.ts",
+      "bytes": 2476,
+      "sha256": "e79865fd51c70eaef22ae8e0cf2b613f5d840f099ecffb9dbfee55cea6390f08"
+    },
+    {
+      "path": "frontend/src/components/Layout.tsx",
+      "bytes": 4899,
+      "sha256": "11fa8e7c6d0a7a80aa8dca93949ef57b3b0de75865673752227a17c1a04ec7d5"
+    },
+    {
+      "path": "frontend/src/components/ProviderPanel.tsx",
+      "bytes": 3716,
+      "sha256": "acc92b609a04c53ff413dbb1331a50ad71ae350a74384811c8a05f3da067d581"
+    },
+    {
+      "path": "frontend/src/pages/AgentWorkspace.tsx",
+      "bytes": 14555,
+      "sha256": "304aa31c11e5f8d60adbb5fe50b3a557231ae40ede25f062f0ac47fc649ecfa9"
+    },
+    {
+      "path": "frontend/tests/environment.ts",
+      "bytes": 1173,
+      "sha256": "1cd110071b642c387e8bb56a0c86e8c97c56764806be6d4d2b795512b8179482"
+    },
+    {
+      "path": "frontend/tests/playground.spec.ts",
+      "bytes": 12643,
+      "sha256": "490b9022f6aaaa9805e5b6afc782dcbcacaeed54cf43094eeb4afb5eefef95c9"
+    },
+    {
+      "path": "scripts/ci/Playground.Dockerfile",
+      "bytes": 979,
+      "sha256": "d49906dce308a0434a09bad281b13dd0a21438af429335c8f906140621512246"
+    },
+    {
+      "path": "scripts/playground_proxy.py",
+      "bytes": 2298,
+      "sha256": "1410940e24500a954780892d6ffe242542bdaa1d121326368eacdaf5ef423935"
+    },
+    {
+      "path": "scripts/playground_server.py",
+      "bytes": 323,
+      "sha256": "fd75537ce674331fcda675ebed8291205d2ccabf1f1dfdd61817ad37ef92c326"
+    },
+    {
+      "path": "scripts/playground_test_server.py",
+      "bytes": 1104,
+      "sha256": "2316aa407da0a90c497fe6401531a7c9876a8773436b633476ec3f9c428ff16f"
+    }
+  ],
+  "inventory_excludes_sorted": [
+    "docs/evidence/t15-a/changed-files.json",
+    "docs/evidence/t15-a/command-receipts.json",
+    "docs/evidence/t15-a/privacy-review.json",
+    "docs/evidence/t15-a/verification.json"
+  ],
+  "hash_scope": "Reviewed changed files; inventory and generated receipt hashes excluded to avoid recursion. Git commit covers all final files."
+}

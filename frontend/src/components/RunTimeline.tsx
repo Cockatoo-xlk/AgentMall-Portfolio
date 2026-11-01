@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '../state/Auth'
 import { errorMessage } from '../api/client'
+import { timelineSummary } from '../api/timelineSummary'
 import { mergeEvents } from '../api/agentWorkflow'
 import type { Run, RunEvent, EventPage } from '../api/agentWorkflow'
 const labels: Record<string, string> = {
@@ -112,13 +113,17 @@ export default function RunTimeline({ run }: { run: Run }) {
               <span>
                 #{event.seq} ·{' '}
                 {event.agent ??
-                  String(event.payload_summary.target ?? event.payload_summary.role ?? 'workflow')}
+                  String(
+                    event.payload_summary.target ?? event.payload_summary.role ?? 'workflow',
+                  )}
               </span>
             </div>
             <strong>
               {event.event_type === 'tool' &&
               event.payload_summary.ok &&
-              ['prepare_checkout', 'prepare_return'].includes(String(event.payload_summary.name))
+              ['prepare_checkout', 'prepare_return'].includes(
+                String(event.payload_summary.name),
+              )
                 ? '提案创建'
                 : event.event_type === 'tool' &&
                     String(event.payload_summary.name).startsWith('retrieve_')
@@ -129,8 +134,14 @@ export default function RunTimeline({ run }: { run: Run }) {
                     : (labels[event.event_type] ?? event.event_type)}
             </strong>
             <small>{event.event_type}</small>
+            {timelineSummary(event) && (
+              <p data-testid="event-summary">{timelineSummary(event)}</p>
+            )}
             {Object.keys(event.payload_summary).length > 0 && (
-              <pre>{JSON.stringify(event.payload_summary, null, 2)}</pre>
+              <details>
+                <summary>结构化记录</summary>
+                <pre>{JSON.stringify(event.payload_summary, null, 2)}</pre>
+              </details>
             )}
             {event.action_id && <small>action_id {event.action_id}</small>}
             {run.result?.entity_refs
@@ -148,7 +159,8 @@ export default function RunTimeline({ run }: { run: Run }) {
                       : `/after-sales?${ref.kind}=${ref.id}`
                   }
                 >
-                  核对{ref.kind === 'order' ? '订单' : ref.kind === 'case' ? '售后' : '工单'}回执
+                  核对{ref.kind === 'order' ? '订单' : ref.kind === 'case' ? '售后' : '工单'}
+                  回执
                 </Link>
               ))}
           </li>

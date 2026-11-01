@@ -10,6 +10,7 @@ import json
 import os
 import signal
 import socket
+import tempfile
 from collections.abc import MutableMapping
 from contextlib import AsyncExitStack, ExitStack, asynccontextmanager, contextmanager
 from contextvars import ContextVar
@@ -246,6 +247,8 @@ class Harness:
     settings: object
     schema: str
     boundary: Boundary
+    sdk_program: object = None
+    sdk_directory: object = None
     mode: Mode = "proposal"
     workflow_mode: str = "purchase"
     answer_failure_used: bool = False
@@ -303,12 +306,18 @@ class Harness:
                 "refund_rows": "SELECT id, case_id, status FROM refunds ORDER BY created_at",
                 "ticket_rows": "SELECT id, order_id, status, resolution, version "
                 "FROM support_tickets ORDER BY created_at",
-                "proposal_rows": "SELECT id, actor_id, origin_request_id, status, expires_at, "
-                "payload_hash, canonical_payload FROM action_proposals ORDER BY created_at,id",
+                "proposal_rows": "SELECT id, actor_id, origin_request_id, action_type, status, "
+                "expires_at, payload_hash, canonical_payload FROM action_proposals "
+                "ORDER BY created_at,id",
+                "cart_rows": "SELECT id,user_id,store_id,version FROM carts ORDER BY id",
+                "cart_item_rows": "SELECT id,cart_id,store_id,product_id,quantity "
+                "FROM cart_items ORDER BY cart_id,product_id",
                 "order_rows": "SELECT * FROM orders ORDER BY created_at,id",
                 "confirmation_rows": "SELECT * FROM confirmations ORDER BY created_at,id",
-                "receipt_rows": "SELECT id, action_id, actor_id, result FROM idempotency_requests "
-                "WHERE action_id IS NOT NULL ORDER BY created_at,id",
+                "payment_rows": "SELECT id, order_id, action_id, status, amount_cents, provider "
+                "FROM payments ORDER BY created_at,id",
+                "receipt_rows": "SELECT id, action_id, actor_id, operation, key, result "
+                "FROM idempotency_requests WHERE action_id IS NOT NULL ORDER BY created_at,id",
                 "event_rows": "SELECT * FROM business_events ORDER BY occurred_at,id",
                 "product_rows": "SELECT id, name, category, price_cents, on_hand, reserved, "
                 "active, attributes FROM products ORDER BY id",
@@ -317,13 +326,37 @@ class Harness:
             state["checkpoint_rows"] = connection.scalar(
                 text(f'SELECT count(*) FROM "{self.settings.checkpoint_schema}".checkpoints')
             )
-        return {**self.status(), **state, "agent_traces": self.agent_traces}
+        sdk = None
+        if self.sdk_program is not None:
+            provider = self.app.state.playground
+            from uuid import uuid5
+
+            sdk = provider.ledger.summary(
+                uuid5(self.settings.storefront_id, "buyer1"), self.settings.storefront_id
+            )
+            sdk["wire_requests"] = len(self.sdk_program.requests)
+            sdk["tools"] = [
+                c["function"]["name"]
+                for record in self.sdk_program.requests
+                for c in record["body"].get("tools", [])
+            ]
+        return {**self.status(), **state, "agent_traces": self.agent_traces, "sdk": sdk}
+
+    async def close_sdk(self):
+        provider = getattr(self.app.state, "playground", None)
+        if provider is not None:
+            await provider.close()
+            self.app.state.playground = None
+        if self.sdk_directory is not None:
+            self.sdk_directory.cleanup()
+        self.sdk_program, self.sdk_directory = None, None
 
     async def reset(self):
         from sqlalchemy import text
 
         from agentmall.seed import seed
 
+        await self.close_sdk()
         tables = (
             "run_events",
             "agent_runs",
@@ -359,6 +392,10 @@ class Harness:
                     )
                 )
             )
+        from agentmall.payments.service import MockPaymentAdapter
+
+        self.app.state.mock_payment_adapter = MockPaymentAdapter()
+        self.checkout_failure = False
         self.mode, self.offset = "proposal", timedelta(0)
         self.workflow_mode = "purchase"
         self.answer_failure_used = False
@@ -385,6 +422,8 @@ def mount_controls(harness):
                 mode = harness.request_mode.get(harness.mode)
                 return None if mode in {"blocked", "done"} else fake_model(mode, harness.boundary)
             if name in {"multi_models", "durable_single_model"}:
+                if self._state.get("playground") is not None:
+                    return self._state[name]
                 from workflow_e2e import models
 
                 value = models(harness.workflow_mode, harness.boundary)
@@ -428,6 +467,19 @@ def mount_controls(harness):
         model_config = ConfigDict(extra="forbid")
         product_id: UUID
 
+    class CheckoutFailureRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        enabled: bool
+
+    class PaymentModeRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        result: Literal["SUCCEEDED", "DECLINED"]
+
+    class OrderConditionRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        order_id: UUID
+        condition: Literal["near_expiry", "expire", "stale_version"]
+
     router = APIRouter(prefix="/__test", dependencies=[Depends(authorize)])
 
     @router.get("/health")
@@ -458,6 +510,91 @@ def mount_controls(harness):
     async def workflow_mode(payload: WorkflowMode):
         harness.workflow_mode = payload.mode
         return {"mode": payload.mode}
+
+    class SDKMode(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        program: Literal[
+            "purchase",
+            "recommend",
+            "orders",
+            "return_replace",
+            "timeout",
+            "missing_usage",
+            "malicious",
+        ]
+        order_id: UUID | None = None
+
+    @router.post("/sdk-mode")
+    async def sdk_mode(payload: SDKMode):
+        from pathlib import Path
+
+        from playground_helpers import install_sdk
+
+        await harness.close_sdk()
+        harness.sdk_directory = tempfile.TemporaryDirectory(prefix="agentmall-sdk-mock-")
+        _, harness.sdk_program = await install_sdk(
+            (None, harness.db, harness.app, harness.settings),
+            Path(harness.sdk_directory.name),
+            payload.program,
+            str(payload.order_id) if payload.order_id else None,
+        )
+        return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
+
+    @router.post("/checkout-failure")
+    async def checkout_failure(payload: CheckoutFailureRequest):
+        harness.checkout_failure = payload.enabled
+        return {"enabled": payload.enabled}
+
+    @router.post("/payment-mode")
+    async def payment_mode(payload: PaymentModeRequest):
+        from agentmall.payments.service import MockPaymentAdapter
+
+        harness.app.state.mock_payment_adapter = MockPaymentAdapter(payload.result)
+        return {"result": payload.result}
+
+    @router.post("/order-condition")
+    async def order_condition(payload: OrderConditionRequest):
+        # The immutable order expiry is never changed. Server time is anchored in
+        # PostgreSQL and advanced locally for this one isolated test process.
+        with harness.db.begin() as connection:
+            if payload.condition == "stale_version":
+                changed = (
+                    connection.execute(
+                        text(
+                            "UPDATE orders SET version=version+1 WHERE id=:id "
+                            "AND status='PENDING_PAYMENT' RETURNING id,version,expires_at"
+                        ),
+                        {"id": payload.order_id},
+                    )
+                    .mappings()
+                    .one_or_none()
+                )
+            else:
+                changed = (
+                    connection.execute(
+                        text(
+                            "SELECT id,version,expires_at,clock_timestamp() AS db_now "
+                            "FROM orders WHERE id=:id AND status='PENDING_PAYMENT'"
+                        ),
+                        {"id": payload.order_id},
+                    )
+                    .mappings()
+                    .one_or_none()
+                )
+            if changed is None:
+                raise HTTPException(404, "Unknown pending synthetic order")
+            if payload.condition != "stale_version":
+                extra = timedelta(seconds=-60 if payload.condition == "near_expiry" else 1)
+                harness.offset = max(
+                    harness.offset, changed["expires_at"] - changed["db_now"] + extra
+                )
+        return {
+            "condition": payload.condition,
+            "order_id": payload.order_id,
+            "version": changed["version"],
+            "expires_at": changed["expires_at"],
+            "server_clock_offset_seconds": harness.offset.total_seconds(),
+        }
 
     @router.post("/reset")
     async def reset():
@@ -567,6 +704,7 @@ async def isolated_app():
             app = create_app(settings)
             cleanup.push_async_callback(app.state.engine.dispose)
             harness = Harness(app, db, settings, schema, boundary)
+            cleanup.push_async_callback(harness.close_sdk)
             mount_controls(harness)
             from agentmall.agents import run_service
 
@@ -607,6 +745,17 @@ async def isolated_app():
             # Process-local test seam; immutable proposal rows and DB triggers remain intact.
             cleanup.enter_context(patch.object(actions, "database_now", test_clock))
             cleanup.enter_context(patch.object(orders, "database_now", test_clock))
+            order_event = orders.write_order_event
+
+            async def test_order_event(*args, **kwargs):
+                await order_event(*args, **kwargs)
+                if getattr(harness, "checkout_failure", False):
+                    raise RuntimeError("Fixture checkout precommit rollback")
+
+            cleanup.enter_context(patch.object(orders, "write_order_event", test_order_event))
+            from agentmall.payments import service as payments
+
+            cleanup.enter_context(patch.object(payments, "database_now", test_clock))
             async with app.state.sessions.begin() as session:
                 await seed(session, settings)
             from retrieval_helpers import index

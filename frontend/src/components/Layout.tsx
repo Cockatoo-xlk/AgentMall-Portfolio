@@ -14,7 +14,7 @@ import { useCart } from '../state/Cart'
 export default function Layout() {
   const { user, logout, expired } = useAuth()
   const { cart, notice, error } = useCart()
-  const count = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+  const count = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? (user?.role === 'buyer' ? '—' : 0)
   const merchant = user?.role === 'merchant'
   return (
     <div className="app-shell">
@@ -47,7 +47,7 @@ export default function Layout() {
               <NavLink to="/cart">
                 <ShoppingBag size={16} />
                 购物车
-                <span className="cart-count" aria-label={`${count} 件商品`}>
+                <span className="cart-count" aria-label={count === '—' ? '购物车数量待核对' : `${count} 件商品`}>
                   {count}
                 </span>
               </NavLink>
@@ -108,9 +108,9 @@ export default function Layout() {
         </div>
       </header>
       <div id="main-content" tabIndex={-1}>
-        {import.meta.env.VITE_AGENT_MODE === 'fixture' && (
+        {(
           <div className="global-notice notice fixture-notice">
-            E2E 测试环境 · Fake Model · 真实本地业务服务与 PostgreSQL · 未调用真实模型
+        合成演示数据 · 模拟资金 · 模型身份及用量以工作流服务端状态为准
           </div>
         )}
         {expired && (
