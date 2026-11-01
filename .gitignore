@@ -69,3 +69,6 @@ frontend/playwright-report/
 
 # T15-C1 private environment/clock diagnostics and test receipts
 /.t15-c1/
+
+# Local release audit originals and tooling
+/.t15-d1/

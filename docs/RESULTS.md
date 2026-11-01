@@ -37,3 +37,9 @@ R5新的独占数据库和无缓存构建已完成完整离线CI：后端642pass
 [逐项归因与新回执](evidence/t15-c1/report.md)：在独立Colima Linux VM中，后端713/14skip、Vitest80、完整Playwright87通过，0失败/skip/retry/flaky。生产源码指纹7049db6a保持不变。旧环境同用例复现了JWT未来iat→401，但其余5项历史单请求信息不足，仍标原因未确定；并未把6项全部归为环境异常。旧81/6及原始日志不覆盖。
 
 新环境连续时钟观测无重大异常，准入状态T15_C_LOCAL_RELEASE_GATE_PASSED只适用于该受验证环境。旧共享VM未修复或重启；当前源码Live=NOT_RUN、远程CI=NOT_RUN、新增付费请求0。
+
+## T15-D1：最终公开内容审查
+
+[D1审查报告](evidence/t15-d1/report.md)核对公开独立父链、全部可达历史Blob、15张合成截图及第三方声明，整理首页与运行/恢复入口。产品源码、锁文件、既有测试与workflow均未改变；复用经原始日志和JUnit/Playwright JSON哈希核对的C1回归，没有重新执行Live或封存评测。
+
+截至D1，当前版本Ubuntu24.04 amd64远程CI为NOT_RUN；actionlint、官方Action固定SHA、87项浏览器收集与默认启动路径的静态检查不等于真实远程运行。[D2待授权方案](evidence/t15-d1/remote-ci-plan.md)只计划推审核分支，不授予Push、Actions、PR或main合并权限。后续实际结果应按准确Commit与RunID追加，不能覆盖各阶段历史回执。

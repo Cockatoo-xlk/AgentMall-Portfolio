@@ -10,7 +10,7 @@
 | 2:00–2:40 | 同Run Resume、业务回执、订单详情 | “领域事务创建唯一订单并预留库存。这里仍是PENDING_PAYMENT。”指出Agent直接SKU下单不清购物车；购物车快照下单才在同事务安全消费。B1只验收至此，不曾付款。 |
 | 2:40–3:15 | 刷新、重新登录、按原Thread恢复 | “JWT没有存在本地存储。持久RunEvent/Checkpoint重建时间线，先读真实订单，不换新请求下单。”若已结束的历史Live服务未开放，不假装现场恢复，改用本次Fixture演示。 |
 | 3:15–4:00 | 服务端用量、预算、UNKNOWN；展示B1公开汇总 | “历史617cdf29一次真实任务7次请求，Supervisor3/Shopping2/Order2；12,048输入、1,109输出，估算上界¥0.032968，平台账单UNKNOWN。单场景不等于泛化评测，新源码尚未重做Live。” |
-| 4:00–4:45 | 代码/测试矩阵及局限 | “PostgreSQL行锁、幂等回执、人工确认、Epoch Fence和Checkpoint把模型与确定性写事务隔开。本地分阶段离线回归不等于新版GitHub Ubuntu amd64 CI；原Docker OOM保留。没有真实支付、生产SLA或云部署。” |
+| 4:00–4:45 | 代码/测试矩阵及局限 | “PostgreSQL行锁、幂等回执、人工确认、Epoch Fence和Checkpoint把模型与确定性写事务隔开。已核对本地713/14skip、Vitest80、Playwright87通过且0retry，环境是独立Linux aarch64加Mac Chromium；不是当前版本GitHub Ubuntu amd64 CI。原Docker OOM和旧VM时钟问题保留。没有真实支付、生产SLA或云部署。” |
 
 若另录完整模拟购物车闭环，使用Fixture模式：加入购物车→购买快照→创建订单后确认购物车→订单详情另建模拟支付提案→本人独立批准→GET订单PAID。这是额外Fixture演示，不把它接到B1真实Smoke上冒称B1付过款。主视频控制在5分钟内，不必同时展示所有售后场景。
 

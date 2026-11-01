@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "protected_files": 12017,
+  "changed": 0,
+  "old_C1_raw_inventory_files": 274,
+  "old_T15C_raw_files": 1578,
+  "older_protected_files": 8401,
+  "original_private_head": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33",
+  "private_git_worktree": "clean on read-only inspection",
+  "original_public_main": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+  "old_worktrees": "Original Public/P0/P1/R1A/T15A/T15C1 tracked files remain unchanged",
+  "historical_manifests_and_failures": "Unmodified; neither historical pilot nor sealed40 tasks reexecuted",
+  "new_containers": 0,
+  "old_services_stopped_or_modified": 0,
+  "paid_requests": 0,
+  "real_key_reads": 0
+}

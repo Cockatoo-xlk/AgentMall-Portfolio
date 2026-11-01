@@ -1,0 +1,104 @@
+{
+  "observed_at_utc": "2026-11-01T15:12:01.572364+00:00",
+  "repository": {
+    "default_branch": "main",
+    "full_name": "Cockatoo-xlk/AgentMall-Portfolio",
+    "private": false
+  },
+  "branch": {
+    "name": "main",
+    "sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf"
+  },
+  "git_ls_remote_sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+  "git_exit": 0,
+  "direct_github_com": {
+    "type": "SSLCertVerificationError",
+    "reason": "self-signed certificate in certificate chain"
+  },
+  "verified_certificates": [
+    {
+      "endpoint": "api.github.com",
+      "via_existing_loopback_proxy": false,
+      "verified": true,
+      "tls": "TLSv1.3",
+      "subject": [
+        [
+          [
+            "commonName",
+            "*.github.com"
+          ]
+        ]
+      ],
+      "issuer": [
+        [
+          [
+            "countryName",
+            "GB"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "Sectigo Limited"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "Sectigo Public Server Authentication CA DV E36"
+          ]
+        ]
+      ],
+      "not_before": "Oct 28 00:00:00 2026 GMT",
+      "not_after": "Jan 25 23:59:59 2027 GMT",
+      "leaf_sha256": "30988ded7e78994b5c3fc151977c0205cb15ee1eb247639751c5334f2b630e32"
+    },
+    {
+      "endpoint": "github.com",
+      "via_existing_loopback_proxy": true,
+      "verified": true,
+      "tls": "TLSv1.3",
+      "subject": [
+        [
+          [
+            "commonName",
+            "github.com"
+          ]
+        ]
+      ],
+      "issuer": [
+        [
+          [
+            "countryName",
+            "GB"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "Sectigo Limited"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "Sectigo Public Server Authentication CA DV E36"
+          ]
+        ]
+      ],
+      "not_before": "Oct 30 00:00:00 2026 GMT",
+      "not_after": "Jan 27 23:59:59 2027 GMT",
+      "leaf_sha256": "7dc4d85cf1e310971225bc9a9257679043a243d70a3cc2a91cc5d389892c2776"
+    }
+  ],
+  "network_configuration_mutations": 0,
+  "new_trusted_certificates": 0,
+  "ssl_verification_disabled": false,
+  "method": "Existing system loopback proxy, command-scoped Git override only; default trusted CA and hostname validation retained. API cross-check separately verifies public CA chain.",
+  "write_operations": 0,
+  "direct_chain_diagnosis": "Direct github.com exposed Scholar Service / Scholar Root CA v1 self-signed chain, rejected; no root imported or trusted. Exact network interception cause not claimed.",
+  "direct_chain_root_sha256": "4da1578b889da6f04cba86f90a347e8fd1569c6469fe2d64c0ef0496310b060a",
+  "safe_resolution": "Per-command existing local system proxy provides independently verified public CA github.com chain; trusted API and ls-remote agree. No persistent proxy/CA/Git change.",
+  "connector_status": "GitHub connector transport unavailable during initial check; no connector writes, safely fell back to read-only CLI/API.",
+  "future_upload_gate": "Recheck proxy ownership, verified TLS and remote SHA at D2; never use sslVerify=false or SSL_NO_VERIFY."
+}

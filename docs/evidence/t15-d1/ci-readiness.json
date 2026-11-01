@@ -1,0 +1,74 @@
+{
+  "status": "STATIC_CONTRACT_PASS_REMOTE_NOT_RUN",
+  "workflow_sha256": "e1156582c8ca3e70ed9d14637443876108c5100c1d6c53043db7e5079c302fc4",
+  "target": "GitHub-hosted ubuntu-24.04, expected Linux X64/amd64; actual remote architecture not observed in D1",
+  "python": "3.12.10",
+  "node": "24.21.0",
+  "uv": "0.9.18",
+  "postgres_image": "pgvector/pgvector:0.8.7-pg17-bookworm@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d",
+  "tool_pin_api_matches": 5,
+  "credential_permissions": "contents:read; checkout persist-credentials:false; no provider secrets injected",
+  "artifact": "Only allowlisted bounded4096-byte status summary; no raw logs/PNG/JUnit/Checkpoint/ledger",
+  "playwright": {
+    "collected": 87,
+    "files": 6,
+    "workers": 1,
+    "retries": 0,
+    "default_api_port": 8001,
+    "default_web_port": 5174,
+    "local_postgres_port": 55433,
+    "runner_mode": "unmanaged/default owned host test process, not Mac managed Compose branch"
+  },
+  "skip_policy": "unchanged13BGE+1private-evidence; no T09/T11 core skips added",
+  "migration_checkpoint": "bootstrap requires fresh owned agentmall_test; Alembic upgrade+check, repeat seed, official PostgreSQL Checkpointer; temporary test_/cp_ cleaned",
+  "resource_assessment": "Hosted job30min; sequential1worker; no Mac2GiB limit is configured in hosted workflow. Performance/memory/clock behavior on Ubuntu amd64 remains REMOTE_CI_NOT_RUN.",
+  "production_tests_locks_workflow_changed": false,
+  "paid_requests": 0,
+  "official_action_refs": [
+    {
+      "repository": "actions/checkout",
+      "pinned_sha": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "tag": "v7.0.1",
+      "observed_commit": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "match": true,
+      "exit": 0
+    },
+    {
+      "repository": "actions/setup-python",
+      "pinned_sha": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+      "tag": "v7.0.0",
+      "observed_commit": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+      "match": true,
+      "exit": 0
+    },
+    {
+      "repository": "astral-sh/setup-uv",
+      "pinned_sha": "68559e99cc807c1eb7e9238fd43a15bba460eec2",
+      "tag": "v10.3.3",
+      "observed_commit": "68559e99cc807c1eb7e9238fd43a15bba460eec2",
+      "match": true,
+      "exit": 0
+    },
+    {
+      "repository": "actions/setup-node",
+      "pinned_sha": "949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "tag": "v7.1.0",
+      "observed_commit": "949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "match": true,
+      "exit": 0
+    },
+    {
+      "repository": "actions/upload-artifact",
+      "pinned_sha": "b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "tag": "v6.0.0",
+      "observed_commit": "b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "match": true,
+      "exit": 0
+    }
+  ],
+  "actionlint": {
+    "version": "1.7.12",
+    "binary_sha256": "8db11704dc296f096216db4db65d86cd7f0ebfdf4c38453a1da276b137b88388",
+    "exit": 0
+  }
+}

@@ -1,0 +1,2069 @@
+{
+  "method": "Read every unique reachable blob with credential/DSN/JWT/private-key/personal-path/email rules; reviewed each matched historical source context. Findings contain fingerprints, not matched literals. PNGs inspected separately. This is a scoped source-publication review, not a universal security guarantee.",
+  "findings": [
+    {
+      "finding_id": "F0001",
+      "pattern": "credential_dsn",
+      "git_blob": "ef186db74fb638789537c515011372e737770679",
+      "paths": [
+        ".env.example"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 3,
+      "match_bytes": 91,
+      "match_sha256": "89cdf01cc38b2042aebce65d4fccb15d3aadfe7a84cf40b3dee9ee9c3c03e83a",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0002",
+      "pattern": "credential_dsn",
+      "git_blob": "ef186db74fb638789537c515011372e737770679",
+      "paths": [
+        ".env.example"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 4,
+      "match_bytes": 96,
+      "match_sha256": "04a6245268f064c93604eec20fad10fbfb0a5b7a2a5af2b0a023aaa31b0e73fe",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0003",
+      "pattern": "credential_dsn",
+      "git_blob": "d3b76dfecf2915a914d104abff7c1ea4d571808a",
+      "paths": [
+        ".env.rag.example"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 3,
+      "match_bytes": 96,
+      "match_sha256": "1ab7db0845fd0530a25c37c249188e14086f72eb0a10b22c5a4b3ec7d83f4508",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0004",
+      "pattern": "credential_assignment",
+      "git_blob": "1e2b58b93498ef533038ea9cd031608fb799a8f6",
+      "paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 25,
+      "match_bytes": 66,
+      "match_sha256": "d0afa1c328796693903e75e33ccdaf7cc8a2b74fde66a7da63f6474564a9902c",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0005",
+      "pattern": "credential_assignment",
+      "git_blob": "1e2b58b93498ef533038ea9cd031608fb799a8f6",
+      "paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 28,
+      "match_bytes": 94,
+      "match_sha256": "1503e765b7120236a9654502f091e5b6f562e3ba32ea189151828b7b3cc227ee",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0006",
+      "pattern": "credential_assignment",
+      "git_blob": "1e2b58b93498ef533038ea9cd031608fb799a8f6",
+      "paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 38,
+      "match_bytes": 63,
+      "match_sha256": "bcf2db06b8540cf906622665365e6230233fcac34c64699f318734899fb1a09c",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0007",
+      "pattern": "credential_dsn",
+      "git_blob": "1e2b58b93498ef533038ea9cd031608fb799a8f6",
+      "paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 26,
+      "match_bytes": 94,
+      "match_sha256": "5b7d358d64ae6272fe56eb38071ac05c010942999975ecfd6d87b2a4cb09fa26",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0008",
+      "pattern": "credential_dsn",
+      "git_blob": "1e2b58b93498ef533038ea9cd031608fb799a8f6",
+      "paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 27,
+      "match_bytes": 94,
+      "match_sha256": "5b7d358d64ae6272fe56eb38071ac05c010942999975ecfd6d87b2a4cb09fa26",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0009",
+      "pattern": "credential_assignment",
+      "git_blob": "444846579406b5c8ea814826dc8d75ed629b00e8",
+      "paths": [
+        "backend/src/agentmall/seed.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 14,
+      "match_bytes": 38,
+      "match_sha256": "132c18726fc012e42746b41b373e3e2fffd45fc1332deb71d9272667b6df81ab",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0010",
+      "pattern": "credential_assignment",
+      "git_blob": "eb80c9ba56afc9a5dd6fa970542ca03c74f48674",
+      "paths": [
+        "backend/tests/aftersales_helpers.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 15,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0011",
+      "pattern": "credential_assignment",
+      "git_blob": "87b8a1ebd2e11058ca5666aa01aee260f6ca2008",
+      "paths": [
+        "backend/tests/conftest.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 17,
+      "match_bytes": 33,
+      "match_sha256": "d37cfd3908af31d70eecad42a207ef5ded05cdb3a3348a0eb9d1c9b5082d2ea4",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0012",
+      "pattern": "credential_assignment",
+      "git_blob": "87b8a1ebd2e11058ca5666aa01aee260f6ca2008",
+      "paths": [
+        "backend/tests/conftest.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 110,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0013",
+      "pattern": "credential_assignment",
+      "git_blob": "87b8a1ebd2e11058ca5666aa01aee260f6ca2008",
+      "paths": [
+        "backend/tests/conftest.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 119,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0014",
+      "pattern": "credential_assignment",
+      "git_blob": "c74e103ade0a913870c18a13f47807b5b1e5be9d",
+      "paths": [
+        "backend/tests/integration/test_business_invariants.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 154,
+      "match_bytes": 42,
+      "match_sha256": "2a21a9d835c20eba68c07d205fffd95d12a74eae98b9ebdafef6c4cbec4d9d81",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0015",
+      "pattern": "credential_assignment",
+      "git_blob": "d18d87f96b58479d2970410cb583ba9903e1b0d8",
+      "paths": [
+        "backend/tests/integration/test_cross_tenant.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 65,
+      "match_bytes": 41,
+      "match_sha256": "ccba575cb03e21295a0a2153c2f2b9d71a6885f342a2f7f2875d56c239d712a3",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0016",
+      "pattern": "credential_assignment",
+      "git_blob": "fcadab627b3fc79d07d02b84a136f332e0408e44",
+      "paths": [
+        "backend/tests/smoke_http.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 16,
+      "match_bytes": 86,
+      "match_sha256": "f75e9496839f15d38dd80386969bd0cbe4785acf6f5cc843bccd352c63020ac1",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0017",
+      "pattern": "credential_assignment",
+      "git_blob": "fcadab627b3fc79d07d02b84a136f332e0408e44",
+      "paths": [
+        "backend/tests/smoke_http.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 61,
+      "match_bytes": 86,
+      "match_sha256": "0c08aba60302bd9e17debc418c021df37469012eeaffd398506566d94c9081f3",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0018",
+      "pattern": "credential_assignment",
+      "git_blob": "fcadab627b3fc79d07d02b84a136f332e0408e44",
+      "paths": [
+        "backend/tests/smoke_http.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 66,
+      "match_bytes": 47,
+      "match_sha256": "6cc02eb0922b5897f6ea8813bb85467cb822c0ae8d31d54beb1da027a6311ec9",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0019",
+      "pattern": "credential_assignment",
+      "git_blob": "14598bb41c3c08167366559caca4e9c691629fdc",
+      "paths": [
+        "backend/tests/t09_worker.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 135,
+      "match_bytes": 97,
+      "match_sha256": "9b68a8e81f82ae3aa818fa17625d277671f668e8b3a1d48624ad1ba2ce0b1e15",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0020",
+      "pattern": "credential_assignment",
+      "git_blob": "14598bb41c3c08167366559caca4e9c691629fdc",
+      "paths": [
+        "backend/tests/t09_worker.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 138,
+      "match_bytes": 49,
+      "match_sha256": "47cb77bc088148e3a38f34de95c8575023cf9343a6327e29dbc6972e11e416af",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0021",
+      "pattern": "credential_assignment",
+      "git_blob": "528c735f2815724d3fa69c4e2182231ad02d2788",
+      "paths": [
+        "backend/tests/test_agent_tools.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 298,
+      "match_bytes": 58,
+      "match_sha256": "212d0181ef97e025884328aa365e581c3758ef46810c29197d78156857d8aa0b",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0022",
+      "pattern": "credential_assignment",
+      "git_blob": "6ac33218220cfc53fa48a168b5f541accc6a283a",
+      "paths": [
+        "backend/tests/test_checkout.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 382,
+      "match_bytes": 42,
+      "match_sha256": "bce4d307cd8b03c6529a47c62b21f59e218746c0b538b3d4d6fccc1086abf9f8",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0023",
+      "pattern": "credential_dsn",
+      "git_blob": "51f91a9598feca50ec8fb18076fd3821fca23d68",
+      "paths": [
+        "backend/tests/test_database.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 85,
+      "match_bytes": 52,
+      "match_sha256": "69fa8993d356aecae5df3933f647be5288cf97197916429d24d855b1b615f9f1",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0024",
+      "pattern": "credential_dsn",
+      "git_blob": "51f91a9598feca50ec8fb18076fd3821fca23d68",
+      "paths": [
+        "backend/tests/test_database.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 86,
+      "match_bytes": 53,
+      "match_sha256": "3b3c529f0a05626298a321c9df4ac843dde20e10b43721726a88b6c809713921",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0025",
+      "pattern": "credential_dsn",
+      "git_blob": "51f91a9598feca50ec8fb18076fd3821fca23d68",
+      "paths": [
+        "backend/tests/test_database.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 87,
+      "match_bytes": 54,
+      "match_sha256": "7e41420f07bda482e18aca4b0d197b3817a7a7691165e37e1daaf5de8864e4cc",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0026",
+      "pattern": "credential_dsn",
+      "git_blob": "51f91a9598feca50ec8fb18076fd3821fca23d68",
+      "paths": [
+        "backend/tests/test_database.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 88,
+      "match_bytes": 86,
+      "match_sha256": "b56bc22fda99314a3f5bad45b5245a4d12577b8bf8b8c8eb9ab11b89e4e1b8e8",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0027",
+      "pattern": "credential_assignment",
+      "git_blob": "dbc91e2b5e4cccc7766df785a6a8c74f63da85af",
+      "paths": [
+        "backend/tests/test_human_handoff.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 32,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0028",
+      "pattern": "credential_assignment",
+      "git_blob": "be988a18e098b8fbe940108ed3b937612815b3b0",
+      "paths": [
+        "backend/tests/test_identity.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 87,
+      "match_bytes": 41,
+      "match_sha256": "c4d37616bc9e86c307544ed5f8a1f42f7fd67280f897594a01c6db6e8989bae5",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0029",
+      "pattern": "credential_assignment",
+      "git_blob": "8777df0a8d01851eb60572594a9b85a39669eb99",
+      "paths": [
+        "backend/tests/test_lifecycle_http.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 82,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0030",
+      "pattern": "email",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 204,
+      "match_bytes": 27,
+      "match_sha256": "48d4dda007b3a2c35e1ab12f8230843f25943443fd95cdfb4eee10a8e2a26ac0",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "DSN user/password@elsewhere.invalid parsed as email by regex; invalid-host admission negative test, not a person."
+    },
+    {
+      "finding_id": "F0031",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 201,
+      "match_bytes": 71,
+      "match_sha256": "41ef535c8bddebb4699b7eadff3481db4630a6bf6d99074cba9095a0d8d49b64",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0032",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 202,
+      "match_bytes": 66,
+      "match_sha256": "ca37db1e43cec90c73df87289adaea126858ac20a6cea7b8766090f84aba06a9",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0033",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 203,
+      "match_bytes": 67,
+      "match_sha256": "9ba9828285d4c1c816b22609164ab8ad37789718b97d74618b795834be0bf2bf",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0034",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 204,
+      "match_bytes": 79,
+      "match_sha256": "dd3acea31d9366f342c73425e3ee40cb47801054b686d85b262dcf2654218cb3",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0035",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 205,
+      "match_bytes": 63,
+      "match_sha256": "543e6847c426587a4fc8257fc277c7c09aa30d4dca2200fc3fbc0ba3cccdac15",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0036",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 206,
+      "match_bytes": 82,
+      "match_sha256": "2e43812c8b13bde2e2d77385acb1816942d53af8c04dfc1013022beb305229cf",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0037",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 231,
+      "match_bytes": 47,
+      "match_sha256": "a4807e091c464b20948d91b138b19d652ef2e919dd073f71fde53aa934805ba1",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0038",
+      "pattern": "credential_dsn",
+      "git_blob": "7d5514c194c06307c47163831ba5f61dfa2e611d",
+      "paths": [
+        "backend/tests/test_live_preflight.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 233,
+      "match_bytes": 47,
+      "match_sha256": "a4807e091c464b20948d91b138b19d652ef2e919dd073f71fde53aa934805ba1",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0039",
+      "pattern": "credential_assignment",
+      "git_blob": "ef0681b05f330e24e8ad19fc5322483d3c583e00",
+      "paths": [
+        "backend/tests/test_order_lifecycle.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 29,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0040",
+      "pattern": "credential_assignment",
+      "git_blob": "aab73ff33915966adb7c0f9f5205eb254e8a24f4",
+      "paths": [
+        "backend/tests/test_refund_idempotency.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 456,
+      "match_bytes": 39,
+      "match_sha256": "cba94cd843519e7e3132afe433153da87a2c812483cb4dd815a55754ecb4513c",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0041",
+      "pattern": "credential_assignment",
+      "git_blob": "aab73ff33915966adb7c0f9f5205eb254e8a24f4",
+      "paths": [
+        "backend/tests/test_refund_idempotency.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 631,
+      "match_bytes": 43,
+      "match_sha256": "89a3c168ddf272a27f8d5a5f11ef08f8e8388f738e95e04a561d52895b025ffe",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0042",
+      "pattern": "provider_token_shape",
+      "git_blob": "209ecdb3c24d0178e2f227535d9ecf4c13c05c29",
+      "paths": [
+        "backend/tests/test_rejected_run_event_durability.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 32,
+      "match_bytes": 19,
+      "match_sha256": "61e8530c90d01d1fd2f2df00a531eff9e0f1b026f65b8f66a1178c177714e485",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Explicit synthetic redaction negative controls; no genuine Provider credential. Reviewed full test context."
+    },
+    {
+      "finding_id": "F0043",
+      "pattern": "provider_token_shape",
+      "git_blob": "209ecdb3c24d0178e2f227535d9ecf4c13c05c29",
+      "paths": [
+        "backend/tests/test_rejected_run_event_durability.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 107,
+      "match_bytes": 19,
+      "match_sha256": "61e8530c90d01d1fd2f2df00a531eff9e0f1b026f65b8f66a1178c177714e485",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Explicit synthetic redaction negative controls; no genuine Provider credential. Reviewed full test context."
+    },
+    {
+      "finding_id": "F0044",
+      "pattern": "credential_assignment",
+      "git_blob": "1a1f7b11e432314c977dc3c4f260921d4120c31c",
+      "paths": [
+        "backend/tests/test_release_bootstrap.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 25,
+      "match_bytes": 74,
+      "match_sha256": "8741ea3401fa1628d12234fff3d0e1bec8d8893ab938e8c7346dd1a257c90b2b",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0045",
+      "pattern": "credential_assignment",
+      "git_blob": "1a1f7b11e432314c977dc3c4f260921d4120c31c",
+      "paths": [
+        "backend/tests/test_release_bootstrap.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 32,
+      "match_bytes": 89,
+      "match_sha256": "e518038b426d6896f0a6b3c7d02736c1cb3f8a46d0e7c729645e8eb3ec3df8c8",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0046",
+      "pattern": "credential_assignment",
+      "git_blob": "1a1f7b11e432314c977dc3c4f260921d4120c31c",
+      "paths": [
+        "backend/tests/test_release_bootstrap.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 38,
+      "match_bytes": 69,
+      "match_sha256": "e14b4ff64599b55321e512cdc00e4a490ce90b07fce8c723c64c1f2676e01fd6",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0047",
+      "pattern": "credential_assignment",
+      "git_blob": "131d5639866be22e7768f3033faf15e979ef5e0a",
+      "paths": [
+        "backend/tests/test_release_demo.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 54,
+      "match_bytes": 86,
+      "match_sha256": "810982ea1546991a66a5e6046abd11cbfe9b731711ced6b2716d4560c3d128ba",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0048",
+      "pattern": "credential_assignment",
+      "git_blob": "4fe21b974134ea9f7084d1a0a51490a80027b77c",
+      "paths": [
+        "backend/tests/test_retest_admission.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 25,
+      "match_bytes": 71,
+      "match_sha256": "046f616bfc6bb19bb31fe3930cb0553dcc61fe6cd0dfcf7c20d8d9350f846410",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0049",
+      "pattern": "credential_dsn",
+      "git_blob": "4fe21b974134ea9f7084d1a0a51490a80027b77c",
+      "paths": [
+        "backend/tests/test_retest_admission.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 235,
+      "match_bytes": 71,
+      "match_sha256": "41ef535c8bddebb4699b7eadff3481db4630a6bf6d99074cba9095a0d8d49b64",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0050",
+      "pattern": "provider_token_shape",
+      "git_blob": "531902f27094ca235d2012d0a77794a1de88e132",
+      "paths": [
+        "backend/tests/test_trace_redaction.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 16,
+      "match_bytes": 19,
+      "match_sha256": "61e8530c90d01d1fd2f2df00a531eff9e0f1b026f65b8f66a1178c177714e485",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Explicit synthetic redaction negative controls; no genuine Provider credential. Reviewed full test context."
+    },
+    {
+      "finding_id": "F0051",
+      "pattern": "credential_assignment",
+      "git_blob": "531902f27094ca235d2012d0a77794a1de88e132",
+      "paths": [
+        "backend/tests/test_trace_redaction.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 46,
+      "match_bytes": 52,
+      "match_sha256": "6cb663a99055c50baa2142dea8257d1314187c267ebac138053c87685a277e67",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0052",
+      "pattern": "credential_assignment",
+      "git_blob": "3823e47631c8f513870d570317eb11602d705b7e",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d"
+      ],
+      "line": 40,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0053",
+      "pattern": "credential_assignment",
+      "git_blob": "3823e47631c8f513870d570317eb11602d705b7e",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d"
+      ],
+      "line": 248,
+      "match_bytes": 54,
+      "match_sha256": "d23a13f7fe1f59e70ea94061c5f5e00b15a09128b109ca98bec11c8a1f1b70ee",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0054",
+      "pattern": "credential_assignment",
+      "git_blob": "3823e47631c8f513870d570317eb11602d705b7e",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d"
+      ],
+      "line": 249,
+      "match_bytes": 52,
+      "match_sha256": "3b4e3fee876acf7c0f2bee87d49c5d53f21c45ca7b7fe713319643600111c7a4",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0055",
+      "pattern": "credential_assignment",
+      "git_blob": "804899eeb518fc0ac871def7577ea8deb62d3f15",
+      "paths": [
+        "compose.ci.yaml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 8,
+      "match_bytes": 59,
+      "match_sha256": "6189e3ab1da907a171b3d90842cdc19df74aa864f5fa37504f7d146b13548a5f",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0056",
+      "pattern": "credential_assignment",
+      "git_blob": "804899eeb518fc0ac871def7577ea8deb62d3f15",
+      "paths": [
+        "compose.ci.yaml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 33,
+      "match_bytes": 66,
+      "match_sha256": "d0afa1c328796693903e75e33ccdaf7cc8a2b74fde66a7da63f6474564a9902c",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0057",
+      "pattern": "credential_assignment",
+      "git_blob": "2656479370067da63f55b3f463e52728f529f5cd",
+      "paths": [
+        "evals/config/frozen-live-retest-01.yaml"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 440,
+      "match_bytes": 71,
+      "match_sha256": "046f616bfc6bb19bb31fe3930cb0553dcc61fe6cd0dfcf7c20d8d9350f846410",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0058",
+      "pattern": "credential_assignment",
+      "git_blob": "260ba7d9cc54e0dff7a3aa2b839a1c2ccc26f516",
+      "paths": [
+        "evals/experiments.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 18,
+      "match_bytes": 71,
+      "match_sha256": "046f616bfc6bb19bb31fe3930cb0553dcc61fe6cd0dfcf7c20d8d9350f846410",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0059",
+      "pattern": "credential_assignment",
+      "git_blob": "f24f4693b50c4058ae23ceff2d123d3e0f273ee7",
+      "paths": [
+        "evals/fixtures.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 130,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0060",
+      "pattern": "credential_assignment",
+      "git_blob": "314ad890e52f635ffd19a4520291577fc4b926fc",
+      "paths": [
+        "evals/live_smoke.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 119,
+      "match_bytes": 41,
+      "match_sha256": "c4d37616bc9e86c307544ed5f8a1f42f7fd67280f897594a01c6db6e8989bae5",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0061",
+      "pattern": "credential_assignment",
+      "git_blob": "8a8bfb041bf3ec4be0c4b308975cfb4443056a49",
+      "paths": [
+        "evals/retrieval.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 290,
+      "match_bytes": 49,
+      "match_sha256": "47cb77bc088148e3a38f34de95c8575023cf9343a6327e29dbc6972e11e416af",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0062",
+      "pattern": "credential_assignment",
+      "git_blob": "3cced8b81d05b9a56b163a635a462ae685a1adbf",
+      "paths": [
+        "frontend/tests/purchase.spec.ts"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 7,
+      "match_bytes": 39,
+      "match_sha256": "40852d3bf06d017e8d28e01dfe6b7b50e25ce6d84580d8c17b23b8de076d54d9",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0063",
+      "pattern": "credential_assignment",
+      "git_blob": "9d481cddabf12095d2c66cd8f387b6d2fdd01baa",
+      "paths": [
+        "frontend/tests/return_replace.spec.ts"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 9,
+      "match_bytes": 39,
+      "match_sha256": "5205c077973abea3d341c01fb7874a3709731756e2866ccc7aaf1259e9a67cc7",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0064",
+      "pattern": "credential_assignment",
+      "git_blob": "d75474dbaa18da35215666ae65a1fa40675424de",
+      "paths": [
+        "scripts/demo.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 21,
+      "match_bytes": 33,
+      "match_sha256": "d37cfd3908af31d70eecad42a207ef5ded05cdb3a3348a0eb9d1c9b5082d2ea4",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0065",
+      "pattern": "credential_assignment",
+      "git_blob": "d75474dbaa18da35215666ae65a1fa40675424de",
+      "paths": [
+        "scripts/demo.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 61,
+      "match_bytes": 39,
+      "match_sha256": "0acef29478ed9403213b006d8d40b563662e793a9d55e429f8cf2ca53a715da2",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0066",
+      "pattern": "credential_assignment",
+      "git_blob": "d75474dbaa18da35215666ae65a1fa40675424de",
+      "paths": [
+        "scripts/demo.py"
+      ],
+      "commits": [
+        "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c",
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 110,
+      "match_bytes": 42,
+      "match_sha256": "bce4d307cd8b03c6529a47c62b21f59e218746c0b538b3d4d6fccc1086abf9f8",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0067",
+      "pattern": "credential_assignment",
+      "git_blob": "87460da6702928fb7035d5788ede367628e11e18",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 40,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0068",
+      "pattern": "credential_assignment",
+      "git_blob": "87460da6702928fb7035d5788ede367628e11e18",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 248,
+      "match_bytes": 54,
+      "match_sha256": "d23a13f7fe1f59e70ea94061c5f5e00b15a09128b109ca98bec11c8a1f1b70ee",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0069",
+      "pattern": "credential_assignment",
+      "git_blob": "87460da6702928fb7035d5788ede367628e11e18",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 249,
+      "match_bytes": 52,
+      "match_sha256": "3b4e3fee876acf7c0f2bee87d49c5d53f21c45ca7b7fe713319643600111c7a4",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0070",
+      "pattern": "credential_assignment",
+      "git_blob": "f22d6e4c51a8178e725358a224fbb0faa5c3dbdf",
+      "paths": [
+        "frontend/tests/payment.spec.ts"
+      ],
+      "commits": [
+        "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef"
+      ],
+      "line": 8,
+      "match_bytes": 39,
+      "match_sha256": "5205c077973abea3d341c01fb7874a3709731756e2866ccc7aaf1259e9a67cc7",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0071",
+      "pattern": "credential_assignment",
+      "git_blob": "274a1e750a9a12818741e22e461cfe7a6d1235ee",
+      "paths": [
+        "backend/tests/cart_checkout_worker.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 26,
+      "match_bytes": 97,
+      "match_sha256": "9b68a8e81f82ae3aa818fa17625d277671f668e8b3a1d48624ad1ba2ce0b1e15",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0072",
+      "pattern": "credential_assignment",
+      "git_blob": "274a1e750a9a12818741e22e461cfe7a6d1235ee",
+      "paths": [
+        "backend/tests/cart_checkout_worker.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 32,
+      "match_bytes": 46,
+      "match_sha256": "b74a2d322893f88b89dfda763649ff2cc6fc2e08249fdeb7917c54bb85e4afbb",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0073",
+      "pattern": "credential_assignment",
+      "git_blob": "d456c81f8157b3335ec09d72632e5dee59a0a5ad",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 40,
+      "match_bytes": 38,
+      "match_sha256": "65b479f312ee49dfb4a01d5c29ccfd67a204d455b57521c44c624db82c4c4881",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0074",
+      "pattern": "credential_assignment",
+      "git_blob": "d456c81f8157b3335ec09d72632e5dee59a0a5ad",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 248,
+      "match_bytes": 54,
+      "match_sha256": "d23a13f7fe1f59e70ea94061c5f5e00b15a09128b109ca98bec11c8a1f1b70ee",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0075",
+      "pattern": "credential_assignment",
+      "git_blob": "d456c81f8157b3335ec09d72632e5dee59a0a5ad",
+      "paths": [
+        "backend/tests/test_web_e2e_server.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 249,
+      "match_bytes": 52,
+      "match_sha256": "3b4e3fee876acf7c0f2bee87d49c5d53f21c45ca7b7fe713319643600111c7a4",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0076",
+      "pattern": "credential_assignment",
+      "git_blob": "067443e6c4e25cc1478d3c11e4a8afc9ea3624a4",
+      "paths": [
+        "frontend/tests/cart_checkout.spec.ts"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 10,
+      "match_bytes": 39,
+      "match_sha256": "5205c077973abea3d341c01fb7874a3709731756e2866ccc7aaf1259e9a67cc7",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0077",
+      "pattern": "credential_assignment",
+      "git_blob": "067443e6c4e25cc1478d3c11e4a8afc9ea3624a4",
+      "paths": [
+        "frontend/tests/cart_checkout.spec.ts"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 23,
+      "match_bytes": 35,
+      "match_sha256": "daccbc046cf026b28bd4094b98a8ec48f915f9c88d008ed6e6b07828037a3c6b",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0078",
+      "pattern": "credential_assignment",
+      "git_blob": "671b037e369e8d9cfbf985741115e35fb75dd243",
+      "paths": [
+        "frontend/tests/payment.spec.ts"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 9,
+      "match_bytes": 39,
+      "match_sha256": "5205c077973abea3d341c01fb7874a3709731756e2866ccc7aaf1259e9a67cc7",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0079",
+      "pattern": "credential_assignment",
+      "git_blob": "a5eb976380bbc1a0b92cf1c5f37971665fc14438",
+      "paths": [
+        "frontend/tests/purchase.spec.ts"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 8,
+      "match_bytes": 39,
+      "match_sha256": "40852d3bf06d017e8d28e01dfe6b7b50e25ce6d84580d8c17b23b8de076d54d9",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0080",
+      "pattern": "credential_assignment",
+      "git_blob": "4969f6dabd64bb47d6e382084299f2cd89077e13",
+      "paths": [
+        "frontend/tests/return_replace.spec.ts"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db",
+        "d81de4adc125c9ce019434fb338a52fe5282070c"
+      ],
+      "line": 10,
+      "match_bytes": 39,
+      "match_sha256": "5205c077973abea3d341c01fb7874a3709731756e2866ccc7aaf1259e9a67cc7",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0081",
+      "pattern": "credential_assignment",
+      "git_blob": "5d71ae7c109c5ffd5f4fbab0f17db7c8e620f7e1",
+      "paths": [
+        "docs/evidence/t14-r1-a/ci-readiness.json"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db"
+      ],
+      "line": 104,
+      "match_bytes": 38,
+      "match_sha256": "5b1b4bb79401cc76de421154ebbec5f2f33aea36d8a7e29e0d0752b8c0010265",
+      "classification": "REVIEWED_PUBLIC_EVIDENCE",
+      "decision": "NON_BLOCKING",
+      "reason": "Authorization status/disclosure text rather than an approval receipt or credential; reviewed JSON field context."
+    },
+    {
+      "finding_id": "F0082",
+      "pattern": "credential_assignment",
+      "git_blob": "91d3bc10517dae871e6eb9522d4b27dc56658f18",
+      "paths": [
+        "docs/evidence/t14-r1-a/remote-observation.json"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+        "c06c5841af36a631b69462c035d6410f732af0db"
+      ],
+      "line": 12,
+      "match_bytes": 52,
+      "match_sha256": "fd8531098f63b876079b59e5c7da55866a50d21dd109c9e5e6fe20d723319593",
+      "classification": "REVIEWED_PUBLIC_EVIDENCE",
+      "decision": "NON_BLOCKING",
+      "reason": "Authorization status/disclosure text rather than an approval receipt or credential; reviewed JSON field context."
+    },
+    {
+      "finding_id": "F0083",
+      "pattern": "credential_assignment",
+      "git_blob": "63c81450bdc2bcd6ee603a3da5e9ad13fe984d24",
+      "paths": [
+        "backend/src/agentmall/playground/cli.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 41,
+      "match_bytes": 54,
+      "match_sha256": "101ac097c334859f5b59401d3f5bdf00f3a290355684f29df157e800a927e073",
+      "classification": "PUBLIC_SOURCE_OR_DOCUMENTATION",
+      "decision": "NON_BLOCKING",
+      "reason": "NOT_GRANTED/LOCAL_RECEIPT_VALIDATED status output, not an uploaded authorization receipt."
+    },
+    {
+      "finding_id": "F0084",
+      "pattern": "credential_assignment",
+      "git_blob": "63c81450bdc2bcd6ee603a3da5e9ad13fe984d24",
+      "paths": [
+        "backend/src/agentmall/playground/cli.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 85,
+      "match_bytes": 66,
+      "match_sha256": "c20923d06031c80e092d608e7866a56905ccfb25ff7750a691e6b4c56aff3912",
+      "classification": "PUBLIC_SOURCE_OR_DOCUMENTATION",
+      "decision": "NON_BLOCKING",
+      "reason": "NOT_GRANTED/LOCAL_RECEIPT_VALIDATED status output, not an uploaded authorization receipt."
+    },
+    {
+      "finding_id": "F0085",
+      "pattern": "credential_assignment",
+      "git_blob": "624915a97ff3ba616b84aefa4b87a053407fb7fb",
+      "paths": [
+        "backend/tests/test_playground_entry.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 169,
+      "match_bytes": 62,
+      "match_sha256": "ece51ad4b535ed85d1e8343e5801823d419a1601d89adc261d7d8be84698f858",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0086",
+      "pattern": "credential_dsn",
+      "git_blob": "624915a97ff3ba616b84aefa4b87a053407fb7fb",
+      "paths": [
+        "backend/tests/test_playground_entry.py"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 168,
+      "match_bytes": 71,
+      "match_sha256": "2ff42ee06ce4bd495d28473abe80b6e8b3ec028b1b8f3a19a83b4a61b9751a5d",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0087",
+      "pattern": "credential_assignment",
+      "git_blob": "8a3f3f2fbeedc24a09b0b373bf7beae9a941fb02",
+      "paths": [
+        "compose.playground.yaml"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 9,
+      "match_bytes": 58,
+      "match_sha256": "6edfddcde2c706edf71c8f003e36ce704604c8a09998b06a81c14a7a513f1ac6",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0088",
+      "pattern": "credential_dsn",
+      "git_blob": "8a3f3f2fbeedc24a09b0b373bf7beae9a941fb02",
+      "paths": [
+        "compose.playground.yaml"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 36,
+      "match_bytes": 93,
+      "match_sha256": "cc700343fc5bcd8de629ec0afd4bf78a95c2e871e580c261f6b2beb67383aa84",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0089",
+      "pattern": "credential_assignment",
+      "git_blob": "26a94c331bb73fd484b92a7f182f826bbc4c667e",
+      "paths": [
+        "docs/evidence/t15-a/provider-reference.json"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 16,
+      "match_bytes": 36,
+      "match_sha256": "8eaa7198b8581afaba295f25455edf5a3bca366e9bbfb8b958af2488e8c229b6",
+      "classification": "REVIEWED_PUBLIC_EVIDENCE",
+      "decision": "NON_BLOCKING",
+      "reason": "Authorization status/disclosure text rather than an approval receipt or credential; reviewed JSON field context."
+    },
+    {
+      "finding_id": "F0090",
+      "pattern": "credential_assignment",
+      "git_blob": "a72b47baeda46416b3e69706e1d791b2895ae80d",
+      "paths": [
+        "docs/evidence/t15-a/source-identity.json"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 5,
+      "match_bytes": 32,
+      "match_sha256": "f8e972ce6db58d86860a1ddbd61cfc4aabd7391a7152fbb91710100ab233de7e",
+      "classification": "REVIEWED_PUBLIC_EVIDENCE",
+      "decision": "NON_BLOCKING",
+      "reason": "Authorization status/disclosure text rather than an approval receipt or credential; reviewed JSON field context."
+    },
+    {
+      "finding_id": "F0091",
+      "pattern": "credential_assignment",
+      "git_blob": "c0a13887346246c7cce09e9f0296e0edcc4dde9a",
+      "paths": [
+        "frontend/tests/playground.spec.ts"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 10,
+      "match_bytes": 39,
+      "match_sha256": "5205c077973abea3d341c01fb7874a3709731756e2866ccc7aaf1259e9a67cc7",
+      "classification": "SYNTHETIC_TEST_DATA",
+      "decision": "NON_BLOCKING",
+      "reason": "Reviewed synthetic demo/CI/test/example constant, dynamically concatenated Bearer header prefix, or noncredential authorization-status constant. Never deploy public sample credentials."
+    },
+    {
+      "finding_id": "F0092",
+      "pattern": "credential_assignment",
+      "git_blob": "33d8d9b63d5e3a7d7d447c1f6d3022881ed8fd68",
+      "paths": [
+        "docs/evidence/t15-c/publication-audit.json"
+      ],
+      "commits": [
+        "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+        "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219"
+      ],
+      "line": 40,
+      "match_bytes": 44,
+      "match_sha256": "5dea802fad151bee081d47a74905ac04b8eb4bf112000cd849c0932d83169435",
+      "classification": "REVIEWED_PUBLIC_EVIDENCE",
+      "decision": "NON_BLOCKING",
+      "reason": "Authorization status/disclosure text rather than an approval receipt or credential; reviewed JSON field context."
+    }
+  ],
+  "unresolved_sensitive_or_unknown": 0
+}

@@ -1,8 +1,17 @@
-# AgentMall：事务电商与可恢复 Agent 工作流
+# AgentMall：可恢复的 Multi-Agent 事务电商
 
-一个面向 Backend / Agent / AI Application 工程岗位的合成电商作品。React 中文商城连接真实 FastAPI、PostgreSQL 和 LangGraph：用户可以自己选购，也可以让 Agent 检索商品、检查订单与售后事实、准备操作提案，最终由用户独立确认、确定性领域服务提交事务。
+基于 **FastAPI + PostgreSQL + React + LangGraph** 的合成电商与 AI 应用工程作品。支持 Single-Agent，或 **Supervisor + Shopping / Order / AfterSales** 协作；通过 Hybrid RAG 检索商品和公开政策，用 Tool Calling 准备操作提案，再由用户独立确认、领域服务提交事务。HITL、PostgreSQL Checkpoint 和持久事件支持等待、刷新与故障恢复。
 
-**源码包含完整模拟购买闭环：购物车 → 购买提案 → 确认下单 → 独立确认模拟付款 → 查询订单与回执。** 默认模型为明确标记的 Fixture Model，商品、账号、地址及资金均为合成数据，不发生真实扣款，也不需要付费模型 Key。[公开仓库](https://github.com/Cockatoo-xlk/AgentMall-Portfolio)的具体版本、发布状态与远程 CI 以对应 Commit 的回执为准，不能从本文推断。
+**购物车 → 购买提案 → 人工确认下单 → 独立确认模拟付款 → 服务端订单与回执。** 库存预留、购物车消费、Confirmation 和幂等回执在 PostgreSQL 事务中协调；金额、账号、商品与资金均为合成数据，不发生真实扣款。
+
+| 运行方式 | 模型与验证边界 |
+|---|---|
+| 默认无 Key Demo | 明确标记 **Fixture Model**，真实 FastAPI / PostgreSQL / Checkpoint；普通 FastAPI 单独启动为 MODEL_DISABLED。 |
+| Live Playground | 独立本机入口使用真实 ChatDeepSeek SDK，需新授权、环境、价格和持久预算门禁。**T15-B1 仅在旧提交 `617cdf29` 完成一个 Multi-Agent 购物场景**；7 次 Provider 回执、50 条事件、唯一待支付订单。当前源码新 Live 验收 **NOT_RUN**，旧许可不能复用。[历史摘要](docs/evidence/t15-c/b1-public-summary.json) |
+
+经T15-D1核对的本地离线回归：**pytest 713 passed / 14 skipped · Vitest 80 passed · Playwright 87 passed / 0 retries**。环境为独立 **Linux aarch64 + Mac Chromium**；截至该次审查，此版本 GitHub Ubuntu amd64 CI 尚未执行，后续以对应SHA的Actions回执为准。原共享 Docker VM 时钟回退在审查时仍未修复。[结果与限制](docs/RESULTS.md)
+
+[安全运行与恢复](docs/REAL_AGENT_DEMO.md) · [3–5分钟演示脚本](docs/DEMO_RECORDING_SCRIPT.md) · [架构](docs/ARCHITECTURE.md) · [工程案例](docs/ENGINEERING_CASES.md)
 
 ## 可以验证的能力
 
@@ -13,18 +22,6 @@
 | 重复请求和响应丢失 | PostgreSQL 行锁、库存 CHECK、action 身份及幂等回执；结果未知先 GET 核对原提案、订单和购物车，不换新请求盲目下单或付款。[数据库 Oracle](backend/tests/integration/oracle.py)、[Cart 浏览器回归](frontend/tests/cart_checkout.spec.ts) |
 | 等待、刷新与恢复 | 官方 PostgreSQL Checkpointer、节点 Journal、Epoch Fence、持久预算；购买、退货及替代购买分别确认后 Resume。[恢复协调](backend/src/agentmall/agents/run_service.py)、[工作流回归](frontend/tests/return_replace.spec.ts) |
 | Agent、检索与权限 | Single，或 Supervisor + Shopping / Order / AfterSales；严格工具参数、服务端 Actor/Store 授权、公开政策版本引用、持久 RunEvent 与脱敏 Trace。Fixture 验证不冒充真实 DeepSeek 推理。 |
-
-[三项工程案例](docs/ENGINEERING_CASES.md) · [实际架构](docs/ARCHITECTURE.md) · [结果及限制](docs/RESULTS.md) · [3–5分钟演示](docs/DEMO.md)
-
-[Live Playground](docs/LIVE_PLAYGROUND.md)复用同一持久化工作流与独立人工确认。**历史提交 `617cdf29` 已完成一次真实 DeepSeek Multi-Agent 浏览器 Smoke**：Supervisor → Shopping检索 → Order提案 → 本人确认 → 唯一待付款订单，7次Provider回执、50条持久事件，实际平台账单UNKNOWN。[脱敏摘要](docs/evidence/t15-c/b1-public-summary.json)只描述该单次指定场景；本版本新增交互后源码指纹变化，**当前源码 Live 验收为 NOT_RUN**，没有复用旧授权。默认Fixture/模型关闭边界保留。
-
-[运行与恢复手册](docs/REAL_AGENT_DEMO.md) · [3–5分钟录屏脚本](docs/DEMO_RECORDING_SCRIPT.md) · [最终发布审核清单](docs/RELEASE_CHECKLIST.md) · [T15-C本地验收](docs/evidence/t15-c/report.md)
-
-**T15-C历史本地结果：后端713 passed/14 skipped、Vitest80 passed；Playwright81 passed/6 failed（新增3项均通过），Docker时钟回退已复现，当时发布准入BLOCKED。** 当时未放宽JWT/价格Guard或增加skip/retry，尚待稳定环境中的完整浏览器回归。该阶段的失败记录保留在[T15-C回执](docs/evidence/t15-c/report.md)。
-
-[T15-A 本地离线回归](docs/evidence/t15-a/report.md)：后端711 passed/14 skipped、Vitest71 passed、Playwright84 passed；均为分阶段本地结果，不能代替真实 DeepSeek 或远程 CI 验证。
-
-**T15-C1本地准入：`T15_C_LOCAL_RELEASE_GATE_PASSED`。** 在新建、独立且通过连续时钟监测的Linux环境，后端713 passed/14 skipped、Vitest80 passed、Playwright87 passed（0skip/0retry/0flaky）。生产源码、既有断言和安全验证未改；原六项失败及归因缺口保留，旧共享VM仍不适合验收。[逐项归因与回执](docs/evidence/t15-c1/report.md)。本地通过不等于新版远程CI或新Live验证。
 
 ## 无 API Key 的 Quick Start
 
@@ -42,20 +39,20 @@ docker compose -p agentmall-portfolio -f compose.ci.yaml run --rm runner python 
 
 退出演示并等待清理后，使用相同项目及配置执行 `docker compose -p agentmall-portfolio -f compose.ci.yaml down`，只移除确认属于该目录的容器/网络；不要加 `-v` 或删除历史数据库。已有演示的开发机可使用[独立端口与分阶段验证配置](docs/DEMO.md#t14-p1本地购物车结算)。
 
-## T14 已验收基线与环境边界
-
-2026-11-01 的 T14-P1 最终分阶段验收：
+## 本地验证与环境边界
 
 | 检查 | 实测结果 | 环境 |
 |---|---|---|
-| 后端 CI_OFFLINE_CORE | **670 passed / 14 skipped** | 本地 Linux ARM64 容器，真实 PostgreSQL17.11 / pgvector0.8.7 / Checkpoint |
-| 前端 Vitest | **65 passed** | 本机 macOS ARM64，锁定 Node/npm 依赖 |
-| Playwright 全量 | **74 passed**，1 worker / 0 retries / 0 skips | Mac 完整 Chromium headless + 独占容器 FastAPI / PostgreSQL / Checkpoint |
+| 后端 CI_OFFLINE_CORE | **713 passed / 14 skipped** | 独立 Linux aarch64 VM，真实 PostgreSQL17.11 / pgvector0.8.7 / Checkpoint |
+| 前端 Vitest | **80 passed** | Mac，锁定 Node/npm 依赖 |
+| Playwright 全量 | **87 passed**，1 worker / 0 retries / 0 skips / 0 flaky | Mac 完整 Chromium headless + 独立 Linux aarch64 VM 后端 |
 | Ruff、格式、typecheck、lint、build | 全部退出0 | 见原始回执哈希及源码对应核对 |
 
-[T14-P1证据及数据库终态](docs/evidence/t14-p1/report.md)保留成功与失败；[本轮发布前核对](docs/evidence/t14-r1-a/report.md)复用经哈希验证的回执。14项跳过仅13个真实 BGE 权重依赖和1个未公开私有 Live 原件比较，核心事务、T09恢复/SIGKILL、T10 Trace、T11并发和T12预算/权限/Oracle没有扩大跳过。
+[T15-C1回执、逐项归因和连续时钟诊断](docs/evidence/t15-c1/report.md)对应源码指纹 `7049db6ae8e334f82dc0b8de3083255e1c84a10ab4f3ec5e99b315fdf519a71a`。D1仅整理文档与发布审查，复用经原始日志 SHA 核对的回归，未改变产品源码或测试。14项跳过仅13个真实 BGE 权重依赖和1个未公开私有 Live 原件比较，事务、T09恢复/SIGKILL、T10 Trace、T11并发和T12预算/权限/Oracle没有扩大跳过。
 
-本机约1.91GiB、无swap的 Docker 引擎曾在单容器完整流程中 OOM、退出143，因此**不声称单容器整套 CI 通过**。最终完整检查集合分阶段完成；这不是新的 GitHub Ubuntu amd64 远程 CI 回执。上述历史候选和T15-C本地结果均不替代新版远程 CI，既有发布版与 Private RC 的成绩另见[结果索引](docs/RESULTS.md)，不能代替当前 SHA 的远程结果。
+原共享VM的时钟回退仍未修复；旧T15-C的81通过/6失败保留，一项同用例复现了JWT未来iat，其余五项历史原因未确定。新独立VM准入及完整测试窗口无重大时钟异常，旧六项均在完整87项中一次通过。不能放宽JWT校验或在旧环境反复碰绿色。
+
+本机约1.91GiB、无swap的旧 Docker 引擎曾在P1单容器完整流程中 OOM、退出143；T15-A也保留OOM/137。**不声称这些单容器流程通过**。本地检查集合分阶段完成，不替代当前版本GitHub Ubuntu24.04 amd64实测。[历史结果索引](docs/RESULTS.md)保留各阶段证据与失败。
 
 ## 已知限制与许可
 
@@ -65,4 +62,4 @@ docker compose -p agentmall-portfolio -f compose.ci.yaml run --rm runner python 
 
 进程内 Journal 不保证任意 SIGKILL 下外部模型调用 exactly-once；本地和远程 CI 都不是生产负载、SLA或容灾证明。没有真实支付/退款、云部署或生产验收，`VIDEO_NOT_RECORDED`。源码和文档不代替个人贡献说明，AI辅助范围需按事实披露。
 
-项目原创内容采用[MIT](LICENSE)，Copyright (c) 2026 Cockatoo-xlk；[权利人决定](docs/LICENSE_DECISION.md)、[COPYRIGHT](COPYRIGHT.md)和[第三方声明](THIRD_PARTY_NOTICES.md)说明归属。公开作品版建立独立 Git 根，不携带原 Private 研发历史、原始 Live 账本、授权记录或模型权重；[候选来源与排除边界](SNAPSHOT.md)仍保留。未来发布二进制、镜像或模型需另行审查。源码交付与上传、Actions、Release、部署相互独立；这些远程操作均需各自明确授权。
+项目原创内容采用[MIT](LICENSE)，Copyright (c) 2026 Cockatoo-xlk；[权利人决定](docs/LICENSE_DECISION.md)、[COPYRIGHT](COPYRIGHT.md)和[第三方声明](THIRD_PARTY_NOTICES.md)说明归属。公开作品版建立独立 Git 根，不携带原 Private 研发历史、原始 Live 账本、授权记录或模型权重；[源码来源与排除边界](SNAPSHOT.md)保留。未来发布二进制、镜像或模型需另行审查。[D1发布审查](docs/evidence/t15-d1/report.md)与[发布清单](docs/RELEASE_CHECKLIST.md)按阶段记录，上传、Actions、Release和部署各需独立授权及对应SHA回执。

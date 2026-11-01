@@ -1,14 +1,21 @@
 # 实际架构与数据职责
 
-本页为公开候选新编技术说明，不是原研发架构文件或历史原件。
+本页依据公开源码说明技术实现；原研发设计与各阶段实测范围以对应历史证据为准。
 
 ```mermaid
 flowchart LR
   UI[React 商城与工作区] --> API[FastAPI 认证和对象授权]
   API --> Graph[LangGraph 持久图]
   API --> Domain[确定性领域事务]
-  Graph --> Agents[Single 或 Supervisor 与三个 Specialist]
-  Agents --> Tools[工具白名单与严格参数]
+  Graph --> Single[Single Agent]
+  Graph --> Supervisor[Supervisor]
+  Supervisor --> Shopping[Shopping]
+  Supervisor --> Order[Order]
+  Supervisor --> AfterSales[AfterSales]
+  Single --> Tools[Tool Calling 白名单与严格参数]
+  Shopping --> Tools
+  Order --> Tools
+  AfterSales --> Tools
   Tools --> RAG[公开范围 Hybrid RAG]
   Tools --> Domain
   Graph --> HITL[提案与独立确认 Resume]
@@ -27,3 +34,7 @@ flowchart LR
 - [Trace](../backend/src/agentmall/infra/observability.py)：RunEvent的白名单投影，无原始对话或思维链，导出器失败不回滚已完成合法业务。
 
 Python依赖以[uv.lock](../backend/uv.lock)、前端以[package-lock](../frontend/package-lock.json)为准。迁移在[backend/migrations](../backend/migrations)，API以实际[路由源码](../backend/src/agentmall/main.py)与运行时OpenAPI为准。
+
+默认Demo给图注入明确标记的Fixture Model；普通FastAPI不注入模型。独立[Live Playground](LIVE_PLAYGROUND.md)在新授权、源码/价格/环境/BGE门禁之后注入真实ChatDeepSeek，发送前由独立持久账本预留预算。Fixture、SDK MockTransport和Live身份由认证后的服务端runtime返回，不由浏览器变量决定。
+
+购物车来源/版本绑定于服务端不可变快照，成功创建订单时与库存预留一起事务消费未变化的购物车；独立商品提案不消费购物车。订单详情通过另一份支付提案与Confirmation模拟付款。提案倒计时只辅助展示，服务器数据库时间、身份与版本检查始终决定能否执行。

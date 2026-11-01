@@ -1,0 +1,193 @@
+{
+  "status": "T15_D1_PUBLIC_RELEASE_CANDIDATE_READY",
+  "scope": "Fresh D1 offline audits and collection; full C1 tests reused separately. Complete postcommit audit and inventory retained as ignored local sidecars.",
+  "receipts": [
+    {
+      "name": "actionlint",
+      "command": [
+        "<R1A_WORKTREE>/.t13/t14-r1-a/actionlint",
+        ".github/workflows/ci.yml"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.038973541,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "ci-contract",
+      "command": [
+        "<A_WORKTREE>/backend/.venv/bin/python",
+        ".t15-d1/ci_contract.py"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.090489291,
+      "log_sha256": "ec52c837ddd522aba2f4549fe8b6a25d811aa04b93cbb779c18bcba91955b3f0",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "compose-config",
+      "command": [
+        "docker",
+        "compose",
+        "-p",
+        "agentmall-t15-d1",
+        "-f",
+        "compose.ci.yaml",
+        "config",
+        "--quiet"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.12711225,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "delivery-check-order-fixed",
+      "command": [
+        "python3",
+        ".t15-d1/check_delivery.py"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.294210917,
+      "log_sha256": "d00f554f4bae30508598e051041e135ebd4ed2ed07f24e8f303c2899a4380e51",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "delivery-check",
+      "command": [
+        "python3",
+        ".t15-d1/check_delivery.py"
+      ],
+      "exit_code": 1,
+      "elapsed_monotonic_seconds": 0.182394083,
+      "log_sha256": "ce34e170002b04f992a0fea634aed8494ef145d16de39bf6c87f8a9968ce913a",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "final-staged-delivery-check",
+      "command": [
+        "python3",
+        ".t15-d1/check_delivery.py"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.294672708,
+      "log_sha256": "4e304f6e4bb8c85b1beaa7de7698a63c58918208a87d4502b98da7c0def379cb",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "mermaid",
+      "command": [
+        "env",
+        "PLAYWRIGHT_BROWSERS_PATH=<C1_WORKTREE>/frontend/.cache/ms-playwright",
+        "node",
+        ".t15-d1/check-mermaid.mjs"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 1.102257,
+      "log_sha256": "ce29d8d2953610d428c568db429ddef2cbe5f9deb65a9d1f9ae4637e67495372",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "playwright-collection",
+      "command": [
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        "frontend/playwright.config.ts",
+        "--list"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.395590375,
+      "log_sha256": "8f278569635059188507226268dcc845bfdec88b7ee0e0f31f55d37fa9ca7d37",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "precommit-remote-check",
+      "command": [
+        "python3",
+        ".t15-d1/remote_readonly.py",
+        "remote-precommit.json"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 3.298454125,
+      "log_sha256": "70327159177c62151d7a0efb7fb493316832519fe498bad90fe3cb3e2c2f3927",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "remote-recheck",
+      "command": [
+        "python3",
+        ".t15-d1/remote_readonly.py"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 4.682473958,
+      "log_sha256": "b0ba6e145022ef1c97ebfd31ce9d37e7f1b1be29620910a228f03892d2a65e9b",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "ruff-format",
+      "command": [
+        "<A_WORKTREE>/backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.038827084,
+      "log_sha256": "feca25aea532c5d75686bc968f8f8cc0dac429b2ade14ae92e7fd62276ef2992",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "ruff",
+      "command": [
+        "<A_WORKTREE>/backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.073755416,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "provider_env_filtered_before_value_access": true
+    },
+    {
+      "name": "source-describe",
+      "command": [
+        "env",
+        "PYTHONPATH=backend/src",
+        "<A_WORKTREE>/backend/.venv/bin/python",
+        "-m",
+        "agentmall.playground",
+        "--describe"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 1.163082333,
+      "log_sha256": "0ded9d3dd075aed1e4372eef15eeade58086706b22f798dcf8e905848ecbc939",
+      "provider_env_filtered_before_value_access": true
+    }
+  ],
+  "known_preparation_failure": "delivery-check exit1 because payload inventory linked before generation; fixed generation order, all links checked by delivery-check-order-fixed exit0; no assertions relaxed.",
+  "mermaid": {
+    "engine": "Mermaid11.12.0 with locked Chromium; local-only server and external requests aborted",
+    "results": [
+      {
+        "file": "docs/ARCHITECTURE.md",
+        "index": 0,
+        "status": "PASS",
+        "svg_characters": 33405
+      },
+      {
+        "file": "docs/LIVE_PLAYGROUND.md",
+        "index": 0,
+        "status": "PASS",
+        "svg_characters": 21876
+      }
+    ]
+  },
+  "full_regression": "Not rerun; verified original C1 logs/JUnit/Playwright JSON and unchanged test/runtime/locks/workflow",
+  "remote_actions_executed": false,
+  "new_paid_calls": 0
+}

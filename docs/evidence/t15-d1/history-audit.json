@@ -1,0 +1,90 @@
+{
+  "scope": "All8 ancestor commits and every reachable blob, including published root and all historical versions; D1 staged documentation audited separately and complete final HEAD inventory/audit is an external ignored sidecar after commit. Git commit cannot contain its own final SHA or all-inclusive self-hash.",
+  "baseline": "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+  "published_main": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+  "root": "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+  "commits": [
+    {
+      "commit": "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+      "parents": "",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "Initial AgentMall public portfolio snapshot"
+    },
+    {
+      "commit": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+      "parents": "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "docs: align public portfolio copy with independent Git root"
+    },
+    {
+      "commit": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "parents": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "feat: complete mock payment flow in order details"
+    },
+    {
+      "commit": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "parents": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "fix: consume verified cart snapshots during checkout"
+    },
+    {
+      "commit": "c06c5841af36a631b69462c035d6410f732af0db",
+      "parents": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "docs: prepare P0 and P1 public release candidate"
+    },
+    {
+      "commit": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+      "parents": "c06c5841af36a631b69462c035d6410f732af0db",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "feat: add metered local DeepSeek agent playground"
+    },
+    {
+      "commit": "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+      "parents": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "feat: prepare real agent demo with release readiness gate"
+    },
+    {
+      "commit": "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+      "parents": "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+      "author": "Cockatoo-xlk",
+      "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "committer": "Cockatoo-xlk",
+      "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+      "subject": "chore: verify release gate in isolated stable clock environment"
+    }
+  ],
+  "unique_blobs": 508,
+  "file_version_occurrences": 2900,
+  "png_unique_versions": 15,
+  "unexpected_binaries": 0,
+  "forbidden_path_versions": 0,
+  "large_blobs_over_2MiB": 0,
+  "git_replace_refs": 0,
+  "commit_object_privacy_scan": "PASS",
+  "old_private_lineage_included": false,
+  "scope_excludes": "Other unpushed branches, reflogs and unreachable object-store objects are not part of the approved candidate ancestry and must not be pushed with --all/--mirror/tags."
+}
