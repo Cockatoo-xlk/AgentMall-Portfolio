@@ -33,3 +33,7 @@ evals/results/t13-r1-dev-fixture
 
 # T14-P1 local test resources and private raw receipts
 .t14-p1
+
+# Private Live Playground state, approvals, budgets and local verification
+.playground/
+.t15-a/

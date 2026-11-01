@@ -108,9 +108,9 @@ export default function Layout() {
         </div>
       </header>
       <div id="main-content" tabIndex={-1}>
-        {import.meta.env.VITE_AGENT_MODE === 'fixture' && (
+        {(
           <div className="global-notice notice fixture-notice">
-            E2E 测试环境 · Fake Model · 真实本地业务服务与 PostgreSQL · 未调用真实模型
+        合成演示数据 · 模拟资金 · 模型身份及用量以工作流服务端状态为准
           </div>
         )}
         {expired && (

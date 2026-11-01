@@ -16,6 +16,10 @@
 
 [三项工程案例](docs/ENGINEERING_CASES.md) · [实际架构](docs/ARCHITECTURE.md) · [结果及限制](docs/RESULTS.md) · [3–5分钟演示](docs/DEMO.md)
 
+本地开发版新增[Live Playground 显式入口](docs/LIVE_PLAYGROUND.md)，复用现有持久化工作流和独立人工确认。本轮只验证真实 DeepSeek SDK 的离线 MockTransport 接线；真实付费 Smoke 尚未授权、未运行，默认 Fixture/模型关闭边界保留。
+
+[T15-A 本地离线回归](docs/evidence/t15-a/report.md)：后端711 passed/14 skipped、Vitest71 passed、Playwright84 passed；均为分阶段本地结果，不能代替真实 DeepSeek 或远程 CI 验证。
+
 ## 无 API Key 的 Quick Start
 
 准备 Docker 引擎及 Compose。**仅在新克隆的独立目录、无同名 Compose 项目且端口空闲时运行**；已有同名项目或端口占用时先核对归属，不能停止未知服务或复用他人的 PGDATA。镜像安装锁定依赖和浏览器，不读取个人 .env 或下载 BGE 权重。
@@ -32,7 +36,7 @@ docker compose -p agentmall-portfolio -f compose.ci.yaml run --rm runner python 
 
 退出演示并等待清理后，使用相同项目及配置执行 `docker compose -p agentmall-portfolio -f compose.ci.yaml down`，只移除确认属于该目录的容器/网络；不要加 `-v` 或删除历史数据库。已有演示的开发机可使用[独立端口与分阶段验证配置](docs/DEMO.md#t14-p1本地购物车结算)。
 
-## 最新本地验证与环境边界
+## T14 已验收基线与环境边界
 
 2026-11-01 的 T14-P1 最终分阶段验收：
 

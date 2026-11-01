@@ -1,0 +1,65 @@
+{
+  "owned_project": "agentmall-t15-a-tests",
+  "database_state": {
+    "database": "agentmall_test",
+    "postgres": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "pgvector": "0.8.7",
+    "remaining_test_cp_schemas": 0,
+    "advisory_locks": 0,
+    "other_client_sessions": 0
+  },
+  "down_exit_code": 0,
+  "owned_containers_remaining": 0,
+  "owned_pgdata_removed": true,
+  "schemas_cleaned_before_down": true,
+  "historical_volumes_deleted": false,
+  "original_containers": [
+    {
+      "name": "agentmall-t14-p1-runner-run-f0aa440e7bcf",
+      "state": "ABSENT",
+      "end_reason": "UNKNOWN",
+      "stop_or_restart_command_issued_by_task": false
+    },
+    {
+      "name": "agentmall-t14-p1-postgres-1",
+      "same_id": true,
+      "same_started_at": true,
+      "same_mounts": true,
+      "running": true
+    },
+    {
+      "name": "agentmall-payment-local-postgres-1",
+      "same_id": true,
+      "same_started_at": true,
+      "same_mounts": true,
+      "running": true
+    },
+    {
+      "name": "agentmall-portfolio-postgres-1",
+      "same_id": true,
+      "same_started_at": true,
+      "same_mounts": true,
+      "running": true
+    },
+    {
+      "name": "agentmall-rag-postgres-1",
+      "same_id": true,
+      "same_started_at": true,
+      "same_mounts": true,
+      "running": true
+    },
+    {
+      "name": "agentmall-postgres-1",
+      "same_id": true,
+      "same_started_at": true,
+      "same_mounts": true,
+      "running": true
+    }
+  ],
+  "new_live_environment_created": false,
+  "formal_live_approval_or_ledger_created": false,
+  "real_key_loaded": false,
+  "paid_requests": 0,
+  "browser_native_processes": "No T15 Vite/Playwright listener left on5186; own test processes exited",
+  "resource_scope": "Only this task owned schemas/processes/container project/data were removed; original PostgreSQL containers retained"
+}

@@ -10,6 +10,7 @@ import json
 import os
 import signal
 import socket
+import tempfile
 from collections.abc import MutableMapping
 from contextlib import AsyncExitStack, ExitStack, asynccontextmanager, contextmanager
 from contextvars import ContextVar
@@ -246,6 +247,8 @@ class Harness:
     settings: object
     schema: str
     boundary: Boundary
+    sdk_program: object = None
+    sdk_directory: object = None
     mode: Mode = "proposal"
     workflow_mode: str = "purchase"
     answer_failure_used: bool = False
@@ -323,13 +326,37 @@ class Harness:
             state["checkpoint_rows"] = connection.scalar(
                 text(f'SELECT count(*) FROM "{self.settings.checkpoint_schema}".checkpoints')
             )
-        return {**self.status(), **state, "agent_traces": self.agent_traces}
+        sdk = None
+        if self.sdk_program is not None:
+            provider = self.app.state.playground
+            from uuid import uuid5
+
+            sdk = provider.ledger.summary(
+                uuid5(self.settings.storefront_id, "buyer1"), self.settings.storefront_id
+            )
+            sdk["wire_requests"] = len(self.sdk_program.requests)
+            sdk["tools"] = [
+                c["function"]["name"]
+                for record in self.sdk_program.requests
+                for c in record["body"].get("tools", [])
+            ]
+        return {**self.status(), **state, "agent_traces": self.agent_traces, "sdk": sdk}
+
+    async def close_sdk(self):
+        provider = getattr(self.app.state, "playground", None)
+        if provider is not None:
+            await provider.close()
+            self.app.state.playground = None
+        if self.sdk_directory is not None:
+            self.sdk_directory.cleanup()
+        self.sdk_program, self.sdk_directory = None, None
 
     async def reset(self):
         from sqlalchemy import text
 
         from agentmall.seed import seed
 
+        await self.close_sdk()
         tables = (
             "run_events",
             "agent_runs",
@@ -395,6 +422,8 @@ def mount_controls(harness):
                 mode = harness.request_mode.get(harness.mode)
                 return None if mode in {"blocked", "done"} else fake_model(mode, harness.boundary)
             if name in {"multi_models", "durable_single_model"}:
+                if self._state.get("playground") is not None:
+                    return self._state[name]
                 from workflow_e2e import models
 
                 value = models(harness.workflow_mode, harness.boundary)
@@ -481,6 +510,35 @@ def mount_controls(harness):
     async def workflow_mode(payload: WorkflowMode):
         harness.workflow_mode = payload.mode
         return {"mode": payload.mode}
+
+    class SDKMode(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        program: Literal[
+            "purchase",
+            "recommend",
+            "orders",
+            "return_replace",
+            "timeout",
+            "missing_usage",
+            "malicious",
+        ]
+        order_id: UUID | None = None
+
+    @router.post("/sdk-mode")
+    async def sdk_mode(payload: SDKMode):
+        from pathlib import Path
+
+        from playground_helpers import install_sdk
+
+        await harness.close_sdk()
+        harness.sdk_directory = tempfile.TemporaryDirectory(prefix="agentmall-sdk-mock-")
+        _, harness.sdk_program = await install_sdk(
+            (None, harness.db, harness.app, harness.settings),
+            Path(harness.sdk_directory.name),
+            payload.program,
+            str(payload.order_id) if payload.order_id else None,
+        )
+        return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
 
     @router.post("/checkout-failure")
     async def checkout_failure(payload: CheckoutFailureRequest):
@@ -646,6 +704,7 @@ async def isolated_app():
             app = create_app(settings)
             cleanup.push_async_callback(app.state.engine.dispose)
             harness = Harness(app, db, settings, schema, boundary)
+            cleanup.push_async_callback(harness.close_sdk)
             mount_controls(harness)
             from agentmall.agents import run_service
 

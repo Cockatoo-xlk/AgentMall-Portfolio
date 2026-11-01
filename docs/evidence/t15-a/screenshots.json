@@ -1,0 +1,37 @@
+[
+  {
+    "file": "screenshots/purchase-waiting.png",
+    "sha256": "aecc1f39bac340477b3ad73eaa1a512710df28fc6f94870fd1af4f8be13a3208",
+    "bytes": 345931,
+    "review": "Pixel-reviewed synthetic browser page only; MOCK_TRANSPORT or separate mock payment; no browser chrome, Key, JWT, personal path or real address",
+    "evidence_class": "OFFLINE_SDK_MOCK_TRANSPORT_REAL_PG"
+  },
+  {
+    "file": "screenshots/purchase-restored.png",
+    "sha256": "f5362dde8dadfbed4c7eedc46a5d466615401538405b8461497120d58e34a694",
+    "bytes": 308439,
+    "review": "Pixel-reviewed synthetic browser page only; MOCK_TRANSPORT or separate mock payment; no browser chrome, Key, JWT, personal path or real address",
+    "evidence_class": "OFFLINE_SDK_MOCK_TRANSPORT_REAL_PG"
+  },
+  {
+    "file": "screenshots/separate-payment.png",
+    "sha256": "0f66cdca36b706d0e46ef66de08e3110b83cc4784c5268be075c48749d02e22c",
+    "bytes": 210287,
+    "review": "Pixel-reviewed synthetic browser page only; MOCK_TRANSPORT or separate mock payment; no browser chrome, Key, JWT, personal path or real address",
+    "evidence_class": "OFFLINE_SDK_MOCK_TRANSPORT_REAL_PG"
+  },
+  {
+    "file": "screenshots/return-replacement-mobile.png",
+    "sha256": "5806c1d5a072f5c8e9581ed4da9cd855d3e0b48f74483e7daac925443b764d02",
+    "bytes": 384760,
+    "review": "Pixel-reviewed synthetic browser page only; MOCK_TRANSPORT or separate mock payment; no browser chrome, Key, JWT, personal path or real address",
+    "evidence_class": "OFFLINE_SDK_MOCK_TRANSPORT_REAL_PG"
+  },
+  {
+    "file": "screenshots/timeout.png",
+    "sha256": "de04bafab569c3743d76b10bbec7337a76b1f233131712ee0be9314f01514e16",
+    "bytes": 305975,
+    "review": "Pixel-reviewed synthetic browser page only; MOCK_TRANSPORT or separate mock payment; no browser chrome, Key, JWT, personal path or real address",
+    "evidence_class": "OFFLINE_SDK_MOCK_TRANSPORT_REAL_PG"
+  }
+]

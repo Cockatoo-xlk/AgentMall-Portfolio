@@ -1,0 +1,10 @@
+{
+  "source_sha256": "ee0f6927f30687892159b39272148e8859fe61f406a0e5aa7c48cb5766766687",
+  "host_and_image_match": true,
+  "image": "sha256:93455a760c208e73e5b94cdf90e50d0445e43ee0b29e554225b5181f92b576de",
+  "authorization": "NOT_GRANTED",
+  "paid_requests": 0,
+  "source_scope": "backend production source/migrations, frontend source, locked dependencies, policy inputs, launcher/config. Evidence documents and test output intentionally excluded.",
+  "backend_receipt": ".t15-a/backend-final-regression.json",
+  "browser_receipt": ".t15-a/playwright-full-green.json"
+}

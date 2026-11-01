@@ -1,0 +1,53 @@
+# Future authorized Live only. NOT started by T15-A offline tests.
+# -p agentmall-playground-local. Never combine with compose.ci.yaml.
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg17-bookworm@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
+    command: ["postgres", "-p", "55433", "-c", "max_connections=32"]
+    environment:
+      POSTGRES_USER: agentmall
+      POSTGRES_PASSWORD: "synthetic-playground-local-only"
+      POSTGRES_DB: agentmall_test
+    volumes:
+      - ./.playground/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:55441:55433"
+      - "127.0.0.1:8017:18001"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p 55433 -U agentmall -d agentmall_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    mem_limit: 256m
+  server:
+    profiles: ["authorized-live"]
+    build:
+      context: .
+      dockerfile: scripts/ci/Playground.Dockerfile
+      args:
+        INSTALL_EMBEDDING: "1"
+    network_mode: "service:postgres"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Name-only forwarding. Never put a key in this file, a command, or Vite.
+      - DEEPSEEK_API_KEY
+      - AGENTMALL_PLAYGROUND_DATABASE_URL=postgresql+psycopg://agentmall:synthetic-playground-local-only@127.0.0.1:55433/agentmall_test
+      - HF_HUB_OFFLINE=1
+      - TRANSFORMERS_OFFLINE=1
+      - HF_HUB_DISABLE_TELEMETRY=1
+      - LANGSMITH_TRACING=false
+      - LANGCHAIN_TRACING_V2=false
+    volumes:
+      - ./.playground:/work/.playground
+      - type: bind
+        source: ./.models
+        target: /work/.models
+        read_only: true
+        bind:
+          create_host_path: false
+    mem_limit: 768m
+    init: true
+    # No enable flag by default; no policy/approval is shipped or generated.
+    command: ["python", "-m", "agentmall.playground", "--describe"]

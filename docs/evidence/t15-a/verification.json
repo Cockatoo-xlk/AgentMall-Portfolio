@@ -1,0 +1,184 @@
+{
+  "status": "OFFLINE_CHECK_SET_PASSED_IN_SEPARATE_PHASES",
+  "source_sha256": "ee0f6927f30687892159b39272148e8859fe61f406a0e5aa7c48cb5766766687",
+  "backend": {
+    "passed": 711,
+    "skipped": 14,
+    "collected": 725,
+    "new_tests": 41,
+    "skip_reasons": [
+      {
+        "test": "backend.tests.test_eval_monitor_policy.test_all_ten_saved_live_rows_remain_unchanged_and_do_not_trigger_false_sigint",
+        "reason": "Raw private Live evidence not present; synthetic regression still required"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A1_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A2_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B2_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_03]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A1_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A2_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B2_01]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_03]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_multiagent_integration.test_shopping_to_order_proposal_with_actual_graph_and_domain[local]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_multiagent_integration.test_cross_domain_return_and_replacement_preserve_identity[local]",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      },
+      {
+        "test": "backend.tests.test_retrieval_ingest.test_real_embedding_offline_sql_roundtrip",
+        "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+      }
+    ],
+    "receipt": {
+      "name": "backend-final-regression",
+      "command": [
+        "docker",
+        "compose",
+        "-p",
+        "agentmall-t15-a-tests",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        "compose.playground-tests.yaml",
+        "-f",
+        ".t15-a/backend-memory.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-a-backend-final",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && python -m agentmall.playground --describe && python -m pytest --ci-offline-core --strict-markers -ra --junitxml=/work/.t13/outputs/pytest-final.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 269.663,
+      "log": ".t15-a/backend-final-regression.log",
+      "log_sha256": "c41aee5d8e8580ed86a40695b67d0a6ed4b1e19e30af2e96b121243c3e6f5d57"
+    },
+    "junit_sha256": "e77c6ed179d2c7d4e4f8bc8e8842894644b1ffd6cccde9e915b86a80bc404eaa",
+    "platform": "Local Linux ARM64 Docker; real dedicated PG17/pgvector/official Checkpoint, not remote Ubuntu amd64"
+  },
+  "frontend": {
+    "vitest_passed": 71,
+    "new_unit_tests": 6,
+    "typecheck_lint_build": "PASS",
+    "receipt": {
+      "name": "frontend-final-checked",
+      "command": [
+        "sh",
+        "-c",
+        "cd frontend && npm run typecheck && npm run lint && npm run build && npm test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.802,
+      "log": ".t15-a/frontend-final-checked.log",
+      "log_sha256": "ffc22f9d17b2cd50d6036b31c55214ff945bd6e332856fb51120acd3bb4fb4cd"
+    }
+  },
+  "playwright": {
+    "actual_stats": {
+      "startTime": "2026-11-01T07:26:53.140Z",
+      "duration": 156416.738,
+      "expected": 84,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "new_cases": 10,
+    "baseline_cases": 74,
+    "receipt": {
+      "name": "playwright-full-green",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_MANAGED_DEMO=t15",
+        "AGENTMALL_EVIDENCE_DIR=../.t15-a/e2e/purchase",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=../.t15-a/e2e/workflow",
+        "AGENTMALL_PAYMENT_EVIDENCE_DIR=../.t15-a/e2e/payment",
+        "AGENTMALL_CART_EVIDENCE_DIR=../.t15-a/e2e/cart",
+        "AGENTMALL_PLAYGROUND_EVIDENCE_DIR=../.t15-a/e2e/playground",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 156.704,
+      "log": ".t15-a/playwright-full-green.log",
+      "log_sha256": "3c8651fb4f8d60de0eb212257b1844c5bab1551586b5708801ee24b70091e985"
+    },
+    "results_sha256": "bcbfd93019b23c94838281d25f9dd7fe4a35a9dba4975f58874b4c9e13b0e5fa",
+    "browser": "Mac ARM64 full Chromium1248, headless, workers1, retries0; FastAPI/PG/Checkpoint in own container"
+  },
+  "ruff_compose_diff": "PASS / exit0",
+  "paid_model_requests": 0,
+  "real_key_loaded": false,
+  "live_agent_verified": "NOT_RUN",
+  "live_bge_image": "NOT_BUILT_OR_RUN",
+  "remote_ci": "NOT_RUN",
+  "original_frozen_manifests": "PRESERVED; not valid authorization for changed source",
+  "static_delivery_receipt": {
+    "name": "final-static-delivery",
+    "command": [
+      "sh",
+      "-c",
+      "backend/.venv/bin/ruff check backend evals scripts && backend/.venv/bin/ruff format --check backend evals scripts && docker compose -p agentmall-t15-a-tests -f compose.ci.yaml -f compose.playground-tests.yaml config -q && docker compose -p agentmall-playground-local -f compose.playground.yaml config --no-interpolate -q && git diff --check"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.234,
+    "log": ".t15-a/final-static-delivery.log",
+    "log_sha256": "8ff00c5fe50a69d7dbd9ae154373ea9393ed16411e54c2028a978b92dc3f3f94",
+    "raw_receipt_sha256": "d5f25e3f9cf356291c5352c1c3b813944096cce9f060afd7a493c74fab70c3f1"
+  },
+  "delivery_evidence_audit": {
+    "name": "delivery-evidence-audit",
+    "command": [
+      "python3",
+      ".t15-a/check_delivery.py"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1.803,
+    "log": ".t15-a/delivery-evidence-audit.log",
+    "log_sha256": "4658d796dcf8f19622c54070f23b97199bb84a2512511445893191ca6bba4626",
+    "raw_receipt_sha256": "724d1b8f540f6782d59f29bdbf59b67da6ce441096cb0cd1ee6dac9e224aebb6"
+  },
+  "local_document_links": "PASS / exit0",
+  "resource_cleanup": "PASS / own schemas, sessions and locks0 before dedicated down"
+}

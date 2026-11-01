@@ -1,0 +1,28 @@
+{
+  "docker_engine_bytes": 2053644288,
+  "phases": {
+    "initial_640": {
+      "samples": 68,
+      "max_observed_mib": 376.3,
+      "sampling_is_not_exact_peak": true
+    },
+    "bounded": {
+      "samples": 113,
+      "max_observed_mib": 733.3,
+      "sampling_is_not_exact_peak": true
+    },
+    "final": {
+      "samples": 67,
+      "max_observed_mib": 504.8,
+      "sampling_is_not_exact_peak": true
+    }
+  },
+  "initial_oom": {
+    "exit_code": 137,
+    "docker_event": "oom"
+  },
+  "backend_limit_final_mib": 1152,
+  "browser_api_limit_mib": 640,
+  "host_browser_and_vite": true,
+  "no_global_setting_change": true
+}

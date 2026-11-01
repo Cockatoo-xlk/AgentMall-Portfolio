@@ -1,0 +1,55 @@
+{
+  "roots": {
+    "AgentMall": {
+      "tracked_files": 2074,
+      "changed_files": [],
+      "head": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33",
+      "head_unchanged": true
+    },
+    "AgentMall-Public-R6-A": {
+      "tracked_files": 297,
+      "changed_files": [],
+      "head": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+      "head_unchanged": true
+    },
+    "AgentMall-T14-P0-Mock-Payment": {
+      "tracked_files": 321,
+      "changed_files": [],
+      "head": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "head_unchanged": true
+    },
+    "AgentMall-T14-P1-Cart-Lifecycle": {
+      "tracked_files": 346,
+      "changed_files": [],
+      "head": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "head_unchanged": true
+    },
+    "AgentMall-T14-R1-A-Public-Candidate": {
+      "tracked_files": 359,
+      "changed_files": [],
+      "head": "c06c5841af36a631b69462c035d6410f732af0db",
+      "head_unchanged": true
+    }
+  },
+  "historical_sets": {
+    "original_203": {
+      "files": 203,
+      "changes": 0
+    },
+    "expanded_1479": {
+      "files": 1479,
+      "changes": 0
+    },
+    "protected_files": {
+      "files": 1595,
+      "changes": 0
+    }
+  },
+  "r5": {
+    "files": 297,
+    "changed_paths": [],
+    "reviewed_tree": "8da9a5c18674520dab92195c279a5faf86c7f710fafe7575697ee0309e687508"
+  },
+  "paid_requests": 0,
+  "historical_manifests_resealed": false
+}

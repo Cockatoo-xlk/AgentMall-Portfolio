@@ -14,6 +14,13 @@ from agentmall.infra.observability import export_optional
 router = APIRouter()
 
 
+@router.get("/agent/runtime")
+async def workflow_runtime(request: Request, actor: Actor, run_id: UUID | None = None):
+    from agentmall.playground.runtime import runtime_status
+
+    return await runtime_status(request.app, actor, run_id)
+
+
 @router.post("/agent/threads", status_code=201)
 async def create_thread(request: Request, actor: Actor, payload: ThreadCreate):
     return await run_service.create_thread(request.app, actor, payload.mode)

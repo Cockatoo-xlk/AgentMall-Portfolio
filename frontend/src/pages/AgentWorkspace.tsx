@@ -11,6 +11,7 @@ import WorkflowConfirmationCard from '../components/WorkflowConfirmationCard'
 import WorkflowResources from '../components/WorkflowResources'
 import PolicyCitation from '../components/PolicyCitation'
 import ClarificationCard from '../components/ClarificationCard'
+import ProviderPanel from '../components/ProviderPanel'
 export default function AgentWorkspace() {
   const [params, setParams] = useSearchParams()
   const id = params.get('thread') ?? ''
@@ -163,6 +164,7 @@ function Workspace({
         </div>
         <span className="workflow-badge">持久化工作流</span>
       </header>
+      <ProviderPanel runId={run?.id} revision={revision} busy={busy} />
       <RecoveryPanel busy={busy} onRestore={restore} />
       {notice && (
         <div className="notice warning" role="alert">
@@ -290,7 +292,7 @@ function Workspace({
                       <p>待处理任务：{run.result.unfinished.join(' · ')}</p>
                     ) : null}
                     <p className="muted">
-                      模型请求 {run.budget.models ?? 0} / 12 · 工具 {run.budget.tools ?? 0} / 16 ·
+                      工作流模型预算计次 {run.budget.models ?? 0} / 12 · 工具 {run.budget.tools ?? 0} / 16 ·
                       未知 Token Usage 以 UNKNOWN 展示。
                     </p>
                     {run.status === 'PARTIAL' && (

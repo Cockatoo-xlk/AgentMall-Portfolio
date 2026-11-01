@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-11-01T06:03:05.731672+00:00",
+  "model_request_id": "deepseek-flash",
+  "documented_revision": "DeepSeek-V4.1-Flash-1017",
+  "pricing_source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+  "protocol_source": "https://api-docs.deepseek.com/guides/tool_calls/",
+  "completion_reference": "https://api-docs.deepseek.com/api/create-chat-completion/",
+  "input_cache_miss_peak_cny_per_million": "2",
+  "output_peak_cny_per_million": "8",
+  "input_cache_miss_offpeak_cny_per_million": "1",
+  "output_offpeak_cny_per_million": "4",
+  "reservation_policy": "Use peak cache-miss2/output8 regardless of current time or cache discounts",
+  "price_validity_seconds": 86400,
+  "wire_protocol": "Chat Completions function tools; thinking disabled; forced route tool; no beta strict assumption; server Pydantic validation retained",
+  "search_fetch_or_hosted_tools": "FORBIDDEN",
+  "new_authorization": "NOT_GRANTED",
+  "live_requests_this_task": 0,
+  "actual_platform_bill": "UNKNOWN"
+}
