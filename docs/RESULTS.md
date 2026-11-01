@@ -31,3 +31,9 @@ R5新的独占数据库和无缓存构建已完成完整离线CI：后端642pass
 [经过审阅的B1汇总](evidence/t15-c/b1-public-summary.json)：历史617cdf29，真实deepseek-flash单场景7请求，12,048输入/1,109输出，费用估算上界¥0.032968而实际账单UNKNOWN；用户本人确认后唯一PENDING_PAYMENT订单、付款0、持久事件50、Checkpoint done。没有Single/Multi公平质量比较或泛化结论。
 
 [T15-C验收](evidence/t15-c/report.md)是新源码的本地离线回归及发布审计。源码指纹变化后Live=NOT_RUN，远程CI=NOT_RUN；旧B1授权、账本与历史Manifest保持不变。
+
+## T15-C1：独立稳定时钟环境重新准入
+
+[逐项归因与新回执](evidence/t15-c1/report.md)：在独立Colima Linux VM中，后端713/14skip、Vitest80、完整Playwright87通过，0失败/skip/retry/flaky。生产源码指纹7049db6a保持不变。旧环境同用例复现了JWT未来iat→401，但其余5项历史单请求信息不足，仍标原因未确定；并未把6项全部归为环境异常。旧81/6及原始日志不覆盖。
+
+新环境连续时钟观测无重大异常，准入状态T15_C_LOCAL_RELEASE_GATE_PASSED只适用于该受验证环境。旧共享VM未修复或重启；当前源码Live=NOT_RUN、远程CI=NOT_RUN、新增付费请求0。

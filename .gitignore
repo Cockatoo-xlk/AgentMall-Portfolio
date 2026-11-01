@@ -66,3 +66,6 @@ frontend/playwright-report/
 /.t15-c/
 .superpowers/
 /test-results/
+
+# T15-C1 private environment/clock diagnostics and test receipts
+/.t15-c1/

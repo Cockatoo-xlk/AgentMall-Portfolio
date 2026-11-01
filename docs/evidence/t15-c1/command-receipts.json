@@ -1,0 +1,430 @@
+{
+  "scope": "All raw command receipts retained locally, including startup and observer failures; this is a sanitized projection",
+  "commands": [
+    {
+      "name": "cancel-owned-forward",
+      "command": [
+        "ssh",
+        "-F",
+        "/dev/null",
+        "-S",
+        "<OWNED_VM_CONTROL_SOCKET>",
+        "-O",
+        "cancel",
+        "-L",
+        "127.0.0.1:8022:127.0.0.1:8021",
+        "localhost"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.0103,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-source-describe",
+      "command": [
+        "env",
+        "PYTHONPATH=backend/src",
+        "<BASE_WORKTREE>/backend/.venv/bin/python",
+        "-m",
+        "agentmall.playground",
+        "--describe"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 1.5239,
+      "log_sha256": "0ded9d3dd075aed1e4372eef15eeade58086706b22f798dcf8e905848ecbc939"
+    },
+    {
+      "name": "frontend-final",
+      "command": [
+        "sh",
+        "-c",
+        "npm --prefix frontend run typecheck && npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 4.8661,
+      "log_sha256": "0b47cc2b76c3bc5dffd0cfc14b23b804053df50b5790b47378e5b4aaa58f035d"
+    },
+    {
+      "name": "independent-backend-full",
+      "command": [
+        "docker",
+        "--context",
+        "colima-agentmall-t15-c1",
+        "compose",
+        "--env-file",
+        ".t15-c1/empty.env",
+        "-p",
+        "agentmall-t15-c1-independent",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t15-c1/independent-compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c1-independent-backend",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && ruff check backend evals scripts && ruff format --check backend evals scripts && python -m agentmall.playground --describe && python -m pytest --ci-offline-core --strict-markers -ra --junitxml=/work/.t13/outputs/pytest.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 300.7088,
+      "log_sha256": "9e05bc965b6377f136459e607cbc0b23e5365554a9cf8c0ae3bb1c88f1cba36f"
+    },
+    {
+      "name": "independent-continuous-clock",
+      "command": [
+        "python3",
+        ".t15-c1/simultaneous_clock.py",
+        "independent-during-tests",
+        "colima-agentmall-t15-c1",
+        "600"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 600.8148,
+      "log_sha256": "0c7b40c3c85a68b643287e518bbd5ffa833ebb69b6c1a6891cc3dc7f92a548bd"
+    },
+    {
+      "name": "independent-e2e-clock",
+      "command": [
+        "python3",
+        ".t15-c1/simultaneous_clock.py",
+        "independent-e2e-window",
+        "colima-agentmall-t15-c1",
+        "600"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 486.6553,
+      "log_sha256": "1739c88a99d8732361d6df95fe3ec45f7c6a10fdc728fe4816196b6b08736d56"
+    },
+    {
+      "name": "independent-image-transfer",
+      "command": [
+        "bash",
+        "-o",
+        "pipefail",
+        "-c",
+        "docker --context colima save agentmall-t15-c-tests-runner:local pgvector/pgvector@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d | docker --context colima-agentmall-t15-c1 load"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 7.7837,
+      "log_sha256": "cae3471f0c3426d3e74f6fd4146b069937604e47df774501c3a5d829bcd9e225"
+    },
+    {
+      "name": "independent-loopback-forward-alternate",
+      "command": [
+        "ssh",
+        "-F",
+        "/dev/null",
+        "-S",
+        "<OWNED_VM_CONTROL_SOCKET>",
+        "-O",
+        "forward",
+        "-L",
+        "127.0.0.1:8022:127.0.0.1:8021",
+        "localhost"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.0097,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "independent-loopback-forward",
+      "command": [
+        "ssh",
+        "-F",
+        "/dev/null",
+        "-S",
+        "<OWNED_VM_CONTROL_SOCKET>",
+        "-O",
+        "forward",
+        "-L",
+        "127.0.0.1:8021:127.0.0.1:8021",
+        "localhost"
+      ],
+      "exit_code": 255,
+      "elapsed_monotonic_seconds": 0.0104,
+      "log_sha256": "f5cc7364acaec9fdc575abc0c936265dde7bf0a700bef70ac40365face4dadb6"
+    },
+    {
+      "name": "independent-owned-down",
+      "command": [
+        "docker",
+        "--context",
+        "colima-agentmall-t15-c1",
+        "compose",
+        "--env-file",
+        ".t15-c1/empty.env",
+        "-p",
+        "agentmall-t15-c1-independent",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t15-c1/independent-compose.yaml",
+        "down"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.2934,
+      "log_sha256": "70f42a5d1406e98873cbe37b7f00fbd0416b6ec09644c8c6fe81c60f186830ff"
+    },
+    {
+      "name": "independent-playwright-admission-fixed",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8022",
+        "AGENTMALL_E2E_WEB_PORT=5191",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "AGENTMALL_EVIDENCE_DIR=.t15-c1/verified-e2e/purchase",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=.t15-c1/verified-e2e/workflow",
+        "AGENTMALL_PAYMENT_EVIDENCE_DIR=.t15-c1/verified-e2e/payment",
+        "AGENTMALL_CART_EVIDENCE_DIR=.t15-c1/verified-e2e/cart",
+        "AGENTMALL_PLAYGROUND_EVIDENCE_DIR=.t15-c1/verified-e2e/playground",
+        "AGENTMALL_DEMO_READINESS_EVIDENCE_DIR=.t15-c1/verified-e2e/readiness",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c1/playwright-independent.config.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 161.3712,
+      "log_sha256": "52f46da842cdd23b4097b81f3d95aad61274323ab1831a7330f54df9a9ff4e1c"
+    },
+    {
+      "name": "independent-playwright-full-once",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8021",
+        "AGENTMALL_E2E_WEB_PORT=5191",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "AGENTMALL_EVIDENCE_DIR=.t15-c1/independent-e2e/purchase",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=.t15-c1/independent-e2e/workflow",
+        "AGENTMALL_PAYMENT_EVIDENCE_DIR=.t15-c1/independent-e2e/payment",
+        "AGENTMALL_CART_EVIDENCE_DIR=.t15-c1/independent-e2e/cart",
+        "AGENTMALL_PLAYGROUND_EVIDENCE_DIR=.t15-c1/independent-e2e/playground",
+        "AGENTMALL_DEMO_READINESS_EVIDENCE_DIR=.t15-c1/independent-e2e/readiness",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c1/playwright-independent.config.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_monotonic_seconds": 60.3876,
+      "log_sha256": "50003a99a5711087051009074d5b70d930f00bfa311b50ac8a1e58fbdbb0404b"
+    },
+    {
+      "name": "independent-playwright-port-fixed-full",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8022",
+        "AGENTMALL_E2E_WEB_PORT=5191",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "AGENTMALL_EVIDENCE_DIR=.t15-c1/stable-e2e/purchase",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=.t15-c1/stable-e2e/workflow",
+        "AGENTMALL_PAYMENT_EVIDENCE_DIR=.t15-c1/stable-e2e/payment",
+        "AGENTMALL_CART_EVIDENCE_DIR=.t15-c1/stable-e2e/cart",
+        "AGENTMALL_PLAYGROUND_EVIDENCE_DIR=.t15-c1/stable-e2e/playground",
+        "AGENTMALL_DEMO_READINESS_EVIDENCE_DIR=.t15-c1/stable-e2e/readiness",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c1/playwright-independent.config.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_monotonic_seconds": 5.9529,
+      "log_sha256": "9f86b279a6402883540ddf5d6b1436f70ffda6122b98f684c178040d8ff70257"
+    },
+    {
+      "name": "independent-postgres",
+      "command": [
+        "docker",
+        "--context",
+        "colima-agentmall-t15-c1",
+        "compose",
+        "--env-file",
+        ".t15-c1/empty.env",
+        "-p",
+        "agentmall-t15-c1-independent",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t15-c1/independent-compose.yaml",
+        "up",
+        "-d",
+        "--wait",
+        "postgres"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 2.7102,
+      "log_sha256": "55e0957c636c3eef96c0513d35bbcf771c846452583da249f6263a5739262a1d"
+    },
+    {
+      "name": "independent-simultaneous-clock",
+      "command": [
+        "python3",
+        ".t15-c1/simultaneous_clock.py",
+        "independent-admission",
+        "colima-agentmall-t15-c1",
+        "60"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 60.7411,
+      "log_sha256": "3bee14b9333b6076cec90d88dc00df157ecce094901b611ebbac12d655320eac"
+    },
+    {
+      "name": "isolated-vm-create",
+      "command": [
+        "colima",
+        "start",
+        "agentmall-t15-c1",
+        "--activate=false",
+        "--template=false",
+        "--ssh-config=false",
+        "--ssh-agent=false",
+        "--vm-type",
+        "vz",
+        "--arch",
+        "aarch64",
+        "--cpus",
+        "2",
+        "--memory",
+        "4",
+        "--disk",
+        "12",
+        "--runtime",
+        "docker",
+        "--network-address=false",
+        "--mount",
+        "<WORKTREE>:w"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 133.11,
+      "log_sha256": "9a69e54617183ffcafc18f5921745800cba3629c6eb6f3d4b31ae70bedf72294"
+    },
+    {
+      "name": "original-diagnostic-postgres",
+      "command": [
+        "docker",
+        "--context",
+        "colima",
+        "compose",
+        "--env-file",
+        ".t15-c1/empty.env",
+        "-p",
+        "agentmall-t15-c1-original",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t15-c1/original-compose.yaml",
+        "up",
+        "-d",
+        "--wait",
+        "postgres"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 2.8902,
+      "log_sha256": "24dcd7830fc5103044ec358ff51ae9fe3cc18eff70d55e5092798a36212d2756"
+    },
+    {
+      "name": "original-owned-down",
+      "command": [
+        "docker",
+        "--context",
+        "colima",
+        "compose",
+        "--env-file",
+        ".t15-c1/empty.env",
+        "-p",
+        "agentmall-t15-c1-original",
+        "-f",
+        "compose.ci.yaml",
+        "-f",
+        ".t15-c1/original-compose.yaml",
+        "down"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 0.3957,
+      "log_sha256": "70862fa99d6b301cd28b9f7bb2ec0bd51b2ec090b49a41010147e938771c28be"
+    },
+    {
+      "name": "original-simultaneous-clock-stdin-fixed",
+      "command": [
+        "python3",
+        ".t15-c1/simultaneous_clock.py",
+        "original-admission",
+        "colima",
+        "60"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 60.8486,
+      "log_sha256": "9167addcd8600aae079a4f5ef8dc0dec163e0383420510edd1e3666a06f6c805"
+    },
+    {
+      "name": "original-simultaneous-clock",
+      "command": [
+        "python3",
+        ".t15-c1/simultaneous_clock.py",
+        "original",
+        "colima",
+        "60"
+      ],
+      "exit_code": 1,
+      "elapsed_monotonic_seconds": 0.7863,
+      "log_sha256": "8f8d3bf6691dcf7686f6bc5588583c7e18af73b80d14c37da0133e9959803ac2"
+    },
+    {
+      "name": "original-six-instrumented-once",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8020",
+        "AGENTMALL_E2E_WEB_PORT=5190",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "AGENTMALL_CART_EVIDENCE_DIR=.t15-c1/original-facts/cart",
+        "AGENTMALL_PLAYGROUND_EVIDENCE_DIR=.t15-c1/original-facts/playground",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=.t15-c1/original-facts/workflow",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c1/playwright-original.config.ts",
+        "--grep",
+        "failed cart refresh keeps order success|mobile SDK return and replacement|model cannot invent missing user quantity|refresh requires login and rebuilds known Thread|unsubmitted Resume retry retains|two clarification interrupts use distinct"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 19.3366,
+      "log_sha256": "ee1d2bd0a0c0e4a9bad1ec20493927dd576875d03f7fbf74346fd2c3ff3a61b1"
+    },
+    {
+      "name": "original-six-observer-child-fixed-once",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8020",
+        "AGENTMALL_E2E_WEB_PORT=5190",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "AGENTMALL_CART_EVIDENCE_DIR=.t15-c1/original-observed/cart",
+        "AGENTMALL_PLAYGROUND_EVIDENCE_DIR=.t15-c1/original-observed/playground",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=.t15-c1/original-observed/workflow",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c1/playwright-original.config.ts",
+        "--grep",
+        "failed cart refresh keeps order success|mobile SDK return and replacement|model cannot invent missing user quantity|refresh requires login and rebuilds known Thread|unsubmitted Resume retry retains|two clarification interrupts use distinct"
+      ],
+      "exit_code": 1,
+      "elapsed_monotonic_seconds": 27.9812,
+      "log_sha256": "79c461626b5be67f08dee37766b6cff7e0590ec425e0b4f8fb5921adc1adc3e2"
+    },
+    {
+      "name": "stop-owned-vm",
+      "command": [
+        "colima",
+        "stop",
+        "agentmall-t15-c1"
+      ],
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 1.8244,
+      "log_sha256": "e82e25d0dd511c20c849ff9726be79d96403ac85f129822d720e9503c9b8ccc8"
+    }
+  ]
+}

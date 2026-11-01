@@ -1,6 +1,6 @@
 # 正式GitHub发布前的权利人审核清单
 
-状态：本地源码已整理，但发布准入 **BLOCKED_ENVIRONMENT_CLOCK**；Playwright全量81通过/6失败。需稳定环境下完整验收，不得以本次失败结果发布通过声明。
+状态：T15-C原阶段因81通过/6失败而阻塞，该历史回执保持不变。T15-C1在新独立稳定Linux环境完成87/87、0skip/0retry/0flaky，当前 **T15_C_LOCAL_RELEASE_GATE_PASSED**，仅解除本地验收阻塞。原共享VM仍有时钟问题，未来使用该环境前必须重新准入；详见[T15-C1回执](evidence/t15-c1/report.md)。
 
 本轮 **NO_PUSH / REMOTE_CI_NOT_RUN / NO_DEPLOY / PAID_REQUESTS_ZERO**。此清单不是发布授权。
 

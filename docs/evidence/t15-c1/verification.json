@@ -1,0 +1,100 @@
+{
+  "status": "T15_C_LOCAL_RELEASE_GATE_PASSED",
+  "scope": "Local gate for unchanged production source in the new isolated stable-clock Linux VM; not a repair or certification of shared default VM",
+  "base_commit": "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+  "production_source_sha256": "7049db6ae8e334f82dc0b8de3083255e1c84a10ab4f3ec5e99b315fdf519a71a",
+  "production_changes": 0,
+  "existing_test_changes": 0,
+  "backend": {
+    "passed": 713,
+    "skipped": 14,
+    "failed": 0,
+    "collected": 727
+  },
+  "skip_reasons": [
+    {
+      "test": "backend.tests.test_eval_monitor_policy.test_all_ten_saved_live_rows_remain_unchanged_and_do_not_trigger_false_sigint",
+      "reason": "Raw private Live evidence not present; synthetic regression still required"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_03]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_03]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_multiagent_integration.test_shopping_to_order_proposal_with_actual_graph_and_domain[local]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_multiagent_integration.test_cross_domain_return_and_replacement_preserve_identity[local]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_retrieval_ingest.test_real_embedding_offline_sql_roundtrip",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    }
+  ],
+  "vitest": {
+    "passed": 80,
+    "failed": 0
+  },
+  "playwright": {
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "workers": 1,
+    "retries": 0,
+    "test_assertions_modified": false,
+    "completed_full_runs_in_stable_env": 1
+  },
+  "typecheck_lint_build_ruff_format": "all exit0",
+  "runtime": "New Colima0.10.3 VZ Linux aarch64,2vCPU/4GiB; API/PG/checkpoint inside, Mac full Chromium headless outside",
+  "postgres": "17.11",
+  "pgvector": "0.8.7",
+  "original_vm": "UNTRUSTED_CLOCK; unchanged and still running",
+  "new_vm": "stopped after owned-resource cleanup, data retained",
+  "remote_ci": "NOT_RUN",
+  "current_source_live": "NOT_RUN; B1 belongs only to old617cdf29 fingerprint",
+  "new_real_model_requests": 0,
+  "real_provider_key_loaded": false,
+  "force_click_added": false,
+  "skips_added": 0,
+  "retry_added": 0,
+  "security_validation_relaxed": false
+}

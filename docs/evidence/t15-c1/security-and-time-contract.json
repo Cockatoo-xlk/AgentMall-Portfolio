@@ -1,0 +1,237 @@
+{
+  "result": "PASS",
+  "scope": "Synthetic protocol admission, separate from87 Playwright tests; production validators unchanged",
+  "issued_numeric_claims": {
+    "iat": 1793540442,
+    "nbf": null,
+    "exp": 1793541342
+  },
+  "valid_authenticated_status": 200,
+  "negative_time_claims": [
+    {
+      "field": "iat",
+      "claims": {
+        "iat": 1793540502,
+        "nbf": null,
+        "exp": 1793541342
+      },
+      "status": 401,
+      "code": "UNAUTHORIZED"
+    },
+    {
+      "field": "nbf",
+      "claims": {
+        "iat": 1793540442,
+        "nbf": 1793540502,
+        "exp": 1793541342
+      },
+      "status": 401,
+      "code": "UNAUTHORIZED"
+    },
+    {
+      "field": "exp",
+      "claims": {
+        "iat": 1793540442,
+        "nbf": null,
+        "exp": 1793540441
+      },
+      "status": 401,
+      "code": "UNAUTHORIZED"
+    }
+  ],
+  "checks": [
+    {
+      "path": "/auth/login",
+      "method": "POST",
+      "status": 200,
+      "code": null,
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442763095737,
+        "mono_ns": 1644206301033
+      },
+      "client_after": {
+        "wall_ns": 1793540442819244820,
+        "mono_ns": 1644262448491
+      }
+    },
+    {
+      "path": "/me",
+      "method": "GET",
+      "status": 200,
+      "code": null,
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442819373195,
+        "mono_ns": 1644262576866
+      },
+      "client_after": {
+        "wall_ns": 1793540442821731445,
+        "mono_ns": 1644264935324
+      }
+    },
+    {
+      "path": "/me",
+      "method": "GET",
+      "status": 401,
+      "code": "UNAUTHORIZED",
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442821819779,
+        "mono_ns": 1644265023408
+      },
+      "client_after": {
+        "wall_ns": 1793540442822575779,
+        "mono_ns": 1644265779449
+      }
+    },
+    {
+      "path": "/me",
+      "method": "GET",
+      "status": 401,
+      "code": "UNAUTHORIZED",
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442822619445,
+        "mono_ns": 1644265823033
+      },
+      "client_after": {
+        "wall_ns": 1793540442823239779,
+        "mono_ns": 1644266443533
+      }
+    },
+    {
+      "path": "/me",
+      "method": "GET",
+      "status": 401,
+      "code": "UNAUTHORIZED",
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442823292612,
+        "mono_ns": 1644266496199
+      },
+      "client_after": {
+        "wall_ns": 1793540442824030320,
+        "mono_ns": 1644267233991
+      }
+    },
+    {
+      "path": "/products?category=keyboard",
+      "method": "GET",
+      "status": 200,
+      "code": null,
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442824054445,
+        "mono_ns": 1644267258033
+      },
+      "client_after": {
+        "wall_ns": 1793540442826726320,
+        "mono_ns": 1644269930033
+      }
+    },
+    {
+      "path": "/checkout/proposals",
+      "method": "POST",
+      "status": 201,
+      "code": null,
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442826768987,
+        "mono_ns": 1644269972574
+      },
+      "client_after": {
+        "wall_ns": 1793540442840714112,
+        "mono_ns": 1644283917741
+      }
+    },
+    {
+      "path": "/proposals/:id",
+      "method": "GET",
+      "status": 200,
+      "code": null,
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": "2026-11-01T13:40:42.843390+00:00",
+      "client_before": {
+        "wall_ns": 1793540442840755695,
+        "mono_ns": 1644283959449
+      },
+      "client_after": {
+        "wall_ns": 1793540442844114820,
+        "mono_ns": 1644287318658
+      }
+    },
+    {
+      "path": "/proposals/:id",
+      "method": "GET",
+      "status": 200,
+      "code": null,
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": "2026-11-01T13:40:42.919896+00:00",
+      "client_before": {
+        "wall_ns": 1793540442916849112,
+        "mono_ns": 1644360052783
+      },
+      "client_after": {
+        "wall_ns": 1793540442920477862,
+        "mono_ns": 1644363681616
+      }
+    },
+    {
+      "path": "/proposals/:id",
+      "method": "POST",
+      "status": 409,
+      "code": "STALE_PROPOSAL",
+      "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442920507654,
+        "mono_ns": 1644363711283
+      },
+      "client_after": {
+        "wall_ns": 1793540442923511654,
+        "mono_ns": 1644366715533
+      }
+    },
+    {
+      "path": "/agent/runtime",
+      "method": "GET",
+      "status": 200,
+      "code": null,
+      "date": "Sun, 01 Nov 2026 13:40:42 GMT",
+      "x_server_time": null,
+      "client_before": {
+        "wall_ns": 1793540442923534529,
+        "mono_ns": 1644366738116
+      },
+      "client_after": {
+        "wall_ns": 1793540442934710570,
+        "mono_ns": 1644377914366
+      }
+    }
+  ],
+  "clock": {
+    "date": "Sun, 01 Nov 2026 13:40:41 GMT",
+    "server_time": "2026-11-01T13:40:42.843390+00:00",
+    "expires_at": "2026-11-01T13:45:42.834367Z",
+    "date_server_delta_seconds": 1.84339,
+    "remaining_seconds": 299.990977
+  },
+  "expired_proposal_approve_status": 409,
+  "business_counts": {
+    "orders": 0,
+    "confirmations": 0,
+    "payments": 0
+  },
+  "runtime_mode": "FIXTURE",
+  "real_provider_calls": 0,
+  "raw_jwt_key_cookie_recorded": false,
+  "test_signing_secret": "new disposable test secret used only in memory; no real provider key read"
+}

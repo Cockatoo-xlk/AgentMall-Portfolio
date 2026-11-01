@@ -20,9 +20,11 @@
 
 [运行与恢复手册](docs/REAL_AGENT_DEMO.md) · [3–5分钟录屏脚本](docs/DEMO_RECORDING_SCRIPT.md) · [最终发布审核清单](docs/RELEASE_CHECKLIST.md) · [T15-C本地验收](docs/evidence/t15-c/report.md)
 
-**T15-C本地结果：后端713 passed/14 skipped、Vitest80 passed；Playwright81 passed/6 failed（新增3项均通过），Docker时钟回退已复现，当前发布准入BLOCKED。** 未放宽JWT/价格Guard或增加skip/retry；须修复环境后完成浏览器回归，不能称已全面通过。详见[T15-C回执](docs/evidence/t15-c/report.md)。
+**T15-C历史本地结果：后端713 passed/14 skipped、Vitest80 passed；Playwright81 passed/6 failed（新增3项均通过），Docker时钟回退已复现，当时发布准入BLOCKED。** 当时未放宽JWT/价格Guard或增加skip/retry，尚待稳定环境中的完整浏览器回归。该阶段的失败记录保留在[T15-C回执](docs/evidence/t15-c/report.md)。
 
 [T15-A 本地离线回归](docs/evidence/t15-a/report.md)：后端711 passed/14 skipped、Vitest71 passed、Playwright84 passed；均为分阶段本地结果，不能代替真实 DeepSeek 或远程 CI 验证。
+
+**T15-C1本地准入：`T15_C_LOCAL_RELEASE_GATE_PASSED`。** 在新建、独立且通过连续时钟监测的Linux环境，后端713 passed/14 skipped、Vitest80 passed、Playwright87 passed（0skip/0retry/0flaky）。生产源码、既有断言和安全验证未改；原六项失败及归因缺口保留，旧共享VM仍不适合验收。[逐项归因与回执](docs/evidence/t15-c1/report.md)。本地通过不等于新版远程CI或新Live验证。
 
 ## 无 API Key 的 Quick Start
 
