@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from sqlalchemy import func, or_, select, tuple_
 
+from agentmall.catalog.capabilities import connection_conditions
 from agentmall.catalog.models import Product
 from agentmall.catalog.service import product_dto
 from agentmall.identity.service import require_buyer
@@ -98,6 +99,22 @@ def product_scope(actor, filters):
         conditions.append(Product.price_cents <= filters.max_price_cents)
     if filters.in_stock:
         conditions.append(Product.on_hand > Product.reserved)
+    if filters.noise_preference:
+        conditions.append(Product.attributes["noise"].as_string() == "较安静")
+    if filters.layout:
+        conditions.append(Product.attributes["size"].as_string() == filters.layout)
+    conditions.extend(
+        connection_conditions(Product.attributes, filters.connection, filters.excluded_connections)
+    )
+    if filters.exclude_product_ids:
+        conditions.append(Product.id.not_in(filters.exclude_product_ids))
+    if filters.keyboard_type:
+        switches = (
+            ["薄膜"]
+            if filters.keyboard_type == "membrane"
+            else ["静音轴", "线性轴", "段落轴", "青轴", "茶轴", "红轴"]
+        )
+        conditions.append(Product.attributes["switch"].as_string().in_(switches))
     return conditions
 
 

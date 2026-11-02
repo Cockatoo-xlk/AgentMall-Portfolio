@@ -4,7 +4,7 @@ import re
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_serializer, model_validator
 
 from agentmall.aftersales.schemas import ReasonCode
 
@@ -26,8 +26,17 @@ class Strict(BaseModel):
 class ProductNeeds(Strict):
     layout: Literal["61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"] | None = None
     connection: Literal["有线", "无线", "双模", "三模"] | None = None
+    excluded_connections: list[Literal["双模", "三模"]] = Field(default_factory=list, max_length=2)
     keyboard_type: Literal["mechanical", "membrane"] | None = None
     usage: Literal["宿舍", "办公", "游戏"] | None = None
+
+    @model_serializer(mode="wrap")
+    def compatible_payload(self, handler):
+        data = handler(self)
+        # Preserve legacy handoff and request hashes when the new optional field is absent.
+        if not self.excluded_connections and "excluded_connections" not in self.model_fields_set:
+            data.pop("excluded_connections", None)
+        return data
 
     def terms(self):
         kind = {"mechanical": "机械", "membrane": "薄膜"}.get(self.keyboard_type)
@@ -151,13 +160,25 @@ def user_constraints(request):
     amount = re.search(r"(\d+(?:\.\d{1,2})?)\s*元(?:以内|以下|内|预算)?", message)
     from decimal import Decimal
 
+    from agentmall.agents.purchase_intent import purchase_intent
+
     values = {}
     needs = {}
     layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键", message)
     if layout:
         needs["layout"] = layout[1] + "键"
+    excluded = re.findall(
+        r"(?:不接受|排除|拒绝)((?:双模|三模)(?:[／/、和或]*(?:双模|三模))*)", message
+    )
+    if excluded:
+        needs["excluded_connections"] = [
+            word for word in ("双模", "三模") if any(word in part for part in excluded)
+        ]
+    connection_text = re.sub(
+        r"(?:不接受|排除|拒绝)(?:双模|三模)(?:[／/、和或]*(?:双模|三模))*", "", message
+    )
     for word in ("有线", "无线", "双模", "三模"):
-        if word in message:
+        if word in connection_text:
             needs["connection"] = word
     for word, kind in [("机械", "mechanical"), ("薄膜", "membrane")]:
         if word in message:
@@ -179,7 +200,8 @@ def user_constraints(request):
         values["address_label"] = "demo_dorm"
     elif "演示家庭" in message:
         values["address_label"] = "demo_home"
-    values["purchase_requested"] = any(x in message for x in ("准备购买", "准备下单", "帮我买"))
+    intent = purchase_intent(message)
+    values["purchase_requested"] = intent.requested is True
     values["return_requested"] = any(x in message for x in ("想退掉", "申请退货", "准备退货"))
     values["support_requested"] = any(x in message for x in ("转人工", "联系人工", "找人工"))
     values["exclude_original"] = any(x in message for x in ("替代", "另一款", "再帮我推荐"))
@@ -196,8 +218,20 @@ def user_constraints(request):
             )
         values.update(explicit)
     # Explicit negation wins over a substring match or contradictory structured input.
+    if intent.requested is not None:
+        if (
+            intent.requested
+            and request.constraints is not None
+            and (
+                "purchase_requested" in request.constraints.model_fields_set
+                and not request.constraints.purchase_requested
+            )
+        ):
+            from agentmall.infra.errors import DomainError
+
+            raise DomainError(409, "CONTEXT_CLARIFICATION_REQUIRED", "购买意图与结构化选择冲突")
+        values["purchase_requested"] = intent.requested
     for field, words in (
-        ("purchase_requested", r"(?:准备)?(?:购买|下单|买)"),
         ("return_requested", r"(?:申请|准备)?退(?:货|掉)"),
         ("support_requested", r"(?:转|联系|找)人工"),
     ):
@@ -210,6 +244,7 @@ def user_constraints(request):
 
 # Included in the versioned Run prompt fingerprint; absent for legacy stateless Runs.
 THREAD_CONTEXT_PROMPT = (
+    "T16-A2：当前轮否定优先；被明确拒绝的候选不是购买对象，多对象冲突必须澄清。"
     "thread_context是服务端按本Thread当前用户输入验证的结构化快照，不是历史对话或授权。"
     "当前canonical_constraints/constraints已完成偏好替换和清除，不要重新取历史预算的较小值。"
     "selected是用户对实际展示名单的明确引用；仅可使用其中的商品ID，不能用名称或重新搜索替换编号。"

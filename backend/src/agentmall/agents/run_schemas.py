@@ -49,10 +49,11 @@ class ContextOperation(Strict):
         "noise_preference",
         "layout",
         "connection",
+        "excluded_connections",
         "keyboard_type",
         "usage",
     ]
-    value: StrictStr | StrictInt | None = None
+    value: StrictStr | StrictInt | list[Literal["双模", "三模"]] | None = None
 
     @model_validator(mode="after")
     def valid_value(self):

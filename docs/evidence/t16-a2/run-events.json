@@ -1,0 +1,1265 @@
+{
+  "mode": "MOCK_TRANSPORT",
+  "event_count": 85,
+  "seq_per_run": {
+    "5b4d26b1-3a9a-4807-9c38-831df594776a": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ],
+    "8c1f672f-24a1-424c-b705-2bf3aa1086f9": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+    ],
+    "fadf0370-cb95-4c27-9675-d04c341a687d": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ]
+  },
+  "events": [
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 1,
+      "event_type": "run_created",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.019268+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 2,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "epoch": 1
+      },
+      "timestamp": "2026-11-02T12:32:27.026762+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 3,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.054698+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 4,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 1,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:27.068376+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 5,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 1,
+        "duration_ms": 45
+      },
+      "timestamp": "2026-11-02T12:32:27.115153+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 6,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [
+          {
+            "goal": "find_products",
+            "target": "shopping",
+            "subtask_id": "search"
+          }
+        ],
+        "tool_call_id": "ctx-121a547e149b40dabd711e1b8ffa78bd"
+      },
+      "timestamp": "2026-11-02T12:32:27.120245+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 7,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "goal": "find_products",
+        "target": "shopping",
+        "subtask_id": "search"
+      },
+      "timestamp": "2026-11-02T12:32:27.120245+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 8,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.120245+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 9,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": "UNKNOWN",
+        "attempt": 2,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:27.140651+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 10,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 2,
+        "duration_ms": 46
+      },
+      "timestamp": "2026-11-02T12:32:27.188744+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 11,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": "UNKNOWN",
+        "attempt": 3,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:27.208552+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 12,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 3,
+        "duration_ms": 44
+      },
+      "timestamp": "2026-11-02T12:32:27.254422+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 13,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "subtask_id": "search"
+      },
+      "timestamp": "2026-11-02T12:32:27.261732+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 14,
+      "event_type": "tool",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "ok": true,
+        "name": "retrieve_products",
+        "role": "shopping",
+        "subtask_id": "search",
+        "duration_ms": 5,
+        "entity_refs": [
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          },
+          {
+            "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+            "kind": "product"
+          }
+        ],
+        "tool_call_id": "ctx-62a7e73d576a4173b6f22f166d238c0e"
+      },
+      "timestamp": "2026-11-02T12:32:27.261732+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 15,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "subtask_id": "search"
+      },
+      "timestamp": "2026-11-02T12:32:27.261732+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 16,
+      "event_type": "model_final",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping"
+      },
+      "timestamp": "2026-11-02T12:32:27.261732+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 17,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "done",
+        "target": "shopping",
+        "subtask_id": "search",
+        "entity_refs": [
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          },
+          {
+            "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+            "kind": "product"
+          }
+        ]
+      },
+      "timestamp": "2026-11-02T12:32:27.261732+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 18,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.261732+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 19,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.270007+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 20,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 4,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:27.281142+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 21,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 4,
+        "duration_ms": 47
+      },
+      "timestamp": "2026-11-02T12:32:27.329701+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 22,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [],
+        "terminal": "finish",
+        "tool_call_id": "ctx-7ef24afd865543eaafa7c45cbf6051df"
+      },
+      "timestamp": "2026-11-02T12:32:27.331763+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 23,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.331763+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 24,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.342422+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 25,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.353255+00:00"
+    },
+    {
+      "run_id": "5b4d26b1-3a9a-4807-9c38-831df594776a",
+      "seq": 26,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "COMPLETED"
+      },
+      "timestamp": "2026-11-02T12:32:27.362776+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 1,
+      "event_type": "run_created",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:30.157709+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 2,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "epoch": 1
+      },
+      "timestamp": "2026-11-02T12:32:30.166709+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 3,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:30.196256+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 4,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 1,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:30.208831+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 5,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 1,
+        "duration_ms": 50
+      },
+      "timestamp": "2026-11-02T12:32:30.260517+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 6,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [
+          {
+            "goal": "prepare_checkout",
+            "target": "order",
+            "subtask_id": "selected",
+            "entity_refs": [
+              {
+                "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+                "kind": "product"
+              }
+            ]
+          }
+        ],
+        "tool_call_id": "ctx-5079d99f70f64bac9ab311df75829874"
+      },
+      "timestamp": "2026-11-02T12:32:30.265526+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 7,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "goal": "prepare_checkout",
+        "target": "order",
+        "subtask_id": "selected",
+        "entity_refs": [
+          {
+            "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+            "kind": "product"
+          }
+        ]
+      },
+      "timestamp": "2026-11-02T12:32:30.265526+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 8,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:30.265526+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 9,
+      "event_type": "model_start",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "usage": "UNKNOWN",
+        "attempt": 2,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:30.282956+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 10,
+      "event_type": "model_end",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 2,
+        "duration_ms": 46
+      },
+      "timestamp": "2026-11-02T12:32:30.330749+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 11,
+      "event_type": "model_start",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "usage": "UNKNOWN",
+        "attempt": 3,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:30.344885+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 12,
+      "event_type": "model_end",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 3,
+        "duration_ms": 42
+      },
+      "timestamp": "2026-11-02T12:32:30.388339+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 13,
+      "event_type": "model_context",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "subtask_id": "selected"
+      },
+      "timestamp": "2026-11-02T12:32:30.404491+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 14,
+      "event_type": "tool",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "ok": true,
+        "name": "get_product",
+        "role": "order",
+        "subtask_id": "selected",
+        "duration_ms": 2,
+        "entity_refs": [
+          {
+            "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+            "kind": "product"
+          }
+        ],
+        "tool_call_id": "ctx-cbf118166ef745d8a2503caf386ca71d"
+      },
+      "timestamp": "2026-11-02T12:32:30.404491+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 15,
+      "event_type": "model_context",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "subtask_id": "selected"
+      },
+      "timestamp": "2026-11-02T12:32:30.404491+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 16,
+      "event_type": "tool",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "ok": true,
+        "name": "prepare_checkout",
+        "role": "order",
+        "subtask_id": "selected",
+        "duration_ms": 6,
+        "entity_refs": [
+          {
+            "id": "660a7747-0dc6-4423-8349-b7c948295e4e",
+            "kind": "proposal"
+          },
+          {
+            "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+            "kind": "product"
+          }
+        ],
+        "tool_call_id": "ctx-5220f4b2fa244de1bacf4d8c7c09f2cc"
+      },
+      "timestamp": "2026-11-02T12:32:30.404491+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 17,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "proposal",
+        "target": "order",
+        "subtask_id": "selected",
+        "entity_refs": [
+          {
+            "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+            "kind": "product"
+          },
+          {
+            "id": "660a7747-0dc6-4423-8349-b7c948295e4e",
+            "kind": "proposal"
+          }
+        ]
+      },
+      "timestamp": "2026-11-02T12:32:30.404491+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 18,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:30.404491+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 19,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:30.412008+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 20,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:30.421985+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 21,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "WAITING_INPUT"
+      },
+      "timestamp": "2026-11-02T12:32:30.437268+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 22,
+      "event_type": "resume_received",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "interrupt_id": "23464d942652437343dff43b0a7391ef"
+      },
+      "timestamp": "2026-11-02T12:32:31.150966+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 23,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "epoch": 2
+      },
+      "timestamp": "2026-11-02T12:32:31.153884+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 24,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:31.172095+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 25,
+      "event_type": "business_receipt",
+      "agent": null,
+      "action_id": "660a7747-0dc6-4423-8349-b7c948295e4e",
+      "payload_summary": {
+        "status": "EXECUTED",
+        "action_id": "660a7747-0dc6-4423-8349-b7c948295e4e",
+        "resource_id": "92ac3191-6bdf-4228-b7f6-3dfacf0c4cae"
+      },
+      "timestamp": "2026-11-02T12:32:31.198953+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 26,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:31.198953+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 27,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 4,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:31.218516+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 28,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 4,
+        "duration_ms": 48
+      },
+      "timestamp": "2026-11-02T12:32:31.268480+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 29,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [],
+        "terminal": "finish",
+        "tool_call_id": "ctx-6d4155d5115542f1817fbe2f6ead4b5b"
+      },
+      "timestamp": "2026-11-02T12:32:31.270821+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 30,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:31.270821+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 31,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:31.287048+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 32,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:31.299790+00:00"
+    },
+    {
+      "run_id": "8c1f672f-24a1-424c-b705-2bf3aa1086f9",
+      "seq": 33,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "COMPLETED"
+      },
+      "timestamp": "2026-11-02T12:32:31.311038+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 1,
+      "event_type": "run_created",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.920215+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 2,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "epoch": 1
+      },
+      "timestamp": "2026-11-02T12:32:27.929302+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 3,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:27.952278+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 4,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 1,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:27.963830+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 5,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 1,
+        "duration_ms": 48
+      },
+      "timestamp": "2026-11-02T12:32:28.013923+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 6,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [
+          {
+            "goal": "find_products",
+            "target": "shopping",
+            "subtask_id": "search"
+          }
+        ],
+        "tool_call_id": "ctx-fabbe051d4bc4e9d86aa445225ab8c35"
+      },
+      "timestamp": "2026-11-02T12:32:28.018270+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 7,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "goal": "find_products",
+        "target": "shopping",
+        "subtask_id": "search"
+      },
+      "timestamp": "2026-11-02T12:32:28.018270+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 8,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:28.018270+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 9,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": "UNKNOWN",
+        "attempt": 2,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:28.036837+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 10,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 2,
+        "duration_ms": 45
+      },
+      "timestamp": "2026-11-02T12:32:28.083803+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 11,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": "UNKNOWN",
+        "attempt": 3,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:28.102550+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 12,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 3,
+        "duration_ms": 40
+      },
+      "timestamp": "2026-11-02T12:32:28.144044+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 13,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "subtask_id": "search"
+      },
+      "timestamp": "2026-11-02T12:32:28.150214+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 14,
+      "event_type": "tool",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "ok": true,
+        "name": "retrieve_products",
+        "role": "shopping",
+        "subtask_id": "search",
+        "duration_ms": 6,
+        "entity_refs": [
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          },
+          {
+            "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+            "kind": "product"
+          },
+          {
+            "id": "e5635304-5562-5b76-80ae-2f577488e404",
+            "kind": "product"
+          }
+        ],
+        "tool_call_id": "ctx-97b8cc54c69f442c9346aa6ce827d93f"
+      },
+      "timestamp": "2026-11-02T12:32:28.150214+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 15,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "subtask_id": "search"
+      },
+      "timestamp": "2026-11-02T12:32:28.150214+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 16,
+      "event_type": "model_final",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping"
+      },
+      "timestamp": "2026-11-02T12:32:28.150214+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 17,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "done",
+        "target": "shopping",
+        "subtask_id": "search",
+        "entity_refs": [
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          },
+          {
+            "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+            "kind": "product"
+          },
+          {
+            "id": "e5635304-5562-5b76-80ae-2f577488e404",
+            "kind": "product"
+          }
+        ]
+      },
+      "timestamp": "2026-11-02T12:32:28.150214+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 18,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:28.150214+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 19,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:28.157762+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 20,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 4,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-02T12:32:28.168231+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 21,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 4,
+        "duration_ms": 33
+      },
+      "timestamp": "2026-11-02T12:32:28.203072+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 22,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [],
+        "terminal": "finish",
+        "tool_call_id": "ctx-1201cae10d8c45119b1cba5b674a5f62"
+      },
+      "timestamp": "2026-11-02T12:32:28.204668+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 23,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:28.204668+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 24,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:28.214805+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 25,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-02T12:32:28.223989+00:00"
+    },
+    {
+      "run_id": "fadf0370-cb95-4c27-9675-d04c341a687d",
+      "seq": 26,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "COMPLETED"
+      },
+      "timestamp": "2026-11-02T12:32:28.231654+00:00"
+    }
+  ]
+}

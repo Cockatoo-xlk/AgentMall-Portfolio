@@ -39,9 +39,9 @@ async function capture(page: Page, request: APIRequestContext, name: string) {
   await page.screenshot({ path: path.join(evidence, name + '.png'), fullPage: true, animations: 'disabled' })
   return facts
 }
-test.beforeEach(async ({ request, page }) => {
+test.beforeEach(async ({ request, page }, info) => {
   await control(request, '/reset', {})
-  await control(request, '/sdk-mode', { program: 'context' })
+  await control(request, '/sdk-mode', { program: info.title.startsWith('A2:') ? 'context-catalog' : 'context' })
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort())
 })
 test.afterEach(async ({ request }, info) => {
@@ -150,4 +150,52 @@ test('multiturn: inspection has no purchase intent and history is recoverable', 
   expect(f.proposals).toBe(0)
   expect(f.orders).toBe(0)
   expect(f.run_rows).toHaveLength(2)
+})
+
+test('A2: default catalogue three turns preserve the current second candidate after relogin', async ({ page, request }) => {
+  await create(page)
+  await turn(page, '推荐300元以内的静音键盘，不要购买。')
+  expect((await control(request, '/facts')).proposals).toBe(0)
+  await turn(page, '改成支持无线连接的，预算提高到400元。')
+  await expect(page.getByTestId('context-preferences')).toContainText('400.00')
+  await expect(page.getByTestId('numbered-candidate')).toHaveCount(3)
+  const before = await capture(page, request, 'a2-default-second-turn')
+  const items = before.candidate_set_rows.at(-1).items
+  expect(items.map((x: { name: string }) => x.name).sort()).toEqual(['办公 K108', '静音 K87', '静音 K98'].sort())
+  const target = items[1].id
+  await page.reload()
+  await login(page, true)
+  await expect(page.getByTestId('numbered-candidate')).toHaveCount(3)
+  await turn(page, '就买最新推荐的第二款，一件，送演示宿舍。', 'WAITING_INPUT')
+  const waiting = await capture(page, request, 'a2-default-waiting')
+  expect(waiting.orders).toBe(0)
+  expect(waiting.confirmation_rows).toHaveLength(0)
+  expect(waiting.proposal_rows[0].canonical_payload.items[0].product_id).toBe(target)
+  await page.getByRole('button', { name: '批准并继续工作流' }).click()
+  await expect(page.getByTestId('run-status')).toHaveText('COMPLETED')
+  const done = await capture(page, request, 'a2-default-completed')
+  expect(done.order_rows).toHaveLength(1)
+  expect(done.order_rows[0].status).toBe('PENDING_PAYMENT')
+  expect(done.payment_rows).toHaveLength(0)
+  expect(done.run_rows).toHaveLength(3)
+  expect(done.checkpoint_rows).toBeGreaterThan(0)
+})
+
+test('A2: negation blocks purchase and a distinct positive candidate can then be proposed', async ({ page, request }) => {
+  await create(page)
+  await turn(page, '推荐400元以内支持无线连接的静音键盘，不要购买。')
+  await turn(page, '我不想买第二款，一件，送演示宿舍。')
+  const denied = await capture(page, request, 'a2-negation')
+  expect(denied.proposals).toBe(0)
+  expect(denied.orders).toBe(0)
+  expect(denied.confirmation_rows).toHaveLength(0)
+  expect(denied.payment_rows).toHaveLength(0)
+  const target = denied.candidate_set_rows.at(-1).items[2].id
+  await turn(page, '不买第二款，改买第三款，一件，送演示宿舍。', 'WAITING_INPUT')
+  const selected = await capture(page, request, 'a2-replacement-waiting')
+  expect(selected.proposal_rows[0].canonical_payload.items[0].product_id).toBe(target)
+  expect(selected.orders).toBe(0)
+  await page.getByRole('button', { name: '拒绝并继续工作流' }).click()
+  await expect(page.getByTestId('run-status')).toHaveText('COMPLETED')
+  expect((await control(request, '/facts')).orders).toBe(0)
 })

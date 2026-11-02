@@ -19,3 +19,12 @@ it('shows server ranks without reranking stale candidates and never renders HTML
   expect(html).toContain('需要重新检索')
   expect(html).toContain('disabled=""')
 })
+
+it('shows explicit excluded connection labels independently from wireless capability', () => {
+  const html = renderToStaticMarkup(<ThreadMemory busy={false} selected="" onSelect={vi.fn()} onPatch={vi.fn()} context={{
+    version: 3, preferences: { product_needs: { connection: '无线', excluded_connections: ['双模', '三模'] } },
+    provenance: {}, updated_at: null, candidate_sets: [],
+  }} />)
+  expect(html).toContain('排除连接标签：双模、三模')
+  expect(html).toContain('清除连接排除')
+})

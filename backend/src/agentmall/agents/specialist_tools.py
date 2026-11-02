@@ -127,6 +127,8 @@ def ref(kind, ident, relation="observed", policy_version=None):
 
 
 def product_allowed(runtime, product):
+    from agentmall.catalog.capabilities import connection_matches
+
     c = runtime.constraints
     needs = c.product_needs
     return (
@@ -136,7 +138,7 @@ def product_allowed(runtime, product):
         and (c.max_price_cents is None or product.price_cents <= c.max_price_cents)
         and (c.noise_preference is None or product.attributes.get("noise") == "较安静")
         and (needs.layout is None or product.attributes.get("size") == needs.layout)
-        and (needs.connection is None or product.attributes.get("connection") == needs.connection)
+        and connection_matches(product.attributes, needs.connection, needs.excluded_connections)
         and (
             needs.keyboard_type is None
             or (
@@ -213,7 +215,15 @@ class SpecialistTools:
                     actor,
                     query,
                     ProductQuery(
-                        query=query, category=r.constraints.category, max_price_cents=maximum
+                        query=query,
+                        category=r.constraints.category,
+                        max_price_cents=maximum,
+                        noise_preference=r.constraints.noise_preference,
+                        layout=r.constraints.product_needs.layout,
+                        connection=r.constraints.product_needs.connection,
+                        excluded_connections=r.constraints.product_needs.excluded_connections,
+                        keyboard_type=r.constraints.product_needs.keyboard_type,
+                        exclude_product_ids=list(r.exclusions),
                     ),
                     r.encoder,
                 )
@@ -423,8 +433,9 @@ class SpecialistTools:
 
             constraints = r.constraints.model_dump(mode="json", exclude_none=True)
             preferences = {k: constraints[k] for k in FIELDS - NEEDS if k in constraints}
-            if constraints.get("product_needs"):
-                preferences["product_needs"] = constraints["product_needs"]
+            needs = {k: v for k, v in constraints.get("product_needs", {}).items() if v != []}
+            if needs:
+                preferences["product_needs"] = needs
             ident = str(
                 uuid5(
                     r.input.request_id, "candidates:" + payload_hash([preferences, candidate_items])

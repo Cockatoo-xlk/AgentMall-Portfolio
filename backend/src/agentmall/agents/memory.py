@@ -10,6 +10,7 @@ from sqlalchemy import select
 from agentmall.actions.service import database_now, payload_hash
 from agentmall.agents.context import Constraints, MultiRequest, user_constraints
 from agentmall.agents.models import CandidateSet, ContextMutation, ThreadContext
+from agentmall.agents.purchase_intent import ORDINAL, purchase_intent
 from agentmall.catalog import service as catalog
 from agentmall.infra.errors import DomainError
 
@@ -19,21 +20,33 @@ FIELDS = {
     "noise_preference",
     "layout",
     "connection",
+    "excluded_connections",
     "keyboard_type",
     "usage",
 }
-NEEDS = {"layout", "connection", "keyboard_type", "usage"}
+NEEDS = {"layout", "connection", "excluded_connections", "keyboard_type", "usage"}
 
 
 def conflict(code="CONTEXT_CLARIFICATION_REQUIRED"):
     return DomainError(409, code, "上下文或候选已变化，请核对当前偏好和名单后明确选择")
 
 
+def normalize_preferences(prefs):
+    if "product_needs" in prefs:
+        prefs["product_needs"] = {k: v for k, v in prefs["product_needs"].items() if v != []}
+        if not prefs["product_needs"]:
+            prefs.pop("product_needs")
+    return prefs
+
+
 def resolve_preferences(previous, payload):
     """Only current authenticated user input can replace a persisted preference."""
     text = payload.message
     amounts = {int(Decimal(v) * 100) for v in re.findall(r"(\d+(?:\.\d{1,2})?)\s*元", text)}
-    connections = {v for v in ("有线", "无线", "双模", "三模") if v in text}
+    connection_text = re.sub(
+        r"(?:不接受|排除|拒绝)(?:双模|三模)(?:[／/、和或]*(?:双模|三模))*", "", text
+    )
+    connections = {v for v in ("有线", "无线", "双模", "三模") if v in connection_text}
     for choices in (
         ("键盘", "鼠标", "耳机"),
         ("机械", "薄膜"),
@@ -65,7 +78,7 @@ def resolve_preferences(previous, payload):
     )
     fresh = raw.model_dump(mode="json")
     changes = {k: fresh[k] for k in FIELDS - NEEDS if fresh.get(k) is not None}
-    changes.update({k: v for k, v in fresh["product_needs"].items() if v is not None})
+    changes.update({k: v for k, v in fresh["product_needs"].items() if v is not None and v != []})
     if amounts:
         changes["max_price_cents"] = next(iter(amounts))
     for field in clears:
@@ -88,8 +101,7 @@ def resolve_preferences(previous, payload):
             prefs.setdefault("product_needs", {})[field] = value
         else:
             prefs[field] = value
-    if not prefs.get("product_needs"):
-        prefs.pop("product_needs", None)
+    normalize_preferences(prefs)
     # Non-preference capabilities are derived afresh for this Run, never from old memory.
     effective = user_constraints(
         MultiRequest(
@@ -102,8 +114,6 @@ def resolve_preferences(previous, payload):
     for field in FIELDS - NEEDS:
         effective[field] = prefs.get(field)
     effective["product_needs"] = prefs.get("product_needs", {})
-    if re.search(r"(?:就买|购买第|买第)", text) and not re.search(r"(?:不要|不买|取消购买)", text):
-        effective["purchase_requested"] = True
     return prefs, Constraints.model_validate(effective).model_dump(mode="json")
 
 
@@ -153,7 +163,8 @@ async def accept_context(session, actor, thread_id, run_id, payload):
     changed = preferences != context.preferences
     selected = []
     source = None
-    ordinal = re.findall(r"第([一二三四五六七八九十]|\d+)(?:款|个)", payload.message)
+    intent = purchase_intent(payload.message)
+    ordinal = re.findall(ORDINAL, intent.reference_text)
     previous = "刚才那款" in payload.message or "上一款" in payload.message
     if ordinal or previous:
         if (
@@ -319,8 +330,7 @@ async def patch_context(app, actor, thread_id, payload):
                     if operation.op == "SET" and old is not None and old != operation.value:
                         raise conflict()
                     target[field] = operation.value
-            if not prefs.get("product_needs"):
-                prefs.pop("product_needs", None)
+            normalize_preferences(prefs)
             # Validate every value through the existing strict domain constraints.
             validated = Constraints.model_validate(prefs).model_dump(mode="json", exclude_none=True)
             context.preferences = {k: validated[k] for k in prefs}
@@ -344,7 +354,10 @@ async def accept_clarification(session, actor, run, message):
     """A new explicit user input is versioned before graph execution, never parsed as old prose."""
     from agentmall.agents.run_schemas import RunCreate
 
-    if re.search(r"第(?:[一二三四五六七八九十]|\d+)(?:款|个)|刚才那款|上一款", message):
+    intent = purchase_intent(message)
+    if intent.requested is not False and re.search(
+        r"第(?:[一二三四五六七八九十]|\d+)(?:款|个)|刚才那款|上一款", message
+    ):
         # Clarification has no displayed-list binding; require an explicit entity ID.
         raise conflict()
     context = await locked_context(session, run.thread_id)
@@ -369,7 +382,11 @@ async def accept_clarification(session, actor, run, message):
         ("return_requested", r"(?:申请|准备)?退(?:货|掉)"),
         ("support_requested", r"(?:转|联系|找)人工"),
     ):
-        revoked = re.search(r"(?:不要|不想|不需要|别|暂不|不)\s*" + pattern, message)
+        revoked = (
+            intent.requested is False
+            if field == "purchase_requested"
+            else re.search(r"(?:不要|不想|不需要|别|暂不|不)\s*" + pattern, message)
+        )
         if not constraints[field] and not revoked:
             constraints[field] = active[field]
         if field == "purchase_requested" and revoked:

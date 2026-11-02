@@ -1,0 +1,33 @@
+{
+  "new_text_files_scanned": 30,
+  "findings": [],
+  "images": [
+    {
+      "path": "docs/evidence/t16-a2/screenshots/completed.png",
+      "sha256": "a1b6122d842aed00c538c8c07df9b9f4249a2ec15e41c7e9794b890699374db0",
+      "metadata_chunks": [],
+      "source": "Reviewed final Linux Playwright synthetic UI; no real LLM"
+    },
+    {
+      "path": "docs/evidence/t16-a2/screenshots/waiting.png",
+      "sha256": "b8d5ed69f27b748047c441402e283f619990e4a2a72ffb3d134bcbb0fb9871df",
+      "metadata_chunks": [],
+      "source": "Reviewed final Linux Playwright synthetic UI; no real LLM"
+    },
+    {
+      "path": "docs/evidence/t16-a2/screenshots/preferences.png",
+      "sha256": "d5d8bac86bc919b835dafe4a95679c224441787cc1e7051815e086548be4251b",
+      "metadata_chunks": [],
+      "source": "Reviewed final Linux Playwright synthetic UI; no real LLM"
+    }
+  ],
+  "project_license": "MIT, owner and third-party notices unchanged",
+  "new_dependencies": false,
+  "locks_unchanged": true,
+  "original_schema_0007_unchanged": true,
+  "raw_logs_checkpoints_models_keys_approvals_ledgers": "PRIVATE_IGNORED_NOT_COMMITTED",
+  "safety_domain_and_checkpoint_kernel_unchanged": true,
+  "github_write_operations": 0,
+  "paid_provider_requests": 0,
+  "real_key_read": false
+}

@@ -12,12 +12,13 @@ export interface CandidateItem {
 }
 export interface ThreadContext {
   version: number
-  preferences: { category?: string; max_price_cents?: number; noise_preference?: string; product_needs?: Record<string, string> }
+  preferences: { category?: string; max_price_cents?: number; noise_preference?: string;
+    product_needs?: { connection?: string; layout?: string; keyboard_type?: string; usage?: string; excluded_connections?: string[] } }
   provenance: { type?: string; run_id?: string; request_id?: string }
   updated_at: string | null
   candidate_sets: { id: string; run_id: string; valid: boolean; items: CandidateItem[] }[]
 }
-export interface ContextOperation { op: 'SET' | 'REPLACE' | 'CLEAR'; field: string; value?: string | number }
+export interface ContextOperation { op: 'SET' | 'REPLACE' | 'CLEAR'; field: string; value?: string | number | string[] }
 
 /** A read-only retry must use this Thread's current preferences, not an old Run's limits. */
 export function freshRecommendationConstraints(previous: Record<string, unknown>) {

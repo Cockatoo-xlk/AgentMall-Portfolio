@@ -17,12 +17,14 @@ export default function ThreadMemory({ context, busy, selected, onSelect, onPatc
       噪声：{p.noise_preference === 'quiet' ? '静音偏好' : '未指定'} ·
       连接：{p.product_needs?.connection ?? '未指定'}
     </p>
+    {!!p.product_needs?.excluded_connections?.length && <p>排除连接标签：{p.product_needs.excluded_connections.join('、')}</p>}
     <p className="muted">仅记住结构化偏好和已核验的商品引用；购买意图、数量、地址和授权不跨轮继承。</p>
     <div className="thread-preference-controls">
       <label>修改预算（元）<input type="number" min="0" max="1000000" step="0.01" value={budget} onChange={e => setBudget(e.target.value)} /></label>
       <button type="button" className="button secondary" disabled={busy || budget === '' || !Number.isFinite(Number(budget)) || Number(budget) < 0} onClick={() => onPatch([{ op: 'REPLACE', field: 'max_price_cents', value: Math.round(Number(budget) * 100) }])}>保存预算</button>
       <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'max_price_cents' }])}>清除预算</button>
       <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'connection' }])}>清除连接偏好</button>
+      {!!p.product_needs?.excluded_connections?.length && <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'excluded_connections' }])}>清除连接排除</button>}
     </div>
     {context.candidate_sets.map(set => <section key={set.id} data-testid="candidate-set" className="stack">
       <label><input type="radio" name="candidate-set" checked={selected === set.id} disabled={!set.valid || busy} onChange={() => onSelect(set.id)} />引用此名单 · 来源 Run {set.run_id}</label>

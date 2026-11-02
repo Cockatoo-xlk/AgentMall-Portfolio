@@ -58,6 +58,14 @@ async def seed(session, settings: Settings):
                 attributes={
                     "switch": switch,
                     "connection": connection,
+                    # Explicit synthetic capabilities, without Bluetooth/2.4GHz claims.
+                    "connection_capabilities": (
+                        ["wired", "wireless"]
+                        if connection in {"双模", "三模"}
+                        else ["wireless"]
+                        if connection == "无线"
+                        else ["wired"]
+                    ),
                     "size": size,
                     "noise": noise,
                 },

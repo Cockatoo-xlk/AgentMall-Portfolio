@@ -528,6 +528,7 @@ def mount_controls(harness):
         model_config = ConfigDict(extra="forbid")
         program: Literal[
             "context",
+            "context-catalog",
             "purchase",
             "recommend",
             "orders",
@@ -546,11 +547,12 @@ def mount_controls(harness):
 
         await harness.close_sdk()
         harness.sdk_directory = tempfile.TemporaryDirectory(prefix="agentmall-sdk-mock-")
-        if payload.program == "context":
+        if payload.program in {"context", "context-catalog"}:
             from multiturn_helpers import install_context_sdk, wireless_products
 
             env = (None, harness.db, harness.app, harness.settings)
-            await wireless_products(env)
+            if payload.program == "context":
+                await wireless_products(env)
             _, harness.sdk_program = await install_context_sdk(
                 env, Path(harness.sdk_directory.name)
             )

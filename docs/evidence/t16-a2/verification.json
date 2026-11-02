@@ -1,0 +1,183 @@
+{
+  "status": "T16_A2_BLOCKERS_FIXED_OFFLINE_VERIFIED",
+  "base_commit": "cbc6e19ae7633758e2ce2f0d64d27aea2af7b9f5",
+  "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+  "final_environment": "ALL_TEST_PROCESSES_LINUX_AARCH64",
+  "commands": [
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622359833135897,
+      "end_wall_ns": 1793622359866505564,
+      "elapsed_monotonic_seconds": 0.033372625000083644,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "name": "format",
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622359950959189,
+      "end_wall_ns": 1793622359966964356,
+      "elapsed_monotonic_seconds": 0.016006666999601293,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-format.log",
+      "sha256": "1c0028d26b0eb2bbffd35e8f3ea2957a6a46019184711c82fa05404d700618f4"
+    },
+    {
+      "name": "backend",
+      "command": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "--ci-offline-core",
+        "-q",
+        "-ra"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622360080997397,
+      "end_wall_ns": 1793622695757939099,
+      "elapsed_monotonic_seconds": 335.676943035,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-backend.log",
+      "sha256": "4bc98ba6928c84ad2813ff462c40b896a8a1f3fb7ac78b3c9910e9fa3ff6d52c"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622695835768974,
+      "end_wall_ns": 1793622697827166058,
+      "elapsed_monotonic_seconds": 1.991398375999779,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-typecheck.log",
+      "sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "name": "lint",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622697903578225,
+      "end_wall_ns": 1793622699328290809,
+      "elapsed_monotonic_seconds": 1.4247135850000632,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-lint.log",
+      "sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "name": "build",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622699407511268,
+      "end_wall_ns": 1793622701743749310,
+      "elapsed_monotonic_seconds": 2.3362388340001417,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-build.log",
+      "sha256": "685b1ccde372d43918b45eaf7cb179dd77977cabf5c5c539aa941e18e66f0265"
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622701897226102,
+      "end_wall_ns": 1793622703220389894,
+      "elapsed_monotonic_seconds": 1.3231651679998322,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-vitest.log",
+      "sha256": "06c9a40e08fee8c8cfb19d013150d657fc4babc767c7c3761bef6b9424a5f85e"
+    },
+    {
+      "name": "playwright",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "start_wall_ns": 1793622703302387269,
+      "end_wall_ns": 1793622884097205356,
+      "elapsed_monotonic_seconds": 180.7948191280002,
+      "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+      "log": "linux2-playwright.log",
+      "sha256": "321b0e23dd85016d6a0758d960b53a24c80eeb0cab7c7805412f6f93266f2faa"
+    }
+  ],
+  "counts": {
+    "pytest_passed": 802,
+    "pytest_skipped": 14,
+    "vitest_passed": 85,
+    "playwright_passed": 96,
+    "playwright_retries": 0,
+    "playwright_skipped": 0
+  },
+  "new_cases": {
+    "backend": 60,
+    "vitest": 1,
+    "playwright": 2
+  },
+  "skips": "Unchanged: 13 real-BGE weight-dependent cases + 1 private Live-original comparison; actual real BGE is separately checked in the fresh R1 environment.",
+  "linux_clock": {
+    "elapsed_seconds": 584.3854806540003,
+    "samples": 54476,
+    "minimum_wall_delta_ns": 10041542,
+    "minimum_mono_delta_ns": 10041542,
+    "maximum_abs_residual_ns": 1808624,
+    "raw_sha256": "3918999faee4c834d2b4f56570e3c076896fdc40bcd0e5c1313506b256a2d51e",
+    "admitted": true
+  },
+  "mac_hybrid_clock_admitted": false,
+  "paid_provider_requests": 0,
+  "real_live_multiturn": "NOT_RUN",
+  "remote_ci": "NOT_RUN",
+  "warnings": "Three existing jieba SyntaxWarning messages; no dependency upgrade or suppression."
+}
