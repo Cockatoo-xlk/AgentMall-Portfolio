@@ -1,0 +1,28 @@
+{
+  "docker_context": "desktop-linux",
+  "stored_default_context": "colima",
+  "docker_desktop_memory_bytes": 8317267968,
+  "docker_desktop_cpus": 18,
+  "runner_limit_bytes": 4294967296,
+  "postgres_each_limit_bytes": 805306368,
+  "real_verifier_memory": {
+    "memory.current": 669216768,
+    "memory.peak": 735391744,
+    "memory.max": 2684354560
+  },
+  "owned_oom_killed": 0,
+  "resource_samples_sha256": "f82e3541fddc53c5957995d1f589afc4c400f766e47c6633e5439ab9edf56f1d",
+  "whole_vm_peak": "NOT_MEASURED",
+  "cleanup": {
+    "clock_and_resource_monitors_stopped": true,
+    "owned_postgres_services_stopped": true,
+    "volumes_deleted": false,
+    "failed_owned_schemas_preserved": [
+      "test_cd09dffd46de4a6ab75c7af9d6208777",
+      "cp_0d5cb6e68bec41df9f416ab31e592e6a"
+    ],
+    "successful_pre_review_verifier_schemas_dropped_after_saved_raw_sha": true,
+    "final_post_review_verifier_not_started": true,
+    "old_r2_service_untouched": true
+  }
+}

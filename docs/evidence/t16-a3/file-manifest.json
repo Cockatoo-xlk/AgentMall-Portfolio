@@ -1,0 +1,112 @@
+{
+  "scope": "Every changed tracked or new nonignored file, excluding this manifest itself",
+  "files": [
+    {
+      "path": "backend/src/agentmall/retrieval/ingest.py",
+      "size_bytes": 5717,
+      "sha256": "e0e4c8c426d9662ac88db931fe926df59333bb882a0efb1ba0350656f594a3e3"
+    },
+    {
+      "path": "backend/src/agentmall/retrieval/search.py",
+      "size_bytes": 7671,
+      "sha256": "6fd6f72200b7776d1a027db08cc93864aab879a95b7a06b30c165d21005ac1ab"
+    },
+    {
+      "path": "backend/tests/t16_a3_oracle.py",
+      "size_bytes": 13381,
+      "sha256": "6bf0649fbd5d5a0916cadf4aaf4e8dc7c0eddc107f39817929b342561ccc5925"
+    },
+    {
+      "path": "backend/tests/t16_a3_retrieval_checks.py",
+      "size_bytes": 9018,
+      "sha256": "e29d1abf26654c7699805162715daec93e513e250e63920f8ca6b765a9b4d4b8"
+    },
+    {
+      "path": "backend/tests/t16_a3_scenario.py",
+      "size_bytes": 11030,
+      "sha256": "647dbebb832ef79fbfbbc43fefba71ef52671dae1a7a951eca28a36ad02527df"
+    },
+    {
+      "path": "backend/tests/test_t16_a3_oracle.py",
+      "size_bytes": 9837,
+      "sha256": "029c719c1fff5deca8ad91b79a23240fcce4eb03632d75040da7113a5ca206bd"
+    },
+    {
+      "path": "backend/tests/test_t16_a3_retrieval.py",
+      "size_bytes": 3900,
+      "sha256": "f22b9fff8879db4139b9b5995ee84f9f22131726d6df0edb8e78fa23065dfdd8"
+    },
+    {
+      "path": "docs/RETRIEVAL_INDEXING.md",
+      "size_bytes": 3072,
+      "sha256": "7b83a73246eedc5beeef17a6d1f2a8816711965552c47393fde628582db4f2c5"
+    },
+    {
+      "path": "docs/evidence/t16-a3/clock-summary.json",
+      "size_bytes": 1276,
+      "sha256": "b724448365535efd97d9422b860080e716fbed65b1a6ba7a60f30e55acab1028"
+    },
+    {
+      "path": "docs/evidence/t16-a3/database-oracle-summary.json",
+      "size_bytes": 21219,
+      "sha256": "fddebd4c4e5170a9a4cb092f9a099f5a32d086737cb570139cf0c2a0db4e0b3c"
+    },
+    {
+      "path": "docs/evidence/t16-a3/failure-ledger.json",
+      "size_bytes": 4726,
+      "sha256": "cd7ddfeb548d40cacef56773af11d07b51a8b3b60e1dfc84ebc694fdfcc30374"
+    },
+    {
+      "path": "docs/evidence/t16-a3/historical-integrity.json",
+      "size_bytes": 358,
+      "sha256": "126506875072b83ee2dd80613385928332a23993729454b6b7e4a92dc079e10e"
+    },
+    {
+      "path": "docs/evidence/t16-a3/live-preflight-next.md",
+      "size_bytes": 1634,
+      "sha256": "0bc38aac1b60fa16bb269274244bccb4f636735da6429906b7aa565fbdad607f"
+    },
+    {
+      "path": "docs/evidence/t16-a3/publication-audit.json",
+      "size_bytes": 449,
+      "sha256": "b17d13f13c0c24e16b43ba38b2c54dd5e022658bd4a230966ce1263b52aee184"
+    },
+    {
+      "path": "docs/evidence/t16-a3/report.md",
+      "size_bytes": 9778,
+      "sha256": "4aff5b7ae57c80545eeb4a4a07b4e7059190124b0f5489cc3b6bff7246293708"
+    },
+    {
+      "path": "docs/evidence/t16-a3/resource-summary.json",
+      "size_bytes": 963,
+      "sha256": "ead42b69f71ca9b0cb583bea2662c19720ff274d0cc32c392197c3bc1f3ec9f0"
+    },
+    {
+      "path": "docs/evidence/t16-a3/retrieval-results.json",
+      "size_bytes": 19601,
+      "sha256": "2da98a62b19c2a55f4bde7be0c27029957906a819289fcd26e530c4a10fcba48"
+    },
+    {
+      "path": "docs/evidence/t16-a3/review.json",
+      "size_bytes": 2345,
+      "sha256": "b59108c89c208cca709c38a29d8d13ae4aa348d147fd520072867b196ac72c21"
+    },
+    {
+      "path": "docs/evidence/t16-a3/verification.json",
+      "size_bytes": 5597,
+      "sha256": "a3cf4a220f9e33b0f6816972a6b0ec59c70095b63b0ca7333d06305f176807d1"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-02-t16-a3.md",
+      "size_bytes": 6362,
+      "sha256": "1e51b171c31f11a2c7051f380b5c79fe369b154168369d3af902be6c5c10f477"
+    },
+    {
+      "path": "scripts/verify_t16_a3.py",
+      "size_bytes": 5971,
+      "sha256": "1d1c9ee8569bca2e24288f7be508fcb8e3322a932212caebc1f3011bf744a202"
+    }
+  ],
+  "file_count_excluding_self": 21,
+  "content_tree_sha256": "9382a1dd8c762d73d139ff3a0c6b9f8f412aebd479d24563cdea630f822fe82d"
+}

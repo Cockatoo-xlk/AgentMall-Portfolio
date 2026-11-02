@@ -14,6 +14,11 @@ from agentmall.retrieval.embedding import ROOT, identity, validate_vectors
 from agentmall.retrieval.models import KnowledgeChunk, KnowledgeDocument, ProductSearch
 from agentmall.retrieval.tokenize import TOKENIZER_VERSION, document_tokens, tokens
 
+# Product document vocabulary has its own identity. Policy indices retain their
+# existing tokenizer identity; old product indices require an explicit rebuild.
+PRODUCT_INDEX_VERSION = TOKENIZER_VERSION + ":catalog-zh-v2"
+CATEGORY_LABELS = {"keyboard": "键盘", "mouse": "鼠标", "headphones": "耳机"}
+
 
 def digest(value):
     return hashlib.sha256(
@@ -22,7 +27,10 @@ def digest(value):
 
 
 def product_text(product):
-    return f"{product.name}\n{product.category}\n{product.description}\n" + json.dumps(
+    category = product.category
+    if category in CATEGORY_LABELS:
+        category += "\n" + CATEGORY_LABELS[category]
+    return f"{product.name}\n{category}\n{product.description}\n" + json.dumps(
         product.attributes, ensure_ascii=False, sort_keys=True
     )
 
@@ -68,6 +76,7 @@ async def index_products(session, store_id, encoder):
                 content_hash=digest(text),
                 **indexed(text, vector, encoder),
             )
+            values["tokenizer_version"] = PRODUCT_INDEX_VERSION
             statement = insert(ProductSearch).values(**values)
             await session.execute(
                 statement.on_conflict_do_update(

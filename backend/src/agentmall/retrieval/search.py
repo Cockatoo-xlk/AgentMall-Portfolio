@@ -13,6 +13,7 @@ from agentmall.identity.service import require_buyer
 from agentmall.infra.errors import DomainError
 from agentmall.orders.models import Order
 from agentmall.retrieval.embedding import MODEL, REVISION, identity, validate_vectors
+from agentmall.retrieval.ingest import PRODUCT_INDEX_VERSION, digest, product_text
 from agentmall.retrieval.models import KnowledgeChunk as K
 from agentmall.retrieval.models import KnowledgeDocument as D
 from agentmall.retrieval.models import ProductSearch as P
@@ -47,7 +48,7 @@ async def recall(session, base, index, key, query, mode, encoder, config, *, ver
     base = base.where(
         index.embedding_model == model,
         index.embedding_revision == revision,
-        index.tokenizer_version == TOKENIZER_VERSION,
+        index.tokenizer_version == (PRODUCT_INDEX_VERSION if index is P else TOKENIZER_VERSION),
     )
     rankings, values = [], {}
     if mode in ("lexical", "hybrid"):
@@ -154,7 +155,7 @@ async def retrieve_products(session, actor, query, filters, encoder=None, config
             score=score,
         )
         for row, score in candidates
-        if row[0] in products
+        if row[0] in products and row[2] == digest(product_text(products[row[0]]))
     ]
 
 

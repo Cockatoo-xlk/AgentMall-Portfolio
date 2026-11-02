@@ -1,0 +1,43 @@
+{
+  "status": "BLOCKED_ENVIRONMENT_CLOCK",
+  "admission_passed": true,
+  "runtime_admitted": false,
+  "thresholds": {
+    "major_wall_back_ns": -1000000,
+    "major_residual_absolute_ns": 100000000,
+    "monotonic_back_forbidden": true,
+    "offset_change_upper_bound_ns": 100000000
+  },
+  "elapsed_seconds": 2906.637346208,
+  "targets": {
+    "host": {
+      "samples": 242024,
+      "minimum_wall_delta_ns": 10047000,
+      "minimum_mono_delta_ns": 10045959,
+      "maximum_abs_residual_ns": 97167,
+      "offset_mid_range_ns": 1629500,
+      "raw_sha256": "1dbe5d5985291dd956bc64c9ee6917c59ff0168fb1415cdb411aaeb8c9aac554",
+      "major_anomalies": 0
+    },
+    "guest": {
+      "samples": 245467,
+      "minimum_wall_delta_ns": -1843431,
+      "minimum_mono_delta_ns": 10040458,
+      "maximum_abs_residual_ns": 17047611,
+      "offset_mid_range_ns": 38580528,
+      "raw_sha256": "721df5cdc19c4f43330e015526bbafef637dab7123d77e43acaa713fb6a028e6",
+      "major_anomalies": 1
+    }
+  },
+  "events": [
+    {
+      "target": "guest",
+      "asia_shanghai": "2026-11-03T00:23:26.484078+08:00",
+      "seq": 151561,
+      "wall_delta_ns": -1843431,
+      "mono_delta_ns": 10841208,
+      "residual_ns": -12684639
+    }
+  ],
+  "same_environment_rerun_after_detection": false
+}

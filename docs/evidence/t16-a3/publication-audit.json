@@ -1,0 +1,14 @@
+{
+  "status": "PASS_FOR_NEW_LOCAL_TEXT_FILES",
+  "scope": "All newly added or modified files in this branch; no claim about a new remote publication",
+  "findings": [],
+  "secrets_or_personal_paths_found": false,
+  "new_binaries_or_images": false,
+  "new_dependency_license_changes": false,
+  "classifications": [
+    "SYNTHETIC_TEST_DATA",
+    "REVIEWED_PUBLIC_EVIDENCE"
+  ],
+  "private_raw_outputs_or_models_staged": false,
+  "paid_requests": 0
+}

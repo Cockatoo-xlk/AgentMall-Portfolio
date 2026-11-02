@@ -1,0 +1,745 @@
+{
+  "classification": "SYNTHETIC_TEST_DATA_REVIEWED_PUBLIC_EVIDENCE",
+  "snapshot_version": "PRE_REVIEW_REAL_DATABASE_SNAPSHOT; current stricter validator revalidation is separate",
+  "original_raw_sha256": "1492599eaa4244d1caea4d60bfbe6762ce05e7af0e701406c47b962a3f0bab14",
+  "raw_sidecar_verified": true,
+  "independent_metadata": {
+    "oracle_pid": 6336,
+    "observed_at": "2026-11-02 16:15:29.512620+00:00",
+    "schema": "test_45512b381bfb4105b1bde34e79dead8c",
+    "read_only": "on",
+    "isolation": "repeatable read"
+  },
+  "orders": [
+    {
+      "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "proposal_id": "89bca558-0465-4857-9dea-1b7d4f5b4250",
+      "status": "PENDING_PAYMENT",
+      "total_cents": 35900,
+      "currency": "CNY",
+      "address_label": "demo_dorm",
+      "expires_at": "2026-11-02 16:30:29.412468+00:00",
+      "version": 1,
+      "policy_version": "demo-v1",
+      "id": "74d61de1-9c6a-482f-bd68-cabc3cc60cb2",
+      "created_at": "2026-11-02 16:15:29.412468+00:00",
+      "updated_at": "2026-11-02 16:15:29.412468+00:00",
+      "paid_at": null,
+      "shipped_at": null,
+      "delivered_at": null
+    }
+  ],
+  "order_items": [
+    {
+      "order_id": "74d61de1-9c6a-482f-bd68-cabc3cc60cb2",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "product_id": "e5635304-5562-5b76-80ae-2f577488e404",
+      "name_snapshot": "办公 K108",
+      "unit_price_cents": 35900,
+      "quantity": 1,
+      "attributes_snapshot": {
+        "size": "108键",
+        "noise": "较安静",
+        "switch": "静音轴",
+        "connection": "双模",
+        "connection_capabilities": [
+          "wired",
+          "wireless"
+        ]
+      },
+      "id": "fe70155c-e143-4bf8-a168-761e0eb6c526",
+      "created_at": "2026-11-02 16:15:29.407136+00:00",
+      "updated_at": "2026-11-02 16:15:29.407136+00:00"
+    }
+  ],
+  "proposal_snapshot_before_confirmation": {
+    "actor_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+    "store_id": "00000000-0000-0000-0000-000000000001",
+    "action_type": "CHECKOUT",
+    "canonical_payload": {
+      "items": [
+        {
+          "quantity": 1,
+          "product_id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "name_snapshot": "办公 K108",
+          "catalog_version": 1,
+          "unit_price_cents": 35900,
+          "attributes_snapshot": {
+            "size": "108键",
+            "noise": "较安静",
+            "switch": "静音轴",
+            "connection": "双模",
+            "connection_capabilities": [
+              "wired",
+              "wireless"
+            ]
+          }
+        }
+      ],
+      "currency": "CNY",
+      "total_cents": 35900,
+      "address_label": "demo_dorm",
+      "policy_version": "demo-v1",
+      "schema_version": 1
+    },
+    "payload_hash": "ba37a74063391f79a3d9de929aec334013b31b9be5ab6c765804cacf327dd929",
+    "request_hash": "e4fcdd2529103fa9a155b2c3e3d560f51be281187a99181f41bcc85ad113482b",
+    "schema_version": 1,
+    "expires_at": "2026-11-02 16:20:29.264055+00:00",
+    "status": "PENDING",
+    "origin_request_id": "692ca9d3-e7a7-5b46-99ed-6fb06aea19b3",
+    "proposal_slot": "t08_purchase",
+    "id": "89bca558-0465-4857-9dea-1b7d4f5b4250",
+    "created_at": "2026-11-02 16:15:29.264055+00:00",
+    "updated_at": "2026-11-02 16:15:29.264055+00:00"
+  },
+  "executed_proposal": {
+    "actor_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+    "store_id": "00000000-0000-0000-0000-000000000001",
+    "action_type": "CHECKOUT",
+    "canonical_payload": {
+      "items": [
+        {
+          "quantity": 1,
+          "product_id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "name_snapshot": "办公 K108",
+          "catalog_version": 1,
+          "unit_price_cents": 35900,
+          "attributes_snapshot": {
+            "size": "108键",
+            "noise": "较安静",
+            "switch": "静音轴",
+            "connection": "双模",
+            "connection_capabilities": [
+              "wired",
+              "wireless"
+            ]
+          }
+        }
+      ],
+      "currency": "CNY",
+      "total_cents": 35900,
+      "address_label": "demo_dorm",
+      "policy_version": "demo-v1",
+      "schema_version": 1
+    },
+    "payload_hash": "ba37a74063391f79a3d9de929aec334013b31b9be5ab6c765804cacf327dd929",
+    "request_hash": "e4fcdd2529103fa9a155b2c3e3d560f51be281187a99181f41bcc85ad113482b",
+    "schema_version": 1,
+    "expires_at": "2026-11-02 16:20:29.264055+00:00",
+    "status": "EXECUTED",
+    "origin_request_id": "692ca9d3-e7a7-5b46-99ed-6fb06aea19b3",
+    "proposal_slot": "t08_purchase",
+    "id": "89bca558-0465-4857-9dea-1b7d4f5b4250",
+    "created_at": "2026-11-02 16:15:29.264055+00:00",
+    "updated_at": "2026-11-02 16:15:29.407136+00:00"
+  },
+  "confirmations": [
+    {
+      "proposal_id": "89bca558-0465-4857-9dea-1b7d4f5b4250",
+      "actor_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "decision": "approve",
+      "decided_at": "2026-11-02 16:15:29.370488+00:00",
+      "consumed_at": "2026-11-02 16:15:29.412468+00:00",
+      "result_ref": "74d61de1-9c6a-482f-bd68-cabc3cc60cb2",
+      "id": "9619643a-bbc7-49b8-a55d-ee34d01eb31d",
+      "created_at": "2026-11-02 16:15:29.369584+00:00",
+      "updated_at": "2026-11-02 16:15:29.407136+00:00"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "静音 K87",
+      "category": "keyboard",
+      "price_cents": 29900,
+      "attributes": {
+        "size": "87键",
+        "noise": "较安静",
+        "switch": "静音轴",
+        "connection": "双模",
+        "connection_capabilities": [
+          "wired",
+          "wireless"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "无线耳机 H2",
+      "category": "headphones",
+      "price_cents": 32900,
+      "attributes": {
+        "size": "头戴",
+        "noise": "不适用",
+        "switch": "无",
+        "connection": "无线",
+        "connection_capabilities": [
+          "wireless"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "段落 K87",
+      "category": "keyboard",
+      "price_cents": 25900,
+      "attributes": {
+        "size": "87键",
+        "noise": "明显",
+        "switch": "段落轴",
+        "connection": "有线",
+        "connection_capabilities": [
+          "wired"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "无线鼠标 M2",
+      "category": "mouse",
+      "price_cents": 18900,
+      "attributes": {
+        "size": "中号",
+        "noise": "较安静",
+        "switch": "无",
+        "connection": "无线",
+        "connection_capabilities": [
+          "wireless"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "有线耳机 H1",
+      "category": "headphones",
+      "price_cents": 12900,
+      "attributes": {
+        "size": "头戴",
+        "noise": "不适用",
+        "switch": "无",
+        "connection": "有线",
+        "connection_capabilities": [
+          "wired"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "静音 K98",
+      "category": "keyboard",
+      "price_cents": 39900,
+      "attributes": {
+        "size": "98键",
+        "noise": "较安静",
+        "switch": "静音轴",
+        "connection": "三模",
+        "connection_capabilities": [
+          "wired",
+          "wireless"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "宿舍静音 K68",
+      "category": "keyboard",
+      "price_cents": 19900,
+      "attributes": {
+        "size": "68键",
+        "noise": "较安静",
+        "switch": "静音轴",
+        "connection": "有线",
+        "connection_capabilities": [
+          "wired"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "轻巧 K61",
+      "category": "keyboard",
+      "price_cents": 15900,
+      "attributes": {
+        "size": "61键",
+        "noise": "适中",
+        "switch": "线性轴",
+        "connection": "有线",
+        "connection_capabilities": [
+          "wired"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "进阶 K75",
+      "category": "keyboard",
+      "price_cents": 59900,
+      "attributes": {
+        "size": "75键",
+        "noise": "适中",
+        "switch": "线性轴",
+        "connection": "三模",
+        "connection_capabilities": [
+          "wired",
+          "wireless"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "轻量鼠标 M1",
+      "category": "mouse",
+      "price_cents": 9900,
+      "attributes": {
+        "size": "中号",
+        "noise": "适中",
+        "switch": "无",
+        "connection": "有线",
+        "connection_capabilities": [
+          "wired"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "静音 K104",
+      "category": "keyboard",
+      "price_cents": 49900,
+      "attributes": {
+        "size": "104键",
+        "noise": "较安静",
+        "switch": "静音轴",
+        "connection": "有线",
+        "connection_capabilities": [
+          "wired"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 0,
+      "active": true,
+      "catalog_version": 1
+    },
+    {
+      "id": "e5635304-5562-5b76-80ae-2f577488e404",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "name": "办公 K108",
+      "category": "keyboard",
+      "price_cents": 35900,
+      "attributes": {
+        "size": "108键",
+        "noise": "较安静",
+        "switch": "静音轴",
+        "connection": "双模",
+        "connection_capabilities": [
+          "wired",
+          "wireless"
+        ]
+      },
+      "on_hand": 20,
+      "reserved": 1,
+      "active": true,
+      "catalog_version": 1
+    }
+  ],
+  "idempotency_requests": [
+    {
+      "actor_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "operation": "execute_checkout",
+      "key": "t09:execute:89bca558-0465-4857-9dea-1b7d4f5b4250",
+      "payload_hash": "6a8fe1821b1b0e14e0decd83d4ceb12bc918ae20621b0553b1787503c5d2b8d7",
+      "action_id": "89bca558-0465-4857-9dea-1b7d4f5b4250",
+      "result": {
+        "status": "PENDING_PAYMENT",
+        "currency": "CNY",
+        "order_id": "74d61de1-9c6a-482f-bd68-cabc3cc60cb2",
+        "action_id": "89bca558-0465-4857-9dea-1b7d4f5b4250",
+        "created_at": "2026-11-02T16:15:29.412468Z",
+        "resource_id": "74d61de1-9c6a-482f-bd68-cabc3cc60cb2",
+        "total_cents": 35900,
+        "cart_consumption": "NOT_APPLICABLE"
+      },
+      "completed_at": "2026-11-02 16:15:29.414177+00:00",
+      "id": "c2499ec0-a3d1-422b-9e01-1a2117406f2c",
+      "created_at": "2026-11-02 16:15:29.407136+00:00",
+      "updated_at": "2026-11-02 16:15:29.407136+00:00"
+    },
+    {
+      "actor_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+      "store_id": "00000000-0000-0000-0000-000000000001",
+      "operation": "prepare_checkout",
+      "key": "t08:checkout:692ca9d3-e7a7-5b46-99ed-6fb06aea19b3",
+      "payload_hash": "e4fcdd2529103fa9a155b2c3e3d560f51be281187a99181f41bcc85ad113482b",
+      "action_id": null,
+      "result": {
+        "proposal_id": "89bca558-0465-4857-9dea-1b7d4f5b4250"
+      },
+      "completed_at": "2026-11-02 16:15:29.265143+00:00",
+      "id": "e61c664d-8f36-448d-9312-25e82e9097da",
+      "created_at": "2026-11-02 16:15:29.259648+00:00",
+      "updated_at": "2026-11-02 16:15:29.259648+00:00"
+    }
+  ],
+  "event_sequences": [
+    {
+      "run_id": "84fbccdf-273c-4ada-a650-cb2aa363d6b9",
+      "recorded_event_seq": 26,
+      "actual_count": 26,
+      "seq": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "run_id": "9c580639-24b4-48fc-9729-0807f5944976",
+      "recorded_event_seq": 33,
+      "actual_count": 33,
+      "seq": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ]
+    },
+    {
+      "run_id": "f7e68626-9a43-46eb-9e74-80345cd85a07",
+      "recorded_event_seq": 26,
+      "actual_count": 26,
+      "seq": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    }
+  ],
+  "checkpoints": [
+    {
+      "run_id": "84fbccdf-273c-4ada-a650-cb2aa363d6b9",
+      "next": "done",
+      "pending_writes": 0,
+      "read_only": "on"
+    },
+    {
+      "run_id": "f7e68626-9a43-46eb-9e74-80345cd85a07",
+      "next": "done",
+      "pending_writes": 0,
+      "read_only": "on"
+    },
+    {
+      "run_id": "9c580639-24b4-48fc-9729-0807f5944976",
+      "next": "done",
+      "pending_writes": 0,
+      "read_only": "on"
+    }
+  ],
+  "checkpoint_rows": 52,
+  "stages": [
+    {
+      "run_id": "84fbccdf-273c-4ada-a650-cb2aa363d6b9",
+      "status": "COMPLETED",
+      "context": {
+        "version": 2,
+        "preferences": {
+          "category": "keyboard",
+          "max_price_cents": 30000,
+          "noise_preference": "quiet"
+        },
+        "candidate_sets": [
+          {
+            "id": "0dd0e472-e0d5-5075-8671-406f988a388b",
+            "run_id": "84fbccdf-273c-4ada-a650-cb2aa363d6b9",
+            "items": [
+              {
+                "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+                "name": "静音 K87",
+                "rank": 1,
+                "currency": "CNY",
+                "price_cents": 29900,
+                "catalog_version": 1
+              },
+              {
+                "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+                "name": "宿舍静音 K68",
+                "rank": 2,
+                "currency": "CNY",
+                "price_cents": 19900,
+                "catalog_version": 1
+              }
+            ],
+            "valid": true,
+            "created_at": "2026-11-02T16:15:28.789573+00:00"
+          }
+        ],
+        "provenance": {
+          "type": "CANDIDATES",
+          "run_id": "84fbccdf-273c-4ada-a650-cb2aa363d6b9"
+        },
+        "updated_at": "2026-11-02T16:15:28.791119+00:00"
+      },
+      "input": "推荐300元以内的静音键盘，不要购买。"
+    },
+    {
+      "run_id": "f7e68626-9a43-46eb-9e74-80345cd85a07",
+      "status": "COMPLETED",
+      "context": {
+        "version": 4,
+        "preferences": {
+          "category": "keyboard",
+          "product_needs": {
+            "connection": "无线"
+          },
+          "max_price_cents": 40000,
+          "noise_preference": "quiet"
+        },
+        "candidate_sets": [
+          {
+            "id": "a0eb3142-c88b-5cbc-85a0-fdae6d81079f",
+            "run_id": "f7e68626-9a43-46eb-9e74-80345cd85a07",
+            "items": [
+              {
+                "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+                "name": "静音 K87",
+                "rank": 1,
+                "currency": "CNY",
+                "price_cents": 29900,
+                "catalog_version": 1
+              },
+              {
+                "id": "e5635304-5562-5b76-80ae-2f577488e404",
+                "name": "办公 K108",
+                "rank": 2,
+                "currency": "CNY",
+                "price_cents": 35900,
+                "catalog_version": 1
+              },
+              {
+                "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+                "name": "静音 K98",
+                "rank": 3,
+                "currency": "CNY",
+                "price_cents": 39900,
+                "catalog_version": 1
+              }
+            ],
+            "valid": true,
+            "created_at": "2026-11-02T16:15:29.079929+00:00"
+          }
+        ],
+        "provenance": {
+          "type": "CANDIDATES",
+          "run_id": "f7e68626-9a43-46eb-9e74-80345cd85a07"
+        },
+        "updated_at": "2026-11-02T16:15:29.081076+00:00"
+      },
+      "input": "我改主意了，要支持无线连接的，预算提高到400元。"
+    },
+    {
+      "run_id": "9c580639-24b4-48fc-9729-0807f5944976",
+      "status": "WAITING_INPUT",
+      "context": {
+        "version": 5,
+        "preferences": {
+          "category": "keyboard",
+          "product_needs": {
+            "connection": "无线"
+          },
+          "max_price_cents": 40000,
+          "noise_preference": "quiet"
+        },
+        "candidate_sets": [
+          {
+            "id": "a0eb3142-c88b-5cbc-85a0-fdae6d81079f",
+            "run_id": "f7e68626-9a43-46eb-9e74-80345cd85a07",
+            "items": [
+              {
+                "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+                "name": "静音 K87",
+                "rank": 1,
+                "currency": "CNY",
+                "price_cents": 29900,
+                "catalog_version": 1
+              },
+              {
+                "id": "e5635304-5562-5b76-80ae-2f577488e404",
+                "name": "办公 K108",
+                "rank": 2,
+                "currency": "CNY",
+                "price_cents": 35900,
+                "catalog_version": 1
+              },
+              {
+                "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+                "name": "静音 K98",
+                "rank": 3,
+                "currency": "CNY",
+                "price_cents": 39900,
+                "catalog_version": 1
+              }
+            ],
+            "valid": true,
+            "created_at": "2026-11-02T16:15:29.079929+00:00"
+          }
+        ],
+        "provenance": {
+          "type": "RUN",
+          "run_id": "9c580639-24b4-48fc-9729-0807f5944976",
+          "request_id": "d61b122a-c800-456f-8f85-f2eed71297d7"
+        },
+        "updated_at": "2026-11-02T16:15:29.100268+00:00"
+      },
+      "input": "就买刚才推荐的第二款，一件，送演示宿舍。"
+    }
+  ],
+  "before_confirmation_counts": {
+    "orders": 0,
+    "action_proposals": 1,
+    "confirmations": 0,
+    "payments": 0
+  },
+  "general_oracle_violations": [],
+  "strict_revalidation": {
+    "status": "VALIDATION_PASS_OF_EXISTING_PRE_REVIEW_SNAPSHOT",
+    "original_raw_sha256": "1492599eaa4244d1caea4d60bfbe6762ce05e7af0e701406c47b962a3f0bab14",
+    "fresh_database_read": false,
+    "new_agent_run": false,
+    "new_schema_cleanup": false,
+    "expected_snapshot_provenance": "Unchanged raw before_confirmation.action_proposals[0]",
+    "violations": [],
+    "validator_sha256": "6bf0649fbd5d5a0916cadf4aaf4e8dc7c0eddc107f39817929b342561ccc5925",
+    "provider_requests": 0
+  },
+  "payments": 0,
+  "mock_model_requests": 12,
+  "paid_model_requests": 0,
+  "warning": "No final post-review new database run or cleanup occurred. Original raw file unchanged; expected snapshot derived from its already captured before_confirmation row."
+}
