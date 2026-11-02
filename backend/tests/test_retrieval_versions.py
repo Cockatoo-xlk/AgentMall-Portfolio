@@ -130,7 +130,7 @@ async def test_0004_to_0005_preserves_refund_and_aftersales_history(env, buyer, 
         cfg.attributes["connection"] = c
         command.upgrade(cfg, "head")
         command.check(cfg)
-        assert c.scalar(text("SELECT version_num FROM alembic_version")) == "0006"
+        assert c.scalar(text("SELECT version_num FROM alembic_version")) == "0007"
         assert (
             c.scalar(
                 text(

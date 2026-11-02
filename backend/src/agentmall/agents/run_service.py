@@ -49,13 +49,16 @@ def sanitized(message):
     return re.sub(r"\bsk-[A-Za-z0-9_-]+", "[REDACTED]", message)
 
 
-def prompt_version():
+def prompt_version(versioned=False):
+    from agentmall.agents.context import THREAD_CONTEXT_PROMPT
+
     return fingerprint(
         {
             "supervisor": SYSTEM_PROMPT,
             "specialists": PROMPTS,
             "single": SINGLE_PROMPT,
             "shell": "t09-v1",
+            **({"thread_context": THREAD_CONTEXT_PROMPT} if versioned else {}),
         }
     )
 
@@ -94,13 +97,16 @@ async def owned_thread(session, actor, thread_id):
 def view(run):
     # Public structured requirements only; never return persisted user prose.
     request = MultiRequest(thread_id=run.thread_id, **run.request_payload)
-    constraints = user_constraints(request).model_dump(mode="json")
+    constraints = run.context_snapshot.get("constraints") or user_constraints(request).model_dump(
+        mode="json"
+    )
     for entry in sorted(run.node_journal.values(), key=lambda e: e["seq"]):
         value = entry["output"].get("runtime_state", {}).get("constraints")
         if value is not None:
             constraints = Constraints.model_validate(value).model_dump(mode="json")
     return {
         "constraints": constraints,
+        "context_snapshot": run.context_snapshot,
         "id": str(run.id),
         "thread_id": str(run.thread_id),
         "request_id": str(run.request_id),
@@ -134,6 +140,8 @@ async def create_thread(app, actor, mode):
 
 
 async def get_thread(app, actor, thread_id):
+    from agentmall.agents.memory import context_view
+
     async with app.state.sessions.begin() as session:
         thread = await owned_thread(session, actor, thread_id)
         runs = await session.scalars(
@@ -147,6 +155,7 @@ async def get_thread(app, actor, thread_id):
             "mode": thread.mode,
             "status": thread.status,
             "runs": [view(r) for r in runs],
+            "context": await context_view(session, actor, thread_id),
         }
 
 
@@ -241,6 +250,14 @@ async def _activate(app, actor, run_id, thread, connection, resume_payload=None)
         run = await session.scalar(select(AgentRun).where(AgentRun.id == run_id).with_for_update())
         fence = await claim_execution(session, run, connection, sessions)
         original = deepcopy(run.request_payload)
+        accepted_context = deepcopy(run.context_snapshot)
+        bindings = [
+            e["payload"]["context_binding"]
+            for e in run.resume_journal.values()
+            if e["payload"].get("context_binding")
+        ]
+        if bindings:
+            accepted_context = deepcopy(max(bindings, key=lambda b: b["version"]))
         external_request_id = run.request_id
         add_event(session, run, "run_activated", {"epoch": run.epoch})
     budget = DurableBudget(fence)
@@ -268,6 +285,7 @@ async def _activate(app, actor, run_id, thread, connection, resume_payload=None)
         {},
         guard=fence.check,
         single=thread.mode == "single",
+        thread_snapshot=accepted_context,
     )
     config = checkpoint_config(thread.id, run_id)
     waiting = None
@@ -350,6 +368,9 @@ async def _activate(app, actor, run_id, thread, connection, resume_payload=None)
     )
     async with sessions.begin() as session:
         run = await fence.check(session, exclusive=True)
+        from agentmall.agents.memory import publish_candidates
+
+        await publish_candidates(session, run, runtime)
         run.result = result
         run.pending_confirmation = waiting
         run.last_error = error
@@ -390,9 +411,9 @@ async def refresh_expired(app, actor, thread, connection, run_id=None):
         pending = run.pending_confirmation or {}
         if pending.get("type") != "confirmation":
             return
-        if run.prompt_version != prompt_version() or run.model_id != model_identity(
-            app, thread.mode
-        ):
+        if run.prompt_version != prompt_version(
+            bool(run.context_snapshot)
+        ) or run.model_id != model_identity(app, thread.mode):
             return
         proposal = await get_proposal(session, actor, UUID(pending["proposal_id"]))
         if proposal.status != "EXPIRED" or proposal.result is not None:
@@ -406,8 +427,29 @@ async def refresh_expired(app, actor, thread, connection, run_id=None):
     await activate(app, actor, target, thread, connection, value)
 
 
+async def thread_busy(session, thread_id):
+    busy = await session.scalar(
+        select(AgentRun.id).where(
+            AgentRun.thread_id == thread_id,
+            or_(
+                AgentRun.status.in_(["RUNNING", "WAITING_INPUT"]),
+                and_(AgentRun.status == "PARTIAL", AgentRun.last_error.in_(RECOVERABLE_ERRORS)),
+            ),
+        )
+    )
+    if busy:
+        raise DomainError(409, "THREAD_BUSY", "请先恢复此会话已有运行")
+
+
 async def start_run(app, actor, thread_id, payload):
-    digest = payload_hash(payload.model_dump(mode="json"))
+    from agentmall.agents.memory import accept_context
+
+    request_body = payload.model_dump(mode="json")
+    # Preserve historical hashes including constraints:null; omit only new absent fields.
+    for key in ("expected_context_version", "candidate_set_id"):
+        if request_body[key] is None:
+            del request_body[key]
+    digest = payload_hash(request_body)
     async with app.state.sessions.begin() as session:
         thread = await owned_thread(session, actor, thread_id)
     async with thread_lock(app.state.settings, thread_id) as connection:
@@ -423,7 +465,7 @@ async def start_run(app, actor, thread_id, payload):
             if run:
                 if run.input_digest != digest:
                     raise DomainError(409, "IDEMPOTENCY_CONFLICT", "相同请求ID对应不同输入")
-                if run.prompt_version != prompt_version():
+                if run.prompt_version != prompt_version(bool(run.context_snapshot)):
                     raise DomainError(409, "RUN_VERSION_MISMATCH", "运行提示版本已变化")
                 if run.model_id != model_identity(app, thread.mode):
                     raise DomainError(409, "RUN_VERSION_MISMATCH", "运行模型已变化")
@@ -446,17 +488,24 @@ async def start_run(app, actor, thread_id, payload):
                 )
                 if busy:
                     raise DomainError(409, "THREAD_BUSY", "请先恢复此会话已有运行")
-                body = payload.model_dump(mode="json")
+                run_id = uuid4()
+                accepted = await accept_context(session, actor, thread_id, run_id, payload)
+                body = {
+                    k: v
+                    for k, v in request_body.items()
+                    if k not in {"expected_context_version", "candidate_set_id"}
+                }
                 body["message"] = sanitized(body["message"])
                 run = AgentRun(
-                    id=uuid4(),
+                    id=run_id,
                     thread_id=thread_id,
                     request_id=payload.request_id,
                     status="RUNNING",
                     input_digest=digest,
-                    prompt_version=prompt_version(),
+                    prompt_version=prompt_version(bool(accepted)),
                     model_id=model_identity(app, thread.mode),
                     request_payload=body,
+                    context_snapshot=accepted,
                     budget={},
                     node_journal={},
                     resume_journal={},
@@ -487,9 +536,9 @@ async def resume_thread(app, actor, thread_id, payload):
             )
             if run is None:
                 raise not_found()
-            if run.prompt_version != prompt_version() or run.model_id != model_identity(
-                app, thread.mode
-            ):
+            if run.prompt_version != prompt_version(
+                bool(run.context_snapshot)
+            ) or run.model_id != model_identity(app, thread.mode):
                 raise DomainError(409, "RUN_VERSION_MISMATCH", "运行提示或模型版本已变化")
             prior = run.resume_journal.get(str(payload.request_id))
             if prior:
@@ -512,6 +561,12 @@ async def resume_thread(app, actor, thread_id, payload):
                         raise DomainError(409, "CONFIRMATION_MISMATCH", "提案与确认不匹配")
                     await validate_confirmation(
                         session, actor, payload.proposal_id, payload.confirmation_id
+                    )
+                if body.get("clarification") and run.context_snapshot:
+                    from agentmall.agents.memory import accept_clarification
+
+                    body["context_binding"] = await accept_clarification(
+                        session, actor, run, body["clarification"]
                     )
                 run.resume_journal = {
                     **run.resume_journal,
@@ -562,9 +617,9 @@ async def recover_run(app, actor, thread_id, run_id, request_id):
                 raise not_found()
             if run.request_id != request_id:
                 raise DomainError(409, "IDEMPOTENCY_CONFLICT", "恢复必须引用原请求")
-            if run.prompt_version != prompt_version() or run.model_id != model_identity(
-                app, thread.mode
-            ):
+            if run.prompt_version != prompt_version(
+                bool(run.context_snapshot)
+            ) or run.model_id != model_identity(app, thread.mode):
                 raise DomainError(409, "RUN_VERSION_MISMATCH", "运行提示或模型版本已变化")
             if run.status != "RUNNING" and run.last_error not in RECOVERABLE_ERRORS:
                 return view(run)

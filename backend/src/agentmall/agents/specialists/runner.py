@@ -63,6 +63,10 @@ async def run_specialist(runtime, envelope):
     runtime.trace["prompts"][role] = fingerprint(PROMPTS[role])
     runtime.trace["tool_allowlists"][role] = list(runtime.tool_allowlist(role))
     prompt = SINGLE_PROMPT if runtime.single else PROMPTS[role]
+    if runtime.thread_snapshot:
+        from agentmall.agents.context import THREAD_CONTEXT_PROMPT
+
+        prompt += THREAD_CONTEXT_PROMPT
     runtime.trace["prompts"][role] = fingerprint(prompt)
     agent = create_agent(
         runtime.models[role],
@@ -90,6 +94,8 @@ async def run_specialist(runtime, envelope):
                 prior_results=[r.model_dump(mode="json") for r in runtime.completed.values()],
                 error_codes=list(runtime.errors),
             )
+        if runtime.thread_snapshot:
+            content["thread_context"] = runtime.thread_snapshot
         if feedback:
             content["orchestration_feedback"] = feedback
             # Only results already exposed to THIS specialist, never other roles' facts.

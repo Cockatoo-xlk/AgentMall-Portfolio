@@ -1,0 +1,67 @@
+{
+  "classification": {
+    "test_accounts_and_mock_keys": "SYNTHETIC_TEST_DATA",
+    "new_summary_json_and_reviewed_screenshots": "REVIEWED_PUBLIC_EVIDENCE",
+    "raw_logs_power_assertions_clock_streams_sdk_test_receipts": "PRIVATE_LOCAL_EVIDENCE, ignored .t16-a only",
+    "sensitive_or_unknown_committed": []
+  },
+  "source_pattern_findings": [],
+  "public_protected_files": 137,
+  "protected_changed": [],
+  "worktrees": [
+    {
+      "label": "public-main",
+      "head_sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+      "tracked_changes": []
+    },
+    {
+      "label": "T14-P0",
+      "head_sha": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "tracked_changes": []
+    },
+    {
+      "label": "T14-P1",
+      "head_sha": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "tracked_changes": []
+    },
+    {
+      "label": "T14-R1-A",
+      "head_sha": "c06c5841af36a631b69462c035d6410f732af0db",
+      "tracked_changes": []
+    },
+    {
+      "label": "T15-A",
+      "head_sha": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+      "tracked_changes": []
+    },
+    {
+      "label": "T15-C1",
+      "head_sha": "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+      "tracked_changes": []
+    },
+    {
+      "label": "T15-D1",
+      "head_sha": "bd0f58368bd40e2b479599fa270b30e43703d2b8",
+      "tracked_changes": []
+    },
+    {
+      "label": "private-source",
+      "head_sha": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33",
+      "tracked_changes": []
+    }
+  ],
+  "licenses": {
+    "project": "MIT, existing owner attribution unchanged",
+    "new_dependencies": false,
+    "dependency_locks_unchanged": true,
+    "new_screenshots": "owned synthetic UI, no text/EXIF metadata",
+    "third_party_notices_unchanged": true
+  },
+  "network": {
+    "github_write_operations": 0,
+    "paid_model_calls": 0,
+    "live_key_explicitly_loaded": false,
+    "real_live_ledger_reset": false
+  },
+  "limits": "No new Live semantic-quality validation or remote CI. Fixture Encoder and MockTransport evidence are explicitly labeled."
+}

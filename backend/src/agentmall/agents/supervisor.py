@@ -34,7 +34,10 @@ entity_refs/evidence_refs只能选择输入中已经核验的引用；Shopping�
 
 
 async def choose_plan(runtime):
-    runtime.trace["prompts"]["supervisor"] = fingerprint(SYSTEM_PROMPT)
+    from agentmall.agents.context import THREAD_CONTEXT_PROMPT
+
+    prompt = SYSTEM_PROMPT + (THREAD_CONTEXT_PROMPT if runtime.thread_snapshot else "")
+    runtime.trace["prompts"]["supervisor"] = fingerprint(prompt)
     schema = convert_to_openai_tool(IntentPlan)
     schema["function"]["name"] = "route"
     bound = runtime.models["supervisor"].bind_tools([schema], tool_choice="route")
@@ -50,8 +53,10 @@ async def choose_plan(runtime):
             "prior_validation_error": runtime.errors[-1] if runtime.errors else None,
             "orchestration_feedback": feedback,
         }
+        if runtime.thread_snapshot:
+            content["thread_context"] = runtime.thread_snapshot
         messages = [
-            SystemMessage(content=SYSTEM_PROMPT),
+            SystemMessage(content=prompt),
             HumanMessage(content=json.dumps(content, ensure_ascii=False)),
         ]
 

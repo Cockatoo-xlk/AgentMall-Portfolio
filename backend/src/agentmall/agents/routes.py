@@ -5,7 +5,13 @@ from fastapi import APIRouter, Query, Request, Response
 from agentmall.agents import run_service
 from agentmall.agents.context import GraphResult, MultiRequest
 from agentmall.agents.graph import run_graph
-from agentmall.agents.run_schemas import RecoverRequest, ResumeRequest, RunCreate, ThreadCreate
+from agentmall.agents.run_schemas import (
+    ContextPatch,
+    RecoverRequest,
+    ResumeRequest,
+    RunCreate,
+    ThreadCreate,
+)
 from agentmall.agents.schemas import AgentRequest, AgentResponse
 from agentmall.agents.single_agent import run_single_agent
 from agentmall.identity.routes import Actor
@@ -107,3 +113,10 @@ async def recover_run(
     )
     await export_optional(request.app, actor, run_id)
     return result
+
+
+@router.patch("/agent/threads/{thread_id}/context")
+async def patch_context(request: Request, actor: Actor, thread_id: UUID, payload: ContextPatch):
+    from agentmall.agents.memory import patch_context as apply_patch
+
+    return await apply_patch(request.app, actor, thread_id, payload)

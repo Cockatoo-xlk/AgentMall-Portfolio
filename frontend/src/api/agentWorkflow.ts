@@ -1,4 +1,5 @@
 import { ApiClient } from './client'
+import type { ThreadContext } from './threadContext'
 import type { Confirmation, Proposal } from './types'
 export interface EntityRef {
   kind: 'product' | 'order' | 'proposal' | 'case' | 'ticket'
@@ -46,6 +47,7 @@ export interface Thread {
   id: string
   mode: 'single' | 'multi'
   status: string
+  context?: ThreadContext
   runs: Run[]
 }
 export interface RunEvent {

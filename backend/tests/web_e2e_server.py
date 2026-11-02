@@ -296,8 +296,18 @@ class Harness:
                 .one()
             )
             for key, query in {
+                "thread_context_rows": "SELECT * FROM agent_thread_contexts ORDER BY thread_id",
+                "candidate_set_rows": "SELECT * FROM agent_candidate_sets ORDER BY created_at,id",
+                "context_mutation_rows": (
+                    "SELECT * FROM agent_context_mutations ORDER BY created_at,id"
+                ),
                 "run_rows": "SELECT id, thread_id, request_id, status, pending_confirmation, "
-                "result, last_error, request_payload->'constraints' AS constraints "
+                "result, last_error, COALESCE("
+                "(SELECT value->'output'->'runtime_state'->'constraints' "
+                "FROM jsonb_each(agent_runs.node_journal) WHERE "
+                "value->'output'->'runtime_state' ? 'constraints' "
+                "ORDER BY (value->>'seq')::integer DESC LIMIT 1), "
+                "context_snapshot->'constraints',request_payload->'constraints') AS constraints "
                 "FROM agent_runs ORDER BY created_at",
                 "run_event_rows": "SELECT run_id, seq, event_type, agent, action_id, "
                 "payload_summary, timestamp FROM run_events ORDER BY run_id, seq",
@@ -358,6 +368,9 @@ class Harness:
 
         await self.close_sdk()
         tables = (
+            "agent_context_mutations",
+            "agent_candidate_sets",
+            "agent_thread_contexts",
             "run_events",
             "agent_runs",
             "agent_threads",
@@ -514,6 +527,7 @@ def mount_controls(harness):
     class SDKMode(BaseModel):
         model_config = ConfigDict(extra="forbid")
         program: Literal[
+            "context",
             "purchase",
             "recommend",
             "orders",
@@ -532,6 +546,15 @@ def mount_controls(harness):
 
         await harness.close_sdk()
         harness.sdk_directory = tempfile.TemporaryDirectory(prefix="agentmall-sdk-mock-")
+        if payload.program == "context":
+            from multiturn_helpers import install_context_sdk, wireless_products
+
+            env = (None, harness.db, harness.app, harness.settings)
+            await wireless_products(env)
+            _, harness.sdk_program = await install_context_sdk(
+                env, Path(harness.sdk_directory.name)
+            )
+            return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
         _, harness.sdk_program = await install_sdk(
             (None, harness.db, harness.app, harness.settings),
             Path(harness.sdk_directory.name),

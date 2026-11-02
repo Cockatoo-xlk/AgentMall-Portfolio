@@ -12,6 +12,8 @@ import WorkflowResources from '../components/WorkflowResources'
 import PolicyCitation from '../components/PolicyCitation'
 import ClarificationCard from '../components/ClarificationCard'
 import ProviderPanel from '../components/ProviderPanel'
+import ThreadMemory from '../components/ThreadMemory'
+import { contextRunInput, freshRecommendationConstraints, type ContextOperation } from '../api/threadContext'
 export default function AgentWorkspace() {
   const [params, setParams] = useSearchParams()
   const id = params.get('thread') ?? ''
@@ -37,6 +39,10 @@ function Workspace({
   const { client: api } = useAuth()
   const mounted = useMounted()
   const [thread, setThread] = useState<Thread | null>(null)
+  const [historyId, setHistoryId] = useState('')
+  const [selectedSet, setSelectedSet] = useState('')
+  const patchOperation = useRef<{request_id: string; expected_version: number; operations: ContextOperation[]} | null>(null)
+  const [patchUnknown, setPatchUnknown] = useState(false)
   const [mode, setMode] = useState<'single' | 'multi'>('multi')
   const [message, setMessage] = useState(
     order ? `订单${order}有质量问题，申请退货，再帮我推荐一款500元以内的静音键盘。` : '',
@@ -50,6 +56,8 @@ function Workspace({
     request_id: string
     message: string
     constraints?: Record<string, unknown>
+    expected_context_version: number
+    candidate_set_id?: string
   } | null>(null)
   const [uncertainStart, setUncertainStart] = useState(false)
   const run = thread?.runs[0]
@@ -103,8 +111,8 @@ function Workspace({
       retry && startOperation.current
         ? startOperation.current
         : {
-            request_id: crypto.randomUUID(),
-            message: text,
+            ...contextRunInput(crypto.randomUUID(), text, thread.context?.version ?? 0,
+              selectedSet || (thread.context?.candidate_sets.length === 1 ? thread.context.candidate_sets[0].id : undefined)),
             ...(constraints ? { constraints } : {}),
           }
     startOperation.current = op
@@ -118,11 +126,20 @@ function Workspace({
         }
       }
       await api.post<Run>(`/agent/threads/${id}/runs`, op)
+      setSelectedSet('')
       setRequote(false)
       apply(await api.get<Thread>(`/agent/threads/${id}`))
       setUncertainStart(false)
     } catch (e) {
-      setUncertainStart(true)
+      const known = e instanceof ApiError && !e.ambiguous
+      setUncertainStart(!known)
+      if (known) {
+        apply(await api.get<Thread>(`/agent/threads/${id}`))
+        startOperation.current = null
+        setSelectedSet('')
+        if (['STALE_CONTEXT', 'STALE_CANDIDATES'].includes(e.code)) setMessage('')
+        throw e
+      }
       try {
         const existing = await api.get<Thread>(`/agent/threads/${id}`)
         if (existing.runs.some((r) => r.request_id === op.request_id)) {
@@ -133,6 +150,22 @@ function Workspace({
       } catch {
         /* Preserve request identity for explicit reconciliation. */
       }
+      throw e
+    }
+  }
+  async function patchMemory(operations?: ContextOperation[]) {
+    if (!thread) return
+    if (operations) patchOperation.current = { request_id: crypto.randomUUID(), expected_version: thread.context?.version ?? 0, operations }
+    if (!patchOperation.current) return
+    try {
+      await api.request(`/agent/threads/${id}/context`, 'PATCH', patchOperation.current)
+      patchOperation.current = null
+      setPatchUnknown(false)
+      setSelectedSet('')
+      apply(await api.get<Thread>(`/agent/threads/${id}`))
+    } catch (e) {
+      setPatchUnknown(!(e instanceof ApiError) || e.ambiguous)
+      apply(await api.get<Thread>(`/agent/threads/${id}`))
       throw e
     }
   }
@@ -207,6 +240,10 @@ function Workspace({
               核对 Thread 状态
             </button>
           </section>
+          {thread?.context && <ThreadMemory context={thread.context} busy={busy || patchUnknown || uncertainStart || !!(run && (recoverable(run) || run.status === 'WAITING_INPUT'))}
+            selected={selectedSet || (thread.context.candidate_sets.length === 1 ? thread.context.candidate_sets[0].id : '')}
+            onSelect={setSelectedSet} onPatch={ops => void perform(() => patchMemory(ops))} />}
+          {patchUnknown && <p className="notice warning">偏好更新结果尚未确定。<button className="text-button" disabled={busy} onClick={() => void perform(() => patchMemory())}>核对并重试原偏好请求</button></p>}
           <div className="workspace-grid">
             <div className="workflow-main">
               <form
@@ -231,7 +268,7 @@ function Workspace({
                     busy ||
                     !thread ||
                     !message.trim() ||
-                    uncertainStart ||
+                    uncertainStart || patchUnknown ||
                     (run && recoverable(run)) ||
                     (run?.status === 'WAITING_INPUT' && !requote)
                   }
@@ -304,7 +341,7 @@ function Workspace({
                           onClick={() =>
                             void perform(() => {
                               const next = recommendation(run)
-                              return start(next.message, false, next.constraints)
+                              return start(next.message, false, freshRecommendationConstraints(next.constraints))
                             })
                           }
                         >
@@ -355,11 +392,13 @@ function Workspace({
                     />
                   ))}
                   {thread!.runs.slice(1).map((previous) => (
-                    <details className="panel" key={previous.id}>
+                    <details className="panel" key={previous.id} onToggle={e => { if (e.currentTarget.open) setHistoryId(previous.id) }}>
                       <summary>
                         历史 Run · {previous.status} · {previous.id}
                       </summary>
+                      <p className="muted">历史 Run · 商品引用不是当前报价，不能在此批准旧操作。</p>
                       <WorkflowResources refs={previous.result?.entity_refs ?? []} />
+                      {historyId === previous.id && <RunTimeline run={previous} />}
                     </details>
                   ))}
                 </>

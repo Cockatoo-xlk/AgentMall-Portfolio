@@ -49,6 +49,7 @@ def build_durable_graph(base, saver, store):
             {},
             guard=base.guard,
             single=base.single,
+            thread_snapshot=base.thread_snapshot,
         )
         return restore(local, data)
 
@@ -239,10 +240,21 @@ def build_durable_graph(base, saver, store):
         if payload.get("clarification"):
             from agentmall.agents.context import user_constraints
 
-            runtime.input = runtime.input.model_copy(
-                update={"message": (runtime.input.message + " " + payload["clarification"])[:2000]}
-            )
-            runtime.constraints = user_constraints(runtime.input)
+            if runtime.thread_snapshot:
+                from agentmall.agents.context import Constraints
+
+                binding = payload["context_binding"]
+                runtime.input = runtime.input.model_copy(
+                    update={"message": payload["clarification"], "constraints": None}
+                )
+                runtime.constraints = Constraints.model_validate(binding["constraints"])
+            else:
+                runtime.input = runtime.input.model_copy(
+                    update={
+                        "message": (runtime.input.message + " " + payload["clarification"])[:2000]
+                    }
+                )
+                runtime.constraints = user_constraints(runtime.input)
             await runtime.hydrate_explicit_entities()
             return {
                 "next": "single" if runtime.single else "supervisor",

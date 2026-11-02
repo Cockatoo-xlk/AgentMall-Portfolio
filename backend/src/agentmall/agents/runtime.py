@@ -50,6 +50,8 @@ class RunContext:
     explicit_order_ids: set = field(default_factory=set)
     guard: object = None
     single: bool = False
+    thread_snapshot: dict = field(default_factory=dict)
+    candidate_lists: dict = field(default_factory=dict)
 
     def tool_allowlist(self, role):
         from agentmall.agents.specialist_tools import ALLOWLISTS
@@ -64,7 +66,13 @@ class RunContext:
         url = self.sessions.kw["bind"].url
         if (url.host, url.port, url.database) != ("127.0.0.1", 55433, "agentmall_test"):
             raise RunStopped("DATABASE_SCOPE_MISMATCH")
-        self.constraints = user_constraints(self.input)
+        from agentmall.agents.context import Constraints
+
+        self.constraints = (
+            Constraints.model_validate(self.thread_snapshot["constraints"])
+            if self.thread_snapshot
+            else user_constraints(self.input)
+        )
         self.return_request_id = uuid5(self.input.request_id, "return")
         self.ticket_request_id = uuid5(self.input.request_id, "human")
         self.trace.update(
@@ -122,6 +130,17 @@ class RunContext:
         )[:4]
         async with self.sessions.begin() as session:
             actor = await authenticate(self, session)
+            from agentmall.agents.memory import verify_items
+
+            selected = self.thread_snapshot.get("selected", [])
+            await verify_items(session, actor, selected)
+            for item in selected:
+                product = await catalog.get_product(session, actor, UUID(item["id"]))
+                if not product_allowed(self, product):
+                    raise DomainError(409, "CONSTRAINT_MISMATCH", "所选商品不符合当前偏好")
+                self.facts[("product", str(product.id))] = product.model_dump(mode="json")
+                entity = ref("product", product.id, "replacement")
+                self.references[(entity.kind, str(entity.id), entity.relation)] = entity
             product_ids = []
             for identifier in identifiers:
                 # A reference is exposed only after the same domain owner/store check as a tool.

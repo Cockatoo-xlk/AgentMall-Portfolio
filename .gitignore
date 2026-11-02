@@ -72,3 +72,12 @@ frontend/playwright-report/
 
 # Local release audit originals and tooling
 /.t15-d1/
+
+# Private T16 offline receipts
+.t16-a/
+
+# Default browser test receipts are local raw evidence.
+/evidence/
+
+# Tooling cache created by root-level Vitest invocations.
+/node_modules/

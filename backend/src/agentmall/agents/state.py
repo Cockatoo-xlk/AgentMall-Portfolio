@@ -22,6 +22,7 @@ class RuntimeState(Strict):
     constraints: Constraints
     references: dict[str, EntityRef] = Field(default_factory=dict)
     facts: dict[str, dict] = Field(default_factory=dict)
+    candidate_lists: dict[str, dict] = Field(default_factory=dict)
     citations: dict[str, dict] = Field(default_factory=dict)
     completed: dict[str, SpecialistResult] = Field(default_factory=dict)
     pending: dict[str, HandoffEnvelope] = Field(default_factory=dict)
@@ -42,6 +43,7 @@ def snapshot(runtime):
         references={"|".join(k): v for k, v in runtime.references.items()},
         facts={"|".join(k): v for k, v in runtime.facts.items()},
         citations=runtime.citations,
+        candidate_lists=runtime.candidate_lists,
         completed=runtime.completed,
         pending={k: v for k, v in runtime.pending.items() if k not in runtime.completed},
         errors=runtime.errors,
@@ -61,7 +63,15 @@ def restore(runtime, data):
     runtime.constraints = state.constraints
     runtime.references = {tuple(k.split("|")): v for k, v in state.references.items()}
     runtime.facts = {tuple(k.split("|")): v for k, v in state.facts.items()}
-    for name in ("citations", "completed", "pending", "errors", "tool_repeats", "schema_repairs"):
+    for name in (
+        "candidate_lists",
+        "citations",
+        "completed",
+        "pending",
+        "errors",
+        "tool_repeats",
+        "schema_repairs",
+    ):
         setattr(runtime, name, getattr(state, name))
     for name in ("seen_tasks", "signatures", "tool_ids", "explicit_order_ids"):
         setattr(runtime, name, set(getattr(state, name)))
@@ -69,7 +79,15 @@ def restore(runtime, data):
     return runtime
 
 
-MAPS = {"references", "facts", "citations", "completed", "pending", "tool_repeats"}
+MAPS = {
+    "candidate_lists",
+    "references",
+    "facts",
+    "citations",
+    "completed",
+    "pending",
+    "tool_repeats",
+}
 SETS = {"errors", "seen_tasks", "signatures", "tool_ids", "explicit_order_ids"}
 
 

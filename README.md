@@ -9,9 +9,11 @@
 | 默认无 Key Demo | 明确标记 **Fixture Model**，真实 FastAPI / PostgreSQL / Checkpoint；普通 FastAPI 单独启动为 MODEL_DISABLED。 |
 | Live Playground | 独立本机入口使用真实 ChatDeepSeek SDK，需新授权、环境、价格和持久预算门禁。**T15-B1 仅在旧提交 `617cdf29` 完成一个 Multi-Agent 购物场景**；7 次 Provider 回执、50 条事件、唯一待支付订单。当前源码新 Live 验收 **NOT_RUN**，旧许可不能复用。[历史摘要](docs/evidence/t15-c/b1-public-summary.json) |
 
-经T15-D1核对的本地离线回归：**pytest 713 passed / 14 skipped · Vitest 80 passed · Playwright 87 passed / 0 retries**。环境为独立 **Linux aarch64 + Mac Chromium**；截至该次审查，此版本 GitHub Ubuntu amd64 CI 尚未执行，后续以对应SHA的Actions回执为准。原共享 Docker VM 时钟回退在审查时仍未修复。[结果与限制](docs/RESULTS.md)
+T16-A 本地离线回归：**pytest 742 passed / 14 skipped · Vitest 84 passed · Playwright 94 passed / 0 retries**。独立 **Linux aarch64 + Mac Chromium**；新受控保醒窗口连续时钟检测通过，旧休眠异常与失败全部保留。当前T16源码远程CI及真实Live多轮验收均为 **NOT_RUN**。[结果、时钟与限制](docs/evidence/t16-a/report.md)
 
 [安全运行与恢复](docs/REAL_AGENT_DEMO.md) · [3–5分钟演示脚本](docs/DEMO_RECORDING_SCRIPT.md) · [架构](docs/ARCHITECTURE.md) · [工程案例](docs/ENGINEERING_CASES.md)
+
+T16-A 增加同一 Thread 的版本化购物偏好、稳定候选编号和跨 Run 恢复；偏好可替换或清除，购买授权不继承。[多轮操作与 API](docs/THREAD_CONTEXT.md)。当前改动仅做离线验证，真实 Live 多轮验收 NOT_RUN。
 
 ## 可以验证的能力
 
@@ -43,14 +45,14 @@ docker compose -p agentmall-portfolio -f compose.ci.yaml run --rm runner python 
 
 | 检查 | 实测结果 | 环境 |
 |---|---|---|
-| 后端 CI_OFFLINE_CORE | **713 passed / 14 skipped** | 独立 Linux aarch64 VM，真实 PostgreSQL17.11 / pgvector0.8.7 / Checkpoint |
-| 前端 Vitest | **80 passed** | Mac，锁定 Node/npm 依赖 |
-| Playwright 全量 | **87 passed**，1 worker / 0 retries / 0 skips / 0 flaky | Mac 完整 Chromium headless + 独立 Linux aarch64 VM 后端 |
+| 后端 CI_OFFLINE_CORE | **742 passed / 14 skipped** | 独立 Linux aarch64 VM，真实 PostgreSQL17.11 / pgvector0.8.7 / Checkpoint |
+| 前端 Vitest | **84 passed** | Mac，锁定 Node/npm 依赖 |
+| Playwright 全量 | **94 passed**，1 worker / 0 retries / 0 skips / 0 flaky | Mac 完整 Chromium headless + 独立 Linux aarch64 VM 后端 |
 | Ruff、格式、typecheck、lint、build | 全部退出0 | 见原始回执哈希及源码对应核对 |
 
-[T15-C1回执、逐项归因和连续时钟诊断](docs/evidence/t15-c1/report.md)对应源码指纹 `7049db6ae8e334f82dc0b8de3083255e1c84a10ab4f3ec5e99b315fdf519a71a`。D1仅整理文档与发布审查，复用经原始日志 SHA 核对的回归，未改变产品源码或测试。14项跳过仅13个真实 BGE 权重依赖和1个未公开私有 Live 原件比较，事务、T09恢复/SIGKILL、T10 Trace、T11并发和T12预算/权限/Oracle没有扩大跳过。
+当前T16源码的命令回执、源码指纹、PG/Checkpoint终态和新增29/4/7项测试见[T16报告](docs/evidence/t16-a/report.md)。[历史T15-C1回执](docs/evidence/t15-c1/report.md)与D1审查对应旧指纹，仍原样保留。14项跳过仅13个真实BGE权重依赖和1个私有Live原件比较，事务、恢复/SIGKILL、Trace、并发和预算/权限测试没有扩大跳过。
 
-原共享VM的时钟回退仍未修复；旧T15-C的81通过/6失败保留，一项同用例复现了JWT未来iat，其余五项历史原因未确定。新独立VM准入及完整测试窗口无重大时钟异常，旧六项均在完整87项中一次通过。不能放宽JWT校验或在旧环境反复碰绿色。
+原共享VM的时钟回退仍未修复；旧T15-C的81通过/6失败保留，一项同用例复现了JWT未来iat，其余五项历史原因未确定。T15-C1的独立VM准入及完整测试窗口无重大时钟异常，旧六项当时在87项中一次通过。T16早期观测又发现宿主休眠相关跳变；使用有时限的进程级保醒重新准入后，完整742/84/94回归窗口没有重大异常。不能放宽JWT校验或在旧环境反复碰绿色。
 
 本机约1.91GiB、无swap的旧 Docker 引擎曾在P1单容器完整流程中 OOM、退出143；T15-A也保留OOM/137。**不声称这些单容器流程通过**。本地检查集合分阶段完成，不替代当前版本GitHub Ubuntu24.04 amd64实测。[历史结果索引](docs/RESULTS.md)保留各阶段证据与失败。
 

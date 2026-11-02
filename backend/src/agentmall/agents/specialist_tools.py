@@ -196,6 +196,7 @@ class SpecialistTools:
         entities = []
         citations = []
         evidence = []
+        candidate_items = None
         async with r.sessions.begin() as session:
             actor = await authenticate(r, session)
             if name == "retrieve_products":
@@ -218,6 +219,18 @@ class SpecialistTools:
                 )
                 accepted = [h for h in hits if product_allowed(r, h.product)][:3]
                 data = {"items": [h.model_dump(mode="json") for h in accepted]}
+                if r.thread_snapshot:
+                    candidate_items = [
+                        {
+                            "rank": i + 1,
+                            "id": str(h.product.id),
+                            "name": h.product.name,
+                            "price_cents": h.product.price_cents,
+                            "currency": h.product.currency,
+                            "catalog_version": h.product.catalog_version,
+                        }
+                        for i, h in enumerate(accepted)
+                    ]
                 for hit in accepted:
                     entities.append(ref("product", hit.id, "replacement"))
                     evidence.append(("product", hit.id, hit.product.model_dump(mode="json")))
@@ -292,6 +305,16 @@ class SpecialistTools:
                     raise DomainError(
                         409, "PURCHASE_DETAILS_REQUIRED", "需要明确购买意图、数量和演示地址"
                     )
+                if r.thread_snapshot:
+                    selected = r.thread_snapshot.get("selected", [])
+                    if selected:
+                        if len(selected) != 1 or str(args.product_id) != selected[0]["id"]:
+                            raise DomainError(
+                                409, "SELECTION_MISMATCH", "仅可为用户明确选择的商品准备提案"
+                            )
+                        from agentmall.agents.memory import verify_items
+
+                        await verify_items(session, actor, selected)
                 seen = r.facts.get(("product", str(args.product_id)))
                 if seen is None:
                     raise DomainError(409, "PRODUCT_NOT_OBSERVED", "先读取候选")
@@ -392,6 +415,25 @@ class SpecialistTools:
             self.observed.add((entity.kind, str(entity.id), entity.relation))
         for citation in citations:
             r.citations[citation["id"]] = citation
+        if candidate_items is not None:
+            from uuid import uuid5
+
+            from agentmall.actions.service import payload_hash
+            from agentmall.agents.memory import FIELDS, NEEDS
+
+            constraints = r.constraints.model_dump(mode="json", exclude_none=True)
+            preferences = {k: constraints[k] for k in FIELDS - NEEDS if k in constraints}
+            if constraints.get("product_needs"):
+                preferences["product_needs"] = constraints["product_needs"]
+            ident = str(
+                uuid5(
+                    r.input.request_id, "candidates:" + payload_hash([preferences, candidate_items])
+                )
+            )
+            r.candidate_lists[ident] = {
+                "items": candidate_items,
+                "preferences_digest": payload_hash(preferences),
+            }
         self.records.append(
             {"name": name, "data": data, "entities": entities, "citations": citations}
         )
