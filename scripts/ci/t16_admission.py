@@ -21,6 +21,7 @@ from t16_evidence import (
     core_proof,
     encrypt,
     public_summary,
+    schema_report,
     validate_certificate,
     write_json,
 )
@@ -108,6 +109,22 @@ def stop_tree(pid):
             os.kill(target, signal.SIGKILL)
         except ProcessLookupError:
             pass
+
+
+def guest_identity(uid, gid):
+    if any(type(value) is not int or not 0 < value < 2**31 for value in (uid, gid)):
+        raise ValueError("NONROOT_HOST_IDENTITY_REQUIRED")
+    return f"{uid}:{gid}"
+
+
+def stage_public_helpers(source, destination):
+    """Docker COPY makes these public code files root-owned; guest still needs read access."""
+    destination.mkdir(mode=0o755)
+    destination.chmod(0o755)
+    for name in ("t16_clock.py", "t16_models.py", "T16Bge.Dockerfile"):
+        target = destination / name
+        shutil.copyfile(source / name, target)
+        target.chmod(0o644)  # Nonsecret reviewed source only, never private evidence/state.
 
 
 class Execution:
@@ -283,9 +300,7 @@ class Execution:
             self.command(["git", "archive", "--format=tar", SOURCE], output=archive)
             with tarfile.open(archive) as source:
                 source.extractall(context, filter="data")
-            (context / "ci_harness").mkdir()
-            for name in ("t16_clock.py", "t16_models.py", "T16Bge.Dockerfile"):
-                shutil.copyfile(self.harness / name, context / "ci_harness" / name)
+            stage_public_helpers(self.harness, context / "ci_harness")
             self.command(
                 [
                     "docker",
@@ -353,6 +368,11 @@ class Execution:
         else:
             raise RuntimeError("POSTGRES_NOT_READY")
         if self.args.phase == "bge":
+            user = guest_identity(os.geteuid(), os.getegid())
+            runtime = self.root / "guest-runtime"
+            runtime.mkdir(mode=0o700)
+            for directory in ("home", "cache", "tmp"):
+                (runtime / directory).mkdir(mode=0o700)
             env_file = self.raw / "verification.env"
             env_file.write_text(
                 f"AGENTMALL_TEST_DATABASE_URL=postgresql+psycopg://agentmall:{self.password}@127.0.0.1:55433/agentmall_test\n"
@@ -364,6 +384,18 @@ class Execution:
                     "-d",
                     "--name",
                     self.guest,
+                    "--user",
+                    user,
+                    "-e",
+                    "HOME=/runtime/home",
+                    "-e",
+                    "XDG_CACHE_HOME=/runtime/cache",
+                    "-e",
+                    "HF_HOME=/runtime/cache/huggingface",
+                    "-e",
+                    "TMPDIR=/runtime/tmp",
+                    "-e",
+                    "PYTHONDONTWRITEBYTECODE=1",
                     "--network",
                     "host",
                     "--memory",
@@ -374,6 +406,8 @@ class Execution:
                     str(env_file),
                     "-v",
                     str(self.raw) + ":/private",
+                    "-v",
+                    str(runtime) + ":/runtime",
                     self.name + ":bge",
                     "sleep",
                     "infinity",
@@ -427,24 +461,16 @@ class Execution:
                     "docker",
                     "exec",
                     self.guest,
-                    "strace",
-                    "-f",
-                    "-yy",
-                    "-e",
-                    "trace=openat,fsync,close",
-                    "-o",
-                    "/private/fsync.strace",
-                    "python",
-                    "scripts/verify_t16_a3.py",
-                    "--output",
-                    "/private/verification",
-                    "--state-dir",
-                    "/private/state",
+                    "sh",
+                    "-c",
+                    "umask 077; exec strace -f -yy -e trace=openat,fsync,close "
+                    "-o /private/fsync.strace python scripts/verify_t16_a3.py "
+                    "--output /private/verification --state-dir /private/state",
                 ],
                 timeout=1200,
                 monitor=True,
             )
-            bge_proof(self.raw)
+            bge_proof(self.raw, self.app)
         while time.monotonic() - runtime < 900:
             self.monitor.check()
             if time.monotonic() > self.deadline:
@@ -455,16 +481,58 @@ class Execution:
         self.clock["runtime_seconds"] = time.monotonic() - runtime
         self.result.update(exit_code=0, verified=True)
 
+    def cleanup_owned(self):
+        roles = {
+            ("container", self.pg): "postgres",
+            ("container", self.guest): "guest",
+            ("volume", self.volume): "postgres_data",
+        }
+        if len(set(self.created)) != len(self.created) or any(
+            pair not in roles for pair in self.created
+        ):
+            raise ValueError("UNOWNED_CLEANUP_REFUSED")
+        checks = []
+        for kind, name in reversed(self.created):
+            check = {
+                "kind": kind,
+                "role": roles[(kind, name)],
+                "remove_exit": None,
+                "absence_exit": None,
+                "verified_absent": False,
+            }
+            try:
+                argv = (
+                    ["docker", "rm", "-f", name]
+                    if kind == "container"
+                    else ["docker", "volume", "rm", name]
+                )
+                removed = subprocess.run(argv, check=False, capture_output=True, timeout=30)
+                check["remove_exit"] = removed.returncode
+                if removed.returncode == 0:
+                    query = (
+                        ["docker", "ps", "--all", "--quiet", "--filter", f"name=^/{name}$"]
+                        if kind == "container"
+                        else ["docker", "volume", "ls", "--quiet", "--filter", f"name=^{name}$"]
+                    )
+                    observed = subprocess.run(query, check=False, capture_output=True, timeout=15)
+                    check["absence_exit"] = observed.returncode
+                    check["verified_absent"] = (
+                        observed.returncode == 0 and not observed.stdout.strip()
+                    )
+            except (OSError, subprocess.SubprocessError):
+                pass  # UNKNOWN is never interpreted as removed.
+            checks.append(check)
+        return checks
+
     def finish(self):
         errors = []
 
         def collect(name, operation):
             try:
-                operation()
-                return True
+                return True, operation()
             except Exception as exc:
                 errors.append({"operation": name, "error_type": type(exc).__name__})
-                return False
+                return False, None
 
         if self.active is not None:
 
@@ -474,9 +542,8 @@ class Execution:
                 self.workload_stopped = self.guest_fenced
 
             collect("terminate", terminate)
-        if self.monitor and not collect("close_clock", self.monitor.close):
+        if self.monitor and not collect("close_clock", self.monitor.close)[0]:
             self.clock["runtime_passed"] = False
-        # Each collection failure is evidence, not a reason to discard other originals.
         if (self.app / ".t13").exists():
             collect(
                 "core_logs",
@@ -519,42 +586,77 @@ class Execution:
                         ["docker", "inspect", name], timeout=10, export=True
                     ),
                 )
+
+        # Independent originals, not child stdout, are the cleanup prerequisite.
+        schema_state = "UNKNOWN"
+        if self.args.phase == "bge":
+            originals_ok, _ = collect("required_originals", lambda: bge_proof(self.raw, self.app))
+            if originals_ok:
+                schema_state = "DROPPED_BY_FROZEN_VERIFIER_VALIDATED_ORACLE"
+            else:
+                schema_state = schema_report(self.raw)
+        else:
+            originals_ok, _ = collect(
+                "required_originals",
+                lambda: core_proof(self.app, outputs=self.raw / "core-originals/outputs"),
+            )
         if errors:
             self.result.update(exit_code=1, verified=False)
         write_json(self.raw / "collection-errors.json", errors)
         write_json(self.raw / "clock-summary.json", self.clock)
-        write_json(self.raw / "result.json", self.result)
+        write_json(
+            self.raw / "result.json", self.result | {"receipt_scope": "PRE_ARCHIVE_EXECUTION"}
+        )
         archive = self.root / "raw.tar.gz"
-        bundle(self.raw, archive)
+        archived_ok, state = collect(
+            "strict_archive", lambda: bundle(self.raw, archive, partial=bool(errors))
+        )
+        if not archived_ok:
+            archive = self.root / "raw-incomplete.tar.gz"
+            archived_ok, state = collect(
+                "partial_archive", lambda: bundle(self.raw, archive, partial=True)
+            )
+        self.result["evidence_complete"] = bool(
+            originals_ok and archived_ok and state["complete"] and not errors
+        )
+        self.result["cleanup_complete"] = False
         encrypted = self.public / "raw-evidence.cms.der"
-        encrypt(archive, self.cert, self.args.certificate_sha, encrypted)
+        encrypted_ok = False
+        if archived_ok:
+            encrypted_ok, _ = collect(
+                "encryption",
+                lambda: encrypt(archive, self.cert, self.args.certificate_sha, encrypted),
+            )
+        if not encrypted_ok:
+            self.result["evidence_complete"] = False
+        checks = []
+        if self.result["evidence_complete"] and encrypted_ok:
+            clean_ok, checks = collect("cleanup", self.cleanup_owned)
+            checks = checks or []
+            self.result["cleanup_complete"] = bool(
+                clean_ok and all(c["verified_absent"] for c in checks)
+            )
+            if not self.result["cleanup_complete"]:
+                errors.append({"operation": "cleanup", "error_type": "REMOVAL_UNVERIFIED"})
+        if errors:
+            self.result.update(exit_code=1, verified=False)
         summary = public_summary(self.args.phase, self.result, self.clock)
         summary.update(
-            evidence_complete=not errors,
+            evidence_state="COMPLETE" if self.result["evidence_complete"] else "INCOMPLETE",
+            cleanup_checks=checks,
+            cleanup_state="VERIFIED_ABSENT" if self.result["cleanup_complete"] else "NOT_VERIFIED",
+            schema_cleanup=schema_state,
+            database_recoverability="NOT_CLAIMED",
+            collection_errors=errors,
             product_sha=SOURCE,
             product_fingerprint=FINGERPRINT,
             ci_sha=self.args.ci_commit,
-            ciphertext_sha256=hashlib.sha256(encrypted.read_bytes()).hexdigest(),
-            originals_tar_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
         )
-        # No schema/volume removal on incomplete collection. Runner teardown is external.
-        if not errors:
-            for kind, name in reversed(self.created):
-                argv = (
-                    ["docker", "rm", "-f", name]
-                    if kind == "container"
-                    else ["docker", "volume", "rm", name]
-                )
-                collect(
-                    "cleanup",
-                    lambda argv=argv: subprocess.run(
-                        argv, check=True, capture_output=True, timeout=30
-                    ),
-                )
-        summary["cleanup_complete"] = not errors
-        if errors:
-            summary["result"] = "FAIL"
-            self.result.update(exit_code=1, verified=False)
+        if encrypted_ok:
+            summary.update(
+                ciphertext_sha256=hashlib.sha256(encrypted.read_bytes()).hexdigest(),
+                originals_tar_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
+            )
         write_json(self.public / "summary.json", summary)
 
 
