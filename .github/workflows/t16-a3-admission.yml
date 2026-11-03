@@ -1,0 +1,118 @@
+name: T16-A3 independent offline admission
+
+on:
+  workflow_call:
+    inputs:
+      ci_commit:
+        description: Exact owner-approved CI candidate SHA (40 lowercase hex characters)
+        required: true
+        type: string
+      recipient_certificate:
+        description: Owner-supplied PUBLIC RSA X.509 PEM certificate; never a private key
+        required: true
+        type: string
+      certificate_sha256:
+        description: SHA-256 of the exact public PEM bytes including final newline
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: t16-a3-independent-admission
+  cancel-in-progress: false
+
+jobs:
+  core:
+    name: A - frozen CI_OFFLINE_CORE
+    if: github.ref == 'refs/heads/codex/t16-a3-ci-verify' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      APPROVED_CI_COMMIT: ${{ inputs.ci_commit }}
+      RECIPIENT_CERT_PEM: ${{ inputs.recipient_certificate }}
+      CERTIFICATE_SHA: ${{ inputs.certificate_sha256 }}
+    steps:
+      - name: Check out exact CI candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: harness
+          persist-credentials: false
+      - name: Check out frozen product
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 77b215878edbce50ce107c6e77e31de4d2044ff9
+          path: app
+          persist-credentials: false
+      - name: Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.10"
+      - name: uv 0.9.18 without cache
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.9.18"
+          enable-cache: false
+      - name: Node 24.21.0 without cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24.21.0"
+          package-manager-cache: false
+      - name: One-shot admitted core run (private originals, bounded public console)
+        run: >-
+          python harness/scripts/ci/t16_admission.py --phase core --app app
+          --output "$RUNNER_TEMP/t16-core"
+          --ci-commit "$APPROVED_CI_COMMIT" --certificate-sha "$CERTIFICATE_SHA"
+      - name: Upload encrypted originals and allowlisted status only
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: t16-core-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/t16-core/publish/*
+          if-no-files-found: error
+          retention-days: 1
+          include-hidden-files: false
+
+  bge:
+    name: B - real BGE, three-turn Mock and independent Oracle
+    needs: core
+    if: github.ref == 'refs/heads/codex/t16-a3-ci-verify' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      APPROVED_CI_COMMIT: ${{ inputs.ci_commit }}
+      RECIPIENT_CERT_PEM: ${{ inputs.recipient_certificate }}
+      CERTIFICATE_SHA: ${{ inputs.certificate_sha256 }}
+    steps:
+      - name: Check out exact CI candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: harness
+          persist-credentials: false
+      - name: Check out frozen product
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 77b215878edbce50ce107c6e77e31de4d2044ff9
+          path: app
+          persist-credentials: false
+      - name: Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.10"
+      - name: One-shot admitted BGE run (no provider, fresh state)
+        run: >-
+          python harness/scripts/ci/t16_admission.py --phase bge --app app
+          --output "$RUNNER_TEMP/t16-bge"
+          --ci-commit "$APPROVED_CI_COMMIT" --certificate-sha "$CERTIFICATE_SHA"
+      - name: Upload encrypted originals and allowlisted status only
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: t16-bge-${{ github.run_id }}-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/t16-bge/publish/*
+          if-no-files-found: error
+          retention-days: 1
+          include-hidden-files: false

@@ -2,18 +2,45 @@ name: AgentMall offline core
 
 on:
   push:
+    # This admission branch is verified once via the dedicated manual workflow.
+    branches-ignore:
+      - codex/t16-a3-ci-verify
   pull_request:
   workflow_dispatch:
+    inputs:
+      ci_commit:
+        description: T16 admission only - exact owner-approved CI commit
+        required: false
+        type: string
+      recipient_certificate:
+        description: T16 admission only - PUBLIC RSA X.509 PEM certificate
+        required: false
+        type: string
+      certificate_sha256:
+        description: T16 admission only - exact PEM SHA-256
+        required: false
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
   group: offline-core-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/codex/t16-a3-ci-verify' }}
 
 jobs:
+  t16-admission:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/codex/t16-a3-ci-verify' && github.run_attempt == 1
+    uses: ./.github/workflows/t16-a3-admission.yml
+    with:
+      ci_commit: ${{ inputs.ci_commit }}
+      recipient_certificate: ${{ inputs.recipient_certificate }}
+      certificate_sha256: ${{ inputs.certificate_sha256 }}
+
   offline-core:
+    if: github.ref != 'refs/heads/codex/t16-a3-ci-verify'
     name: CI_OFFLINE_CORE
     runs-on: ubuntu-24.04
     timeout-minutes: 30

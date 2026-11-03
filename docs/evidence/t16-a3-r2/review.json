@@ -1,0 +1,38 @@
+{
+  "scope": "CI_HELPERS_ONLY_STATIC_AND_SYNTHETIC_REVIEW",
+  "rounds": 1,
+  "reviewed_source_sha256": "16256699b0bd71708ced2a1ee64bd3f2dc4679e8af67492b84123bb909a816d4",
+  "critical_findings": 0,
+  "important_findings": 3,
+  "items": [
+    {
+      "id": "R1",
+      "finding": "Docker pause timeout skipped descendant termination and lost active handle",
+      "test": "test_pause_timeout_still_terminates_the_actual_workload",
+      "red": "14 tests, 3 errors including pause TimeoutExpired",
+      "green": "Real local child is terminated even when mocked Docker pause times out",
+      "resolution": "finally terminates workload; DB unpause gated by stopped state; Docker exec client death is not sufficient: require acknowledged guest pause/kill before DB unpause"
+    },
+    {
+      "id": "R2",
+      "finding": "Collection failure prevented all encrypted export; missing guest inspected unconditionally",
+      "test": "test_dump_failure_exports_existing_encrypted_evidence_and_fails",
+      "red": "14 tests, 3 errors including pre-encryption abort",
+      "green": "Existing evidence encrypted with synthetic RSA certificate despite injected dump failure; result FAIL/evidence incomplete",
+      "resolution": "Independent best-effort collection, inspect owned resources separately, encrypt partial originals, no cleanup on incomplete evidence"
+    },
+    {
+      "id": "R3",
+      "finding": "Host sampler failure could pass admission with no host observations",
+      "test": "test_host_log_failure_is_a_fatal_clock_event",
+      "red": "14 tests, 3 errors including unhandled host log failure",
+      "green": "Host file failure emits fatal sampler event",
+      "resolution": "Host exception/exit/heartbeat and both thread liveness/sample counts gated; close rejects queued fatal events"
+    }
+  ],
+  "test_harness_failure_preserved": "One first GREEN attempt mocked subprocess.run too broadly and intercepted OpenSSL, causing 1 error/14. Narrowed the mock to Docker only; encryption now real.",
+  "final_helper_tests": 14,
+  "docker_execution": "NOT_RUN",
+  "remote_ci": "NOT_RUN",
+  "product_regression": "NOT_RUN_IN_THIS_STAGE"
+}
