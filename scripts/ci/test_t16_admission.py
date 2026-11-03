@@ -337,6 +337,194 @@ class SafetyTests(unittest.TestCase):
             self.assertFalse((root / "wrong.der").exists())
 
 
+class CoreProofTests(unittest.TestCase):
+    """Synthetic reporter output only; original runner logs must never be fixtures."""
+
+    PLAIN = " Test Files  13 passed (13)\n      Tests  85 passed (85)\n"
+
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.app = Path(self.directory.name)
+        self.outputs = self.app / ".t13/outputs"
+        self.outputs.mkdir(parents=True)
+        for name in (
+            "bootstrap",
+            "ruff",
+            "format",
+            "pytest",
+            "typecheck",
+            "lint",
+            "vitest",
+            "build",
+            "playwright",
+        ):
+            self.write_result(name, "synthetic successful command\n")
+        self.write_result("pytest", "=== 834 passed, 14 skipped in 1.0s ===\n")
+        self.write_result("vitest", self.PLAIN)
+        self.write_result("playwright", "  96 passed (1.0m)\n")
+
+    def write_result(self, name, text, *, code=0):
+        log = self.outputs / f"{name}.txt"
+        log.write_text(text)
+        (self.outputs / f"{name}.json").write_text(
+            json.dumps(
+                {
+                    "exit_code": code,
+                    "log": str(log.relative_to(self.app)),
+                    "log_sha256": hashlib.sha256(log.read_bytes()).hexdigest(),
+                }
+            )
+        )
+
+    def proof(self):
+        from t16_evidence import core_proof
+
+        return core_proof(self.app)
+
+    def test_plain_report_preserves_all_frozen_counts(self):
+        self.assertEqual(
+            self.proof(),
+            {
+                "pytest_passed": 834,
+                "pytest_skipped": 14,
+                "vitest_passed": 85,
+                "playwright_passed": 96,
+            },
+        )
+
+    def test_sgr_colored_summary_is_accepted(self):
+        self.write_result(
+            "vitest",
+            "\x1b[2m Test Files \x1b[22m \x1b[1m\x1b[32m13 passed"
+            "\x1b[39m\x1b[22m\x1b[90m (13)\x1b[39m\n"
+            "\x1b[2m      Tests \x1b[22m \x1b[1m\x1b[32m85 passed"
+            "\x1b[39m\x1b[22m\x1b[90m (85)\x1b[39m\n",
+        )
+        self.assertEqual(self.proof()["vitest_passed"], 85)
+
+    def test_sgr_between_label_count_and_status_is_accepted(self):
+        self.write_result(
+            "vitest",
+            "Test Files 13 passed (13)\n"
+            "Tests\x1b[22m \x1b[1m85\x1b[39m \x1b[32mpassed\x1b[m (85)\n",
+        )
+        self.assertEqual(self.proof()["vitest_passed"], 85)
+
+    def test_missing_tests_summary_is_rejected(self):
+        self.write_result("vitest", "synthetic output without a reporter summary\n")
+        with self.assertRaises(ValueError):
+            self.proof()
+
+    def test_test_files_only_cannot_supply_the_tests_count(self):
+        self.write_result("vitest", "Test Files 85 passed (85)\n")
+        with self.assertRaises(ValueError):
+            self.proof()
+
+    def test_wrong_passed_count_is_rejected(self):
+        self.write_result("vitest", "Test Files 13 passed (13)\nTests 84 passed (84)\n")
+        with self.assertRaises(ValueError):
+            self.proof()
+
+    def test_passed_and_total_must_agree(self):
+        for line in ("Tests 85 passed (86)", "Tests 85 passed (84)", "Tests 85 passed"):
+            with self.subTest(summary=line):
+                self.write_result("vitest", "Test Files 13 passed (13)\n" + line + "\n")
+                with self.assertRaises(ValueError):
+                    self.proof()
+
+    def test_mixed_failure_or_skip_summary_is_rejected(self):
+        for line in ("Tests 85 passed | 1 failed (86)", "Tests 85 passed | 1 skipped (86)"):
+            with self.subTest(summary=line):
+                self.write_result("vitest", "Test Files 13 passed (13)\n" + line + "\n")
+                with self.assertRaises(ValueError):
+                    self.proof()
+
+    def test_duplicate_or_conflicting_summaries_are_rejected(self):
+        for extra in (self.PLAIN, "Tests 84 passed (84)\n"):
+            with self.subTest(extra=extra):
+                self.write_result("vitest", self.PLAIN + extra)
+                with self.assertRaises(ValueError):
+                    self.proof()
+
+    def test_error_messages_and_unrelated_text_cannot_supply_summary(self):
+        for line in (
+            "Error: Tests 85 passed (85)",
+            '"Tests 85 passed (85)"',
+            "Tests 85 passed (85) is an example",
+            "85 passed (85)",
+            "Tests 85 passed (85)",
+        ):
+            with self.subTest(text=line):
+                self.write_result("vitest", line + "\n")
+                with self.assertRaises(ValueError):
+                    self.proof()
+
+    def test_terminal_rewrite_commands_are_not_treated_as_colors(self):
+        self.write_result(
+            "vitest", "Test Files 13 passed (13)\nError\x1b[2K\rTests 85 passed (85)\n"
+        )
+        with self.assertRaises(ValueError):
+            self.proof()
+
+    def test_test_files_summary_must_be_consistent(self):
+        for line in (
+            "Test Files 13 passed (14)",
+            "Test Files 86 passed (86)",
+            "Test Files 0 passed (0)",
+        ):
+            with self.subTest(summary=line):
+                self.write_result("vitest", line + "\nTests 85 passed (85)\n")
+                with self.assertRaises(ValueError):
+                    self.proof()
+
+    def test_nonzero_exit_cannot_be_overridden_by_a_valid_summary(self):
+        self.write_result("vitest", self.PLAIN, code=1)
+        with self.assertRaisesRegex(ValueError, "CORE_RECEIPT_FAILED"):
+            self.proof()
+
+    def test_modified_log_is_rejected_before_summary_parsing(self):
+        (self.outputs / "vitest.txt").write_text("malformed replacement\n")
+        with self.assertRaisesRegex(ValueError, "CORE_RECEIPT_FAILED"):
+            self.proof()
+
+    def test_later_command_receipt_is_checked_before_summary_parsing(self):
+        self.write_result("vitest", "not a valid summary\n")
+        self.write_result("playwright", "96 passed (1.0m)\n", code=1)
+        with self.assertRaisesRegex(ValueError, "CORE_RECEIPT_FAILED"):
+            self.proof()
+
+    def test_missing_other_stage_receipt_is_rejected(self):
+        (self.outputs / "build.json").unlink()
+        with self.assertRaises(FileNotFoundError):
+            self.proof()
+
+    def test_pytest_contract_is_unchanged(self):
+        for text in ("822 passed, 14 skipped", "834 passed, 13 skipped", "834 passed, 15 skipped"):
+            with self.subTest(summary=text):
+                self.write_result("pytest", text + "\n")
+                with self.assertRaises(ValueError):
+                    self.proof()
+
+    def test_playwright_contract_is_unchanged(self):
+        for text in ("95 passed (1.0m)", "97 passed (1.0m)", "no tests"):
+            with self.subTest(summary=text):
+                self.write_result("playwright", text + "\n")
+                with self.assertRaises(ValueError):
+                    self.proof()
+
+    def test_parser_uses_the_bytes_whose_hash_was_verified(self):
+        read_text = Path.read_text
+
+        def changed_read(path, *args, **kwargs):
+            if path.suffix == ".txt":
+                return "unverified text\n"
+            return read_text(path, *args, **kwargs)
+
+        with patch.object(Path, "read_text", changed_read):
+            self.assertEqual(self.proof()["vitest_passed"], 85)
+
+
 if __name__ == "__main__":
     os.umask(0o077)
     unittest.main()

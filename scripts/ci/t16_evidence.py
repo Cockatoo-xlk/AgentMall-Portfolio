@@ -132,8 +132,35 @@ def public_summary(phase, result, clock):
     return value
 
 
+def _vitest_passed(output):
+    # SGR changes presentation only. Cursor/erase/other controls are not colors.
+    plain = re.sub(r"\x1b\[[0-9;:]*m", "", output).replace("\r\n", "\n")
+    if re.search(r"[\x00-\x08\x0b-\x1f\x7f-\x9f]", plain):
+        raise ValueError("VITEST_UNSUPPORTED_CONTROL")
+    lines = [line for line in plain.split("\n") if line.strip()]
+    summaries = [
+        (index, line)
+        for index, line in enumerate(lines)
+        if re.match(r"[ \t]*(?:Test Files|Tests)\b", line)
+    ]
+    if len(summaries) != 2 or summaries[1][0] != summaries[0][0] + 1:
+        raise ValueError("VITEST_SUMMARY_MISSING_OR_AMBIGUOUS")
+    counts = []
+    for (_, line), label in zip(summaries, ("Test Files", "Tests"), strict=True):
+        match = re.fullmatch(
+            rf"[ \t]*{label}[ \t]+([1-9][0-9]*) passed[ \t]+\(([1-9][0-9]*)\)[ \t]*",
+            line,
+        )
+        if match is None or match[1] != match[2]:
+            raise ValueError("VITEST_SUMMARY_INCONSISTENT")
+        counts.append(int(match[1]))
+    if counts[0] > counts[1]:
+        raise ValueError("VITEST_SUMMARY_INCONSISTENT")
+    return counts[1]
+
+
 def core_proof(app):
-    records = {}
+    verified_logs = {}
     for name in (
         "bootstrap",
         "ruff",
@@ -147,27 +174,31 @@ def core_proof(app):
     ):
         path = app / ".t13/outputs" / (name + ".json")
         receipt = json.loads(path.read_text())
-        log = app / receipt["log"]
+        expected_log = f".t13/outputs/{name}.txt"
+        if receipt["log"] != expected_log:
+            raise ValueError("CORE_RECEIPT_FAILED")
+        data = (app / expected_log).read_bytes()
         if (
-            receipt["exit_code"] != 0
-            or hashlib.sha256(log.read_bytes()).hexdigest() != receipt["log_sha256"]
+            type(receipt["exit_code"]) is not int
+            or receipt["exit_code"] != 0
+            or hashlib.sha256(data).hexdigest() != receipt["log_sha256"]
         ):
             raise ValueError("CORE_RECEIPT_FAILED")
-        records[name] = receipt
-    pytest = (app / ".t13/outputs/pytest.txt").read_text()
-    vitest = (app / ".t13/outputs/vitest.txt").read_text()
-    playwright = (app / ".t13/outputs/playwright.txt").read_text()
+        verified_logs[name] = data
+    # Parse only the bytes already verified, after ALL nine receipts pass.
+    pytest = verified_logs["pytest"].decode("utf-8")
+    vitest = verified_logs["vitest"].decode("utf-8")
+    playwright = verified_logs["playwright"].decode("utf-8")
     passed = re.findall(r"(\d+) passed", pytest)
     skipped = re.findall(r"(\d+) skipped", pytest)
-    units = re.findall(r"Tests\s+(\d+) passed", vitest)
+    units = _vitest_passed(vitest)
     browser = re.findall(r"(\d+) passed", playwright)
     if (
         not passed
         or int(passed[-1]) < 823
         or not skipped
         or int(skipped[-1]) != 14
-        or not units
-        or int(units[-1]) != 85
+        or units != 85
         or not browser
         or int(browser[-1]) != 96
     ):
@@ -175,7 +206,7 @@ def core_proof(app):
     return {
         "pytest_passed": int(passed[-1]),
         "pytest_skipped": int(skipped[-1]),
-        "vitest_passed": int(units[-1]),
+        "vitest_passed": units,
         "playwright_passed": int(browser[-1]),
     }
 
