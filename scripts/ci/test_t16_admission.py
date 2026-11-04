@@ -14,6 +14,94 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 
+class PublicSourceTests(unittest.TestCase):
+    def source_archive(self, root):
+        import io
+        import tarfile
+
+        archive = root / "source.tar"
+        with tarfile.open(archive, "w") as stream:
+            for name in ("scripts", "backend", "backend/src"):
+                entry = tarfile.TarInfo(name)
+                entry.type = tarfile.DIRTYPE
+                entry.mode = 0o775
+                stream.addfile(entry)
+            for name, mode, data in [
+                ("scripts/verify_t16_a3.py", 0o664, b"print('verified entry')\n"),
+                ("backend/src/public.py", 0o664, b"VALUE = 42\n"),
+                ("scripts/executable", 0o775, b"#!/bin/sh\nexit 0\n"),
+            ]:
+                entry = tarfile.TarInfo(name)
+                entry.mode, entry.size = mode, len(data)
+                stream.addfile(entry, io.BytesIO(data))
+        return archive
+
+    def test_complete_public_source_is_traversable_under_private_umask(self):
+        import t16_admission
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            archive = self.source_archive(root)
+            before = archive.read_bytes()
+            private = root / "raw"
+            private.mkdir(mode=0o700)
+            (private / "oracle.json").write_bytes(b"synthetic private oracle")
+            (private / "oracle.json").chmod(0o600)
+            previous = os.umask(0o077)
+            try:
+                t16_admission.stage_public_source(archive, private / "build")
+            finally:
+                os.umask(previous)
+            context = private / "build"
+            for name in (".", "scripts", "backend", "backend/src"):
+                self.assertEqual((context / name).stat().st_mode & 0o777, 0o755)
+            self.assertEqual(
+                (context / "scripts/verify_t16_a3.py").read_bytes(), b"print('verified entry')\n"
+            )
+            self.assertEqual((context / "scripts/verify_t16_a3.py").stat().st_mode & 0o777, 0o644)
+            self.assertEqual((context / "scripts/executable").stat().st_mode & 0o777, 0o755)
+            self.assertEqual(archive.read_bytes(), before)
+            self.assertEqual(private.stat().st_mode & 0o777, 0o700)
+            self.assertEqual((private / "oracle.json").stat().st_mode & 0o777, 0o600)
+
+    def test_existing_destination_is_never_normalized(self):
+        from t16_admission import stage_public_source
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            archive = self.source_archive(root)
+            private = root / "existing"
+            private.mkdir(mode=0o700)
+            with self.assertRaises(FileExistsError):
+                stage_public_source(archive, private)
+            self.assertEqual(private.stat().st_mode & 0o777, 0o700)
+
+    def test_source_archive_rejects_links_special_types_and_escape(self):
+        import tarfile
+
+        from t16_admission import stage_public_source
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for index, (name, kind) in enumerate(
+                [
+                    ("../escape", tarfile.REGTYPE),
+                    ("/absolute", tarfile.REGTYPE),
+                    ("symlink", tarfile.SYMTYPE),
+                    ("hardlink", tarfile.LNKTYPE),
+                    ("fifo", tarfile.FIFOTYPE),
+                ]
+            ):
+                archive = root / f"unsafe-{index}.tar"
+                with tarfile.open(archive, "w") as stream:
+                    entry = tarfile.TarInfo(name)
+                    entry.type, entry.linkname = kind, "../private"
+                    stream.addfile(entry)
+                with self.subTest(name=name), self.assertRaises(ValueError):
+                    stage_public_source(archive, root / f"build-{index}")
+                self.assertFalse((root / f"build-{index}").exists())
+
+
 class ClockTests(unittest.TestCase):
     def test_host_log_failure_is_a_fatal_clock_event(self):
         from t16_clock import ClockGate, Monitor
@@ -1202,6 +1290,28 @@ def linux_ownership_suite():
                 assert process.returncode==0,process.stderr
             """)
 
+        def test_full_public_tree_is_readable_across_uid_without_exposing_private_evidence(self):
+            from t16_admission import stage_public_source
+
+            archive = PublicSourceTests().source_archive(self.root)
+            stage_public_source(archive, self.root / "build")
+            raw = self.root / "root-private"
+            raw.mkdir(mode=0o700)
+            (raw / "oracle.json").write_text("synthetic private evidence")
+            self.expect("""
+                import subprocess
+                entry=root/'build/scripts/verify_t16_a3.py'
+                assert entry.stat().st_uid==0
+                assert (root/'build/backend/src/public.py').read_text()=='VALUE = 42\\n'
+                result=subprocess.run([sys.executable,str(entry)],capture_output=True,text=True)
+                assert result.returncode==0 and result.stdout=='verified entry\\n'
+                try:
+                    (root/'root-private/oracle.json').read_bytes()
+                    raise AssertionError('private evidence became readable')
+                except PermissionError:
+                    pass
+            """)
+
         def test_regular_file_to_fifo_race_is_bounded(self):
             child = self.child(
                 """
@@ -1229,8 +1339,156 @@ def linux_ownership_suite():
     return unittest.defaultTestLoader.loadTestsFromTestCase(LinuxOwnershipTests)
 
 
+def bge_image_suite(image, context):
+    """Opt-in real full-image regression. No mounts, DB, Provider or network access."""
+    import textwrap
+    from uuid import uuid4
+
+    from t16_admission import safe_environment
+
+    environment = safe_environment(os.environ)
+    probe = textwrap.dedent("""
+        import hashlib, importlib, json, os, pathlib, runpy, stat
+        root=pathlib.Path('/work')
+        paths=['scripts/verify_t16_a3.py', 'backend/tests/t16_a3_oracle.py',
+               'backend/tests/t16_a3_scenario.py', 'backend/tests/t16_a3_retrieval_checks.py',
+               'backend/.venv/pyvenv.cfg', 'evals/data/embedding_manifest.json']
+        for name in paths:
+            assert (root/name).read_bytes(), name
+        namespace=runpy.run_path(str(root/'scripts/verify_t16_a3.py'),run_name='access_probe')
+        with namespace['offline_boundary']() as boundary:
+            for module in ['sqlalchemy','psycopg','pgvector','langgraph.checkpoint.postgres',
+                           't16_a3_oracle','t16_a3_scenario','t16_a3_retrieval_checks']:
+                importlib.import_module(module)
+            manifest=json.loads((root/'evals/data/embedding_manifest.json').read_text())
+            model=root/'.models'/manifest['revision']
+            assert len(manifest['files'])==6
+            for name, ref in manifest['files'].items():
+                data=(model/name).read_bytes()
+                assert len(data)==ref['size_bytes']
+                assert hashlib.sha256(data).hexdigest()==ref['sha256']
+            from agentmall.retrieval.embedding import LocalEncoder
+            encoder=LocalEncoder()
+            vector=encoder.encode(['键盘'],query=True)[0]
+            assert len(vector)==512
+            assert str(next(encoder.model.parameters()).device)=='cpu'
+            assert boundary.blocked_external_attempts==0
+        print(json.dumps({'uid':os.geteuid(),'gid':os.getegid(), 'model_files':6,
+                          'dimension':512,'device':'cpu','external_attempts':0}))
+    """)
+
+    class BgeImageTests(unittest.TestCase):
+        def container(self, user, code, *, readonly=True):
+            name = "am-t16-image-test-" + uuid4().hex
+            argv = [
+                "docker",
+                "--context",
+                context,
+                "run",
+                "--rm",
+                "--name",
+                name,
+                "--network",
+                "none",
+                "--user",
+                user,
+                "--memory",
+                "2g",
+                "--cpus",
+                "2",
+                "--tmpfs",
+                "/tmp:rw,mode=1777,size=128m",
+                "-e",
+                "HOME=/tmp",
+                "-e",
+                "PYTHONDONTWRITEBYTECODE=1",
+            ]
+            if readonly:
+                argv.append("--read-only")
+            docker = ["docker", "--context", context]
+            try:
+                return subprocess.run(
+                    argv + [image, "python", "-c", code],
+                    env=environment,
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                )
+            finally:
+                query = docker + ["ps", "-aq", "--filter", f"name=^/{name}$"]
+                observed = subprocess.run(query, env=environment, capture_output=True, timeout=15)
+                if observed.returncode:
+                    raise RuntimeError("IMAGE_TEST_CLEANUP_UNKNOWN")
+                if observed.stdout.strip():
+                    subprocess.run(
+                        docker + ["rm", "-f", name],
+                        env=environment,
+                        capture_output=True,
+                        timeout=15,
+                    )
+                    observed = subprocess.run(
+                        query, env=environment, capture_output=True, timeout=15
+                    )
+                    if observed.returncode or observed.stdout.strip():
+                        raise RuntimeError("IMAGE_TEST_CLEANUP_UNVERIFIED")
+
+        def test_full_verifier_help_as_nonroot(self):
+            result = self.container(
+                "1001:1001",
+                """
+import subprocess,sys
+raise SystemExit(subprocess.run([sys.executable,'scripts/verify_t16_a3.py','--help']).returncode)
+""",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("--state-dir", result.stdout)
+
+        def test_root_and_nonroot_read_full_verifier_dependencies_and_real_model(self):
+            for uid in (0, 1001):
+                with self.subTest(uid=uid):
+                    result = self.container(f"{uid}:{uid}", probe)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    record = json.loads(result.stdout)
+                    self.assertEqual(
+                        record,
+                        {
+                            "uid": uid,
+                            "gid": uid,
+                            "model_files": 6,
+                            "dimension": 512,
+                            "device": "cpu",
+                            "external_attempts": 0,
+                        },
+                    )
+
+        def test_unreadable_full_script_dependency_or_model_is_rejected(self):
+            for path in [
+                "/work/scripts",
+                "/work/backend/.venv/lib/python3.12/site-packages/sqlalchemy",
+                "/work/.models",
+            ]:
+                with self.subTest(path=path):
+                    code = (
+                        "import os; "
+                        f"os.chmod({path!r},0o700); "
+                        "os.setgroups([]); os.setgid(1001); os.setuid(1001);\n" + probe
+                    )
+                    result = self.container("0:0", code, readonly=False)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertTrue(
+                        "PermissionError" in result.stderr
+                        or "ModuleNotFoundError" in result.stderr,
+                        result.stderr,
+                    )
+
+    return unittest.defaultTestLoader.loadTestsFromTestCase(BgeImageTests)
+
+
 if __name__ == "__main__":
     os.umask(0o077)
+    if len(sys.argv) == 5 and sys.argv[1] == "--bge-image" and sys.argv[3] == "--docker-context":
+        result = unittest.TextTestRunner(verbosity=2).run(bge_image_suite(sys.argv[2], sys.argv[4]))
+        raise SystemExit(not result.wasSuccessful())
     if sys.argv[1:] == ["--linux-ownership"]:
         result = unittest.TextTestRunner(verbosity=2).run(linux_ownership_suite())
         raise SystemExit(not result.wasSuccessful())

@@ -9,10 +9,11 @@ import platform
 import secrets
 import shutil
 import signal
+import stat
 import subprocess
 import tarfile
 import time
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from t16_clock import Monitor
 from t16_evidence import (
@@ -125,6 +126,36 @@ def stage_public_helpers(source, destination):
         target = destination / name
         shutil.copyfile(source / name, target)
         target.chmod(0o644)  # Nonsecret reviewed source only, never private evidence/state.
+
+
+def stage_public_source(archive, destination):
+    """Stage only the frozen public Git archive, never evidence or a pre-existing tree.
+
+    tar's data filter leaves directory modes to mkdir/umask. With our private 077
+    umask that means 0700, which Docker COPY preserves under root ownership.
+    Normalize this disposable public copy before COPY; keep its private parent,
+    archive, runtime state and all evidence untouched.
+    """
+    with tarfile.open(archive) as source:
+        members = source.getmembers()
+        if any(
+            not (entry.isfile() or entry.isdir())
+            or PurePosixPath(entry.name).is_absolute()
+            or ".." in PurePosixPath(entry.name).parts
+            for entry in members
+        ):
+            raise ValueError("UNSAFE_PUBLIC_SOURCE_ARCHIVE")
+        destination.mkdir(mode=0o755, exist_ok=False)
+        source.extractall(destination, members=members, filter="data")
+    destination.chmod(0o755)
+    for path in destination.rglob("*"):
+        info = path.lstat()
+        if stat.S_ISDIR(info.st_mode):
+            path.chmod(0o755)
+        elif stat.S_ISREG(info.st_mode):
+            path.chmod(0o755 if info.st_mode & 0o111 else 0o644)
+        else:
+            raise ValueError("UNSAFE_PUBLIC_SOURCE_ENTRY")
 
 
 class Execution:
@@ -295,11 +326,9 @@ class Execution:
             self.command(["docker", "pull", PYTHON])
         else:
             context = self.raw / "build"
-            context.mkdir()
             archive = self.raw / "source.tar"
             self.command(["git", "archive", "--format=tar", SOURCE], output=archive)
-            with tarfile.open(archive) as source:
-                source.extractall(context, filter="data")
+            stage_public_source(archive, context)
             stage_public_helpers(self.harness, context / "ci_harness")
             self.command(
                 [
@@ -438,6 +467,12 @@ class Execution:
             )
             guest_script = "/ci/t16_clock.py"
         self.created.append(("container", self.guest))
+        if self.args.phase == "bge":
+            # Check the full entry point as the actual guest, not just the clock helper.
+            self.command(
+                ["docker", "exec", self.guest, "python", "scripts/verify_t16_a3.py", "--help"],
+                timeout=30,
+            )
         self.monitor = Monitor(self.guest, guest_script, self.raw)
 
     def verify(self):
