@@ -69,10 +69,13 @@ def safe_environment(environment):
 def fingerprint(app):
     tree = ast.parse((app / "backend/src/agentmall/playground/policy.py").read_text())
     function = next(
-        n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "source_fingerprint"
+        n
+        for n in tree.body
+        if isinstance(n, ast.FunctionDef) and n.name == "source_fingerprint"
     )
     scope = {"ROOT": app, "hashlib": hashlib, "json": json}
-    exec(
+    # setup() checks the frozen Git SHA and clean tree before extracting this function.
+    exec(  # noqa: S102 - Execute only the reviewed repository fingerprint function.
         compile(ast.Module(body=[function], type_ignores=[]), "fingerprint", "exec"),
         scope,
     )
@@ -126,7 +129,9 @@ def stage_public_helpers(source, destination):
     for name in ("t16_clock.py", "t16_models.py", "t16_cache.py", "T16Bge.Dockerfile"):
         target = destination / name
         shutil.copyfile(source / name, target)
-        target.chmod(0o644)  # Nonsecret reviewed source only, never private evidence/state.
+        target.chmod(
+            0o644
+        )  # Nonsecret reviewed source only, never private evidence/state.
 
 
 def stage_public_source(archive, destination):
@@ -184,7 +189,9 @@ class Execution:
         self.result = {"exit_code": None, "verified": False}
         self.clock = {"admission_passed": False, "runtime_passed": False}
 
-    def command(self, argv, *, cwd=None, timeout=900, monitor=False, output=None, export=False):
+    def command(
+        self, argv, *, cwd=None, timeout=900, monitor=False, output=None, export=False
+    ):
         self.sequence += 1
         log = output or self.raw / f"command-{self.sequence:02d}.log"
         start = time.monotonic()
@@ -257,7 +264,10 @@ class Execution:
         for operation in ("pause", "kill"):
             try:
                 result = subprocess.run(
-                    ["docker", operation, self.guest], check=False, capture_output=True, timeout=15
+                    ["docker", operation, self.guest],
+                    check=False,
+                    capture_output=True,
+                    timeout=15,
                 )
                 if result.returncode == 0:
                     return True
@@ -271,8 +281,12 @@ class Execution:
         release = Path("/etc/os-release").read_text()
         if 'VERSION_ID="24.04"' not in release or "ID=ubuntu" not in release:
             raise ValueError("UBUNTU_24_04_REQUIRED")
-        sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=self.app, text=True).strip()
-        dirty = subprocess.check_output(["git", "status", "--porcelain"], cwd=self.app, text=True)
+        sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=self.app, text=True
+        ).strip()
+        dirty = subprocess.check_output(
+            ["git", "status", "--porcelain"], cwd=self.app, text=True
+        )
         if sha != SOURCE or dirty or fingerprint(self.app) != FINGERPRINT:
             raise ValueError("FROZEN_PRODUCT_MISMATCH")
         if shutil.disk_usage(self.root).free < 8 * 1024**3:
@@ -346,7 +360,9 @@ class Execution:
                 cwd=context,
                 timeout=1200,
             )
-            shutil.rmtree(context)  # Only this invocation's disposable source copy, not evidence.
+            shutil.rmtree(
+                context
+            )  # Only this invocation's disposable source copy, not evidence.
             # Retain the exact frozen source archive and its command receipt in encrypted evidence.
         self.command(["docker", "pull", PG])
         self.password = secrets.token_hex(24)
@@ -389,6 +405,7 @@ class Execution:
                     "-d",
                     "agentmall_test",
                 ],
+                check=False,
                 capture_output=True,
                 timeout=5,
             )
@@ -471,7 +488,14 @@ class Execution:
         if self.args.phase == "bge":
             # Check the full entry point as the actual guest, not just the clock helper.
             self.command(
-                ["docker", "exec", self.guest, "python", "scripts/verify_t16_a3.py", "--help"],
+                [
+                    "docker",
+                    "exec",
+                    self.guest,
+                    "python",
+                    "scripts/verify_t16_a3.py",
+                    "--help",
+                ],
                 timeout=30,
             )
             self.command(
@@ -515,9 +539,11 @@ class Execution:
                     self.guest,
                     "sh",
                     "-c",
-                    "umask 077; exec strace -f -yy -e trace=openat,fsync,close "
-                    "-o /private/fsync.strace python scripts/verify_t16_a3.py "
-                    "--output /private/verification --state-dir /private/state",
+                    (
+                        "umask 077; exec strace -f -yy -e trace=openat,fsync,close "
+                        "-o /private/fsync.strace python scripts/verify_t16_a3.py "
+                        "--output /private/verification --state-dir /private/state"
+                    ),
                 ],
                 timeout=1200,
                 monitor=True,
@@ -558,15 +584,33 @@ class Execution:
                     if kind == "container"
                     else ["docker", "volume", "rm", name]
                 )
-                removed = subprocess.run(argv, check=False, capture_output=True, timeout=30)
+                removed = subprocess.run(
+                    argv, check=False, capture_output=True, timeout=30
+                )
                 check["remove_exit"] = removed.returncode
                 if removed.returncode == 0:
                     query = (
-                        ["docker", "ps", "--all", "--quiet", "--filter", f"name=^/{name}$"]
+                        [
+                            "docker",
+                            "ps",
+                            "--all",
+                            "--quiet",
+                            "--filter",
+                            f"name=^/{name}$",
+                        ]
                         if kind == "container"
-                        else ["docker", "volume", "ls", "--quiet", "--filter", f"name=^{name}$"]
+                        else [
+                            "docker",
+                            "volume",
+                            "ls",
+                            "--quiet",
+                            "--filter",
+                            f"name=^{name}$",
+                        ]
                     )
-                    observed = subprocess.run(query, check=False, capture_output=True, timeout=15)
+                    observed = subprocess.run(
+                        query, check=False, capture_output=True, timeout=15
+                    )
                     check["absence_exit"] = observed.returncode
                     check["verified_absent"] = (
                         observed.returncode == 0 and not observed.stdout.strip()
@@ -582,7 +626,7 @@ class Execution:
         def collect(name, operation):
             try:
                 return True, operation()
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 - Record failure; continue evidence/cleanup.
                 errors.append({"operation": name, "error_type": type(exc).__name__})
                 return False, None
 
@@ -599,14 +643,19 @@ class Execution:
         if (self.app / ".t13").exists():
             collect(
                 "core_logs",
-                lambda: shutil.move(str(self.app / ".t13"), self.raw / "core-originals"),
+                lambda: shutil.move(
+                    str(self.app / ".t13"), self.raw / "core-originals"
+                ),
             )
         if ("container", self.pg) in self.created:
             if self.workload_stopped:
                 collect(
                     "unpause_db",
                     lambda: subprocess.run(
-                        ["docker", "unpause", self.pg], check=False, capture_output=True, timeout=10
+                        ["docker", "unpause", self.pg],
+                        check=False,
+                        capture_output=True,
+                        timeout=10,
                     ),
                 )
                 collect(
@@ -629,7 +678,9 @@ class Execution:
                     ),
                 )
             else:
-                errors.append({"operation": "database_dump", "error_type": "WORKLOAD_NOT_STOPPED"})
+                errors.append(
+                    {"operation": "database_dump", "error_type": "WORKLOAD_NOT_STOPPED"}
+                )
         for kind, name in self.created:
             if kind == "container":
                 collect(
@@ -642,7 +693,9 @@ class Execution:
         # Independent originals, not child stdout, are the cleanup prerequisite.
         schema_state = "UNKNOWN"
         if self.args.phase == "bge":
-            originals_ok, _ = collect("required_originals", lambda: bge_proof(self.raw, self.app))
+            originals_ok, _ = collect(
+                "required_originals", lambda: bge_proof(self.raw, self.app)
+            )
             if originals_ok:
                 schema_state = "DROPPED_BY_FROZEN_VERIFIER_VALIDATED_ORACLE"
             else:
@@ -650,14 +703,17 @@ class Execution:
         else:
             originals_ok, _ = collect(
                 "required_originals",
-                lambda: core_proof(self.app, outputs=self.raw / "core-originals/outputs"),
+                lambda: core_proof(
+                    self.app, outputs=self.raw / "core-originals/outputs"
+                ),
             )
         if errors:
             self.result.update(exit_code=1, verified=False)
         write_json(self.raw / "collection-errors.json", errors)
         write_json(self.raw / "clock-summary.json", self.clock)
         write_json(
-            self.raw / "result.json", self.result | {"receipt_scope": "PRE_ARCHIVE_EXECUTION"}
+            self.raw / "result.json",
+            self.result | {"receipt_scope": "PRE_ARCHIVE_EXECUTION"},
         )
         archive = self.root / "raw.tar.gz"
         archived_ok, state = collect(
@@ -677,7 +733,9 @@ class Execution:
         if archived_ok:
             encrypted_ok, _ = collect(
                 "encryption",
-                lambda: encrypt(archive, self.cert, self.args.certificate_sha, encrypted),
+                lambda: encrypt(
+                    archive, self.cert, self.args.certificate_sha, encrypted
+                ),
             )
         if not encrypted_ok:
             self.result["evidence_complete"] = False
@@ -694,20 +752,29 @@ class Execution:
                     "runtime_cleanup",
                     lambda: cleanup_runtime(self.root / "guest-runtime", self.name),
                 )
-                runtime_cleanup = runtime_cleanup or {"verified_absent": False, "state": "UNKNOWN"}
+                runtime_cleanup = runtime_cleanup or {
+                    "verified_absent": False,
+                    "state": "UNKNOWN",
+                }
                 self.result["cleanup_complete"] = bool(
                     runtime_ok and runtime_cleanup["verified_absent"]
                 )
             if not self.result["cleanup_complete"]:
-                errors.append({"operation": "cleanup", "error_type": "REMOVAL_UNVERIFIED"})
+                errors.append(
+                    {"operation": "cleanup", "error_type": "REMOVAL_UNVERIFIED"}
+                )
         if errors:
             self.result.update(exit_code=1, verified=False)
         summary = public_summary(self.args.phase, self.result, self.clock)
         summary.update(
-            evidence_state="COMPLETE" if self.result["evidence_complete"] else "INCOMPLETE",
+            evidence_state="COMPLETE"
+            if self.result["evidence_complete"]
+            else "INCOMPLETE",
             cleanup_checks=checks,
             runtime_cleanup=runtime_cleanup,
-            cleanup_state="VERIFIED_ABSENT" if self.result["cleanup_complete"] else "NOT_VERIFIED",
+            cleanup_state="VERIFIED_ABSENT"
+            if self.result["cleanup_complete"]
+            else "NOT_VERIFIED",
             schema_cleanup=schema_state,
             database_recoverability="NOT_CLAIMED",
             collection_errors=errors,
@@ -737,13 +804,15 @@ def main():
     try:
         run.setup()
         run.verify()
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - Fail closed, then attempt evidence export/cleanup.
         run.result.update(exit_code=1, error_type=type(exc).__name__)
     try:
         run.finish()
-    except Exception:
+    except Exception:  # noqa: BLE001 - Export/cleanup failure returns 2 without exposing secrets.
         # No raw exception text, logs or arbitrary JSON is printed to public Actions logs.
-        print("BLOCKED_EVIDENCE_EXPORT_OR_CLEANUP; retain this runner's private originals")
+        print(
+            "BLOCKED_EVIDENCE_EXPORT_OR_CLEANUP; retain this runner's private originals"
+        )
         return 2
     print(json.dumps(public_summary(args.phase, run.result, run.clock)))
     return run.result["exit_code"]

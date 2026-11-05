@@ -56,10 +56,15 @@ class PublicSourceTests(unittest.TestCase):
             for name in (".", "scripts", "backend", "backend/src"):
                 self.assertEqual((context / name).stat().st_mode & 0o777, 0o755)
             self.assertEqual(
-                (context / "scripts/verify_t16_a3.py").read_bytes(), b"print('verified entry')\n"
+                (context / "scripts/verify_t16_a3.py").read_bytes(),
+                b"print('verified entry')\n",
             )
-            self.assertEqual((context / "scripts/verify_t16_a3.py").stat().st_mode & 0o777, 0o644)
-            self.assertEqual((context / "scripts/executable").stat().st_mode & 0o777, 0o755)
+            self.assertEqual(
+                (context / "scripts/verify_t16_a3.py").stat().st_mode & 0o777, 0o644
+            )
+            self.assertEqual(
+                (context / "scripts/executable").stat().st_mode & 0o777, 0o755
+            )
             self.assertEqual(archive.read_bytes(), before)
             self.assertEqual(private.stat().st_mode & 0o777, 0o700)
             self.assertEqual((private / "oracle.json").stat().st_mode & 0o777, 0o600)
@@ -111,12 +116,16 @@ class CacheRuntimeTests(unittest.TestCase):
             create_runtime(root, "synthetic-cache-owner")
             validate_runtime(root, "synthetic-cache-owner", os.geteuid(), os.getegid())
             for entry in root.rglob("*"):
-                self.assertEqual(entry.stat().st_mode & 0o777, 0o700 if entry.is_dir() else 0o600)
+                self.assertEqual(
+                    entry.stat().st_mode & 0o777, 0o700 if entry.is_dir() else 0o600
+                )
             with self.assertRaises(FileExistsError):
                 create_runtime(root, "synthetic-cache-owner")
             (root / "ml-cache/jieba.cache").write_bytes(b"synthetic cache")
             (root / "ml-cache/jieba.cache").chmod(0o600)
-            self.assertTrue(cleanup_runtime(root, "synthetic-cache-owner")["verified_absent"])
+            self.assertTrue(
+                cleanup_runtime(root, "synthetic-cache-owner")["verified_absent"]
+            )
             self.assertFalse(root.exists())
 
     def test_runtime_rejects_wrong_owner_mode_links_and_missing_cache(self):
@@ -141,8 +150,13 @@ class CacheRuntimeTests(unittest.TestCase):
                     (root / "ml-cache").rmdir()
                 else:
                     os.mkfifo(root / "ml-cache/fifo", 0o600)
-                with self.subTest(failure=failure), self.assertRaises((ValueError, OSError)):
-                    validate_runtime(root, "synthetic-cache-owner", os.geteuid(), os.getegid())
+                with (
+                    self.subTest(failure=failure),
+                    self.assertRaises((ValueError, OSError)),
+                ):
+                    validate_runtime(
+                        root, "synthetic-cache-owner", os.geteuid(), os.getegid()
+                    )
 
     def test_cleanup_refuses_mismatched_identity_and_retains_runtime(self):
         from t16_cache import cleanup_runtime, create_runtime
@@ -212,7 +226,9 @@ class ClockTests(unittest.TestCase):
             with self.subTest(wall=wall, mono=mono):
                 gate = ClockGate()
                 gate.sample(1_000_000_000, 1_000_000_000)
-                self.assertEqual(gate.sample(1_000_000_000 + wall, 1_000_000_000 + mono), expected)
+                self.assertEqual(
+                    gate.sample(1_000_000_000 + wall, 1_000_000_000 + mono), expected
+                )
 
     def test_offset_uses_bounded_round_trip_and_rejects_shift(self):
         from t16_clock import ClockGate
@@ -228,7 +244,9 @@ class SafetyTests(unittest.TestCase):
         from t16_admission import Execution
 
         with tempfile.TemporaryDirectory() as tmp:
-            run = Execution(SimpleNamespace(app=Path(tmp), output=Path(tmp) / "run", phase="core"))
+            run = Execution(
+                SimpleNamespace(app=Path(tmp), output=Path(tmp) / "run", phase="core")
+            )
             run.monitor = SimpleNamespace(
                 check=lambda: (_ for _ in ()).throw(RuntimeError("WALL_ROLLBACK"))
             )
@@ -249,7 +267,10 @@ class SafetyTests(unittest.TestCase):
                     ),
                     self.assertRaises(RuntimeError),
                 ):
-                    run.command([sys.executable, "-c", "import time; time.sleep(20)"], monitor=True)
+                    run.command(
+                        [sys.executable, "-c", "import time; time.sleep(20)"],
+                        monitor=True,
+                    )
                 self.assertIsNotNone(processes[0].poll())
                 # A failed Docker exec client does not prove its container process stopped.
                 run.args.phase = "bge"
@@ -260,7 +281,10 @@ class SafetyTests(unittest.TestCase):
                     ),
                     self.assertRaises(RuntimeError),
                 ):
-                    run.command([sys.executable, "-c", "import time; time.sleep(20)"], monitor=True)
+                    run.command(
+                        [sys.executable, "-c", "import time; time.sleep(20)"],
+                        monitor=True,
+                    )
                 self.assertFalse(run.workload_stopped)
             finally:
                 for process in processes:
@@ -274,7 +298,9 @@ class SafetyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             run = Execution(
-                SimpleNamespace(app=root, output=root / "run", phase="bge", ci_commit="a" * 40)
+                SimpleNamespace(
+                    app=root, output=root / "run", phase="bge", ci_commit="a" * 40
+                )
             )
             run.cert = root / "cert.pem"
             subprocess.run(
@@ -309,7 +335,9 @@ class SafetyTests(unittest.TestCase):
                 return real_run(argv, **kwargs)
 
             with (
-                patch.object(run, "command", side_effect=RuntimeError("SYNTHETIC_DUMP_FAILURE")),
+                patch.object(
+                    run, "command", side_effect=RuntimeError("SYNTHETIC_DUMP_FAILURE")
+                ),
                 patch("t16_admission.subprocess.run", side_effect=transport),
             ):
                 run.finish()
@@ -324,11 +352,15 @@ class SafetyTests(unittest.TestCase):
         from t16_admission import Execution
 
         with tempfile.TemporaryDirectory() as tmp:
-            args = SimpleNamespace(app=Path(tmp), output=Path(tmp) / "owned", phase="core")
+            args = SimpleNamespace(
+                app=Path(tmp), output=Path(tmp) / "owned", phase="core"
+            )
             run = Execution(args)
             run.deadline = 0
             with patch("t16_admission.subprocess.run"):
-                run.command([sys.executable, "-c", "print('synthetic export')"], export=True)
+                run.command(
+                    [sys.executable, "-c", "print('synthetic export')"], export=True
+                )
             self.assertIn("synthetic export", (run.raw / "command-01.log").read_text())
 
     def test_failing_counts_cannot_be_hidden_by_zero_exit_receipts(self):
@@ -429,7 +461,9 @@ class SafetyTests(unittest.TestCase):
     def test_missing_success_proof_is_not_pass(self):
         from t16_evidence import public_summary
 
-        self.assertEqual(public_summary("bge", {"exit_code": 0}, {})["result"], "BLOCKED")
+        self.assertEqual(
+            public_summary("bge", {"exit_code": 0}, {})["result"], "BLOCKED"
+        )
 
     def test_archive_rejects_symlinks_and_oversized_originals(self):
         from t16_evidence import bundle
@@ -599,7 +633,10 @@ class CoreProofTests(unittest.TestCase):
                     self.proof()
 
     def test_mixed_failure_or_skip_summary_is_rejected(self):
-        for line in ("Tests 85 passed | 1 failed (86)", "Tests 85 passed | 1 skipped (86)"):
+        for line in (
+            "Tests 85 passed | 1 failed (86)",
+            "Tests 85 passed | 1 skipped (86)",
+        ):
             with self.subTest(summary=line):
                 self.write_result("vitest", "Test Files 13 passed (13)\n" + line + "\n")
                 with self.assertRaises(ValueError):
@@ -665,7 +702,11 @@ class CoreProofTests(unittest.TestCase):
             self.proof()
 
     def test_pytest_contract_is_unchanged(self):
-        for text in ("822 passed, 14 skipped", "834 passed, 13 skipped", "834 passed, 15 skipped"):
+        for text in (
+            "822 passed, 14 skipped",
+            "834 passed, 13 skipped",
+            "834 passed, 15 skipped",
+        ):
             with self.subTest(summary=text):
                 self.write_result("pytest", text + "\n")
                 with self.assertRaises(ValueError):
@@ -698,15 +739,26 @@ def synthetic_bge(raw, app):
     from t16_evidence import write_json
 
     tree = ast.parse((app / "backend/tests/test_t16_a3_oracle.py").read_text())
-    function = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "sample")
-    function.body = [n for n in function.body if not isinstance(n, (ast.Import, ast.ImportFrom))]
+    function = next(
+        n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "sample"
+    )
+    function.body = [
+        n for n in function.body if not isinstance(n, (ast.Import, ast.ImportFrom))
+    ]
     scope = {
         "deepcopy": deepcopy,
         "payload_hash": lambda x: hashlib.sha256(
-            json.dumps(x, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+            json.dumps(
+                x, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+            ).encode()
         ).hexdigest(),
     }
-    exec(compile(ast.Module(body=[function], type_ignores=[]), "synthetic-fixture", "exec"), scope)
+    exec(  # noqa: S102 - Execute only the repository's synthetic fixture, never CI evidence.
+        compile(
+            ast.Module(body=[function], type_ignores=[]), "synthetic-fixture", "exec"
+        ),
+        scope,
+    )
     expected, observed, cp = scope["sample"]()
     from t16_admission import FINGERPRINT
 
@@ -757,7 +809,9 @@ def synthetic_bge(raw, app):
             "real_provider_requests": 0,
             "real_key_read": False,
         },
-        "verifier_files": {p: hashlib.sha256((app / p).read_bytes()).hexdigest() for p in files},
+        "verifier_files": {
+            p: hashlib.sha256((app / p).read_bytes()).hexdigest() for p in files
+        },
     }
     messages = [
         "推荐300元以内的静音键盘，不要购买。",
@@ -774,7 +828,9 @@ def synthetic_bge(raw, app):
                     "candidate_sets": [{"items": [{"id": "other"}, {"id": "sku"}]}],
                 },
             }
-            for i, (rid, message) in enumerate(zip(expected["run_ids"], messages, strict=True))
+            for i, (rid, message) in enumerate(
+                zip(expected["run_ids"], messages, strict=True)
+            )
         ],
         before_confirmation={
             "orders": [],
@@ -822,7 +878,9 @@ def synthetic_bge(raw, app):
         },
     )
     write_json(verification / "business-oracle.json", oracle)
-    digest = hashlib.sha256((verification / "business-oracle.json").read_bytes()).hexdigest()
+    digest = hashlib.sha256(
+        (verification / "business-oracle.json").read_bytes()
+    ).hexdigest()
     write_json(
         verification / "result.json",
         {
@@ -862,7 +920,9 @@ def synthetic_pipeline(directory):
 
     app = Path(__file__).resolve().parents[2]
     run = Execution(
-        SimpleNamespace(app=app, output=directory / "run", phase="bge", ci_commit="a" * 40)
+        SimpleNamespace(
+            app=app, output=directory / "run", phase="bge", ci_commit="a" * 40
+        )
     )
     synthetic_bge(run.raw, app)
     from t16_cache import create_runtime
@@ -902,7 +962,9 @@ def inspect_synthetic_pipeline(run, key):
 
     summary = json.loads((run.public / "summary.json").read_text())
     cipher = run.public / "raw-evidence.cms.der"
-    assert hashlib.sha256(cipher.read_bytes()).hexdigest() == summary["ciphertext_sha256"]
+    assert (
+        hashlib.sha256(cipher.read_bytes()).hexdigest() == summary["ciphertext_sha256"]
+    )
     decoded = run.root / "decoded.tgz"
     subprocess.run(
         [
@@ -924,7 +986,10 @@ def inspect_synthetic_pipeline(run, key):
         check=True,
         capture_output=True,
     )
-    assert hashlib.sha256(decoded.read_bytes()).hexdigest() == summary["originals_tar_sha256"]
+    assert (
+        hashlib.sha256(decoded.read_bytes()).hexdigest()
+        == summary["originals_tar_sha256"]
+    )
     state = verify_bundle(decoded)
     assert state["complete"] == summary["evidence_complete"]
     return summary
@@ -1008,11 +1073,15 @@ class EvidencePipelineTests(unittest.TestCase):
 
         (self.raw / "original").write_bytes(b"synthetic evidence")
         archive = self.root / "raw.tgz"
-        with patch.object(
-            tarfile.TarFile, "addfile", side_effect=OSError("synthetic archive failure")
+        with (
+            patch.object(
+                tarfile.TarFile,
+                "addfile",
+                side_effect=OSError("synthetic archive failure"),
+            ),
+            self.assertRaises(OSError),
         ):
-            with self.assertRaises(OSError):
-                bundle(self.raw, archive)
+            bundle(self.raw, archive)
         self.assertFalse(archive.exists())
 
     def test_links_and_special_files_cannot_escape_archive(self):
@@ -1096,7 +1165,9 @@ class EvidencePipelineTests(unittest.TestCase):
     def test_cleanup_must_verify_absence_not_just_zero_remove_exit(self):
         from t16_admission import Execution
 
-        run = Execution(SimpleNamespace(app=self.app, output=self.root / "owned", phase="bge"))
+        run = Execution(
+            SimpleNamespace(app=self.app, output=self.root / "owned", phase="bge")
+        )
         run.created = [("container", run.guest)]
         with patch(
             "t16_admission.subprocess.run",
@@ -1119,7 +1190,9 @@ class EvidencePipelineTests(unittest.TestCase):
             bundle(self.raw, self.root / "strict.tgz", limit=4096)
         status = bundle(self.raw, self.root / "partial.tgz", limit=4096, partial=True)
         self.assertFalse(status["complete"])
-        self.assertFalse(verify_bundle(self.root / "partial.tgz", limit=4096)["complete"])
+        self.assertFalse(
+            verify_bundle(self.root / "partial.tgz", limit=4096)["complete"]
+        )
         run, key = synthetic_pipeline(self.root)
         cipher = self.root / "bounded.cms.der"
         encrypt(self.root / "partial.tgz", run.cert, run.args.certificate_sha, cipher)
@@ -1205,14 +1278,24 @@ def linux_ownership_suite():
                 f"sys.path.insert(0,{str(Path(__file__).parent)!r}); root=Path(sys.argv[1]); "
             )
             return subprocess.run(
-                [sys.executable, "-c", header + "\n" + textwrap.dedent(code), str(self.root)],
+                [
+                    sys.executable,
+                    "-c",
+                    header + "\n" + textwrap.dedent(code),
+                    str(self.root),
+                ],
+                check=False,
                 user=uid,
                 group=uid,
                 extra_groups=[],
                 capture_output=True,
                 text=True,
                 timeout=timeout,
-                env={"PATH": os.environ["PATH"], "HOME": str(self.root), "TMPDIR": str(self.root)},
+                env={
+                    "PATH": os.environ["PATH"],
+                    "HOME": str(self.root),
+                    "TMPDIR": str(self.root),
+                },
             )
 
         def expect(self, code):
@@ -1294,7 +1377,9 @@ def linux_ownership_suite():
             raw = self.root / "raw"
             raw.mkdir(mode=0o700)
             os.chown(raw, 1001, 1001)
-            denied = self.child("(root/'raw/unauthorized').write_text('synthetic')", uid=1002)
+            denied = self.child(
+                "(root/'raw/unauthorized').write_text('synthetic')", uid=1002
+            )
             self.assertNotEqual(denied.returncode, 0)
             self.assertFalse((raw / "unauthorized").exists())
             self.expect("""
@@ -1360,7 +1445,9 @@ def linux_ownership_suite():
             from t16_admission import stage_public_helpers
 
             target = self.root / "ci_harness"
-            stage_public_helpers(Path(__file__).parent, target)  # Root owner, as Docker COPY.
+            stage_public_helpers(
+                Path(__file__).parent, target
+            )  # Root owner, as Docker COPY.
             self.expect("""
                 import subprocess
                 helper=root/'ci_harness/t16_clock.py'
@@ -1370,7 +1457,9 @@ def linux_ownership_suite():
                 assert process.returncode==0,process.stderr
             """)
 
-        def test_full_public_tree_is_readable_across_uid_without_exposing_private_evidence(self):
+        def test_full_public_tree_is_readable_across_uid_without_exposing_private_evidence(
+            self,
+        ):
             from t16_admission import stage_public_source
 
             archive = PublicSourceTests().source_archive(self.root)
@@ -1514,6 +1603,7 @@ def bge_image_suite(image, context):
             try:
                 return subprocess.run(
                     argv + [image, "python", "-c", code],
+                    check=False,
                     env=environment,
                     capture_output=True,
                     text=True,
@@ -1521,18 +1611,25 @@ def bge_image_suite(image, context):
                 )
             finally:
                 query = docker + ["ps", "-aq", "--filter", f"name=^/{name}$"]
-                observed = subprocess.run(query, env=environment, capture_output=True, timeout=15)
+                observed = subprocess.run(
+                    query, check=False, env=environment, capture_output=True, timeout=15
+                )
                 if observed.returncode:
                     raise RuntimeError("IMAGE_TEST_CLEANUP_UNKNOWN")
                 if observed.stdout.strip():
                     subprocess.run(
                         docker + ["rm", "-f", name],
+                        check=False,
                         env=environment,
                         capture_output=True,
                         timeout=15,
                     )
                     observed = subprocess.run(
-                        query, env=environment, capture_output=True, timeout=15
+                        query,
+                        check=False,
+                        env=environment,
+                        capture_output=True,
+                        timeout=15,
                     )
                     if observed.returncode or observed.stdout.strip():
                         raise RuntimeError("IMAGE_TEST_CLEANUP_UNVERIFIED")
@@ -1602,7 +1699,12 @@ def cache_image_suite(image, context):
     class CacheImageTests(unittest.TestCase):
         def command(self, args):
             return subprocess.run(
-                docker + args, env=environment, capture_output=True, text=True, timeout=150
+                docker + args,
+                check=False,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=150,
             )
 
         def setUp(self):
@@ -1612,10 +1714,14 @@ def cache_image_suite(image, context):
             self.addCleanup(self.directory.cleanup)
             public = Path(self.directory.name)
             public.chmod(0o755)
-            shutil.copyfile(Path(__file__).with_name("t16_cache.py"), public / "t16_cache.py")
+            shutil.copyfile(
+                Path(__file__).with_name("t16_cache.py"), public / "t16_cache.py"
+            )
             (public / "t16_cache.py").chmod(0o644)
             self.helper = public
-            self.assertEqual(self.command(["volume", "create", self.volume]).returncode, 0)
+            self.assertEqual(
+                self.command(["volume", "create", self.volume]).returncode, 0
+            )
             self.addCleanup(self.remove_owned)
             inspected = self.command(["volume", "inspect", self.volume])
             self.assertEqual(inspected.returncode, 0, inspected.stderr)
@@ -1655,14 +1761,20 @@ create_runtime(Path('/owned/guest-runtime'),'synthetic-cache-owner')
             for name in self.names:
                 result = self.command(["ps", "-aq", "--filter", f"name=^/{name}$"])
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertFalse(result.stdout.strip(), "cache test container not removed")
+                self.assertFalse(
+                    result.stdout.strip(), "cache test container not removed"
+                )
             removed = self.command(["volume", "rm", self.volume])
             self.assertEqual(removed.returncode, 0, removed.stderr)
-            observed = self.command(["volume", "ls", "-q", "--filter", f"name=^{self.volume}$"])
+            observed = self.command(
+                ["volume", "ls", "-q", "--filter", f"name=^{self.volume}$"]
+            )
             self.assertEqual(observed.returncode, 0, observed.stderr)
             self.assertFalse(observed.stdout.strip())
 
-        def preflight(self, *, target="ml-cache", cache_readonly=False, mount_cache=True):
+        def preflight(
+            self, *, target="ml-cache", cache_readonly=False, mount_cache=True
+        ):
             name = "am-t16-cache-probe-" + uuid4().hex
             self.names.append(name)
             args = [
@@ -1715,7 +1827,9 @@ create_runtime(Path('/owned/guest-runtime'),'synthetic-cache-owner')
 
         def rejected(self, result):
             self.assertEqual(result.returncode, 2, result.stderr)
-            self.assertEqual(json.loads(result.stdout)["status"], "NONROOT_CACHE_PREFLIGHT_FAILED")
+            self.assertEqual(
+                json.loads(result.stdout)["status"], "NONROOT_CACHE_PREFLIGHT_FAILED"
+            )
 
         def test_real_jieba_and_cpu_encoder_succeed_without_network(self):
             result = self.preflight()
@@ -1731,7 +1845,9 @@ create_runtime(Path('/owned/guest-runtime'),'synthetic-cache-owner')
             # Another process must be able to read the same cache without rebuilding.
             again = self.preflight()
             self.assertEqual(again.returncode, 0, again.stdout + again.stderr)
-            self.assertEqual(json.loads(again.stdout)["cache_sha256"], record["cache_sha256"])
+            self.assertEqual(
+                json.loads(again.stdout)["cache_sha256"], record["cache_sha256"]
+            )
 
         def test_missing_mount_is_rejected(self):
             self.rejected(self.preflight(mount_cache=False))
@@ -1754,7 +1870,9 @@ create_runtime(Path('/owned/guest-runtime'),'synthetic-cache-owner')
             self.rejected(self.preflight())
 
         def test_nonwritable_mode_is_rejected(self):
-            result = self.root_command("import os;os.chmod('/owned/guest-runtime/ml-cache',0o500)")
+            result = self.root_command(
+                "import os;os.chmod('/owned/guest-runtime/ml-cache',0o500)"
+            )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.rejected(self.preflight())
 
@@ -1772,10 +1890,20 @@ shutil.copytree('/owned/guest-runtime/ml-cache','/owned/guest-runtime/wrong-cach
 
 if __name__ == "__main__":
     os.umask(0o077)
-    if len(sys.argv) == 5 and sys.argv[1] == "--bge-image" and sys.argv[3] == "--docker-context":
-        result = unittest.TextTestRunner(verbosity=2).run(bge_image_suite(sys.argv[2], sys.argv[4]))
+    if (
+        len(sys.argv) == 5
+        and sys.argv[1] == "--bge-image"
+        and sys.argv[3] == "--docker-context"
+    ):
+        result = unittest.TextTestRunner(verbosity=2).run(
+            bge_image_suite(sys.argv[2], sys.argv[4])
+        )
         raise SystemExit(not result.wasSuccessful())
-    if len(sys.argv) == 5 and sys.argv[1] == "--cache-image" and sys.argv[3] == "--docker-context":
+    if (
+        len(sys.argv) == 5
+        and sys.argv[1] == "--cache-image"
+        and sys.argv[3] == "--docker-context"
+    ):
         result = unittest.TextTestRunner(verbosity=2).run(
             cache_image_suite(sys.argv[2], sys.argv[4])
         )

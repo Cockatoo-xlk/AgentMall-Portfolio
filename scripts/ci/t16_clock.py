@@ -89,12 +89,14 @@ class Monitor:
                 while not self.stop.is_set():
                     wall, mono = time.time_ns(), time.monotonic_ns()
                     error = self.host.sample(wall, mono)
-                    stream.write(json.dumps({"wall": wall, "mono": mono, "error": error}) + "\n")
+                    stream.write(
+                        json.dumps({"wall": wall, "mono": mono, "error": error}) + "\n"
+                    )
                     self.last_host = time.monotonic()
                     if error:
                         self.events.put(error)
                     self.stop.wait(0.01)
-        except Exception:
+        except Exception:  # noqa: BLE001 - Any host sampler failure must reject clock admission.
             self.events.put("HOST_SAMPLER_ERROR")
         finally:
             if not self.stop.is_set():
@@ -111,13 +113,17 @@ class Monitor:
                     if row["kind"] == "sample":
                         error = self.guest.sample(row["wall"], row["mono"])
                     elif row["kind"] == "pong":
-                        error = self.guest.offset(self.pings.pop(row["id"]), now, row["wall"])
+                        error = self.guest.offset(
+                            self.pings.pop(row["id"]), now, row["wall"]
+                        )
                     else:
                         raise ValueError("UNKNOWN_CLOCK_FRAME")
-                    stream.write(json.dumps(row | {"host_received": now, "error": error}) + "\n")
+                    stream.write(
+                        json.dumps(row | {"host_received": now, "error": error}) + "\n"
+                    )
                     if error:
                         self.events.put(error)
-        except Exception:
+        except Exception:  # noqa: BLE001 - Any guest sampler failure must reject clock admission.
             self.events.put("SAMPLER_ERROR")
         finally:
             if not self.stop.is_set():
@@ -145,7 +151,10 @@ class Monitor:
         while time.monotonic() < end:
             self.check()
             time.sleep(0.01)
-        if min(self.host.samples, self.guest.samples) < 5000 or len(self.guest.offsets) < 30:
+        if (
+            min(self.host.samples, self.guest.samples) < 5000
+            or len(self.guest.offsets) < 30
+        ):
             raise RuntimeError("INSUFFICIENT_CLOCK_OBSERVATIONS")
 
     def close(self):

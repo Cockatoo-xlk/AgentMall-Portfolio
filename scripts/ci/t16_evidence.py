@@ -15,12 +15,16 @@ from pathlib import PurePosixPath
 
 def write_json(path, data):
     payload = (json.dumps(data, indent=2, ensure_ascii=False) + "\n").encode()
-    with os.fdopen(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "wb") as stream:
+    with os.fdopen(
+        os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "wb"
+    ) as stream:
         stream.write(payload)
         stream.flush()
         os.fsync(stream.fileno())
     sidecar = path.with_suffix(path.suffix + ".sha256")
-    with os.fdopen(os.open(sidecar, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w") as stream:
+    with os.fdopen(
+        os.open(sidecar, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w"
+    ) as stream:
         stream.write(hashlib.sha256(payload).hexdigest() + "\n")
         stream.flush()
         os.fsync(stream.fileno())
@@ -55,11 +59,16 @@ def _snapshot(raw, limit, partial=False):
                     stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)
                 ):
                     raise ValueError("UNSAFE_EVIDENCE_ENTRY")
-                private = info.st_uid == os.geteuid() and not stat.S_IMODE(info.st_mode) & 0o077
+                private = (
+                    info.st_uid == os.geteuid()
+                    and not stat.S_IMODE(info.st_mode) & 0o077
+                )
                 if not private:
                     problem(path, ValueError("PRIVATE_OWNER_REQUIRED"))
                 if stat.S_ISDIR(info.st_mode):
-                    child = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+                    child = os.open(
+                        name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd
+                    )
                     try:
                         walk(child, path + "/")
                     finally:
@@ -73,12 +82,17 @@ def _snapshot(raw, limit, partial=False):
                         raise ValueError("UNSAFE_EVIDENCE_ENTRY")
                     if info.st_size + total > limit:
                         raise ValueError("EVIDENCE_SIZE_LIMIT")
-                    file_fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
+                    file_fd = os.open(
+                        name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd
+                    )
                     with os.fdopen(file_fd, "rb") as stream:
                         before = os.fstat(stream.fileno())
                         if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1:
                             raise ValueError("UNSAFE_EVIDENCE_ENTRY")
-                        if before.st_uid != os.geteuid() or stat.S_IMODE(before.st_mode) & 0o077:
+                        if (
+                            before.st_uid != os.geteuid()
+                            or stat.S_IMODE(before.st_mode) & 0o077
+                        ):
                             problem(path, ValueError("PRIVATE_OWNER_REQUIRED"))
                         if (before.st_dev, before.st_ino) != (info.st_dev, info.st_ino):
                             raise ValueError("EVIDENCE_CHANGED")
@@ -137,7 +151,10 @@ def verify_bundle(path, *, limit=100_000_000):
         raise ValueError("ARCHIVE_INVENTORY_MISMATCH")
     for ref in refs:
         data = values[ref["path"]]
-        if len(data) != ref["size"] or hashlib.sha256(data).hexdigest() != ref["sha256"]:
+        if (
+            len(data) != ref["size"]
+            or hashlib.sha256(data).hexdigest() != ref["sha256"]
+        ):
             raise ValueError("ARCHIVE_FILE_HASH")
     return json.loads(values["evidence-status.json"])
 
@@ -150,7 +167,9 @@ def bundle(raw, output, *, limit=100_000_000, partial=False):
             "state": "INCOMPLETE" if partial or errors else "COMPLETE",
             "errors": errors,
         }
-        packed = files | {"evidence-status.json": (json.dumps(status, indent=2) + "\n").encode()}
+        packed = files | {
+            "evidence-status.json": (json.dumps(status, indent=2) + "\n").encode()
+        }
         refs = [
             {"path": p, "size": len(data), "sha256": hashlib.sha256(data).hexdigest()}
             for p, data in sorted(packed.items())
@@ -180,7 +199,9 @@ def bundle(raw, output, *, limit=100_000_000, partial=False):
             stream.flush()
             os.fsync(stream.fileno())
         verified = verify_bundle(name, limit=limit)
-        os.link(name, output)  # Atomic no-overwrite publication, never replace old evidence.
+        os.link(
+            name, output
+        )  # Atomic no-overwrite publication, never replace old evidence.
         return verified
     finally:
         os.unlink(name)
@@ -268,7 +289,8 @@ def public_summary(phase, result, clock):
     value["counts"] = {
         k: v
         for k, v in counts.items()
-        if k in {"pytest_passed", "pytest_skipped", "vitest_passed", "playwright_passed"}
+        if k
+        in {"pytest_passed", "pytest_skipped", "vitest_passed", "playwright_passed"}
         and type(v) is int
         and v >= 0
     }
@@ -424,7 +446,10 @@ def bge_proof(raw, app):
         or ownership["schema_state"] != "OWNED"
         or ownership["schemas"] != oracle["schemas"]
         or oracle["schemas"]
-        != [environment["settings"]["db_schema"], environment["settings"]["checkpoint_schema"]]
+        != [
+            environment["settings"]["db_schema"],
+            environment["settings"]["checkpoint_schema"],
+        ]
         or policy["evidence_mode"] != "MOCK_TRANSPORT"
         or policy["source_sha256"] != oracle["source_fingerprint"]
     ):
@@ -436,7 +461,8 @@ def bge_proof(raw, app):
         binding != ledger["binding"]
         or binding != oracle["mock_policy_sha256"]
         or len(ledger["attempts"]) != oracle["mock_requests"]
-        or {a["run_id"] for a in ledger["attempts"]} != set(oracle["expected"]["run_ids"])
+        or {a["run_id"] for a in ledger["attempts"]}
+        != set(oracle["expected"]["run_ids"])
     ):
         raise ValueError("MOCK_LEDGER_MISMATCH")
     stages = oracle["stages"]
@@ -476,7 +502,10 @@ def bge_proof(raw, app):
         or model["dimension"] != 512
         or model["device"] != "cpu"
         or len(model["files"]) != 6
-        or {v["file"]: {k: v[k] for k in ("sha256", "size_bytes")} for v in model["files"]}
+        or {
+            v["file"]: {k: v[k] for k in ("sha256", "size_bytes")}
+            for v in model["files"]
+        }
         != manifest["files"]
         or len(retrieval["cases"]) != 14
         or retrieval["filters_before_limit"] is not True
@@ -496,14 +525,21 @@ def bge_proof(raw, app):
         raise ValueError("FROZEN_VERIFIER_MISMATCH")
     # Only execute the already source-bound pure validator, never checkpoint deserialization.
     tree = ast.parse((app / "backend/tests/t16_a3_oracle.py").read_text())
-    function = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "validate")
+    function = next(
+        n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "validate"
+    )
     scope = {"json": json, "hashlib": hashlib}
-    exec(compile(ast.Module(body=[function], type_ignores=[]), "frozen-oracle", "exec"), scope)
+    exec(  # noqa: S102 - Pure validator from the source-bound app, SHA-checked above; not evidence.
+        compile(ast.Module(body=[function], type_ignores=[]), "frozen-oracle", "exec"),
+        scope,
+    )
     if (
         oracle["status"] != "PASS"
         or oracle["violations"]
         or oracle["general_oracle"]["violations"]
-        or scope["validate"](oracle["observed"], oracle["expected"], oracle["checkpoints"])
+        or scope["validate"](
+            oracle["observed"], oracle["expected"], oracle["checkpoints"]
+        )
         or result["order_id"] != oracle["observed"]["orders"][0]["id"]
         or oracle["offline_boundary"]["external_attempts"] != 0
         or oracle["offline_boundary"]["real_provider_requests"] != 0

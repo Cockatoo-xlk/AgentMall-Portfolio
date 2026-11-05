@@ -84,8 +84,12 @@ def validate_mount(root, runtime, owner, uid, gid):
     validate_runtime(runtime, owner, uid, gid)
     cache = root / ".ml-cache"
     private_entry(cache, uid, gid, True)
-    mounted = [line.split() for line in Path("/proc/self/mountinfo").read_text().splitlines()]
-    if not any(fields[4] == str(cache) and "rw" in fields[5].split(",") for fields in mounted):
+    mounted = [
+        line.split() for line in Path("/proc/self/mountinfo").read_text().splitlines()
+    ]
+    if not any(
+        fields[4] == str(cache) and "rw" in fields[5].split(",") for fields in mounted
+    ):
         raise ValueError("DEDICATED_CACHE_BIND_MOUNT_REQUIRED")
     if not os.path.samestat(cache.stat(), (runtime / "ml-cache").stat()):
         raise ValueError("CACHE_BIND_SOURCE_MISMATCH")
@@ -152,7 +156,10 @@ def probe(owner, uid, gid):
             raise ValueError("SIX_PINNED_MODEL_FILES_REQUIRED")
         for name, ref in manifest["files"].items():
             data = (root / ".models" / manifest["revision"] / name).read_bytes()
-            if len(data) != ref["size_bytes"] or hashlib.sha256(data).hexdigest() != ref["sha256"]:
+            if (
+                len(data) != ref["size_bytes"]
+                or hashlib.sha256(data).hexdigest() != ref["sha256"]
+            ):
                 raise ValueError("PINNED_MODEL_FILE_MISMATCH")
         from agentmall.retrieval.embedding import LocalEncoder
         from agentmall.retrieval.tokenize import document_tokens, tokenizer
@@ -171,8 +178,13 @@ def probe(owner, uid, gid):
         )
         second = document_tokens(text)
         tokenizer.cache_clear()
-        reloaded = document_tokens(text)  # New Jieba instance reads the persisted cache.
-        after = (hashlib.sha256(cache_file.read_bytes()).hexdigest(), cache_file.stat().st_mtime_ns)
+        reloaded = document_tokens(
+            text
+        )  # New Jieba instance reads the persisted cache.
+        after = (
+            hashlib.sha256(cache_file.read_bytes()).hexdigest(),
+            cache_file.stat().st_mtime_ns,
+        )
         if not first or first != second or first != reloaded or before != after:
             raise ValueError("TOKENIZER_CACHE_RELOAD_MISMATCH")
         validate_runtime(runtime, owner, uid, gid)
@@ -204,7 +216,7 @@ def main():
     args = parser.parse_args()
     try:
         print(json.dumps(probe(args.owner, args.uid, args.gid)))
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - Every preflight failure returns redacted error/exit 2.
         code = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
         if not re.fullmatch(r"[A-Z_]{1,100}", code):
             code = type(exc).__name__
