@@ -15,6 +15,7 @@ import tarfile
 import time
 from pathlib import Path, PurePosixPath
 
+from t16_cache import cleanup_runtime, create_runtime
 from t16_clock import Monitor
 from t16_evidence import (
     bge_proof,
@@ -122,7 +123,7 @@ def stage_public_helpers(source, destination):
     """Docker COPY makes these public code files root-owned; guest still needs read access."""
     destination.mkdir(mode=0o755)
     destination.chmod(0o755)
-    for name in ("t16_clock.py", "t16_models.py", "T16Bge.Dockerfile"):
+    for name in ("t16_clock.py", "t16_models.py", "t16_cache.py", "T16Bge.Dockerfile"):
         target = destination / name
         shutil.copyfile(source / name, target)
         target.chmod(0o644)  # Nonsecret reviewed source only, never private evidence/state.
@@ -399,9 +400,7 @@ class Execution:
         if self.args.phase == "bge":
             user = guest_identity(os.geteuid(), os.getegid())
             runtime = self.root / "guest-runtime"
-            runtime.mkdir(mode=0o700)
-            for directory in ("home", "cache", "tmp"):
-                (runtime / directory).mkdir(mode=0o700)
+            create_runtime(runtime, self.name)
             env_file = self.raw / "verification.env"
             env_file.write_text(
                 f"AGENTMALL_TEST_DATABASE_URL=postgresql+psycopg://agentmall:{self.password}@127.0.0.1:55433/agentmall_test\n"
@@ -437,6 +436,8 @@ class Execution:
                     str(self.raw) + ":/private",
                     "-v",
                     str(runtime) + ":/runtime",
+                    "--mount",
+                    f"type=bind,source={runtime / 'ml-cache'},target=/work/.ml-cache",
                     self.name + ":bge",
                     "sleep",
                     "infinity",
@@ -472,6 +473,22 @@ class Execution:
             self.command(
                 ["docker", "exec", self.guest, "python", "scripts/verify_t16_a3.py", "--help"],
                 timeout=30,
+            )
+            self.command(
+                [
+                    "docker",
+                    "exec",
+                    self.guest,
+                    "python",
+                    "/work/ci_harness/t16_cache.py",
+                    "--owner",
+                    self.name,
+                    "--uid",
+                    str(os.geteuid()),
+                    "--gid",
+                    str(os.getegid()),
+                ],
+                timeout=120,
             )
         self.monitor = Monitor(self.guest, guest_script, self.raw)
 
@@ -665,12 +682,22 @@ class Execution:
         if not encrypted_ok:
             self.result["evidence_complete"] = False
         checks = []
+        runtime_cleanup = {"verified_absent": False, "state": "RETAINED_OR_NOT_CREATED"}
         if self.result["evidence_complete"] and encrypted_ok:
             clean_ok, checks = collect("cleanup", self.cleanup_owned)
             checks = checks or []
             self.result["cleanup_complete"] = bool(
                 clean_ok and all(c["verified_absent"] for c in checks)
             )
+            if self.result["cleanup_complete"] and self.args.phase == "bge":
+                runtime_ok, runtime_cleanup = collect(
+                    "runtime_cleanup",
+                    lambda: cleanup_runtime(self.root / "guest-runtime", self.name),
+                )
+                runtime_cleanup = runtime_cleanup or {"verified_absent": False, "state": "UNKNOWN"}
+                self.result["cleanup_complete"] = bool(
+                    runtime_ok and runtime_cleanup["verified_absent"]
+                )
             if not self.result["cleanup_complete"]:
                 errors.append({"operation": "cleanup", "error_type": "REMOVAL_UNVERIFIED"})
         if errors:
@@ -679,6 +706,7 @@ class Execution:
         summary.update(
             evidence_state="COMPLETE" if self.result["evidence_complete"] else "INCOMPLETE",
             cleanup_checks=checks,
+            runtime_cleanup=runtime_cleanup,
             cleanup_state="VERIFIED_ABSENT" if self.result["cleanup_complete"] else "NOT_VERIFIED",
             schema_cleanup=schema_state,
             database_recoverability="NOT_CLAIMED",

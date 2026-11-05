@@ -102,6 +102,83 @@ class PublicSourceTests(unittest.TestCase):
                 self.assertFalse((root / f"build-{index}").exists())
 
 
+class CacheRuntimeTests(unittest.TestCase):
+    def test_exclusive_private_runtime_and_safe_cleanup(self):
+        from t16_cache import cleanup_runtime, create_runtime, validate_runtime
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "guest-runtime"
+            create_runtime(root, "synthetic-cache-owner")
+            validate_runtime(root, "synthetic-cache-owner", os.geteuid(), os.getegid())
+            for entry in root.rglob("*"):
+                self.assertEqual(entry.stat().st_mode & 0o777, 0o700 if entry.is_dir() else 0o600)
+            with self.assertRaises(FileExistsError):
+                create_runtime(root, "synthetic-cache-owner")
+            (root / "ml-cache/jieba.cache").write_bytes(b"synthetic cache")
+            (root / "ml-cache/jieba.cache").chmod(0o600)
+            self.assertTrue(cleanup_runtime(root, "synthetic-cache-owner")["verified_absent"])
+            self.assertFalse(root.exists())
+
+    def test_runtime_rejects_wrong_owner_mode_links_and_missing_cache(self):
+        from t16_cache import create_runtime, validate_runtime
+
+        with tempfile.TemporaryDirectory() as tmp:
+            for index, failure in enumerate(
+                ("owner", "mode", "symlink", "hardlink", "missing", "fifo")
+            ):
+                root = Path(tmp) / str(index)
+                create_runtime(root, "synthetic-cache-owner")
+                if failure == "owner":
+                    (root / "ml-cache/.owner.json").write_text("{}")
+                elif failure == "mode":
+                    (root / "ml-cache").chmod(0o755)
+                elif failure == "symlink":
+                    (root / "ml-cache/escape").symlink_to(tmp)
+                elif failure == "hardlink":
+                    os.link(root / "ml-cache/.owner.json", root / "ml-cache/linked")
+                elif failure == "missing":
+                    (root / "ml-cache/.owner.json").unlink()
+                    (root / "ml-cache").rmdir()
+                else:
+                    os.mkfifo(root / "ml-cache/fifo", 0o600)
+                with self.subTest(failure=failure), self.assertRaises((ValueError, OSError)):
+                    validate_runtime(root, "synthetic-cache-owner", os.geteuid(), os.getegid())
+
+    def test_cleanup_refuses_mismatched_identity_and_retains_runtime(self):
+        from t16_cache import cleanup_runtime, create_runtime
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "guest-runtime"
+            create_runtime(root, "synthetic-cache-owner")
+            with self.assertRaises(ValueError):
+                cleanup_runtime(root, "different-owner")
+            self.assertTrue(root.is_dir())
+
+    def test_runtime_cleanup_failure_cannot_report_complete_cleanup(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run, _ = synthetic_pipeline(Path(tmp))
+            with patch("t16_admission.cleanup_runtime", side_effect=PermissionError):
+                run.finish()
+            summary = json.loads((run.public / "summary.json").read_text())
+            self.assertFalse(summary["cleanup_complete"])
+            self.assertEqual(summary["runtime_cleanup"]["state"], "UNKNOWN")
+            self.assertEqual(summary["result"], "FAIL")
+            self.assertTrue((run.root / "guest-runtime/ml-cache").is_dir())
+
+    def test_cleanup_failure_is_not_absence(self):
+        from t16_cache import cleanup_runtime, create_runtime
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "guest-runtime"
+            create_runtime(root, "synthetic-cache-owner")
+            with (
+                patch("t16_cache.shutil.rmtree", side_effect=PermissionError),
+                self.assertRaises(PermissionError),
+            ):
+                cleanup_runtime(root, "synthetic-cache-owner")
+            self.assertTrue(root.exists())
+
+
 class ClockTests(unittest.TestCase):
     def test_host_log_failure_is_a_fatal_clock_event(self):
         from t16_clock import ClockGate, Monitor
@@ -788,6 +865,9 @@ def synthetic_pipeline(directory):
         SimpleNamespace(app=app, output=directory / "run", phase="bge", ci_commit="a" * 40)
     )
     synthetic_bge(run.raw, app)
+    from t16_cache import create_runtime
+
+    create_runtime(run.root / "guest-runtime", run.name)
     run.cert = directory / "synthetic.cert.pem"
     key = directory / "synthetic.key.pem"
     subprocess.run(
@@ -1312,6 +1392,31 @@ def linux_ownership_suite():
                     pass
             """)
 
+        def test_cache_runtime_cannot_be_read_or_adopted_by_other_uid(self):
+            self.expect("""
+                from t16_cache import create_runtime, validate_runtime
+                create_runtime(root/'guest-runtime','synthetic-cache-owner')
+                validate_runtime(root/'guest-runtime','synthetic-cache-owner',1001,1001)
+            """)
+            os.chmod(self.root, 0o755)
+            other = self.child(
+                """
+                from t16_cache import validate_runtime
+                try:
+                    validate_runtime(root/'guest-runtime','synthetic-cache-owner',1002,1002)
+                    raise AssertionError('adopted another identity runtime')
+                except (ValueError,PermissionError):
+                    pass
+                try:
+                    (root/'guest-runtime/ml-cache/.owner.json').read_bytes()
+                    raise AssertionError('read another identity private cache')
+                except PermissionError:
+                    pass
+            """,
+                uid=1002,
+            )
+            self.assertEqual(other.returncode, 0, other.stderr)
+
         def test_regular_file_to_fifo_race_is_bounded(self):
             child = self.child(
                 """
@@ -1484,10 +1589,196 @@ raise SystemExit(subprocess.run([sys.executable,'scripts/verify_t16_a3.py','--he
     return unittest.defaultTestLoader.loadTestsFromTestCase(BgeImageTests)
 
 
+def cache_image_suite(image, context):
+    """Real nonroot full-image/cache bind checks; every container has network=none."""
+    import shutil
+    from uuid import uuid4
+
+    from t16_admission import safe_environment
+
+    environment = safe_environment(os.environ)
+    docker = ["docker", "--context", context]
+
+    class CacheImageTests(unittest.TestCase):
+        def command(self, args):
+            return subprocess.run(
+                docker + args, env=environment, capture_output=True, text=True, timeout=150
+            )
+
+        def setUp(self):
+            self.volume = "am-t16-cache-test-" + uuid4().hex
+            self.names = []
+            self.directory = tempfile.TemporaryDirectory()
+            self.addCleanup(self.directory.cleanup)
+            public = Path(self.directory.name)
+            public.chmod(0o755)
+            shutil.copyfile(Path(__file__).with_name("t16_cache.py"), public / "t16_cache.py")
+            (public / "t16_cache.py").chmod(0o644)
+            self.helper = public
+            self.assertEqual(self.command(["volume", "create", self.volume]).returncode, 0)
+            self.addCleanup(self.remove_owned)
+            inspected = self.command(["volume", "inspect", self.volume])
+            self.assertEqual(inspected.returncode, 0, inspected.stderr)
+            self.source = json.loads(inspected.stdout)[0]["Mountpoint"]
+            result = self.root_command("""
+import os,sys
+from pathlib import Path
+sys.path.insert(0,'/harness')
+from t16_cache import create_runtime
+os.chown('/owned',1001,1001)
+os.setgroups([]);os.setgid(1001);os.setuid(1001);os.umask(0o077)
+create_runtime(Path('/owned/guest-runtime'),'synthetic-cache-owner')
+""")
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+        def root_command(self, code):
+            return self.command(
+                [
+                    "run",
+                    "--rm",
+                    "--network",
+                    "none",
+                    "--user",
+                    "0:0",
+                    "--mount",
+                    f"type=volume,source={self.volume},target=/owned",
+                    "-v",
+                    f"{self.helper}:/harness:ro",
+                    image,
+                    "python",
+                    "-c",
+                    code,
+                ]
+            )
+
+        def remove_owned(self):
+            for name in self.names:
+                result = self.command(["ps", "-aq", "--filter", f"name=^/{name}$"])
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertFalse(result.stdout.strip(), "cache test container not removed")
+            removed = self.command(["volume", "rm", self.volume])
+            self.assertEqual(removed.returncode, 0, removed.stderr)
+            observed = self.command(["volume", "ls", "-q", "--filter", f"name=^{self.volume}$"])
+            self.assertEqual(observed.returncode, 0, observed.stderr)
+            self.assertFalse(observed.stdout.strip())
+
+        def preflight(self, *, target="ml-cache", cache_readonly=False, mount_cache=True):
+            name = "am-t16-cache-probe-" + uuid4().hex
+            self.names.append(name)
+            args = [
+                "run",
+                "--rm",
+                "--name",
+                name,
+                "--network",
+                "none",
+                "--read-only",
+                "--user",
+                "1001:1001",
+                "--memory",
+                "2g",
+                "--cpus",
+                "2",
+                "-e",
+                "HOME=/runtime/home",
+                "-e",
+                "TMPDIR=/runtime/tmp",
+                "-e",
+                "HF_HOME=/runtime/cache/huggingface",
+                "-e",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "--mount",
+                f"type=bind,source={self.source}/guest-runtime,target=/runtime",
+                "-v",
+                f"{self.helper}:/harness:ro",
+            ]
+            if mount_cache:
+                args += [
+                    "--mount",
+                    f"type=bind,source={self.source}/guest-runtime/{target},"
+                    "target=/work/.ml-cache" + (",readonly" if cache_readonly else ""),
+                ]
+            return self.command(
+                args
+                + [
+                    image,
+                    "python",
+                    "/harness/t16_cache.py",
+                    "--uid",
+                    "1001",
+                    "--gid",
+                    "1001",
+                    "--owner",
+                    "synthetic-cache-owner",
+                ]
+            )
+
+        def rejected(self, result):
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual(json.loads(result.stdout)["status"], "NONROOT_CACHE_PREFLIGHT_FAILED")
+
+        def test_real_jieba_and_cpu_encoder_succeed_without_network(self):
+            result = self.preflight()
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            record = json.loads(result.stdout)
+            self.assertEqual(record["dimension"], 512)
+            self.assertEqual(record["model_files"], 6)
+            self.assertEqual(record["uid"], 1001)
+            self.assertEqual(record["gid"], 1001)
+            self.assertEqual(record["network_attempts"], 0)
+            self.assertEqual(record["forbidden_source_writes"], 0)
+            self.assertTrue(record["persisted_cache_reload"])
+            # Another process must be able to read the same cache without rebuilding.
+            again = self.preflight()
+            self.assertEqual(again.returncode, 0, again.stdout + again.stderr)
+            self.assertEqual(json.loads(again.stdout)["cache_sha256"], record["cache_sha256"])
+
+        def test_missing_mount_is_rejected(self):
+            self.rejected(self.preflight(mount_cache=False))
+
+        def test_missing_cache_directory_is_rejected(self):
+            result = self.root_command(
+                "import shutil;shutil.rmtree('/owned/guest-runtime/ml-cache')"
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.rejected(self.preflight(mount_cache=False))
+
+        def test_readonly_cache_mount_is_rejected(self):
+            self.rejected(self.preflight(cache_readonly=True))
+
+        def test_wrong_uid_gid_is_rejected(self):
+            result = self.root_command(
+                "import os;os.chown('/owned/guest-runtime/ml-cache',1002,1002)"
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.rejected(self.preflight())
+
+        def test_nonwritable_mode_is_rejected(self):
+            result = self.root_command("import os;os.chmod('/owned/guest-runtime/ml-cache',0o500)")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.rejected(self.preflight())
+
+        def test_wrong_bind_source_with_same_marker_is_rejected(self):
+            result = self.root_command("""
+import os,shutil
+os.setgroups([]);os.setgid(1001);os.setuid(1001);os.umask(0o077)
+shutil.copytree('/owned/guest-runtime/ml-cache','/owned/guest-runtime/wrong-cache')
+""")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.rejected(self.preflight(target="wrong-cache"))
+
+    return unittest.defaultTestLoader.loadTestsFromTestCase(CacheImageTests)
+
+
 if __name__ == "__main__":
     os.umask(0o077)
     if len(sys.argv) == 5 and sys.argv[1] == "--bge-image" and sys.argv[3] == "--docker-context":
         result = unittest.TextTestRunner(verbosity=2).run(bge_image_suite(sys.argv[2], sys.argv[4]))
+        raise SystemExit(not result.wasSuccessful())
+    if len(sys.argv) == 5 and sys.argv[1] == "--cache-image" and sys.argv[3] == "--docker-context":
+        result = unittest.TextTestRunner(verbosity=2).run(
+            cache_image_suite(sys.argv[2], sys.argv[4])
+        )
         raise SystemExit(not result.wasSuccessful())
     if sys.argv[1:] == ["--linux-ownership"]:
         result = unittest.TextTestRunner(verbosity=2).run(linux_ownership_suite())
