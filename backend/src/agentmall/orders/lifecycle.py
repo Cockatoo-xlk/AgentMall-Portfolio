@@ -4,9 +4,9 @@ from sqlalchemy import select
 
 from agentmall.actions.service import conflict, database_now
 from agentmall.catalog.models import Product
-from agentmall.identity.service import require_buyer
+from agentmall.identity.service import require_buyer, require_merchant
 from agentmall.infra.audit import BusinessEvent
-from agentmall.infra.errors import DomainError, not_found
+from agentmall.infra.errors import not_found
 from agentmall.orders.models import Order, OrderItem
 from agentmall.orders.schemas import ExpiryResult, ShipmentDTO, ShipmentEvent
 from agentmall.orders.service import order_view
@@ -14,8 +14,7 @@ from agentmall.orders.service import order_view
 
 async def owned_order(session, actor, order_id, *, lock=False, merchant=False):
     if merchant:
-        if actor.role != "merchant" or actor.user_id is None:
-            raise DomainError(403, "FORBIDDEN", "此接口仅供所属店铺商家使用")
+        require_merchant(actor)
     else:
         require_buyer(actor)
     query = select(Order).where(Order.id == order_id, Order.store_id == actor.store_id)

@@ -20,15 +20,16 @@ from agentmall.aftersales.models import AfterSalesCase, Refund
 from agentmall.aftersales.policy import POLICY_WINDOWS, evaluate_eligibility
 from agentmall.aftersales.schemas import (
     CaseDTO,
+    CasePage,
     RefundPayload,
     RefundReceipt,
     ReturnCancelPayload,
     ReturnPayload,
     ReturnReceipt,
 )
-from agentmall.identity.service import require_buyer
+from agentmall.identity.service import require_buyer, require_merchant
 from agentmall.infra.audit import BusinessEvent
-from agentmall.infra.errors import DomainError, not_found
+from agentmall.infra.errors import not_found
 from agentmall.orders.lifecycle import owned_order
 from agentmall.payments.models import Payment
 from agentmall.support.models import SupportTicket
@@ -38,11 +39,6 @@ PAYLOADS = {
     "RETURN_CANCEL": ReturnCancelPayload,
     "MOCK_REFUND": RefundPayload,
 }
-
-
-def require_merchant(actor):
-    if actor.user_id is None or actor.role != "merchant":
-        raise DomainError(403, "FORBIDDEN", "此接口仅供所属店铺商家使用")
 
 
 async def owned_case(session, actor, case_id, *, merchant=False, lock=False):
@@ -64,8 +60,22 @@ async def owned_case(session, actor, case_id, *, merchant=False, lock=False):
     return case
 
 
-async def get_case(session, actor, case_id):
-    return CaseDTO.model_validate(await owned_case(session, actor, case_id))
+async def get_case(session, actor, case_id, *, merchant=False):
+    return CaseDTO.model_validate(await owned_case(session, actor, case_id, merchant=merchant))
+
+
+async def list_merchant_cases(session, actor, filters):
+    require_merchant(actor)
+    query = select(AfterSalesCase).where(AfterSalesCase.store_id == actor.store_id)
+    if filters.cursor:
+        query = query.where(AfterSalesCase.id > filters.cursor)
+    if filters.status:
+        query = query.where(AfterSalesCase.status == filters.status)
+    cases = list(await session.scalars(query.order_by(AfterSalesCase.id).limit(filters.limit + 1)))
+    return CasePage(
+        items=[CaseDTO.model_validate(case) for case in cases[: filters.limit]],
+        next_cursor=cases[filters.limit - 1].id if len(cases) > filters.limit else None,
+    )
 
 
 async def payment_for(session, order, *, lock=False):

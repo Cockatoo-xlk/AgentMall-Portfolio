@@ -64,10 +64,10 @@ export default function Layout() {
               </NavLink>
             )}
             {merchant ? (
-              <span className="nav-disabled" aria-disabled="true">
+              <NavLink to="/merchant">
                 <Package size={16} />
-                我的订单
-              </span>
+                商家工作台
+              </NavLink>
             ) : (
               <NavLink to="/orders">
                 <Package size={16} />
@@ -130,7 +130,7 @@ export default function Layout() {
         )}
         {merchant && (
           <div className="global-notice notice">
-            当前为商家账户，可浏览商品；买家购物操作不可用。
+            当前为商家账户，可在工作台处理本店订单和售后申请。
           </div>
         )}
         <Outlet />

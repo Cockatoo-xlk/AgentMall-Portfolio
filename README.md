@@ -23,6 +23,7 @@
 - **Hybrid RAG**：PostgreSQL词法检索 + 固定BGE / pgvector向量召回 + RRF；店铺、价格、库存、状态与属性过滤在LIMIT前应用，工具重新读取当前事实。
 - **HITL与恢复**：不可变Proposal → 独立Confirmation → 原Run Resume。官方PostgreSQL Checkpointer、RunEvent、节点Journal与Epoch Fence支持等待和恢复；JWT只存浏览器内存。
 - **交易闭环**：购物车 → 确认下单 → 库存预留 → 订单详情独立确认模拟付款。购物车来源/版本由服务端绑定，创建订单时同事务安全消费；变化后的购物车保守保留，Agent直接下单不清理同SKU购物车。
+- **商家运营工作台**：商家在 `/merchant` 处理本店订单和售后；模拟退款须核对快照，分别批准提案并执行。[操作与验证步骤](docs/MERCHANT_WORKBENCH.md)。
 - **失败处理**：稳定request_id、action身份及幂等回执；响应未知先GET核对原结果。PARTIAL保留已完成业务，不用新随机请求盲目重做。
 
 ## 系统架构
@@ -78,7 +79,7 @@ docker --context desktop-linux compose -p agentmall-portfolio-demo \
 
 ## 已完成的工程验证
 
-以下是历史准确提交的结果：R8的**CI/执行器提交为`e60ee792d6809dad696f27aac1e40272dd04f141`，冻结产品提交为`77b215878edbce50ce107c6e77e31de4d2044ff9`**。不表示任意后续源码自动通过；本次只修改Demo配置与说明，未重跑完整CI。
+下表是 V1 的历史验收。R8 的 **CI/执行器提交为 `e60ee792d6809dad696f27aac1e40272dd04f141`，冻结产品提交为 `77b215878edbce50ce107c6e77e31de4d2044ff9`**。V2 商家工作台另做本地定向回归；历史结果不代表 V2 已通过完整远程 CI。
 
 | 验证 | 结果 | 范围 |
 |---|---|---|

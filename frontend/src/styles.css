@@ -3103,3 +3103,38 @@ main:focus {
 .thread-preference-controls .text-button {
   padding: 0.6rem;
 }
+
+.merchant-page > .inline-actions {
+  margin-bottom: 1rem;
+}
+.merchant-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1rem;
+}
+.merchant-grid .panel,
+.merchant-row {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.merchant-grid .stack > .badge {
+  align-self: flex-start;
+}
+.merchant-row {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+}
+.merchant-row p {
+  margin: 0.4rem 0;
+}
+.merchant-row button[aria-pressed="true"] {
+  font-weight: 700;
+  outline: 1px solid currentColor;
+}
+@media (max-width: 760px) {
+  .merchant-grid {
+    grid-template-columns: 1fr;
+  }
+}

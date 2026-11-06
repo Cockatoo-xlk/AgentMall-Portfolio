@@ -152,6 +152,17 @@ export type ReturnReasonCode =
   | 'POLICY_DISPUTE'
   | 'INSUFFICIENT_INFORMATION'
   | 'OTHER'
+export type CaseStatus = 'REQUESTED' | 'APPROVED' | 'RECEIVED' | 'REFUNDED' | 'REJECTED' | 'CANCELLED'
+export interface AfterSalesCase {
+  id: string
+  order_id: string
+  status: CaseStatus
+  version: number
+  reason_code: ReturnReasonCode
+  description: string
+  created_at: string
+  review_reason: string | null
+}
 export interface EligibilityResult {
   eligible: boolean
   reason_codes: string[]

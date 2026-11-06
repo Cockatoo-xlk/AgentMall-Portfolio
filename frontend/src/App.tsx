@@ -12,6 +12,7 @@ import Cart from './pages/Cart'
 import Proposal from './pages/Proposal'
 import Orders, { OrderDetail } from './pages/Orders'
 import ChatPanel from './components/ChatPanel'
+import MerchantWorkbench from './pages/MerchantWorkbench'
 function StoreRoutes() {
   const { user } = useAuth()
   return (
@@ -36,6 +37,7 @@ function StoreRoutes() {
             }
           />
           <Route path="login" element={<Login />} />
+          <Route path="merchant" element={<MerchantWorkbench />} />
           <Route path="products/:id" element={<ProductDetail />} />
           <Route
             path="cart"
