@@ -90,7 +90,12 @@ ALLOWLISTS = {
         "create_support_ticket",
     ),
 }
-WRITES = frozenset({"prepare_checkout", "prepare_return", "create_support_ticket"})
+WRITE_TOOLS_BY_GOAL = {
+    "prepare_checkout": "prepare_checkout",
+    "prepare_return": "prepare_return",
+    "human_support": "create_support_ticket",
+}
+WRITES = frozenset(WRITE_TOOLS_BY_GOAL.values())
 DESCRIPTIONS = {
     "retrieve_products": "真实Hybrid RAG，运行时强制预算/类别/静音偏好/排除原SKU；结果至多3条。",
     "get_product": "读取本店商品事实，必须遵守用户约束。",
@@ -173,6 +178,8 @@ class SpecialistTools:
             raise DomainError(403, "READ_ONLY_HANDOFF", "只读任务不能写入")
         try:
             if name in WRITES:
+                if not runtime.single and WRITE_TOOLS_BY_GOAL.get(self.envelope.goal) != name:
+                    raise DomainError(403, "HANDOFF_WRITE_SCOPE_CHANGED", "写工具必须匹配交接目标")
                 async with runtime.write_lock:
                     return await self._execute(name, args)
             return await self._execute(name, args)
@@ -315,6 +322,8 @@ class SpecialistTools:
                     raise DomainError(
                         409, "PURCHASE_DETAILS_REQUIRED", "需要明确购买意图、数量和演示地址"
                     )
+                if r.purchase_target_id and str(args.product_id) != r.purchase_target_id:
+                    raise DomainError(409, "SELECTION_MISMATCH", "仅可为用户明确选择的商品准备提案")
                 if r.thread_snapshot:
                     selected = r.thread_snapshot.get("selected", [])
                     if selected:

@@ -120,7 +120,7 @@ def build_durable_graph(base, saver, store):
         return {"next": "single" if runtime.single else "supervisor"}
 
     async def supervisor(runtime, state):
-        plan = await choose_plan(runtime)
+        plan = await choose_plan(runtime, state.get("user_goal"), durable=True)
         envelopes = await runtime.validate_tasks(plan.tasks) if plan.tasks else []
         return {
             "round": state.get("round", 0) + 1,
@@ -239,6 +239,7 @@ def build_durable_graph(base, saver, store):
             }
         if payload.get("clarification"):
             from agentmall.agents.context import user_constraints
+            from agentmall.agents.purchase_intent import purchase_intent
 
             if runtime.thread_snapshot:
                 from agentmall.agents.context import Constraints
@@ -255,6 +256,9 @@ def build_durable_graph(base, saver, store):
                     }
                 )
                 runtime.constraints = user_constraints(runtime.input)
+            intent = purchase_intent(payload["clarification"])
+            if not runtime.constraints.purchase_requested or intent.product_id:
+                runtime.purchase_target_id = intent.product_id
             await runtime.hydrate_explicit_entities()
             return {
                 "next": "single" if runtime.single else "supervisor",

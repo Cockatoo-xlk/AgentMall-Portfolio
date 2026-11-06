@@ -32,6 +32,7 @@ class RuntimeState(Strict):
     tool_ids: list[str] = Field(default_factory=list)
     tool_repeats: dict[str, int] = Field(default_factory=dict)
     schema_repairs: int = 0
+    purchase_target_id: str | None = None
     explicit_order_ids: list[UUID] = Field(default_factory=list)
     budget: dict = Field(default_factory=dict)
 
@@ -52,6 +53,7 @@ def snapshot(runtime):
         tool_ids=sorted(runtime.tool_ids),
         tool_repeats=runtime.tool_repeats,
         schema_repairs=runtime.schema_repairs,
+        purchase_target_id=runtime.purchase_target_id,
         explicit_order_ids=sorted(runtime.explicit_order_ids, key=str),
         budget=runtime.budget.snapshot(),
     ).model_dump(mode="json")
@@ -71,6 +73,7 @@ def restore(runtime, data):
         "errors",
         "tool_repeats",
         "schema_repairs",
+        "purchase_target_id",
     ):
         setattr(runtime, name, getattr(state, name))
     for name in ("seen_tasks", "signatures", "tool_ids", "explicit_order_ids"):

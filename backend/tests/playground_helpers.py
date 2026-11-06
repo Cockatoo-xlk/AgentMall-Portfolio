@@ -6,13 +6,52 @@ from uuid import uuid4
 
 import httpx
 from langchain_core.messages import HumanMessage
-from multiagent_helpers import ai, call, choose_purchase, final, route
+from multiagent_helpers import ai, call, choose_purchase, final, payload, route
 
 
 class SDKProgram:
     def __init__(self, program="purchase", order_id=None):
         self.program, self.order_id = program, order_id
         self.counts, self.requests = {}, []
+
+    def plan(self, messages):
+        state = payload(messages)
+        completed = {result["subtask_id"] for result in state["completed"]}
+        constraints = state["canonical_constraints"]
+        if self.program == "orders":
+            decision = (
+                route("finish")
+                if "inspect" in completed
+                else route("order", "inspect_orders", "inspect")
+            )
+        elif self.program == "return_policy":
+            decision = (
+                route("finish")
+                if "assessment" in completed
+                else route("aftersales", "assess_return", "assessment")
+            )
+        elif (
+            self.program == "return_replace"
+            and constraints["return_requested"]
+            and "return" not in completed
+        ):
+            if not any(ref["kind"] == "order" for ref in state["entity_refs"]):
+                decision = route("aftersales", "assess_return", "assessment")
+            else:
+                decision = route("aftersales", "prepare_return", "return", read_only=False)
+        elif "shop" not in completed:
+            decision = route("shopping", "find_products", "shop")
+        elif (
+            self.program == "recommend"
+            or not constraints["purchase_requested"]
+            or "buy" in completed
+        ):
+            decision = route("finish")
+        elif state["checkout_blocker"]:
+            decision = route("clarify")
+        else:
+            decision = route("order", "prepare_checkout", "buy", depends=["shop"], read_only=False)
+        return decision(messages)
 
     def transport(self, role):
         def respond(request):
@@ -30,33 +69,7 @@ class SDKProgram:
             elif self.program == "malicious":
                 message = ai(call("approve_payment", {"approved": True, "amount": 0}))
             elif role == "supervisor":
-                steps = (
-                    [route("order", "inspect_orders", "inspect"), route("finish")]
-                    if self.program == "orders"
-                    else [route("shopping", "find_products", "find"), route("finish")]
-                    if self.program == "recommend"
-                    else [
-                        route("aftersales", "prepare_return", "return", read_only=False),
-                        route("shopping", "find_products", "replacement"),
-                        route(
-                            "order",
-                            "prepare_checkout",
-                            "new",
-                            depends=["replacement"],
-                            read_only=False,
-                        ),
-                        route("finish"),
-                    ]
-                    if self.program == "return_replace"
-                    else [
-                        route("shopping", "find_products", "shop"),
-                        route(
-                            "order", "prepare_checkout", "buy", depends=["shop"], read_only=False
-                        ),
-                        route("finish"),
-                    ]
-                )
-                message = steps[index](human)
+                message = self.plan(human)
             elif role == "shopping":
                 message = (
                     ai(call("retrieve_products", {"query": "静音键盘"})) if index == 0 else final()
@@ -85,7 +98,11 @@ class SDKProgram:
                         )
                     ),
                 ]
-                message = steps[index]
+                goal = payload(human)["goal"]
+                if goal == "assess_return" and index >= 2:
+                    message = final()
+                else:
+                    message = steps[min(index, 2)]
             elif self.program == "orders" or role == "single":
                 message = ai(call("list_orders")) if index == 0 else final('{"terminal":"finish"}')
             else:

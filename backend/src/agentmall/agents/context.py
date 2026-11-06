@@ -150,6 +150,17 @@ class GraphResult(Strict):
     execution_mode: Literal["FIXTURE", "MODEL_ENABLED", "DISABLED"]
 
 
+def asks_return_policy(message):
+    return (
+        re.search(
+            r"(?:查询|查看|了解|想知道)[^。！？；\n]*(?:售后|退货|退款)政策"
+            r"|(?:是否(?:可以|能)?|能否|可不可以)(?:申请|准备)?退货",
+            message,
+        )
+        is not None
+    )
+
+
 def user_constraints(request):
     """Extract explicit safety constraints, never route agents here.
 
@@ -196,15 +207,23 @@ def user_constraints(request):
         values["noise_preference"] = "quiet"
     if any(x in message for x in ("一款", "一件", "一个")):
         values["quantity"] = 1
-    if "演示宿舍" in message:
+    if "演示宿舍" in message and "演示家庭" not in message:
         values["address_label"] = "demo_dorm"
-    elif "演示家庭" in message:
+    elif "演示家庭" in message and "演示宿舍" not in message:
         values["address_label"] = "demo_home"
     intent = purchase_intent(message)
     values["purchase_requested"] = intent.requested is True
-    values["return_requested"] = any(x in message for x in ("想退掉", "申请退货", "准备退货"))
+    return_clauses = re.split(r"[，。！？；,;\n]", message)
+    direct_return = any(
+        not asks_return_policy(clause)
+        and any(text in clause for text in ("想退掉", "申请退货", "准备退货"))
+        for clause in return_clauses
+    )
+    values["return_requested"] = direct_return
     values["support_requested"] = any(x in message for x in ("转人工", "联系人工", "找人工"))
-    values["exclude_original"] = any(x in message for x in ("替代", "另一款", "再帮我推荐"))
+    values["exclude_original"] = any(x in message for x in ("替代", "另一款", "再帮我推荐")) or (
+        values["return_requested"] and "再推荐" in message
+    )
     if "质量问题" in message:
         values["reason_code"] = "QUALITY_ISSUE"
     if request.constraints is not None:
@@ -239,6 +258,22 @@ def user_constraints(request):
             values[field] = False
             if field == "support_requested":
                 values["support_declined"] = True
+    if not direct_return and asks_return_policy(message):
+        values["return_requested"] = False
+    if values["purchase_requested"]:
+        # A recommendation of one item must not turn a conflicting explicit count
+        # into a one-item purchase. Non-single counts can use the typed quantity.
+        counts = re.findall(
+            r"(?<![第0-9一二两三四五六七八九十百])([0-9]+|[一二两三四五六七八九十百]+)\s*件",
+            message,
+        )
+        typed_quantity = request.constraints.quantity if request.constraints is not None else None
+        if counts and (
+            typed_quantity is None and any(count not in {"一", "1"} for count in counts)
+        ):
+            values["quantity"] = None
+        if "演示宿舍" in message and "演示家庭" in message:
+            values["address_label"] = None
     return Constraints.model_validate(values)
 
 

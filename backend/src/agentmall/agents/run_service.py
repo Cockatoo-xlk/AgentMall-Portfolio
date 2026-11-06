@@ -362,10 +362,15 @@ async def _activate(app, actor, run_id, thread, connection, resume_payload=None)
     async with asyncio.timeout(5):
         await recover_receipts(runtime)
     result = (
-        render(runtime, "finish")
+        render(
+            runtime, "clarify" if waiting and waiting.get("type") == "clarification" else "finish"
+        )
         .model_copy(update={"request_id": external_request_id})
         .model_dump(mode="json")
     )
+    unresolved = not runtime.single and bool(result["unfinished"])
+    if unresolved and not waiting and result["status"] == "done":
+        result["status"] = "partial"
     async with sessions.begin() as session:
         run = await fence.check(session, exclusive=True)
         from agentmall.agents.memory import publish_candidates
@@ -378,7 +383,7 @@ async def _activate(app, actor, run_id, thread, connection, resume_payload=None)
             "WAITING_INPUT"
             if waiting
             else "PARTIAL"
-            if error or result["error_codes"]
+            if error or result["error_codes"] or unresolved
             else "COMPLETED"
         )
         if not waiting:

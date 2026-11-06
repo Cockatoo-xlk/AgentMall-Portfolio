@@ -120,7 +120,12 @@ async def test_missing_or_negative_purchase_intent_cannot_prepare(env, buyer, me
     )
     await install(env, models)
     result = await send(env, buyer, message=message)
-    assert "PURCHASE_DETAILS_REQUIRED" in result["error_codes"]
+    if message.endswith("准备购买") and "不要" not in message:
+        assert result["status"] == "needs_input"
+    else:
+        assert result["status"] == "done"
+    assert result["error_codes"] == []
+    assert not models["order"].seen
     with env[1].connect() as c:
         assert c.scalar(text("SELECT count(*) FROM action_proposals")) == 0
 

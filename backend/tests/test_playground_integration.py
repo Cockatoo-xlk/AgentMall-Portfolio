@@ -101,6 +101,14 @@ async def test_sdk_return_and_replacement_have_two_confirmations(
 
     env = durable_env
     order = await delivered_order(env[0], buyer, product)
+    replacement = row(
+        env[1],
+        "SELECT id, price_cents FROM products WHERE name IN ('静音 K87', '宿舍静音 K68') "
+        "AND id != :id",
+        id=product,
+    )
+    replacement_id = replacement["id"]
+    before = row(env[1], "SELECT on_hand, reserved FROM products WHERE id=:id", id=replacement_id)
     provider, _ = await install_sdk(env, tmp_path, "return_replace", order["id"])
     try:
         tid = await thread(env, buyer)
@@ -109,11 +117,14 @@ async def test_sdk_return_and_replacement_have_two_confirmations(
                 env,
                 buyer,
                 tid,
-                message=f"订单{order['id']}有质量问题，想退掉，再帮我推荐一款500元以内静音键盘准备购买，送演示宿舍",
+                message=f"订单{order['id']}有质量问题，想退掉，再购买{replacement_id}作为替代品，一件，送演示宿舍",
             )
         ).json()
         assert run["status"] == "WAITING_INPUT", run
         first = run["pending_confirmation"]
+        assert first["action_type"] == "RETURN_REQUEST"
+        assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 0
+        assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 1
         cid = await confirm(env, buyer, first["proposal_id"])
         second = (await resume(env, buyer, tid, run, cid)).json()
         assert second["status"] == "WAITING_INPUT", second
@@ -121,11 +132,27 @@ async def test_sdk_return_and_replacement_have_two_confirmations(
         assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 1
         wrong = await resume(env, buyer, tid, second, cid)
         assert wrong.status_code == 409
+        assert second["pending_confirmation"]["action_type"] == "CHECKOUT"
+        assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 1
         cid2 = await confirm(env, buyer, second["pending_confirmation"]["proposal_id"])
+        assert cid2 != cid
         done = await resume(env, buyer, tid, second, cid2)
         assert done.status_code == 200 and done.json()["status"] == "COMPLETED", done.text
         assert row(env[1], "SELECT count(*) n FROM refunds")["n"] == 0
         assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 2
+        purchased = row(
+            env[1],
+            "SELECT oi.product_id, oi.quantity, o.total_cents FROM order_items oi "
+            "JOIN orders o ON o.id = oi.order_id WHERE o.status = 'PENDING_PAYMENT'",
+        )
+        assert purchased["product_id"] == replacement_id and purchased["quantity"] == 1
+        assert purchased["total_cents"] == replacement["price_cents"]
+        assert row(
+            env[1],
+            "SELECT on_hand, reserved FROM products WHERE id=:id",
+            id=replacement_id,
+        ) == dict(before) | {"reserved": before["reserved"] + 1}
+        assert row(env[1], "SELECT count(*) n FROM payments")["n"] == 1  # Original order only.
     finally:
         await provider.close()
 

@@ -11,8 +11,10 @@ from agentmall.actions import service as actions
 from agentmall.aftersales import service as aftersales
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import HandoffEnvelope, user_constraints
+from agentmall.agents.purchase_intent import purchase_intent
 from agentmall.agents.specialist_tools import authenticate, order_data, product_allowed, ref
 from agentmall.catalog import service as catalog
+from agentmall.catalog.schemas import ProductDTO
 from agentmall.infra.errors import DomainError
 from agentmall.orders import service as orders
 from agentmall.orders.schemas import OrderFilters
@@ -73,6 +75,7 @@ class RunContext:
             if self.thread_snapshot
             else user_constraints(self.input)
         )
+        self.purchase_target_id = purchase_intent(self.input.message).product_id
         self.return_request_id = uuid5(self.input.request_id, "return")
         self.ticket_request_id = uuid5(self.input.request_id, "human")
         self.trace.update(
@@ -113,6 +116,28 @@ class RunContext:
         return self.constraints.model_copy(
             update={"exclude_product_ids": sorted(self.exclusions, key=str)}
         )
+
+    def checkout_blocker(self):
+        constraints = self.constraints
+        if not constraints.purchase_requested:
+            return "PURCHASE_NOT_REQUESTED"
+        if constraints.quantity is None or constraints.address_label is None:
+            return "PURCHASE_DETAILS_REQUIRED"
+        selected = self.thread_snapshot.get("selected", [])
+        target = self.purchase_target_id or (selected[0]["id"] if len(selected) == 1 else None)
+        if len(selected) > 1 or not any(
+            kind == "product"
+            and (target is None or ident == target)
+            and product_allowed(self, ProductDTO.model_validate(fact))
+            and fact["available"] >= constraints.quantity
+            and (
+                constraints.max_price_cents is None
+                or fact["price_cents"] * constraints.quantity <= constraints.max_price_cents
+            )
+            for (kind, ident), fact in self.facts.items()
+        ):
+            return "PURCHASE_CANDIDATE_REQUIRED"
+        return None
 
     def event(self, kind, **values):
         self.trace["events"].append({"seq": len(self.trace["events"]) + 1, "kind": kind, **values})

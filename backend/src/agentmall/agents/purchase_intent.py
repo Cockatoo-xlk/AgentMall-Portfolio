@@ -29,6 +29,7 @@ ACTION = re.compile(
 class PurchaseIntent:
     requested: bool | None
     reference_text: str
+    product_id: str | None = None
 
 
 def purchase_intent(message):
@@ -75,4 +76,8 @@ def purchase_intent(message):
         raise DomainError(
             409, "CONTEXT_CLARIFICATION_REQUIRED", "购买对象或意图冲突，请明确唯一商品"
         )
-    return PurchaseIntent(True if buying else False if denying else None, "".join(reference))
+    return PurchaseIntent(
+        True if buying else False if denying else None,
+        "".join(reference),
+        next((value for kind, value in positive if kind == "product"), None),
+    )

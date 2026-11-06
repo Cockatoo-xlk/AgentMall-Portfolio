@@ -163,7 +163,9 @@ def render(runtime, terminal):
         lines.append("没有支持所请求信息的公开证据，不能提供或编造内部信息。")
     if runtime.citations:
         lines.append("政策引用仅作背景；资格以确定性服务为准。")
-    if terminal == "clarify" or any(
+    if terminal == "clarify":
+        lines.append("尚有需求需要补充或继续核验，请明确商品、数量、演示地址或原订单。")
+    if any(
         code in errors
         for code in (
             "ORDER_SELECTION_REQUIRED",

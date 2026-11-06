@@ -65,6 +65,7 @@ async def test_explicit_owned_order_reaches_aftersales_without_raw_user_text(env
 
 async def test_order_handoff_rejects_private_return_proposal(env, buyer, product):
     from aftersales_helpers import delivered_order
+    from conftest import row
     from multiagent_helpers import ai, call, install, make_models, route, send
 
     order = await delivered_order(env[0], buyer, product)
@@ -104,7 +105,12 @@ async def test_order_handoff_rejects_private_return_proposal(env, buyer, product
         ],
     )
     await install(env, models)
-    result = await send(env, buyer, message=f"订单 {order['id']} 质量问题想退掉")
+    replacement = row(env[1], "SELECT id FROM products WHERE id != :id LIMIT 1", id=product)["id"]
+    result = await send(
+        env,
+        buyer,
+        message=f"订单 {order['id']} 质量问题想退掉，购买{replacement}，一件，送演示宿舍",
+    )
     assert "CONTEXT_SCOPE_VIOLATION" in result["error_codes"]
     assert not models["order"].seen
 
