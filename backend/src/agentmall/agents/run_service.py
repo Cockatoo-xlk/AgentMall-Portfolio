@@ -160,20 +160,35 @@ async def get_thread(app, actor, thread_id):
 
 
 async def events(app, actor, run_id, after_seq, limit):
+    page, _ = await event_snapshot(app, actor, run_id, after_seq, limit)
+    return page
+
+
+async def event_snapshot(app, actor, run_id, after_seq, limit):
     async with app.state.sessions.begin() as session:
-        run = await session.get(AgentRun, run_id)
+        run = (
+            await session.execute(
+                select(AgentRun.thread_id, AgentRun.status, AgentRun.event_seq).where(
+                    AgentRun.id == run_id
+                )
+            )
+        ).one_or_none()
         if run is None:
             raise not_found()
         await owned_thread(session, actor, run.thread_id)
         rows = list(
             await session.scalars(
                 select(RunEvent)
-                .where(RunEvent.run_id == run_id, RunEvent.seq > after_seq)
+                .where(
+                    RunEvent.run_id == run_id,
+                    RunEvent.seq > after_seq,
+                    RunEvent.seq <= run.event_seq,
+                )
                 .order_by(RunEvent.seq)
                 .limit(limit)
             )
         )
-        return {
+        page = {
             "items": [
                 {
                     "id": str(e.id),
@@ -188,6 +203,7 @@ async def events(app, actor, run_id, after_seq, limit):
             ],
             "next_seq": rows[-1].seq if rows else after_seq,
         }
+        return page, run.status
 
 
 def add_event(session, run, kind, payload=None, agent=None, action_id=None):

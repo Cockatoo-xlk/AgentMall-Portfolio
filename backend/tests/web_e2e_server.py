@@ -425,7 +425,7 @@ class Harness:
 def mount_controls(harness):
     from fastapi import APIRouter, Depends, HTTPException, Request
     from fastapi.responses import JSONResponse
-    from pydantic import BaseModel, ConfigDict
+    from pydantic import BaseModel, ConfigDict, Field
     from sqlalchemy import text
     from starlette.datastructures import State
 
@@ -538,6 +538,7 @@ def mount_controls(harness):
             "malicious",
         ]
         order_id: UUID | None = None
+        delay_ms: int = Field(0, ge=0, le=1500)
 
     @router.post("/sdk-mode")
     async def sdk_mode(payload: SDKMode):
@@ -562,6 +563,7 @@ def mount_controls(harness):
             Path(harness.sdk_directory.name),
             payload.program,
             str(payload.order_id) if payload.order_id else None,
+            delay_ms=payload.delay_ms,
         )
         return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
 

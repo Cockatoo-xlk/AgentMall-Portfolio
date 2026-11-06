@@ -98,6 +98,57 @@ export class ApiClient {
       signal?.removeEventListener('abort', abort)
     }
   }
+  async stream(path: string, onFrame: (event: string, data: string) => void, signal: AbortSignal) {
+    if (!path.startsWith('/') || path.startsWith('//')) throw new Error('Invalid API path')
+    const headers = new Headers({ Accept: 'text/event-stream' })
+    if (this.token) headers.set('Authorization', `Bearer ${this.token}`)
+    const bounded = AbortSignal.any([signal, AbortSignal.timeout(35000)])
+    let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
+    try {
+      const response = await fetch(`/api/v1${path}`, {
+        method: 'GET', headers, signal: bounded, cache: 'no-store', redirect: 'error',
+      })
+      reader = response.body?.getReader()
+      if (!response.ok) throw new ApiError(response.status, 'STREAM_HTTP_ERROR')
+      if (!reader || !response.headers.get('Content-Type')?.startsWith('text/event-stream'))
+        throw new ApiError(0, 'INVALID_STREAM')
+      const decoder = new TextDecoder()
+      let buffer = ''
+      while (!bounded.aborted) {
+        const { done, value } = await reader.read()
+        if (bounded.aborted) break
+        if (done) {
+          if (buffer) throw new ApiError(0, 'INCOMPLETE_STREAM')
+          return
+        }
+        buffer += decoder.decode(value, { stream: true })
+        let boundary = /\r?\n\r?\n/.exec(buffer)
+        while (boundary) {
+          if (boundary.index > 65536) throw new ApiError(0, 'INVALID_STREAM')
+          const lines = buffer.slice(0, boundary.index).split(/\r?\n/)
+          buffer = buffer.slice(boundary.index + boundary[0].length)
+          const event = lines.find((line) => line.startsWith('event: '))?.slice(7)
+          const data = lines.filter((line) => line.startsWith('data: ')).map((line) => line.slice(6)).join('\n')
+          if (event === 'auth_expired') throw new ApiError(401, 'UNAUTHORIZED')
+          if (event === 'stream_denied') throw new ApiError(403, 'STREAM_DENIED')
+          if (event && data) onFrame(event, data)
+          boundary = /\r?\n\r?\n/.exec(buffer)
+        }
+        if (buffer.length > 65536) throw new ApiError(0, 'INVALID_STREAM')
+      }
+      if (bounded.aborted) throw bounded.reason
+    } catch (error) {
+      if (signal.aborted) throw new DOMException('Cancelled', 'AbortError')
+      if (error instanceof ApiError) {
+        if (error.status === 401 && this.token) this.onUnauthorized?.()
+        throw error
+      }
+      throw new ApiError(0, 'STREAM_INTERRUPTED')
+    } finally {
+      await reader?.cancel().catch(() => undefined)
+      reader?.releaseLock()
+    }
+  }
   get<T>(path: string, signal?: AbortSignal) {
     return this.request<T>(path, 'GET', undefined, undefined, signal)
   }

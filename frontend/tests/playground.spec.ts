@@ -241,6 +241,100 @@ test('playground: return plus recommendation finishes without asking to buy', as
   expect(f.orders).toBe(1)
   expect(f.case_rows).toEqual([expect.objectContaining({ status: 'REQUESTED' })])
   expect(f.confirmation_rows).toHaveLength(3)
+  const handoffs = page.getByTestId('run-event').filter({ hasText: 'Specialist Handoff' })
+  await expect(handoffs.last()).toContainText('shopping')
+  await expect(handoffs.first()).toContainText('aftersales')
   expect(f.run_event_rows.some(e => e.event_type === 'tool' && e.payload_summary.name === 'retrieve_products')).toBe(true)
   expect(f.run_event_rows.some(e => e.event_type === 'tool' && e.payload_summary.name === 'prepare_checkout')).toBe(false)
+})
+
+test('playground SSE: committed progress arrives before POST and reconnect restores every seq', async ({ page, request }) => {
+  await control(request, '/sdk-mode', { program: 'recommend', delay_ms: 1250 })
+  await page.addInitScript(() => {
+    const nativeFetch = window.fetch.bind(window)
+    const probe = { cursors: [] as number[], disconnect: () => {} }
+    Object.assign(window, { streamProbe: probe })
+    window.fetch = (input, init) => {
+      const url = new URL(String(input), location.href)
+      if (!url.pathname.endsWith('/events/stream')) return nativeFetch(input, init)
+      const network = new AbortController()
+      probe.cursors.push(Number(url.searchParams.get('after_seq')))
+      probe.disconnect = () => network.abort()
+      return nativeFetch(input, {
+        ...init,
+        signal: init?.signal ? AbortSignal.any([network.signal, init.signal]) : network.signal,
+      })
+    }
+  })
+  let returned = false
+  let starts = 0
+  page.on('request', req => { if (req.method() === 'POST' && req.url().endsWith('/runs')) starts++ })
+  page.on('response', res => { if (res.request().method() === 'POST' && res.url().endsWith('/runs')) returned = true })
+  await workspace(page, '推荐300元以内的静音键盘，不要购买。')
+  await expect(page.getByTestId('run-status')).toHaveText('RUNNING')
+  const events = page.getByTestId('run-event')
+  await expect(events.filter({ hasText: 'Specialist Handoff' })).toHaveCount(1)
+  await expect(page.getByTestId('timeline-connection')).toHaveText('实时接收')
+  expect(returned).toBe(false)
+  const first = await events.count()
+  const disconnected = await page.evaluate(() => {
+    const probe = (window as unknown as { streamProbe: { disconnect: () => void } }).streamProbe
+    probe.disconnect()
+    return true
+  })
+  expect(disconnected).toBe(true)
+  await expect(page.getByTestId('timeline-connection')).toContainText('重连')
+  await expect(events.filter({ hasText: 'retrieve_products' }).first()).toBeVisible()
+  expect(returned).toBe(false)
+  expect(await events.count()).toBeGreaterThan(first)
+  await expect(page.getByTestId('run-status')).toHaveText('COMPLETED')
+  const f = await facts(request)
+  expect(f.orders).toBe(0)
+  expect(starts).toBe(1)
+  const cursors = await page.evaluate(() => (window as unknown as { streamProbe: { cursors: number[] } }).streamProbe.cursors)
+  expect(cursors[0]).toBe(0)
+  expect(cursors.slice(1).some(cursor => cursor >= first)).toBe(true)
+  const seqs = f.run_event_rows.map(event => event.seq)
+  await expect.poll(() => events.evaluateAll(rows => rows.map(row => Number(row.getAttribute('data-seq'))))).toEqual(seqs)
+  expect(new Set(seqs).size).toBe(seqs.length)
+  await page.reload()
+  await login(page, true)
+  await expect(page.getByTestId('run-status')).toHaveText('COMPLETED')
+  await expect.poll(() => events.evaluateAll(rows => rows.map(row => Number(row.getAttribute('data-seq'))))).toEqual(seqs)
+  expect(starts).toBe(1)
+})
+
+test('playground SSE: invalidated session aborts the previous stream and leaves approval pending', async ({ page, request }) => {
+  await control(request, '/sdk-mode', { program: 'purchase' })
+  await page.addInitScript(() => {
+    const nativeFetch = window.fetch.bind(window)
+    const probe = { aborted: false }
+    Object.assign(window, { authStreamProbe: probe })
+    window.fetch = (input, init) => {
+      if (new URL(String(input), location.href).pathname.endsWith('/events/stream')) {
+        init?.signal?.addEventListener('abort', () => { probe.aborted = true }, { once: true })
+      }
+      return nativeFetch(input, init)
+    }
+  })
+  const streamRoute = /\/agent\/runs\/[^/]+\/events\/stream\?/
+  await page.route(streamRoute, route => route.fulfill({ status: 404 }))
+  await workspace(page, '帮我找一款300元以内静音键盘准备购买，送演示宿舍')
+  await expect(page.getByTestId('run-status')).toHaveText('WAITING_INPUT')
+  await expect(page.getByRole('button', { name: '批准并继续工作流' })).toBeVisible()
+  await expect(page.getByTestId('timeline-connection')).toContainText('重连')
+  await expect(page.getByTestId('run-event').filter({ hasText: '提案创建' })).toHaveCount(1)
+  await page.unroute(streamRoute)
+  await expect(page.getByTestId('timeline-connection')).toHaveText('实时接收')
+  await page.evaluate(() => {
+    (window as unknown as { authStreamProbe: { aborted: boolean } }).authStreamProbe.aborted = false
+  })
+  await page.route('**/api/v1/agent/threads/*', route => route.fulfill({ status: 401, json: { code: 'UNAUTHORIZED' } }))
+  await page.getByRole('button', { name: '核对 Thread 状态' }).click()
+  await expect(page.getByRole('link', { name: '去登录' })).toBeVisible()
+  await expect.poll(() => page.evaluate(() => (window as unknown as { authStreamProbe: { aborted: boolean } }).authStreamProbe.aborted)).toBe(true)
+  const f = await facts(request)
+  expect(f.orders).toBe(0)
+  expect(f.confirmation_rows).toHaveLength(0)
+  expect(f.run_rows[0].status).toBe('WAITING_INPUT')
 })

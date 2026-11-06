@@ -1,5 +1,6 @@
 """MOCK_TRANSPORT programs only. Real ChatDeepSeek parses these synthetic wire responses."""
 
+import asyncio
 import json
 from datetime import UTC, datetime
 from uuid import uuid4
@@ -10,8 +11,9 @@ from multiagent_helpers import ai, call, choose_purchase, final, payload, route
 
 
 class SDKProgram:
-    def __init__(self, program="purchase", order_id=None):
+    def __init__(self, program="purchase", order_id=None, *, delay_ms=0):
         self.program, self.order_id = program, order_id
+        self.delay_ms = delay_ms
         self.counts, self.requests = {}, []
 
     def plan(self, messages):
@@ -137,10 +139,14 @@ class SDKProgram:
                 data["usage"] = {"prompt_tokens": 100, "completion_tokens": 30, "total_tokens": 130}
             return httpx.Response(200, json=data, headers={"x-request-id": "mock-" + uuid4().hex})
 
-        return httpx.MockTransport(respond)
+        async def delayed(request):
+            await asyncio.sleep(self.delay_ms / 1000)
+            return respond(request)
+
+        return httpx.MockTransport(delayed if self.delay_ms else respond)
 
 
-async def install_sdk(env, state_dir, program="purchase", order_id=None):
+async def install_sdk(env, state_dir, program="purchase", order_id=None, *, delay_ms=0):
     from retrieval_helpers import index
 
     from agentmall.playground.app import attach_models
@@ -149,7 +155,7 @@ async def install_sdk(env, state_dir, program="purchase", order_id=None):
     provider = getattr(env[2].state, "playground", None)
     if provider:
         await provider.close()
-    scripted = SDKProgram(program, order_id)
+    scripted = SDKProgram(program, order_id, delay_ms=delay_ms)
     policy = PlaygroundPolicy(
         enabled=True,
         evidence_mode="MOCK_TRANSPORT",

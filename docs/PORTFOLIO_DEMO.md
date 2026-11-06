@@ -56,6 +56,20 @@ docker --context desktop-linux build --network none \
 
 本次现场使用临时项目`agentmall-portfolio-1bd09733`及私有覆盖文件；API/前端端口和服务资源与公开覆盖文件一致。上面的固定项目名用于复现示例，不能据此覆盖其他目录的同名项目。
 
+## 演示实时进度
+
+用本分支源码重新构建并启动上面的独占 Demo。用以下设置替换三轮 Mock 场景配置。延时只用于本地 MockTransport。
+
+```sh
+curl --fail --silent --show-error -X POST http://127.0.0.1:8026/__test/sdk-mode \
+  -H 'X-E2E-Key: agentmall-local-e2e' -H 'Content-Type: application/json' \
+  --data '{"program":"recommend","delay_ms":1250}'
+```
+
+以 `buyer1` 登录，在工作流创建 Multi Thread，输入「推荐300元以内的静音键盘，不要购买。」。在右侧时间线观察 `RUNNING` 时的 Supervisor、Handoff 和工具事件，再看 `COMPLETED`。用浏览器网络工具中断连接再恢复，时间线从最后收到的序号补读，刷新并重新登录后可通过原 Thread 查看历史。
+
+购买演示可在当前 Run 结束后，把上面配置中的 `program` 改为 `purchase`，创建新 Thread 并输入「帮我找一款300元以内静音键盘准备购买，送演示宿舍」。到 `WAITING_INPUT` 时核对购买快照，再手动批准并观察 Resume 与业务回执。演示到待支付结束。
+
 ## 浏览器六步
 
 | 步骤 | 操作 | 核对 |

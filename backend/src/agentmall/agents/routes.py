@@ -4,6 +4,7 @@ from fastapi import APIRouter, Query, Request, Response
 
 from agentmall.agents import run_service
 from agentmall.agents.context import GraphResult, MultiRequest
+from agentmall.agents.event_stream import stream_events
 from agentmall.agents.graph import run_graph
 from agentmall.agents.run_schemas import (
     ContextPatch,
@@ -63,6 +64,16 @@ async def run_events(
     limit: int = Query(50, ge=1, le=100),
 ):
     return await run_service.events(request.app, actor, run_id, after_seq, limit)
+
+
+@router.get("/agent/runs/{run_id}/events/stream")
+async def run_event_stream(
+    request: Request,
+    actor: Actor,
+    run_id: UUID,
+    after_seq: int = Query(0, ge=0, le=2_147_483_647),
+):
+    return await stream_events(request, actor, run_id, after_seq)
 
 
 @router.post("/agent/messages", response_model=AgentResponse)

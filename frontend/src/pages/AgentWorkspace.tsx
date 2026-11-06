@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { useAuth } from '../state/Auth'
 import { useMounted } from '../state/useResource'
@@ -16,11 +16,12 @@ import ThreadMemory from '../components/ThreadMemory'
 import { contextRunInput, freshRecommendationConstraints, type ContextOperation } from '../api/threadContext'
 export default function AgentWorkspace() {
   const [params, setParams] = useSearchParams()
+  const { user } = useAuth()
   const id = params.get('thread') ?? ''
   const order = params.get('order') ?? ''
   return (
     <Workspace
-      key={id}
+      key={`${user?.store_id}:${user?.user_id}:${id}`}
       id={id}
       order={uuidPattern.test(order) ? order : ''}
       restore={(thread) => setParams(order ? { thread, order } : { thread })}
@@ -60,7 +61,11 @@ function Workspace({
     candidate_set_id?: string
   } | null>(null)
   const [uncertainStart, setUncertainStart] = useState(false)
-  const run = thread?.runs[0]
+  const [pendingStartId, setPendingStartId] = useState('')
+  const run = pendingStartId
+    ? thread?.runs.find((item) => item.request_id === pendingStartId)
+    : thread?.runs[0]
+  const refreshRun = useCallback(() => setRevision((n) => n + 1), [])
   const apply = (value: Thread) => {
     if (mounted.current) {
       setThread(value)
@@ -72,16 +77,22 @@ function Workspace({
     const controller = new AbortController()
     let timer: ReturnType<typeof setTimeout> | undefined
     let reads = 0
+    let failures = 0
     async function read() {
       try {
         const value = await api.get<Thread>(`/agent/threads/${id}`, controller.signal)
         if (!controller.signal.aborted) {
           setThread(value)
-          if ((busy || value.runs[0]?.status === 'RUNNING') && ++reads < 40)
-            timer = setTimeout(() => void read(), 1500)
+          const discovering = pendingStartId && !value.runs.some((item) => item.request_id === pendingStartId)
+          failures = 0
+          if ((busy || value.runs[0]?.status === 'RUNNING') && ++reads < 150)
+            timer = setTimeout(() => void read(), discovering ? 350 : 1500)
         }
       } catch (e) {
-        if (!controller.signal.aborted) setNotice(errorMessage(e))
+        if (controller.signal.aborted) return
+        if (e instanceof ApiError && (e.status === 0 || e.status >= 500) && ++failures < 4)
+          timer = setTimeout(() => void read(), 1500)
+        else setNotice(errorMessage(e))
       }
     }
     void read()
@@ -89,7 +100,7 @@ function Workspace({
       controller.abort()
       clearTimeout(timer)
     }
-  }, [api, id, revision, busy])
+  }, [api, id, revision, busy, pendingStartId])
   async function perform(action: () => Promise<void>) {
     if (gate.current) return
     gate.current = true
@@ -116,6 +127,7 @@ function Workspace({
             ...(constraints ? { constraints } : {}),
           }
     startOperation.current = op
+    setPendingStartId(op.request_id)
     try {
       if (retry) {
         const existing = await api.get<Thread>(`/agent/threads/${id}`)
@@ -151,6 +163,8 @@ function Workspace({
         /* Preserve request identity for explicit reconciliation. */
       }
       throw e
+    } finally {
+      setPendingStartId('')
     }
   }
   async function patchMemory(operations?: ContextOperation[]) {
@@ -354,24 +368,26 @@ function Workspace({
                       </>
                     )}
                   </section>
-                  {run.pending_confirmation?.proposal_id && (
-                    <WorkflowConfirmationCard
-                      key={run.pending_confirmation.interrupt_id}
-                      run={run}
-                      onThread={apply}
-                      onRequote={() => {
-                        setRequote(true)
-                        setNotice('请在本次任务中重新明确需求，再启动新 Run。新快照仍需重新批准。')
-                      }}
-                    />
-                  )}
-                  {run.pending_confirmation?.type === 'clarification' && (
-                    <ClarificationCard
-                      key={`${run.id}:${run.pending_confirmation.interrupt_id}`}
-                      run={run}
-                      onThread={apply}
-                    />
-                  )}
+                  <div hidden={run.status !== 'WAITING_INPUT' || !run.pending_confirmation}>
+                    {run.pending_confirmation?.proposal_id && (
+                      <WorkflowConfirmationCard
+                        key={run.pending_confirmation.interrupt_id}
+                        run={run}
+                        onThread={apply}
+                        onRequote={() => {
+                          setRequote(true)
+                          setNotice('请在本次任务中重新明确需求，再启动新 Run。新快照仍需重新批准。')
+                        }}
+                      />
+                    )}
+                    {run.pending_confirmation?.type === 'clarification' && (
+                      <ClarificationCard
+                        key={`${run.id}:${run.pending_confirmation.interrupt_id}`}
+                        run={run}
+                        onThread={apply}
+                      />
+                    )}
+                  </div>
                   {run.result?.facts
                     .filter((f) => f.kind === 'proposal')
                     .map((f) => (
@@ -404,7 +420,13 @@ function Workspace({
                 </>
               )}
             </div>
-            {run && <RunTimeline key={run.id} run={run} />}
+            {pendingStartId && !run && <p role="status">正在查找本次运行的持久记录…</p>}
+            {run && (
+              <RunTimeline key={run.id} run={run}
+                live={busy || run.status === 'RUNNING' || run.status === 'WAITING_INPUT'}
+                onStatusChange={refreshRun}
+              />
+            )}
           </div>
         </>
       )}

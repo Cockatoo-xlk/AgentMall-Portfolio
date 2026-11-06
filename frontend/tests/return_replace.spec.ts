@@ -352,6 +352,7 @@ test('return_replace: created case survives recommendation failure; independent 
   await approve(page)
   await expect(page.getByTestId('run-status')).toHaveText('PARTIAL')
   await expect(page.getByTestId('resource-case')).toContainText('REQUESTED')
+  await expect(page.getByTestId('run-event').filter({ hasText: '真实业务回执' }).first()).toBeVisible()
   const before = await facts(request)
   expect(before.case_rows).toHaveLength(1)
   expect(before.refund_rows).toHaveLength(0)
