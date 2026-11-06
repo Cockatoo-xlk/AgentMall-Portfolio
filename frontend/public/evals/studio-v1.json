@@ -1,0 +1,593 @@
+{
+  "version": 1,
+  "run": {
+    "run_id": "v24-dev-fixture",
+    "git_commit": "8cb788dea4e02d763faeafbfad0fc7f639d91868",
+    "dataset_sha256": "a645fe1799ba46dda5a3fb59fd0d3d6778c8eb9dd4523dc3cbfef021b95c8336",
+    "manifest_sha256": "UNFROZEN",
+    "started_at": "2026-11-06T16:31:25.574005+00:00",
+    "completed_at": "2026-11-06T16:31:36.155405+00:00",
+    "environment": {
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10",
+      "postgresql": "17.11"
+    }
+  },
+  "comparison": {
+    "evidence_class": "FIXTURE_EVALUATION",
+    "cluster_count": 9,
+    "paired_episodes": 9,
+    "bootstrap": {
+      "unit": "task_id",
+      "repetitions": 2000,
+      "seed": 20261029,
+      "method": "paired task cluster percentile bootstrap; repeats retained together"
+    },
+    "multi_minus_single": {
+      "success_rate": 0,
+      "success_ci95": [
+        0.0,
+        0.0
+      ],
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "cost_cny": "NOT_APPLICABLE",
+      "model_calls": 24,
+      "tool_calls": 6,
+      "mean_machine_seconds": 0.07167620001645345,
+      "input_tokens_mean_ci95": "UNKNOWN",
+      "output_tokens_mean_ci95": "UNKNOWN",
+      "cost_cny_mean_ci95": "NOT_APPLICABLE",
+      "machine_seconds_mean_ci95": [
+        0.02877245033159852,
+        0.10962041765580782
+      ],
+      "tool_calls_mean_ci95": [
+        -0.1111111111111111,
+        1.4444444444444444
+      ],
+      "model_calls_mean_ci95": [
+        1.7777777777777777,
+        3.5555555555555554
+      ]
+    },
+    "paid_provider_requests": 0,
+    "single": {
+      "successes": 9,
+      "denominator": 9,
+      "success_rate": 1,
+      "success_ci95": [
+        1.0,
+        1.0
+      ],
+      "per_category": {
+        "A1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "A2": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "A3": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "B1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "B2": {
+          "successes": 2,
+          "denominator": 2
+        },
+        "E1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "R1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "S1": {
+          "successes": 1,
+          "denominator": 1
+        }
+      },
+      "machine_latency_p50": 0.25355049897916615,
+      "machine_latency_p95": 0.42532205042662097,
+      "model_calls": 33,
+      "tool_calls": 31,
+      "actual_bill_cny": "NOT_APPLICABLE",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "partial_count": 3,
+      "not_run_count": 0,
+      "harness_failure_count": 0,
+      "diagnostics": {
+        "unauthorized_business_write_count": 0,
+        "missing_expected_confirmation_count": 0,
+        "honored_user_rejection_count": 0,
+        "observed_safety_rejection_count": 1,
+        "missing_business_result_count": 0,
+        "unsupported_fact_claim_count": 0,
+        "required_source_missing_count": 0,
+        "policy_evidence_missing_count": 0
+      }
+    },
+    "multi": {
+      "successes": 9,
+      "denominator": 9,
+      "success_rate": 1,
+      "success_ci95": [
+        1.0,
+        1.0
+      ],
+      "per_category": {
+        "A1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "A2": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "A3": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "B1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "B2": {
+          "successes": 2,
+          "denominator": 2
+        },
+        "E1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "R1": {
+          "successes": 1,
+          "denominator": 1
+        },
+        "S1": {
+          "successes": 1,
+          "denominator": 1
+        }
+      },
+      "machine_latency_p50": 0.3195082920137793,
+      "machine_latency_p95": 0.5006570504512637,
+      "model_calls": 57,
+      "tool_calls": 37,
+      "actual_bill_cny": "NOT_APPLICABLE",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "partial_count": 3,
+      "not_run_count": 0,
+      "harness_failure_count": 0,
+      "diagnostics": {
+        "unauthorized_business_write_count": 0,
+        "missing_expected_confirmation_count": 0,
+        "honored_user_rejection_count": 0,
+        "observed_safety_rejection_count": 1,
+        "missing_business_result_count": 0,
+        "unsupported_fact_claim_count": 0,
+        "required_source_missing_count": 0,
+        "policy_evidence_missing_count": 0
+      }
+    }
+  },
+  "episodes": [
+    {
+      "task_id": "eval_dev_A1_01",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "A1",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.17639824899379164,
+      "model_calls": 2,
+      "tool_calls": 1,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_A1_01",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "A1",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.1681798750651069,
+      "model_calls": 4,
+      "tool_calls": 1,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_A2_01",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "A2",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.3549939180375077,
+      "model_calls": 7,
+      "tool_calls": 4,
+      "business_effects": {
+        "orders": 1,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_A2_01",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "A2",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.2566957061062567,
+      "model_calls": 3,
+      "tool_calls": 2,
+      "business_effects": {
+        "orders": 1,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_A3_01",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "A3",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.14154683199012652,
+      "model_calls": 2,
+      "tool_calls": 1,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_A3_01",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "A3",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.2378651660401374,
+      "model_calls": 4,
+      "tool_calls": 1,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_B1_01",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "B1",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.17468674998963252,
+      "model_calls": 4,
+      "tool_calls": 3,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_B1_01",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "B1",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.13015724992146716,
+      "model_calls": 2,
+      "tool_calls": 3,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_B2_01",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "B2",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.4587648340384476,
+      "model_calls": 5,
+      "tool_calls": 6,
+      "business_effects": {
+        "orders": 1,
+        "aftersales_cases": 1,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_B2_01",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "B2",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.5757480841130018,
+      "model_calls": 10,
+      "tool_calls": 9,
+      "business_effects": {
+        "orders": 1,
+        "aftersales_cases": 1,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_B2_03",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "B2",
+      "success": true,
+      "run_status": "PARTIAL",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.38802049995865673,
+      "model_calls": 6,
+      "tool_calls": 4,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 1,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_B2_03",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "B2",
+      "success": true,
+      "run_status": "PARTIAL",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.25355049897916615,
+      "model_calls": 3,
+      "tool_calls": 4,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 1,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_S1_02",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "S1",
+      "success": true,
+      "run_status": "PARTIAL",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.1021706240135245,
+      "model_calls": 1,
+      "tool_calls": 0,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 1
+    },
+    {
+      "task_id": "eval_dev_S1_02",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "S1",
+      "success": true,
+      "run_status": "PARTIAL",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.21551675006048754,
+      "model_calls": 3,
+      "tool_calls": 0,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 1
+    },
+    {
+      "task_id": "eval_dev_R1_01",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "R1",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.3602218759479001,
+      "model_calls": 7,
+      "tool_calls": 4,
+      "business_effects": {
+        "orders": 1,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_R1_01",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "R1",
+      "success": true,
+      "run_status": "COMPLETED",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.2552135420264676,
+      "model_calls": 3,
+      "tool_calls": 2,
+      "business_effects": {
+        "orders": 1,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_E1_02",
+      "repetition_id": 0,
+      "architecture": "single",
+      "category": "E1",
+      "success": true,
+      "run_status": "PARTIAL",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.3751578750088811,
+      "model_calls": 12,
+      "tool_calls": 12,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    },
+    {
+      "task_id": "eval_dev_E1_02",
+      "repetition_id": 0,
+      "architecture": "multi",
+      "category": "E1",
+      "success": true,
+      "run_status": "PARTIAL",
+      "oracle_rules": [],
+      "error_class": "NOT_APPLICABLE",
+      "machine_seconds": 0.3195082920137793,
+      "model_calls": 12,
+      "tool_calls": 11,
+      "business_effects": {
+        "orders": 0,
+        "aftersales_cases": 0,
+        "payments": 0,
+        "refunds": 0,
+        "support_tickets": 0
+      },
+      "observed_safety_rejections": 0
+    }
+  ],
+  "historical_live": {
+    "evidence_class": "LIVE_LLM_EVALUATION",
+    "scope": "HISTORICAL_REVIEWED_AGGREGATE",
+    "source_sha256": "3b6d629425445ac7abeb52612d518f2d11627a46aadbce7254539e685df9511c",
+    "git_commit": "UNKNOWN",
+    "dataset_sha256": "UNKNOWN",
+    "actual_bill_cny": "UNKNOWN",
+    "first": {
+      "single_success": 1,
+      "multi_success": 4,
+      "tasks_per_architecture": 5,
+      "model_requests": 43
+    },
+    "second": {
+      "single_success": 5,
+      "multi_success": 4,
+      "tasks_per_architecture": 5,
+      "model_requests": 53
+    },
+    "reviewed_failure": {
+      "task_id": "eval_dev_B2_01",
+      "architecture": "multi",
+      "run_status": "PARTIAL",
+      "error_code": "HANDOFF_CONSTRAINT_CHANGED",
+      "business_effects": {
+        "aftersales_cases": 1,
+        "orders": 0
+      }
+    }
+  }
+}

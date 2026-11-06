@@ -80,6 +80,7 @@ export default function Layout() {
                 <NavLink to="/after-sales">售后服务</NavLink>
               </>
             )}
+            <NavLink to="/engineering/evals">评测工作台</NavLink>
           </nav>
           <div className="header-account">
             {user ? (
