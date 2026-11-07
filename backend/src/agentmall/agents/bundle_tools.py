@@ -24,13 +24,50 @@ async def retrieve(context, args):
         raise clarify("BUNDLE_CATEGORY_NOT_REQUESTED")
     async with r.sessions.begin() as session:
         actor = await authenticate(r, session)
-        query = part.requirements.model_copy(
-            update={"exclude_product_ids": sorted(r.exclusions, key=str)}
-        )
-        hits = await retrieve_products(session, actor, query.query, query, r.encoder)
-        products = [
-            h.product for h in hits if matches(part, h.product) and h.id not in r.exclusions
-        ]
+        revision = r.thread_snapshot.get("bundle_revision")
+        if revision and ("bundle_revision", "started") not in r.facts:
+            r.event("bundle_revision_requested", item_count=len(spec.parts))
+            r.event("bundle_constraints_updated", budget_cents=spec.budget_cents)
+            r.facts[("bundle_revision", "started")] = {
+                "source_bundle_id": revision["source_bundle_id"]
+            }
+        if revision and part.category not in revision["refresh_categories"]:
+            from uuid import UUID
+
+            from agentmall.catalog import service as catalog
+            from agentmall.infra.errors import DomainError
+
+            snapshot = next((i for i in revision["items"] if i["category"] == part.category), None)
+            products = []
+            try:
+                if snapshot is None:
+                    raise clarify("INVALID_BUNDLE")
+                current = await catalog.get_product(session, actor, UUID(snapshot["id"]))
+                if not matches(part, current) or current.id in r.exclusions:
+                    raise clarify("BUNDLE_REUSED_SKU_INVALID")
+                products = [current]
+            except DomainError as error:
+                r.event(
+                    "bundle_revision_rejected", category=part.category, reason="CURRENT_SKU_INVALID"
+                )
+                r.facts[("bundle_invalid", part.category)] = {"reason": error.code}
+            r.event("bundle_retrieval_reused", category=part.category, item_count=len(products))
+        else:
+            query = part.requirements.model_copy(
+                update={
+                    "exclude_product_ids": sorted(
+                        set(part.requirements.exclude_product_ids) | r.exclusions, key=str
+                    )
+                }
+            )
+            hits = await retrieve_products(session, actor, query.query, query, r.encoder)
+            products = [
+                h.product for h in hits if matches(part, h.product) and h.id not in r.exclusions
+            ]
+            if revision:
+                r.event(
+                    "bundle_retrieval_refreshed", category=part.category, item_count=len(products)
+                )
     # Only committed facts enter the bounded composer and checkpoint.
     r.facts[("bundle_candidates", part.category)] = {
         "requirements_digest": actions.payload_hash(spec.model_dump(mode="json")),
@@ -50,6 +87,27 @@ async def retrieve(context, args):
                 p.category: r.facts[("bundle_candidates", p.category)]["items"] for p in spec.parts
             }
             result = choose_bundle(spec, pools)
+            revision = r.thread_snapshot.get("bundle_revision")
+            diff = None
+            if revision:
+                from agentmall.agents.bundle_revision import revision_diff
+
+                rev = {
+                    **revision,
+                    "invalid_categories": [
+                        key for (kind, key) in r.facts if kind == "bundle_invalid"
+                    ],
+                }
+                result["budget_cents"] = spec.budget_cents
+                diff = revision_diff(rev, result)
+                result["revision"] = diff
+                r.event(
+                    "bundle_replanned",
+                    status=result["status"],
+                    total_cents=result.get("total_cents"),
+                    budget_cents=spec.budget_cents,
+                    item_count=len(result.get("items", [])),
+                )
             if result["status"] == "READY":
                 async with r.sessions.begin() as session:
                     actor = await authenticate(r, session)
@@ -65,6 +123,7 @@ async def retrieve(context, args):
                         "expires_at": (now + timedelta(minutes=15)).isoformat(),
                         "items_hash": actions.payload_hash(result["items"]),
                         "ranking": result["ranking"],
+                        **({"revision": diff} if diff else {}),
                     }
                     await verify_bundle(session, actor, result["items"], details)
                 ident = str(

@@ -18,7 +18,16 @@ from agentmall.agents.purchase_intent import purchase_intent
 
 
 async def accept_bundle_context(session, actor, context, payload, run_id):
-    parsed = parse_bundle(payload.message)
+    parsed = None if payload.bundle_revision else parse_bundle(payload.message)
+    previous = context.preferences.get("bundle")
+    if previous and parsed is None:
+        from agentmall.agents.bundle_revision import parse_operations
+
+        operations = parse_operations(payload.message)
+        if payload.bundle_revision is not None or operations:
+            return await accept_revision(session, actor, context, payload, run_id, operations)
+    elif payload.bundle_revision is not None:
+        raise clarify("STALE_BUNDLE")
     typed = payload.constraints.bundle if payload.constraints else None
     previous = context.preferences.get("bundle")
     if not (parsed or typed or previous):
@@ -85,6 +94,7 @@ async def accept_bundle_context(session, actor, context, payload, run_id):
             )
             for word in sorted(
                 (
+                    "修改后的",
                     "刚才推荐的组合",
                     "刚才那套",
                     "这套",
@@ -224,11 +234,12 @@ async def accept_bundle_context(session, actor, context, payload, run_id):
     }
 
 
-async def bundle_view(session, actor, record):
+async def bundle_view(session, actor, record, historical=False):
     valid = True
     reason = None
     try:
-        await verify_bundle(session, actor, record.items, record.details)
+        if not historical:
+            await verify_bundle(session, actor, record.items, record.details)
     except Exception as error:
         from agentmall.infra.errors import DomainError
 
@@ -236,6 +247,8 @@ async def bundle_view(session, actor, record):
             raise
         valid = False
         reason = error.code if isinstance(error, DomainError) else "INVALID_BUNDLE"
+    if historical:
+        valid, reason = False, "HISTORICAL_BUNDLE"
     details = record.details
     return {
         "bundle_id": str(record.id),
@@ -252,5 +265,103 @@ async def bundle_view(session, actor, record):
         "valid": valid,
         "invalid_reason": reason,
         "ranking": details.get("ranking"),
+        "revision": details.get("revision"),
         "created_at": record.created_at,
+    }
+
+
+async def accept_revision(session, actor, context, payload, run_id, parsed):
+    from agentmall.agents.bundle_revision import apply_revision
+    from agentmall.agents.context import Constraints
+    from agentmall.agents.purchase_intent import purchase_intent
+
+    typed = payload.bundle_revision
+    if (
+        typed
+        and not parsed
+        and payload.message.strip() not in {"应用组合修改", "按结构化参数修改组合"}
+    ):
+        raise clarify()
+    if (
+        purchase_intent(payload.message).requested
+        or payload.bundle_id
+        or payload.bundle_quantities
+        or payload.constraints
+    ):
+        raise clarify("BUNDLE_EDIT_PURCHASE_CONFLICT")
+    if typed and (
+        typed.expected_context_version != context.version or (parsed and typed.operations != parsed)
+    ):
+        raise clarify(
+            "STALE_CONTEXT"
+            if typed.expected_context_version != context.version
+            else "BUNDLE_CONFLICTING_OPERATIONS"
+        )
+    operations = typed.operations if typed else parsed
+    source_id = (
+        str(typed.source_bundle_id)
+        if typed
+        else context.offered_ids[0]
+        if len(context.offered_ids) == 1
+        else context.focus.get("bundle_revision_source_id")
+    )
+    recovering = source_id is not None and source_id == context.focus.get(
+        "bundle_revision_source_id"
+    )
+    if source_id not in context.offered_ids and not recovering:
+        raise clarify("STALE_BUNDLE")
+    source = await session.get(CandidateSet, UUID(source_id))
+    if (
+        source is None
+        or source.kind != "bundle"
+        or source.thread_id != context.thread_id
+        or source.details.get("buyer_id") != str(actor.user_id)
+        or source.details.get("store_id") != str(actor.store_id)
+        or (not recovering and source.preferences_digest != payload_hash(context.preferences))
+    ):
+        raise clarify("BUNDLE_SCOPE_MISMATCH")
+    spec, refresh, reasons = apply_revision(
+        BundleRequirements.model_validate(context.preferences["bundle"]), source.items, operations
+    )
+    if recovering:
+        current_categories = {part.category for part in spec.parts}
+        refresh = sorted(
+            set(refresh) | (set(context.focus.get("refresh_categories", [])) & current_categories)
+        )
+        reasons = {**context.focus.get("reasons", {}), **reasons}
+    revision = {
+        "source_bundle_id": str(source.id),
+        "source_run_id": str(source.run_id),
+        "items": deepcopy(source.items),
+        "operations": [o.model_dump(mode="json", exclude_unset=True) for o in operations],
+        "refresh_categories": refresh,
+        "reasons": reasons,
+        "old_total_cents": source.details["total_cents"],
+        "old_budget_cents": source.details["budget_cents"],
+        "current_categories": [p.category for p in spec.parts],
+    }
+    context.preferences = {"bundle": spec.model_dump(mode="json")}
+    context.offered_ids = []
+    context.focus = {
+        "bundle_revision_source_id": str(source.id),
+        "refresh_categories": refresh,
+        "reasons": reasons,
+    }
+    context.version += 1
+    context.updated_at = await database_now(session)
+    context.provenance = {
+        "type": "BUNDLE_REVISION",
+        "run_id": str(run_id),
+        "request_id": str(payload.request_id),
+    }
+    constraints = Constraints(bundle=spec, purchase_requested=False)
+    return {
+        "version": context.version,
+        "preferences": deepcopy(context.preferences),
+        "constraints": constraints.model_dump(mode="json"),
+        "selected": [],
+        "selected_bundle": None,
+        "candidate_set_id": None,
+        "source_run_id": str(source.run_id),
+        "bundle_revision": revision,
     }

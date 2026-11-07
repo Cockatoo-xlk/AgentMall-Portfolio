@@ -3,6 +3,7 @@ from uuid import UUID
 
 from pydantic import Field, StrictInt, StrictStr, model_validator
 
+from agentmall.agents.bundle_revision import BundleRevision
 from agentmall.agents.context import Constraints, Strict
 from agentmall.catalog.categories import Category
 
@@ -17,6 +18,7 @@ class RunCreate(Strict):
     constraints: Constraints | None = None
     expected_context_version: int | None = Field(None, ge=0, strict=True)
     candidate_set_id: UUID | None = None
+    bundle_revision: BundleRevision | None = None
     bundle_id: UUID | None = None
     bundle_quantities: dict[Category, StrictInt] | None = Field(None, min_length=2, max_length=5)
 

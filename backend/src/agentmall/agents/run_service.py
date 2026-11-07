@@ -467,7 +467,13 @@ async def start_run(app, actor, thread_id, payload):
 
     request_body = payload.model_dump(mode="json")
     # Preserve historical hashes including constraints:null; omit only new absent fields.
-    for key in ("expected_context_version", "candidate_set_id", "bundle_id", "bundle_quantities"):
+    for key in (
+        "expected_context_version",
+        "candidate_set_id",
+        "bundle_id",
+        "bundle_quantities",
+        "bundle_revision",
+    ):
         if request_body[key] is None:
             del request_body[key]
     digest = payload_hash(request_body)
@@ -514,7 +520,7 @@ async def start_run(app, actor, thread_id, payload):
                 body = {
                     k: v
                     for k, v in request_body.items()
-                    if k not in {"expected_context_version", "candidate_set_id"}
+                    if k not in {"expected_context_version", "candidate_set_id", "bundle_revision"}
                 }
                 body["message"] = sanitized(body["message"])
                 run = AgentRun(

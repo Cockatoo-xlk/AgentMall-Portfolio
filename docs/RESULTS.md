@@ -2,6 +2,12 @@
 
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
+## V2.9 多轮组合重规划（本地累计完整回归）
+
+基于`8a8d54bd7b21d7e084c7a8d02f312d64f0203b4b`，新增七种可信差分、按品类增量检索与当前事实复核、历史方案只读和前后价格对比。完整后端 **1038 passed / 14 skipped**（含22项新增）、完整Vitest **104 passed**、完整Playwright **113 passed / 0 retries**；Ruff、格式、TypeScript、ESLint、build全部退出0。[A—L场景及保留失败](evidence/v29/report.md)、[命令/日志/源码内容绑定](evidence/v29/verification.json)。
+
+本轮独占PostgreSQL与官方Checkpoint，模型MockTransport、Embedding Fixture；真实Provider及Key读取0。首轮后端1007通过/31失败/14跳过因测试包装缺少私有`.env.rag`，补齐本轮配置后第二轮完整通过；首轮原件保留，不归咎于产品也不隐藏。旧跳过、断言与重试均未放宽，冻结eval数据与MCP权限未改。新版本远程CI、真实BGE和LLM效果均NOT_RUN。
+
 ## V2.8 MCP Tool Gateway（本地定向验收）
 
 基于V2.7 `5f197611d6e4cb93a0a39c3882456f196c84551e`，新增官方SDK2.3.0的stdio和localhost Streamable HTTP接口。**181项定向pytest通过（含35项MCP协议/业务测试）**、完整Vitest **102通过**、选定Playwright **11通过 / 0 retries**；Ruff、格式、TypeScript、ESLint、build均退出0。不是完整后端或完整浏览器回归，也不是新的远程CI。[命令、源码内容绑定及日志SHA](evidence/v28/verification.json)。

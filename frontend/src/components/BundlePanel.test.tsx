@@ -34,3 +34,20 @@ it('passes only a selected bundle reference with original request identity', () 
   expect(contextRunInput('r', '就买这套，每样一件，送演示宿舍', 2, undefined, 'b')).toEqual({ request_id: 'r', message: '就买这套，每样一件，送演示宿舍', expected_context_version: 2, bundle_id: 'b' })
   expect(contextRunInput('r', '推荐', 0)).not.toHaveProperty('bundle_id')
 })
+
+it('shows factual revision differences and historical snapshots without selecting history', () => {
+  const next = { ...bundle, total_cents: 90000, remaining_cents: 410000, revision: {
+    source_bundle_id: 'old-bundle', old_total_cents: 100000, new_total_cents: 90000,
+    old_budget_cents: 500000, new_budget_cents: 500000, delta_cents: -10000,
+    changes: [{ category: 'monitor' as const, status: 'REPLACED', old_item: bundle.items[0], new_item: { ...bundle.items[0], id: 'new-monitor', price_cents: 90000, subtotal_cents: 90000 }, delta_cents: -10000, retrieval: 'REFRESHED', reason: 'CONSTRAINT_CHANGED' }],
+  } }
+  const html = renderToStaticMarkup(<BundlePanel context={{ ...context, bundles: [next], bundle_history: [{ ...bundle, bundle_id: 'old-bundle', valid: false }] }} busy={false} selected="" onSelect={vi.fn()} />)
+  for (const label of ['修改前后对比', '900.00', '原方案', '替换', '重新检索', '历史方案', 'old-bundle']) expect(html).toContain(label)
+  expect((html.match(/name="bundle"/g) ?? [])).toHaveLength(1)
+  expect(html).not.toContain('<script>')
+})
+it('does not turn missing failed-composition amounts into zero', () => {
+  const html = renderToStaticMarkup(<BundlePanel context={{ ...context, bundles: [], bundle_status: { status: 'NO_FEASIBLE_BUNDLE', reason: 'EMPTY_REQUIRED_CATEGORY', revision: { source_bundle_id: 'old', old_total_cents: 100000, new_total_cents: null, old_budget_cents: 500000, new_budget_cents: 100, delta_cents: null, changes: [] } } }} busy={false} selected="" onSelect={vi.fn()} />)
+  expect(html).toContain('新方案总价：未知')
+  expect(html).toContain('没有完整可行方案')
+})

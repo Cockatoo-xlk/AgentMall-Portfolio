@@ -7,6 +7,12 @@ import { mergeEvents } from '../api/agentWorkflow'
 import type { Run, RunEvent, EventPage } from '../api/agentWorkflow'
 const labels: Record<string, string> = {
   bundle_computed: '组合预算计算',
+  bundle_revision_requested: '组合修改请求',
+  bundle_constraints_updated: '组合约束更新',
+  bundle_retrieval_reused: '重验并复用原SKU',
+  bundle_retrieval_refreshed: '重新检索品类',
+  bundle_replanned: '组合重规划完成',
+  bundle_revision_rejected: '原SKU不能复用',
   run_created: 'Run 启动',
   run_activated: '激活执行',
   route_decision: 'Supervisor 路由',

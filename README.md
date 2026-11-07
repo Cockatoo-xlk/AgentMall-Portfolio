@@ -16,6 +16,10 @@
 
 截图为合成业务演示：**MockTransport + Fixture Embedding，确认操作者TEST_OPERATOR，未付款**。
 
+## V2.9 多轮组合重规划
+
+同一Thread可保留SKU、替换为更便宜商品、按品类修改规格、增删品类、调整整套预算与数量。只有受影响品类重新检索，其他SKU重读当前事实；展示新旧价格和方案差异，失败保留缺口与重检义务。购买仍需最新方案和一份独立Confirmation，不继承旧授权。[七种差分、增量检索与可复现演示](docs/BUNDLE_REPLANNING.md)。
+
 ## V2.8 MCP Tool Gateway
 
 官方MCP Python SDK2.3.0提供标准stdio及localhost Streamable HTTP入口，独立客户端可发现并调用9个角色受限工具，查询商品、本人订单、售后资格、公开政策与本店商家资料。唯一写扩展只创建幂等DRAFT，不能批准、发布或执行交易。实际验证2026-07-28无协议会话请求、stdio旧版兼容及原领域数据一致性；不替换LangGraph内部工具。[连接指南、权限矩阵与独立客户端回执](docs/MCP_GATEWAY.md)。仅限本地：**REMOTE_AUTH_NOT_IMPLEMENTED**，没有真实Provider请求。

@@ -96,7 +96,21 @@ def public_summary(kind, event):
         value = data.get(key)
         if isinstance(value, str) and re.fullmatch(r"[A-Za-z_]{1,64}", value) and identifier(value):
             result[key] = value
-    if kind == "bundle_computed":
+    if kind in {
+        "bundle_computed",
+        "bundle_revision_requested",
+        "bundle_constraints_updated",
+        "bundle_retrieval_reused",
+        "bundle_retrieval_refreshed",
+        "bundle_replanned",
+        "bundle_revision_rejected",
+    }:
+        from agentmall.catalog.categories import CATEGORY_LABELS
+
+        if isinstance(data.get("category"), str) and data["category"] in CATEGORY_LABELS:
+            result["category"] = data["category"]
+        if data.get("reason") == "CURRENT_SKU_INVALID":
+            result["reason"] = "CURRENT_SKU_INVALID"
         for key in ("item_count", "total_cents", "budget_cents"):
             if type(data.get(key)) is int and 0 <= data[key] <= 100_000_000:
                 result[key] = data[key]

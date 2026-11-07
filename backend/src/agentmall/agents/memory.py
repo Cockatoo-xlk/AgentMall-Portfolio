@@ -168,6 +168,7 @@ async def accept_context(session, actor, thread_id, run_id, payload):
         if (
             existing is not None
             or payload.candidate_set_id is not None
+            or payload.bundle_revision is not None
             or re.search(
                 r"第(?:[一二三四五六七八九十]|\d+)(?:款|个)|刚才那款|上一款", payload.message
             )
@@ -324,9 +325,29 @@ async def context_view(session, actor, thread_id):
                 "created_at": record.created_at,
             }
         )
+    history = []
+    if context.preferences.get("bundle"):
+        from agentmall.agents.bundle_memory import bundle_view
+
+        records = (
+            await session.scalars(
+                select(CandidateSet)
+                .where(CandidateSet.thread_id == thread_id, CandidateSet.kind == "bundle")
+                .order_by(CandidateSet.created_at.desc(), CandidateSet.id.desc())
+                .limit(21)
+            )
+        ).all()
+        for record in records:
+            if str(record.id) not in context.offered_ids:
+                history.append(await bundle_view(session, actor, record, historical=True))
+        history = history[:20]
     return {
         **(
-            {"bundles": bundles, "bundle_status": context.provenance.get("bundle_status")}
+            {
+                "bundles": bundles,
+                "bundle_history": history,
+                "bundle_status": context.provenance.get("bundle_status"),
+            }
             if context.preferences.get("bundle")
             else {}
         ),
