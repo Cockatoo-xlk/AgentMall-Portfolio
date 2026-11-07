@@ -45,3 +45,10 @@ V2.1—V2.4沿用既有依赖和图标声明，没有新增第三方包或图片
 ## V2.5目录与插画
 
 本地V2.5扩展增加108条自建合成商品记录及10类原创代码SVG示意，不使用真实品牌图、外部照片或远程资产。新增3张浏览器截图只展示合成目录与TEST_OPERATOR确认页，按[目录验证摘要](docs/evidence/v25/verification.json)记录来源与哈希。原有Lucide/Feather声明继续适用；未新增第三方依赖、模型权重、二进制或镜像分发。此前29张截图属于各历史阶段；本目录新增后合计32张。
+
+
+## V2.8 MCP源码接入
+
+新增官方[MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)依赖`mcp==2.3.0`及`mcp-types==2.3.0`，安装元数据声明为MIT。项目只分发调用SDK的自有适配源码和锁文件，不复制SDK源码、wheel、安装目录或镜像；捆绑分发时须保留SDK及传递依赖各自许可。本轮锁文件只增加所需依赖，没有更改既有包版本，也不修改历史依赖审计Manifest。
+
+[客户端回执图](docs/screenshots/v28/mcp-client-receipts.png)由本轮真实合成数据JSON生成，文字和布局为项目自建，不是MCP Inspector UI截图或真实LLM结果，不含外部图片。原有图标与截图署名继续保留。

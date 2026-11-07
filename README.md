@@ -16,6 +16,10 @@
 
 截图为合成业务演示：**MockTransport + Fixture Embedding，确认操作者TEST_OPERATOR，未付款**。
 
+## V2.8 MCP Tool Gateway
+
+官方MCP Python SDK2.3.0提供标准stdio及localhost Streamable HTTP入口，独立客户端可发现并调用9个角色受限工具，查询商品、本人订单、售后资格、公开政策与本店商家资料。唯一写扩展只创建幂等DRAFT，不能批准、发布或执行交易。实际验证2026-07-28无协议会话请求、stdio旧版兼容及原领域数据一致性；不替换LangGraph内部工具。[连接指南、权限矩阵与独立客户端回执](docs/MCP_GATEWAY.md)。仅限本地：**REMOTE_AUTH_NOT_IMPLEMENTED**，没有真实Provider请求。
+
 ## V2.7 商家动态商品运营
 
 商家在工作台导入CSV/JSON或创建草稿，查看带原文依据的规格建议，明确审核后独立发布。商品变更有版本与库存基线校验；检索索引单独执行、显示真实状态并有界重试。新品继续通过原商品、购物车、Single/Multi及Bundle购买链路。[操作指南与安全边界](docs/CATALOG_OPERATIONS.md)。本轮辅助为MockTransport、向量为Fixture，普通API默认禁用模型，未进行真实LLM评测或远程发布。

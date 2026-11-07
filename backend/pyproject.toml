@@ -17,6 +17,7 @@ dependencies = [
   "pgvector==0.4.2",
   "jieba==0.42.1",
   "langgraph-checkpoint-postgres==3.2.0",
+  "mcp==2.3.0",
 ]
 
 [project.optional-dependencies]

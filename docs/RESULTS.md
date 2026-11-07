@@ -2,6 +2,14 @@
 
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
+## V2.8 MCP Tool Gateway（本地定向验收）
+
+基于V2.7 `5f197611d6e4cb93a0a39c3882456f196c84551e`，新增官方SDK2.3.0的stdio和localhost Streamable HTTP接口。**181项定向pytest通过（含35项MCP协议/业务测试）**、完整Vitest **102通过**、选定Playwright **11通过 / 0 retries**；Ruff、格式、TypeScript、ESLint、build均退出0。不是完整后端或完整浏览器回归，也不是新的远程CI。[命令、源码内容绑定及日志SHA](evidence/v28/verification.json)。
+
+六个独立官方客户端进程完成Public/Buyer/Merchant × stdio/HTTP、共54次真实Tool Call；结果来自新独占PostgreSQL17/pgvector和原领域服务。数据库前后对照：商品120不变、订单1不变、付款0、库存预留1不变，仅草稿0→1；同request_id跨传输重放仍为同一DRAFT。待支付订单在MCP调用前由TEST_OPERATOR经原独立Confirmation创建，不是MCP下单。[客户端脱敏原件投影](evidence/v28/clients.json)及[本轮报告与保留失败](evidence/v28/report.md)。
+
+HTTP实测协议2026-07-28；stdio另测2025-11-25兼容路径。角色过滤与每次领域认证保留；无批准、下单、付款、退款、发布或任意SQL工具。**REMOTE_AUTH_NOT_IMPLEMENTED**，仅localhost自定义Bearer，不是远程OAuth。Provider调用及Key读取0；普通业务回归为MockTransport/Fixture，没有新增真实BGE或LLM效果评测。
+
 ## V2.7 商家动态商品运营（本地离线）
 
 基于V2.6 `cb70ebb6687490db7b21794eb8257a1078d6939d`，使用新独占PostgreSQL17/pgvector、官方Checkpoint及MockTransport/Fixture。完整后端 **981 passed / 14 skipped**，Vitest **102 passed**，完整Playwright **111 passed / 0 retries**；最后商品运营专项 **4 passed**（含3项重复覆盖，不相加为115）。Ruff、格式、TypeScript、ESLint和build均退出0。[本轮结果与保留失败](evidence/v27/report.md)及[命令/源码树/日志SHA](evidence/v27/verification.json)。只读审核、分立发布、版本/库存保护和新品Single/Multi/Bundle交易均有数据库断言。

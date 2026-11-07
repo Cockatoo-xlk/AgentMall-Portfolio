@@ -1,0 +1,640 @@
+{
+  "classification": "REVIEWED_PUBLIC_EVIDENCE / SYNTHETIC_TEST_DATA",
+  "kind": "REAL_OFFICIAL_MCP_CLIENT_OVER_STDIO_AND_LOOPBACK_HTTP",
+  "sdk": "mcp==2.3.0 / mcp-types==2.3.0",
+  "protocol_version": "2026-07-28",
+  "operator": "TEST_OPERATOR; setup order created before MCP calls",
+  "source_private_summary_sha256": "b3d0df0c23c2735238097b0b1f6658c7e7f610fbf4e6cdce88c9371246f761c4",
+  "clients": [
+    {
+      "transport": "stdio",
+      "profile_requested": "public",
+      "protocol_version": "2026-07-28",
+      "tools": [
+        "get_product",
+        "get_public_return_policy",
+        "search_products"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "083cf2840cc77b35ac4b84f17604f1d5066cab3f1365ebdcff67b8d09d7754a2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "calls": [
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+            "323fa516-68b1-572b-9386-2e474e21e77b"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+          "name": "长行 S4 手机",
+          "category": "smartphone",
+          "price_cents": 229900,
+          "catalog_version": 1,
+          "available": 24
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+            "52d06e95-f470-5c22-9807-11349db2d1cc"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+          "name": "色彩 D27C 显示器",
+          "category": "monitor",
+          "price_cents": 219900,
+          "catalog_version": 1,
+          "available": 27
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "0acb4537-1413-5979-993d-645202d5739a"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+          "name": "简行 R3 骑行头盔",
+          "category": "cycling",
+          "price_cents": 15900,
+          "catalog_version": 1,
+          "available": 21
+        },
+        {
+          "tool": "list_merchant_catalog",
+          "ok": false,
+          "error_code": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "transport": "stdio",
+      "profile_requested": "buyer",
+      "protocol_version": "2026-07-28",
+      "tools": [
+        "check_return_eligibility",
+        "get_my_order",
+        "get_product",
+        "get_public_return_policy",
+        "list_my_orders",
+        "search_products"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "a6c017333d831b60f0cb91db73a8b0722937428b4c5e2e533135751db5c772ea",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "calls": [
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+            "323fa516-68b1-572b-9386-2e474e21e77b"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+          "name": "长行 S4 手机",
+          "category": "smartphone",
+          "price_cents": 229900,
+          "catalog_version": 1,
+          "available": 24
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+            "52d06e95-f470-5c22-9807-11349db2d1cc"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+          "name": "色彩 D27C 显示器",
+          "category": "monitor",
+          "price_cents": 219900,
+          "catalog_version": 1,
+          "available": 27
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "0acb4537-1413-5979-993d-645202d5739a"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+          "name": "简行 R3 骑行头盔",
+          "category": "cycling",
+          "price_cents": 15900,
+          "catalog_version": 1,
+          "available": 21
+        },
+        {
+          "tool": "list_my_orders",
+          "ok": true,
+          "item_count": 1,
+          "entity_ids": [
+            "8e9627af-6531-4858-bac4-e0d95494a88a"
+          ]
+        },
+        {
+          "tool": "get_my_order",
+          "ok": true,
+          "item_count": 1,
+          "entity_ids": [
+            "05fed497-dabf-5a6a-b1b9-3d257fc2f553"
+          ],
+          "id": "8e9627af-6531-4858-bac4-e0d95494a88a",
+          "status": "PENDING_PAYMENT",
+          "total_cents": 379900,
+          "version": 1
+        },
+        {
+          "tool": "check_return_eligibility",
+          "ok": true,
+          "eligibility": {
+            "eligible": false,
+            "reason_codes": [
+              "NOT_PAID",
+              "NOT_DELIVERED",
+              "MISSING_DELIVERY_TIME"
+            ],
+            "requires_human": false,
+            "policy_version": "demo-v1"
+          }
+        },
+        {
+          "tool": "list_merchant_catalog",
+          "ok": false,
+          "error_code": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "transport": "stdio",
+      "profile_requested": "merchant",
+      "protocol_version": "2026-07-28",
+      "tools": [
+        "create_product_draft",
+        "get_product",
+        "get_public_return_policy",
+        "list_merchant_after_sales",
+        "list_merchant_catalog",
+        "search_products"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "2aabb2cfa2fca9fca9c6baf678b3ae13346170a3370cb62b654f94bd572546dc",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "calls": [
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+            "323fa516-68b1-572b-9386-2e474e21e77b"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+          "name": "长行 S4 手机",
+          "category": "smartphone",
+          "price_cents": 229900,
+          "catalog_version": 1,
+          "available": 24
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+            "52d06e95-f470-5c22-9807-11349db2d1cc"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+          "name": "色彩 D27C 显示器",
+          "category": "monitor",
+          "price_cents": 219900,
+          "catalog_version": 1,
+          "available": 27
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "0acb4537-1413-5979-993d-645202d5739a"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+          "name": "简行 R3 骑行头盔",
+          "category": "cycling",
+          "price_cents": 15900,
+          "catalog_version": 1,
+          "available": 21
+        },
+        {
+          "tool": "list_merchant_catalog",
+          "ok": true,
+          "item_count": 3,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "05ce52eb-eb89-554d-beb6-162d4a3627e3",
+            "05d1895a-8b52-5058-91dd-83fcd6aab8f9"
+          ]
+        },
+        {
+          "tool": "list_merchant_after_sales",
+          "ok": true,
+          "item_count": 0,
+          "entity_ids": []
+        },
+        {
+          "tool": "create_product_draft",
+          "ok": true,
+          "draft": {
+            "draft_id": "e8ead797-13c3-40e4-adb1-e40dcd156b8c",
+            "status": "DRAFT",
+            "version": 1
+          }
+        },
+        {
+          "tool": "create_product_draft",
+          "ok": true,
+          "draft": {
+            "draft_id": "e8ead797-13c3-40e4-adb1-e40dcd156b8c",
+            "status": "DRAFT",
+            "version": 1
+          }
+        }
+      ]
+    },
+    {
+      "transport": "http",
+      "profile_requested": "public",
+      "protocol_version": "2026-07-28",
+      "tools": [
+        "get_product",
+        "get_public_return_policy",
+        "search_products"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "083cf2840cc77b35ac4b84f17604f1d5066cab3f1365ebdcff67b8d09d7754a2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "calls": [
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+            "323fa516-68b1-572b-9386-2e474e21e77b"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+          "name": "长行 S4 手机",
+          "category": "smartphone",
+          "price_cents": 229900,
+          "catalog_version": 1,
+          "available": 24
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+            "52d06e95-f470-5c22-9807-11349db2d1cc"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+          "name": "色彩 D27C 显示器",
+          "category": "monitor",
+          "price_cents": 219900,
+          "catalog_version": 1,
+          "available": 27
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "0acb4537-1413-5979-993d-645202d5739a"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+          "name": "简行 R3 骑行头盔",
+          "category": "cycling",
+          "price_cents": 15900,
+          "catalog_version": 1,
+          "available": 21
+        },
+        {
+          "tool": "list_merchant_catalog",
+          "ok": false,
+          "error_code": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "transport": "http",
+      "profile_requested": "buyer",
+      "protocol_version": "2026-07-28",
+      "tools": [
+        "check_return_eligibility",
+        "get_my_order",
+        "get_product",
+        "get_public_return_policy",
+        "list_my_orders",
+        "search_products"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "a6c017333d831b60f0cb91db73a8b0722937428b4c5e2e533135751db5c772ea",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "calls": [
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+            "323fa516-68b1-572b-9386-2e474e21e77b"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+          "name": "长行 S4 手机",
+          "category": "smartphone",
+          "price_cents": 229900,
+          "catalog_version": 1,
+          "available": 24
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+            "52d06e95-f470-5c22-9807-11349db2d1cc"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+          "name": "色彩 D27C 显示器",
+          "category": "monitor",
+          "price_cents": 219900,
+          "catalog_version": 1,
+          "available": 27
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "0acb4537-1413-5979-993d-645202d5739a"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+          "name": "简行 R3 骑行头盔",
+          "category": "cycling",
+          "price_cents": 15900,
+          "catalog_version": 1,
+          "available": 21
+        },
+        {
+          "tool": "list_my_orders",
+          "ok": true,
+          "item_count": 1,
+          "entity_ids": [
+            "8e9627af-6531-4858-bac4-e0d95494a88a"
+          ]
+        },
+        {
+          "tool": "get_my_order",
+          "ok": true,
+          "item_count": 1,
+          "entity_ids": [
+            "05fed497-dabf-5a6a-b1b9-3d257fc2f553"
+          ],
+          "id": "8e9627af-6531-4858-bac4-e0d95494a88a",
+          "status": "PENDING_PAYMENT",
+          "total_cents": 379900,
+          "version": 1
+        },
+        {
+          "tool": "check_return_eligibility",
+          "ok": true,
+          "eligibility": {
+            "eligible": false,
+            "reason_codes": [
+              "NOT_PAID",
+              "NOT_DELIVERED",
+              "MISSING_DELIVERY_TIME"
+            ],
+            "requires_human": false,
+            "policy_version": "demo-v1"
+          }
+        },
+        {
+          "tool": "list_merchant_catalog",
+          "ok": false,
+          "error_code": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "transport": "http",
+      "profile_requested": "merchant",
+      "protocol_version": "2026-07-28",
+      "tools": [
+        "create_product_draft",
+        "get_product",
+        "get_public_return_policy",
+        "list_merchant_after_sales",
+        "list_merchant_catalog",
+        "search_products"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "2aabb2cfa2fca9fca9c6baf678b3ae13346170a3370cb62b654f94bd572546dc",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "calls": [
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+            "323fa516-68b1-572b-9386-2e474e21e77b"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "13d36ddb-a7d1-5fdb-9064-54f3a3beb2ac",
+          "name": "长行 S4 手机",
+          "category": "smartphone",
+          "price_cents": 229900,
+          "catalog_version": 1,
+          "available": 24
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+            "52d06e95-f470-5c22-9807-11349db2d1cc"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "0c5e982a-8ce9-5866-97d1-36747c4dcb82",
+          "name": "色彩 D27C 显示器",
+          "category": "monitor",
+          "price_cents": 219900,
+          "catalog_version": 1,
+          "available": 27
+        },
+        {
+          "tool": "search_products",
+          "ok": true,
+          "item_count": 2,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "0acb4537-1413-5979-993d-645202d5739a"
+          ]
+        },
+        {
+          "tool": "get_product",
+          "ok": true,
+          "id": "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+          "name": "简行 R3 骑行头盔",
+          "category": "cycling",
+          "price_cents": 15900,
+          "catalog_version": 1,
+          "available": 21
+        },
+        {
+          "tool": "list_merchant_catalog",
+          "ok": true,
+          "item_count": 3,
+          "entity_ids": [
+            "045ef3db-a2d1-55d5-9620-58e022bf4d43",
+            "05ce52eb-eb89-554d-beb6-162d4a3627e3",
+            "05d1895a-8b52-5058-91dd-83fcd6aab8f9"
+          ]
+        },
+        {
+          "tool": "list_merchant_after_sales",
+          "ok": true,
+          "item_count": 0,
+          "entity_ids": []
+        },
+        {
+          "tool": "create_product_draft",
+          "ok": true,
+          "draft": {
+            "draft_id": "e8ead797-13c3-40e4-adb1-e40dcd156b8c",
+            "status": "DRAFT",
+            "version": 1
+          }
+        },
+        {
+          "tool": "create_product_draft",
+          "ok": true,
+          "draft": {
+            "draft_id": "e8ead797-13c3-40e4-adb1-e40dcd156b8c",
+            "status": "DRAFT",
+            "version": 1
+          }
+        }
+      ]
+    }
+  ],
+  "before_mcp": {
+    "products": 120,
+    "drafts": 0,
+    "index_jobs": 0,
+    "orders": 1,
+    "order_items": 1,
+    "proposals": 1,
+    "confirmations": 1,
+    "payments": 0,
+    "reserved": 1
+  },
+  "after_mcp": {
+    "products": 120,
+    "drafts": 1,
+    "index_jobs": 0,
+    "orders": 1,
+    "order_items": 1,
+    "proposals": 1,
+    "confirmations": 1,
+    "payments": 0,
+    "reserved": 1
+  },
+  "invariants": {
+    "no_checkout_payment_refund_publish_or_index_tool": true,
+    "same_request_draft_replayed_across_transports": true,
+    "original_api_read_after_disconnect": true
+  },
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "remote_auth": "REMOTE_AUTH_NOT_IMPLEMENTED"
+}

@@ -111,6 +111,9 @@ test("merchant import, separate review/publication/index and buyer checkout pres
   await login(page, "buyer1");
   await page.getByRole("link", { name: "AgentMall 首页", exact: true }).click();
   await page.getByRole("button", { name: "显示器", exact: true }).click();
+  // UUID-sorted pagination does not guarantee the newly created SKU is on page one.
+  await page.getByLabel("搜索商品", { exact: true }).fill(data.name);
+  await page.getByRole("button", { name: "筛选商品", exact: true }).click();
   const card = page.getByTestId("product-card").filter({ hasText: data.name });
   await expect(card).toBeVisible();
   if (screenshotRoot)
