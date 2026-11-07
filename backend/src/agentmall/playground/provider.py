@@ -13,7 +13,7 @@ from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import IntentPlan
 from agentmall.agents.durable_budget import node_key
 from agentmall.agents.single_agent import unique_object
-from agentmall.agents.specialist_tools import SCHEMAS, WRITES
+from agentmall.agents.specialist_tools import ALL_SCHEMAS, WRITES
 from agentmall.infra.llm import deepseek_model
 from agentmall.playground.context import current_scope
 from agentmall.playground.ledger import safe_id
@@ -58,7 +58,7 @@ def validate_response(data, body):
             ids.add(ident)
             fn = call["function"]
             name = fn["name"]
-            if name not in allowed or name not in {*SCHEMAS, "route"}:
+            if name not in allowed or name not in {*ALL_SCHEMAS, "route"}:
                 raise ValueError()
             args = json.loads(fn["arguments"], object_pairs_hook=unique_object)
             if name == "route":
@@ -68,7 +68,7 @@ def validate_response(data, body):
                 ):
                     raise ValueError()
             else:
-                SCHEMAS[name].model_validate(args)
+                ALL_SCHEMAS[name].model_validate(args)
             names.append(name)
         if len(calls) > 1 and any(n in WRITES for n in names):
             raise ValueError()
@@ -147,7 +147,7 @@ class PlaygroundTransport(httpx.AsyncBaseTransport):
                 or body.get("temperature") != 0
                 or any(
                     t.get("type") != "function"
-                    or t.get("function", {}).get("name") not in {*SCHEMAS, "route"}
+                    or t.get("function", {}).get("name") not in {*ALL_SCHEMAS, "route"}
                     for t in body.get("tools", [])
                 )
             ):

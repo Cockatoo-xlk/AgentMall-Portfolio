@@ -77,3 +77,11 @@ R5新的独占数据库和无缓存构建已完成完整离线CI：后端642pass
 [D1审查报告](evidence/t15-d1/report.md)核对公开独立父链、全部可达历史Blob、15张合成截图及第三方声明，整理首页与运行/恢复入口。产品源码、锁文件、既有测试与workflow均未改变；复用经原始日志和JUnit/Playwright JSON哈希核对的C1回归，没有重新执行Live或封存评测。
 
 截至D1，当前版本Ubuntu24.04 amd64远程CI为NOT_RUN；actionlint、官方Action固定SHA、87项浏览器收集与默认启动路径的静态检查不等于真实远程运行。[D2待授权方案](evidence/t15-d1/remote-ci-plan.md)只计划推审核分支，不授予Push、Actions、PR或main合并权限。后续实际结果应按准确Commit与RunID追加，不能覆盖各阶段历史回执。
+
+## V2.6：组合购物本地验证
+
+[实现及演示](BUNDLE_SHOPPING.md)、[本轮结果和失败记录](evidence/v26/report.md)、[命令回执与源码指纹](evidence/v26/verification.json)。基线为`c8e9683502e8672d7c23ff9f9b17b79d019c0220`；本轮只在独占PostgreSQL/pgvector、Expanded120 SKU、官方Checkpoint下使用MockTransport与Fixture Embedding，没有真实Provider请求或新远程CI。
+
+新增41项后端、4项Vitest与2项Playwright。一次完整后端回归实际为917 passed /25 failed /14 skipped；失败来自新增工具与旧Fixture/冻结工具协议的兼容问题。修复保持Legacy注册表及历史Manifest不变，最后相关集合129 passed /10 skipped，覆盖全部25项失败。全量Playwright107 passed /1 failed /0 retries，旧Single Fixture工具集合断言修正后，组合/移动端/旧Single定向3 passed；Vitest99 passed。Ruff、格式、typecheck、lint和build通过。按限定范围未再次整套重跑，不把这些结果描述为一次全量全绿。当前收集960项后端测试（946可执行、原14项跳过）。
+
+当前V2.6真实Live、真实BGE专项、远程CI均NOT_RUN；历史R8/V2.5结果保留原版本适用范围。

@@ -14,6 +14,8 @@ GOALS = {
     "human_support",
 }
 TOOLS = {
+    "retrieve_bundle_candidates",
+    "prepare_bundle_checkout",
     "retrieve_products",
     "retrieve_policies",
     "get_product",
@@ -28,6 +30,7 @@ TOOLS = {
     "get_support_ticket",
 }
 CONSTRAINT_FIELDS = {
+    "bundle",
     "max_price_cents",
     "category",
     "noise_preference",
@@ -71,6 +74,12 @@ def public_summary(kind, event):
         result["goal"] = data["goal"]
     if data.get("name") in TOOLS:
         result["name"] = data["name"]
+        if data["name"] == "retrieve_bundle_candidates":
+            from agentmall.catalog.categories import CATEGORY_LABELS
+
+            category = data.get("validated_arguments", {}).get("category")
+            if isinstance(category, str) and category in CATEGORY_LABELS:
+                result["category"] = category
     for key in ("subtask_id", "tool_call_id", "interrupt_id"):
         if value := identifier(data.get(key)):
             result[key] = value
@@ -87,6 +96,10 @@ def public_summary(kind, event):
         value = data.get(key)
         if isinstance(value, str) and re.fullmatch(r"[A-Za-z_]{1,64}", value) and identifier(value):
             result[key] = value
+    if kind == "bundle_computed":
+        for key in ("item_count", "total_cents", "budget_cents"):
+            if type(data.get(key)) is int and 0 <= data[key] <= 100_000_000:
+                result[key] = data[key]
     if kind == "orchestration_rejected" and isinstance(data.get("constraint_fields"), list):
         result["constraint_fields"] = sorted(
             {

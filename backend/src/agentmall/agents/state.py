@@ -103,12 +103,17 @@ def delta(before, after):
             result[key] = [v for v in value if v not in before.get(key, [])]
         elif before.get(key) != value:
             result[key] = value
+    removed = {key: sorted(set(before.get(key, {})) - set(after.get(key, {}))) for key in MAPS}
+    if any(removed.values()):
+        result["removed_maps"] = {key: values for key, values in removed.items() if values}
     return result
 
 
 def merge_state(left, right):
     result = deepcopy(left)
     for key, value in right.items():
+        if key == "removed_maps":
+            continue
         if key in MAPS:
             result[key] = {**result.get(key, {}), **value}
         elif key in SETS:
@@ -117,6 +122,11 @@ def merge_state(left, right):
             result[key] = max(result.get(key, 0), value)
         else:
             result[key] = deepcopy(value)
+    for key, identifiers in right.get("removed_maps", {}).items():
+        if key not in MAPS:
+            raise ValueError("Unknown runtime map")
+        for identifier in identifiers:
+            result.get(key, {}).pop(identifier, None)
     result["pending"] = {
         k: v for k, v in result.get("pending", {}).items() if k not in result.get("completed", {})
     }

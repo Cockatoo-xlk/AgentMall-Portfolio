@@ -467,7 +467,7 @@ async def start_run(app, actor, thread_id, payload):
 
     request_body = payload.model_dump(mode="json")
     # Preserve historical hashes including constraints:null; omit only new absent fields.
-    for key in ("expected_context_version", "candidate_set_id"):
+    for key in ("expected_context_version", "candidate_set_id", "bundle_id", "bundle_quantities"):
         if request_body[key] is None:
             del request_body[key]
     digest = payload_hash(request_body)

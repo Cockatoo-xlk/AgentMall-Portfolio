@@ -177,6 +177,11 @@ async def accept_context(session, actor, thread_id, run_id, payload):
     context = await locked_context(session, thread_id)
     if context.version != payload.expected_context_version:
         raise conflict("STALE_CONTEXT")
+    from agentmall.agents.bundle_memory import accept_bundle_context
+
+    bundle_binding = await accept_bundle_context(session, actor, context, payload, run_id)
+    if bundle_binding is not None:
+        return bundle_binding
     preferences, constraints = resolve_preferences(context.preferences, payload)
     changed = preferences != context.preferences
     selected = []
@@ -263,16 +268,25 @@ async def publish_candidates(session, run, runtime):
                     run_id=run.id,
                     preferences_digest=candidate["preferences_digest"],
                     items=items,
+                    kind=candidate.get("kind", "product"),
+                    details=candidate.get("details", {}),
                 )
             )
         offered.append(ident)
+    bundle_status = runtime.facts.get(("bundle_status", "current"))
+    if bundle_status and context.version == binding["version"]:
+        context.provenance = {**context.provenance, "bundle_status": bundle_status}
     # Recovery/repeated Resume cannot republish an old list over a newer accepted context.
     if offered and context.version == binding["version"]:
         context.offered_ids = offered
         context.focus = {}
         context.version += 1
         context.updated_at = await database_now(session)
-        context.provenance = {"type": "CANDIDATES", "run_id": str(run.id)}
+        context.provenance = {
+            "type": "CANDIDATES",
+            "run_id": str(run.id),
+            **({"bundle_status": bundle_status} if bundle_status else {}),
+        }
 
 
 async def context_view(session, actor, thread_id):
@@ -286,9 +300,15 @@ async def context_view(session, actor, thread_id):
             "updated_at": None,
         }
     sets = []
+    bundles = []
     for ident in context.offered_ids:
         record = await session.get(CandidateSet, UUID(ident))
         if record is None or record.thread_id != thread_id:
+            continue
+        if record.kind == "bundle":
+            from agentmall.agents.bundle_memory import bundle_view
+
+            bundles.append(await bundle_view(session, actor, record))
             continue
         valid = True
         try:
@@ -305,6 +325,11 @@ async def context_view(session, actor, thread_id):
             }
         )
     return {
+        **(
+            {"bundles": bundles, "bundle_status": context.provenance.get("bundle_status")}
+            if context.preferences.get("bundle")
+            else {}
+        ),
         "version": context.version,
         "preferences": context.preferences,
         "candidate_sets": sets,
@@ -338,6 +363,8 @@ async def patch_context(app, actor, thread_id, payload):
             if context.version != payload.expected_version:
                 raise conflict("STALE_CONTEXT")
             prefs = deepcopy(context.preferences)
+            if prefs.get("bundle") and any(o.field != "bundle" for o in payload.operations):
+                raise conflict("BUNDLE_CLARIFICATION_REQUIRED")
             for operation in payload.operations:
                 field = operation.field
                 target = prefs.setdefault("product_needs", {}) if field in NEEDS else prefs
@@ -379,6 +406,12 @@ async def accept_clarification(session, actor, run, message):
         # Clarification has no displayed-list binding; require an explicit entity ID.
         raise conflict()
     context = await locked_context(session, run.thread_id)
+    if context.preferences.get("bundle"):
+        from agentmall.agents.bundle_memory import accept_bundle_context
+
+        return await accept_bundle_context(
+            session, actor, context, RunCreate(request_id=run.request_id, message=message), run.id
+        )
     prefs, constraints = resolve_preferences(
         context.preferences, RunCreate(request_id=run.request_id, message=message)
     )

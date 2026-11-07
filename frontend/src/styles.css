@@ -3148,3 +3148,10 @@ main:focus {
   .category-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .category-tab { font-size: 12px; gap: 5px; padding: 10px 4px; }
 }
+
+.bundle-offer { border: 1px solid var(--border, #d7e3df); border-radius: 16px; padding: clamp(12px, 2vw, 24px); }
+.bundle-specs { display: grid; gap: 4px; font-size: .85rem; }
+.bundle-specs div { display: flex; justify-content: space-between; gap: 12px; }
+.bundle-specs dt { color: #687c76; }
+.bundle-specs dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.bundle-total { font-weight: 700; font-size: 1.1rem; }

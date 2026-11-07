@@ -296,7 +296,7 @@ async def test_0004_preserves_0003_payment_and_history_and_refuses_lossy_downgra
     with pytest.raises(DBAPIError), db.begin() as c:
         cfg.attributes["connection"] = c
         command.downgrade(cfg, "0003")
-    assert row(db, "SELECT version_num FROM alembic_version")["version_num"] == "0008"
+    assert row(db, "SELECT version_num FROM alembic_version")["version_num"] == "0009"
     assert row(db, "SELECT count(*) n FROM refunds")["n"] == 1
 
 

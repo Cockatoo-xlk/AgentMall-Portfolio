@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.runtime import fingerprint
 from agentmall.agents.single_agent import unique_object
-from agentmall.agents.specialist_tools import SCHEMAS, WRITES
+from agentmall.agents.specialist_tools import ALL_SCHEMAS, WRITES
 
 
 async def model_call(runtime, role, invoke):
@@ -122,7 +122,7 @@ class SpecialistGuard(AgentMiddleware):
                     raise ValueError("Invalid tool")
                 if call["name"] in WRITES and self.context.envelope.read_only:
                     raise ValueError("Read only")
-                args = SCHEMAS[call["name"]].model_validate(call["args"])
+                args = ALL_SCHEMAS[call["name"]].model_validate(call["args"])
                 signature = fingerprint(
                     {
                         "role": self.role,
@@ -157,7 +157,7 @@ class SpecialistGuard(AgentMiddleware):
 
     async def awrap_tool_call(self, request, handler):
         call = request.tool_call
-        arguments = SCHEMAS[call["name"]].model_validate(call["args"]).model_dump(mode="json")
+        arguments = ALL_SCHEMAS[call["name"]].model_validate(call["args"]).model_dump(mode="json")
         started = monotonic()
         try:
             result = await handler(request)

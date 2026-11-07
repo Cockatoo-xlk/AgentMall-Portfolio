@@ -6,6 +6,7 @@ import { timelineSummary } from '../api/timelineSummary'
 import { mergeEvents } from '../api/agentWorkflow'
 import type { Run, RunEvent, EventPage } from '../api/agentWorkflow'
 const labels: Record<string, string> = {
+  bundle_computed: '组合预算计算',
   run_created: 'Run 启动',
   run_activated: '激活执行',
   route_decision: 'Supervisor 路由',

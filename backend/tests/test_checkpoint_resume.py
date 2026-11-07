@@ -47,7 +47,7 @@ async def test_checkpoint_roundtrip_after_connection_reopen(env, checkpoint_sett
             is None
         )
     with env[1].connect() as c:
-        assert c.scalar(text("SELECT version_num FROM alembic_version")) == "0008"
+        assert c.scalar(text("SELECT version_num FROM alembic_version")) == "0009"
         assert (
             c.scalar(
                 text(
@@ -91,7 +91,7 @@ async def test_0006_upgrade_and_check_preserve_business_and_checkpoint_tables(
         command.downgrade(cfg, "0005")
         command.upgrade(cfg, "head")
         command.check(cfg)
-        assert c.scalar(text("SELECT version_num FROM alembic_version")) == "0008"
+        assert c.scalar(text("SELECT version_num FROM alembic_version")) == "0009"
         assert c.execute(text("SELECT to_jsonb(o) FROM orders o")).all() == before
         assert (
             c.scalar(

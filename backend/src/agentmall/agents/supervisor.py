@@ -57,6 +57,14 @@ def unfinished_goal(runtime, user_goal):
         runtime.citations and any(kind == "eligibility" for kind, _ in runtime.facts)
     ):
         return "POLICY_GOAL_UNRESOLVED"
+    if runtime.constraints.bundle:
+        return (
+            None
+            if runtime.facts.get(("bundle_status", "current"), {}).get("status")
+            in {"READY", "NO_FEASIBLE_BUNDLE"}
+            or runtime.thread_snapshot.get("selected_bundle")
+            else "BUNDLE_GOAL_UNRESOLVED"
+        )
     recommendation = r"推荐(?!的)|找(?:个|一款)?替代(?:品|商品)"
     goal = re.sub(
         r"(?:不要|别|无需|不必|不用)(?:再|帮我)*\s*(?:" + recommendation + ")", "", user_goal
@@ -128,6 +136,10 @@ async def choose_plan(runtime, user_goal=None, *, durable=False):
         }
         if user_goal and user_goal != runtime.input.message:
             content["clarification"] = runtime.input.message
+        if runtime.constraints.bundle:
+            content["bundle_progress"] = {
+                "composition": runtime.facts.get(("bundle_status", "current"))
+            }
         if runtime.thread_snapshot:
             content["thread_context"] = runtime.thread_snapshot
         messages = [

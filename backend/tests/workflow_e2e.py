@@ -7,7 +7,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.outputs import ChatGeneration, ChatResult
 from multiagent_helpers import ai, call, choose_purchase, payload, route
 
-from agentmall.agents.specialist_tools import ALLOWLISTS, SCHEMAS
+from agentmall.agents.specialist_tools import ALLOWLISTS
 
 
 def models(mode, boundary):
@@ -26,7 +26,7 @@ def models(mode, boundary):
             assert names == (
                 {"route"}
                 if self.role == "supervisor"
-                else set(SCHEMAS)
+                else {name for allowed in ALLOWLISTS.values() for name in allowed}
                 if self.role == "single"
                 else set(ALLOWLISTS[self.role])
             )

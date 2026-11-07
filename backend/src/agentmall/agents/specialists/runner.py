@@ -39,7 +39,7 @@ def incomplete_purchase(runtime, context, terminal):
     if (
         terminal == "clarify"
         or not c.purchase_requested
-        or c.quantity is None
+        or (c.quantity is None and not c.bundle)
         or c.address_label is None
         or any("error_code" in r for r in context.records)
         or runtime.errors
@@ -49,6 +49,8 @@ def incomplete_purchase(runtime, context, terminal):
         )
     ):
         return False
+    if c.bundle:
+        return runtime.checkout_blocker() is None
     return any(
         kind == "product"
         and value.get("available", 0) >= c.quantity
@@ -79,6 +81,13 @@ async def run_specialist(runtime, envelope):
     terminal = None
     for attempt in range(2):
         content = envelope.model_dump(mode="json")
+        if runtime.constraints.bundle:
+            content["bundle_progress"] = {
+                "completed_categories": [
+                    ident for kind, ident in runtime.facts if kind == "bundle_candidates"
+                ],
+                "composition": runtime.facts.get(("bundle_status", "current")),
+            }
         if runtime.single:
             # The outer graph's inspect_orders is only an internal placeholder.
             # It must not override the actual user goal presented to the Single model.

@@ -48,6 +48,7 @@ class RunContext:
     tool_ids: set = field(default_factory=set)
     tool_repeats: dict = field(default_factory=dict)
     write_lock: object = field(default_factory=asyncio.Lock)
+    bundle_lock: object = field(default_factory=asyncio.Lock)
     schema_repairs: int = 0
     explicit_order_ids: set = field(default_factory=set)
     guard: object = None
@@ -58,11 +59,18 @@ class RunContext:
     def tool_allowlist(self, role):
         from agentmall.agents.specialist_tools import ALLOWLISTS
 
-        return (
+        names = (
             tuple(dict.fromkeys(name for names in ALLOWLISTS.values() for name in names))
             if self.single
             else ALLOWLISTS[role]
         )
+        if self.constraints.bundle:
+            names = tuple(n for n in names if n not in {"retrieve_products", "prepare_checkout"})
+            if self.single or role == "shopping":
+                names += ("retrieve_bundle_candidates",)
+            if self.single or role == "order":
+                names += ("prepare_bundle_checkout",)
+        return names
 
     def __post_init__(self):
         url = self.sessions.kw["bind"].url
@@ -121,6 +129,9 @@ class RunContext:
         constraints = self.constraints
         if not constraints.purchase_requested:
             return "PURCHASE_NOT_REQUESTED"
+        if constraints.bundle:
+            selected = self.thread_snapshot.get("selected_bundle")
+            return None if selected and constraints.address_label else "BUNDLE_SELECTION_REQUIRED"
         if constraints.quantity is None or constraints.address_label is None:
             return "PURCHASE_DETAILS_REQUIRED"
         selected = self.thread_snapshot.get("selected", [])
@@ -144,6 +155,10 @@ class RunContext:
 
     async def hydrate_explicit_entities(self):
         """Resolve only UUIDs explicitly supplied by the user, without forwarding raw text."""
+        if self.constraints.bundle:
+            from agentmall.agents.bundle_tools import invalidate_changed_requirements
+
+            invalidate_changed_requirements(self)
         identifiers = list(
             dict.fromkeys(
                 re.findall(
@@ -158,7 +173,14 @@ class RunContext:
             from agentmall.agents.memory import verify_items
 
             selected = self.thread_snapshot.get("selected", [])
-            await verify_items(session, actor, selected)
+            if bundle := self.thread_snapshot.get("selected_bundle"):
+                from agentmall.agents.bundle_planner import verify_bundle
+
+                await verify_bundle(
+                    session, actor, selected, bundle["details"], quantities=bundle["quantities"]
+                )
+            else:
+                await verify_items(session, actor, selected)
             for item in selected:
                 product = await catalog.get_product(session, actor, UUID(item["id"]))
                 if not product_allowed(self, product):

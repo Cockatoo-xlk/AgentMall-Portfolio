@@ -42,6 +42,7 @@ function Workspace({
   const [thread, setThread] = useState<Thread | null>(null)
   const [historyId, setHistoryId] = useState('')
   const [selectedSet, setSelectedSet] = useState('')
+  const [selectedBundle, setSelectedBundle] = useState('')
   const patchOperation = useRef<{request_id: string; expected_version: number; operations: ContextOperation[]} | null>(null)
   const [patchUnknown, setPatchUnknown] = useState(false)
   const [mode, setMode] = useState<'single' | 'multi'>('multi')
@@ -59,6 +60,7 @@ function Workspace({
     constraints?: Record<string, unknown>
     expected_context_version: number
     candidate_set_id?: string
+    bundle_id?: string
   } | null>(null)
   const [uncertainStart, setUncertainStart] = useState(false)
   const [pendingStartId, setPendingStartId] = useState('')
@@ -123,7 +125,8 @@ function Workspace({
         ? startOperation.current
         : {
             ...contextRunInput(crypto.randomUUID(), text, thread.context?.version ?? 0,
-              selectedSet || (thread.context?.candidate_sets.length === 1 ? thread.context.candidate_sets[0].id : undefined)),
+              selectedSet || (thread.context?.candidate_sets.length === 1 ? thread.context.candidate_sets[0].id : undefined),
+              selectedBundle || undefined),
             ...(constraints ? { constraints } : {}),
           }
     startOperation.current = op
@@ -139,6 +142,7 @@ function Workspace({
       }
       await api.post<Run>(`/agent/threads/${id}/runs`, op)
       setSelectedSet('')
+      setSelectedBundle('')
       setRequote(false)
       apply(await api.get<Thread>(`/agent/threads/${id}`))
       setUncertainStart(false)
@@ -149,6 +153,7 @@ function Workspace({
         apply(await api.get<Thread>(`/agent/threads/${id}`))
         startOperation.current = null
         setSelectedSet('')
+      setSelectedBundle('')
         if (['STALE_CONTEXT', 'STALE_CANDIDATES'].includes(e.code)) setMessage('')
         throw e
       }
@@ -176,6 +181,7 @@ function Workspace({
       patchOperation.current = null
       setPatchUnknown(false)
       setSelectedSet('')
+      setSelectedBundle('')
       apply(await api.get<Thread>(`/agent/threads/${id}`))
     } catch (e) {
       setPatchUnknown(!(e instanceof ApiError) || e.ambiguous)
@@ -256,6 +262,7 @@ function Workspace({
           </section>
           {thread?.context && <ThreadMemory context={thread.context} busy={busy || patchUnknown || uncertainStart || !!(run && (recoverable(run) || run.status === 'WAITING_INPUT'))}
             selected={selectedSet || (thread.context.candidate_sets.length === 1 ? thread.context.candidate_sets[0].id : '')}
+            selectedBundle={selectedBundle} onSelectBundle={setSelectedBundle}
             onSelect={setSelectedSet} onPatch={ops => void perform(() => patchMemory(ops))} />}
           {patchUnknown && <p className="notice warning">偏好更新结果尚未确定。<button className="text-button" disabled={busy} onClick={() => void perform(() => patchMemory())}>核对并重试原偏好请求</button></p>}
           <div className="workspace-grid">

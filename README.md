@@ -16,6 +16,10 @@
 
 截图为合成业务演示：**MockTransport + Fixture Embedding，确认操作者TEST_OPERATOR，未付款**。
 
+## V2.6 组合购物
+
+同一Thread按2–5个品类独立检索，以整套预算生成有来源的组合。用户后续明确选择、数量与地址后，Order只准备一份多SKU提案；独立批准才通过原事务创建一笔订单。任一商品变化或缺货停止整套购买，支持刷新、SSE与幂等恢复。[组合演示、算法与安全边界](docs/BUNDLE_SHOPPING.md)。当前演示为MockTransport + Fixture Embedding，真实Live尚未验收。
+
 ## V2.5 多品类目录
 
 扩展Profile提供 **13品类、120 SKU**，保留原12件及其UUID。手机、笔记本、显示器、摄影、骑行、健身和生活家电等都有独立规格及原创类别插画。Legacy仍是测试/历史评测的默认数据；普通Demo选择Expanded。详见[数据版本、启动与重建](docs/EXPANDED_CATALOG.md)。本轮验证单独记录于[结果索引](docs/RESULTS.md)，不套用旧RC或Live成绩。

@@ -101,6 +101,10 @@ def product_scope(actor, filters):
         conditions.append(Product.price_cents <= filters.max_price_cents)
     if filters.in_stock:
         conditions.append(Product.on_hand > Product.reserved)
+    if filters.usage:
+        conditions.append(
+            Product.attributes["usage"].as_string().icontains(filters.usage, autoescape=True)
+        )
     if filters.product_kind:
         category, attribute, term = KIND_ATTRIBUTES[filters.product_kind]
         conditions.extend(

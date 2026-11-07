@@ -22,7 +22,7 @@ from pydantic import ValidationError
 from sqlalchemy import text
 from test_eval_budget import policy
 
-from agentmall.agents.specialist_tools import ALLOWLISTS, SCHEMAS
+from agentmall.agents.specialist_tools import ALLOWLISTS, BUNDLE_SCHEMAS, SCHEMAS
 
 ROOT = Path(__file__).resolve().parents[2]
 PILOT = [
@@ -252,13 +252,15 @@ def test_no_tool_schema_grants_authority(field):
     base = {
         "query": "synthetic",
         "product_id": str(uuid4()),
+        "bundle_id": str(uuid4()),
+        "category": "keyboard",
         "order_id": str(uuid4()),
         "reason_code": "QUALITY_ISSUE",
         "description": "synthetic",
         "reason": "EXPLANATION",
         "summary": "synthetic",
     }
-    for schema in SCHEMAS.values():
+    for schema in {**SCHEMAS, **BUNDLE_SCHEMAS}.values():
         valid = {k: base[k] for k, v in schema.model_fields.items() if v.is_required()}
         schema.model_validate(valid)
         with pytest.raises(ValidationError) as error:
@@ -360,7 +362,7 @@ async def test_pilot_sdk_pg_checkpoint_and_real_local_embedding(
             assert body["tool_choice"] == {"type": "function", "function": {"name": "route"}}
         elif architecture == "single":
             role = "single"
-            assert names == set(SCHEMAS)
+            assert names == {name for allowed in ALLOWLISTS.values() for name in allowed}
         else:
             role = next(r for r, allowed in ALLOWLISTS.items() if names == set(allowed))
         assert str(request.url) == "https://api.deepseek.com/chat/completions"

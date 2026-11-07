@@ -538,6 +538,7 @@ def mount_controls(harness):
         program: Literal[
             "context",
             "context-catalog",
+            "bundle",
             "purchase",
             "recommend",
             "orders",
@@ -557,6 +558,13 @@ def mount_controls(harness):
 
         await harness.close_sdk()
         harness.sdk_directory = tempfile.TemporaryDirectory(prefix="agentmall-sdk-mock-")
+        if payload.program == "bundle":
+            from bundle_helpers import install_bundle_sdk
+
+            _, harness.sdk_program = await install_bundle_sdk(
+                (None, harness.db, harness.app, harness.settings), Path(harness.sdk_directory.name)
+            )
+            return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
         if payload.program in {"context", "context-catalog"}:
             from multiturn_helpers import install_context_sdk, wireless_products
 

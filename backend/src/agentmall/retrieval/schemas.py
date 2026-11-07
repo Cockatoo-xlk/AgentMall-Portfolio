@@ -19,6 +19,7 @@ class SearchQuery(BaseModel):
 class ProductQuery(SearchQuery):
     category: Category | None = None
     screen_inches: str | None = Field(None, pattern=r"^\d{1,2}(?:\.\d)?$", max_length=4)
+    usage: Literal["办公", "游戏", "宿舍"] | None = None
     activity: Literal["road_cycling"] | None = None
     product_kind: ProductKind | None = None
     max_price_cents: int | None = Field(None, ge=0)

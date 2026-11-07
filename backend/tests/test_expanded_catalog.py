@@ -309,7 +309,7 @@ async def test_incremental_category_migration_refuses_destructive_downgrade(env)
         cfg.attributes["connection"] = conn
         command.downgrade(cfg, "0007")
     with env[1].connect() as conn:
-        assert conn.scalar(text("SELECT version_num FROM alembic_version")) == "0008"
+        assert conn.scalar(text("SELECT version_num FROM alembic_version")) == "0009"
         assert conn.scalar(text("SELECT count(*) FROM products")) == 120
 
 

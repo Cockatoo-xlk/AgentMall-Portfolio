@@ -94,6 +94,8 @@ class ThreadContext(Base):
 class CandidateSet(Record, Base):
     __tablename__ = "agent_candidate_sets"
     __table_args__ = (
+        CheckConstraint("kind IN ('product','bundle')", name="ck_candidate_kind"),
+        CheckConstraint("jsonb_typeof(details)='object'", name="ck_candidate_details"),
         ForeignKeyConstraint(
             ["run_id", "thread_id"],
             ["agent_runs.id", "agent_runs.thread_id"],
@@ -104,6 +106,9 @@ class CandidateSet(Record, Base):
     run_id: Mapped[UUID]
     preferences_digest: Mapped[str] = mapped_column(String(64))
     items: Mapped[list] = mapped_column(JSONB)
+
+    kind: Mapped[str] = mapped_column(String(16), server_default="product")
+    details: Mapped[dict] = mapped_column(JSONB, server_default="{}")
 
 
 class ContextMutation(Record, Base):

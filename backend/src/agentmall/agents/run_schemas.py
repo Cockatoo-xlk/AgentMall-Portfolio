@@ -4,6 +4,7 @@ from uuid import UUID
 from pydantic import Field, StrictInt, StrictStr, model_validator
 
 from agentmall.agents.context import Constraints, Strict
+from agentmall.catalog.categories import Category
 
 
 class ThreadCreate(Strict):
@@ -16,6 +17,8 @@ class RunCreate(Strict):
     constraints: Constraints | None = None
     expected_context_version: int | None = Field(None, ge=0, strict=True)
     candidate_set_id: UUID | None = None
+    bundle_id: UUID | None = None
+    bundle_quantities: dict[Category, StrictInt] | None = Field(None, min_length=2, max_length=5)
 
 
 class ResumeRequest(Strict):
@@ -55,12 +58,16 @@ class ContextOperation(Strict):
         "screen_inches",
         "activity",
         "product_kind",
+        "bundle",
     ]
     value: StrictStr | StrictInt | list[Literal["双模", "三模"]] | None = None
 
     @model_validator(mode="after")
     def valid_value(self):
         from agentmall.agents.memory import NEEDS
+
+        if self.field == "bundle" and self.op != "CLEAR":
+            raise ValueError("Bundle changes require a new explicit Run")
 
         if self.op == "CLEAR":
             if self.value is not None:

@@ -17,7 +17,7 @@ from agentmall.agents.evidence import policy_support
 from agentmall.cart import service as cart
 from agentmall.cart.models import Cart
 from agentmall.catalog import service as catalog
-from agentmall.catalog.categories import KIND_ATTRIBUTES
+from agentmall.catalog.categories import KIND_ATTRIBUTES, Category
 from agentmall.identity.models import User
 from agentmall.identity.service import actor_for, require_buyer
 from agentmall.infra.errors import DomainError
@@ -59,6 +59,14 @@ class PrepareInput(Strict):
     product_id: UUID
 
 
+class BundleSearchInput(Strict):
+    category: Category
+
+
+class BundlePrepareInput(Strict):
+    bundle_id: UUID
+
+
 class ReturnInput(EligibilityInput):
     description: str = Field(min_length=1, max_length=1000, strict=True)
 
@@ -80,6 +88,13 @@ SCHEMAS = {
     "prepare_return": ReturnInput,
     "create_support_ticket": TicketInput,
 }
+# Legacy evaluation protocol remains immutable. New Thread tools are scoped separately.
+BUNDLE_SCHEMAS = {
+    "retrieve_bundle_candidates": BundleSearchInput,
+    "prepare_bundle_checkout": BundlePrepareInput,
+}
+ALL_SCHEMAS = {**SCHEMAS, **BUNDLE_SCHEMAS}
+
 ALLOWLISTS = {
     "shopping": ("retrieve_products", "get_product"),
     "order": ("list_orders", "get_order", "get_product", "get_cart", "prepare_checkout"),
@@ -96,8 +111,15 @@ WRITE_TOOLS_BY_GOAL = {
     "prepare_return": "prepare_return",
     "human_support": "create_support_ticket",
 }
-WRITES = frozenset(WRITE_TOOLS_BY_GOAL.values())
+WRITES = frozenset([*WRITE_TOOLS_BY_GOAL.values(), "prepare_bundle_checkout"])
 DESCRIPTIONS = {
+    "retrieve_bundle_candidates": (
+        "按用户组合中一个品类的可信规格检索；各品类都检索后确定性计算整套预算。不得省略品类。"
+    ),
+    "prepare_bundle_checkout": (
+        "仅为本轮用户明确选中的整套bundle_id准备一份多SKU提案；"
+        "数量和地址来自用户，必须独占调用，等待独立确认。"
+    ),
     "retrieve_products": "真实Hybrid RAG，运行时强制预算/类别/静音偏好/排除原SKU；结果至多3条。",
     "get_product": "读取本店商品事实，必须遵守用户约束。",
     "list_orders": "读取本人订单摘要，没有地址或身份字段。",
@@ -136,6 +158,15 @@ def product_allowed(runtime, product):
     from agentmall.catalog.capabilities import connection_matches
 
     c = runtime.constraints
+    if c.bundle:
+        from agentmall.agents.bundle_planner import matches
+
+        selected = runtime.thread_snapshot.get("selected_bundle")
+        if selected and str(product.id) not in {i["id"] for i in selected["items"]}:
+            return False
+        return product.id not in runtime.exclusions and any(
+            matches(p, product) for p in c.bundle.parts
+        )
     needs = c.product_needs
     if needs.product_kind:
         category, attribute, term = KIND_ATTRIBUTES[needs.product_kind]
@@ -183,12 +214,15 @@ class SpecialistTools:
         runtime = self.runtime
         if name not in runtime.tool_allowlist(self.envelope.target):
             raise DomainError(403, "TOOL_FORBIDDEN", "专业工具不可用")
-        args = SCHEMAS[name].model_validate(arguments)
+        args = ALL_SCHEMAS[name].model_validate(arguments)
         if name in WRITES and self.envelope.read_only:
             raise DomainError(403, "READ_ONLY_HANDOFF", "只读任务不能写入")
         try:
             if name in WRITES:
-                if not runtime.single and WRITE_TOOLS_BY_GOAL.get(self.envelope.goal) != name:
+                required = WRITE_TOOLS_BY_GOAL.get(self.envelope.goal)
+                if required == "prepare_checkout" and runtime.constraints.bundle:
+                    required = "prepare_bundle_checkout"
+                if not runtime.single and required != name:
                     raise DomainError(403, "HANDOFF_WRITE_SCOPE_CHANGED", "写工具必须匹配交接目标")
                 async with runtime.write_lock:
                     return await self._execute(name, args)
@@ -212,6 +246,14 @@ class SpecialistTools:
 
     async def _execute(self, name, args):
         r = self.runtime
+        if name in {"retrieve_bundle_candidates", "prepare_bundle_checkout"}:
+            from agentmall.agents.bundle_tools import prepare, retrieve
+
+            return await (
+                retrieve(self, args)
+                if name == "retrieve_bundle_candidates"
+                else prepare(self, args)
+            )
         entities = []
         citations = []
         evidence = []
@@ -511,7 +553,7 @@ def build_specialist_tools(context):
                 coroutine=make_call(name),
                 name=name,
                 description=DESCRIPTIONS[name],
-                args_schema=SCHEMAS[name],
+                args_schema=ALL_SCHEMAS[name],
                 return_direct=name in WRITES
                 and not (context.runtime.single and name == "create_support_ticket"),
             )
