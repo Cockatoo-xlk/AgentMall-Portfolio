@@ -372,6 +372,10 @@ class Harness:
 
         await self.close_sdk()
         tables = (
+            "catalog_commands",
+            "catalog_index_jobs",
+            "product_drafts",
+            "catalog_imports",
             "agent_context_mutations",
             "agent_candidate_sets",
             "agent_thread_contexts",
@@ -759,6 +763,9 @@ async def isolated_app():
             with db.begin() as connection:
                 migrate(connection)
             app = create_app(settings)
+            from agentmall.catalog_operations.parser import MockCatalogParser
+
+            app.state.catalog_parser = MockCatalogParser()
             cleanup.push_async_callback(app.state.engine.dispose)
             harness = Harness(app, db, settings, schema, boundary)
             cleanup.push_async_callback(harness.close_sdk)

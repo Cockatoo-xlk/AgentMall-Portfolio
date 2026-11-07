@@ -10,6 +10,7 @@ import type {
   ReturnReasonCode,
 } from '../api/types'
 import MerchantRefund from '../components/MerchantRefund'
+import MerchantCatalog from '../components/MerchantCatalog'
 import type { RefundDraft } from '../components/MerchantRefund'
 import { useAuth } from '../state/Auth'
 import { useMerchantAction } from '../state/useMerchantAction'
@@ -69,7 +70,7 @@ export default function MerchantWorkbench() {
 }
 
 function Workbench() {
-  const [tab, setTab] = useState<'orders' | 'cases'>('orders')
+  const [tab, setTab] = useState<'orders' | 'cases' | 'catalog'>('orders')
   const [orderId, setOrderId] = useState<string | null>(null)
   const [caseId, setCaseId] = useState<string | null>(null)
   // Keep operation identities while inspecting another record in this login.
@@ -80,7 +81,7 @@ function Workbench() {
         <div>
           <span className="eyebrow">MERCHANT OPERATIONS</span>
           <h1>商家工作台</h1>
-          <p className="muted">处理本店发货、送达和退货，核对服务端记录。</p>
+          <p className="muted">管理本店商品、发货、送达和退货，核对服务端记录。</p>
         </div>
       </header>
       <nav className="inline-actions" aria-label="工作台模块">
@@ -98,8 +99,9 @@ function Workbench() {
         >
           售后管理
         </button>
+        <button className={`button ${tab === 'catalog' ? 'primary' : 'secondary'}`} aria-pressed={tab === 'catalog'} onClick={() => setTab('catalog')}>商品管理</button>
       </nav>
-      {tab === 'orders' ? (
+      {tab === 'catalog' ? <MerchantCatalog /> : tab === 'orders' ? (
         <OrdersPanel selected={orderId} select={setOrderId} />
       ) : (
         <CasesPanel

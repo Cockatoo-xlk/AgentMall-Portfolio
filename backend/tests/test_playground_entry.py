@@ -126,7 +126,7 @@ async def test_fresh_owned_environment_migrates_seeds_and_reopens_without_reset(
                 )
             )
             assert conn.execute("SELECT count(*) FROM products").fetchone()[0] == 12
-            assert conn.execute("SELECT version_num FROM alembic_version").fetchone()[0] == "0009"
+            assert conn.execute("SELECT version_num FROM alembic_version").fetchone()[0] == "0010"
             conn.execute("UPDATE users SET disabled=true WHERE login='buyer2'")
         again, same = load_environment(tmp_path)
         assert again == settings and same == ident

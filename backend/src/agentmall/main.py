@@ -13,6 +13,8 @@ from agentmall.agents.budgets import GraphBudget
 from agentmall.agents.routes import router as agent_router
 from agentmall.cart.routes import router as cart_router
 from agentmall.catalog.routes import router as catalog_router
+from agentmall.catalog_operations.parser import DisabledParser
+from agentmall.catalog_operations.routes import router as catalog_operations_router
 from agentmall.identity.routes import router as identity_router
 from agentmall.infra.config import Settings
 from agentmall.infra.db import database
@@ -90,6 +92,7 @@ def create_app(settings: Settings | None = None):
     for router in (
         identity_router,
         catalog_router,
+        catalog_operations_router,
         cart_router,
         actions_router,
         orders_router,
@@ -104,6 +107,7 @@ def create_app(settings: Settings | None = None):
     app.state.durable_single_model = None
     app.state.multi_budget_factory = GraphBudget
     app.state.multi_trace_factory = dict
+    app.state.catalog_parser = DisabledParser()
     app.state.retrieval_encoder = None
     app.state.agent_model = None  # Explicit injection only; ordinary startup never loads a key.
     app.state.agent_budget_factory = Budget

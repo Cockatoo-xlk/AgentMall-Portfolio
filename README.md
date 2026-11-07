@@ -16,6 +16,10 @@
 
 截图为合成业务演示：**MockTransport + Fixture Embedding，确认操作者TEST_OPERATOR，未付款**。
 
+## V2.7 商家动态商品运营
+
+商家在工作台导入CSV/JSON或创建草稿，查看带原文依据的规格建议，明确审核后独立发布。商品变更有版本与库存基线校验；检索索引单独执行、显示真实状态并有界重试。新品继续通过原商品、购物车、Single/Multi及Bundle购买链路。[操作指南与安全边界](docs/CATALOG_OPERATIONS.md)。本轮辅助为MockTransport、向量为Fixture，普通API默认禁用模型，未进行真实LLM评测或远程发布。
+
 ## V2.6 组合购物
 
 同一Thread按2–5个品类独立检索，以整套预算生成有来源的组合。用户后续明确选择、数量与地址后，Order只准备一份多SKU提案；独立批准才通过原事务创建一笔订单。任一商品变化或缺货停止整套购买，支持刷新、SSE与幂等恢复。[组合演示、算法与安全边界](docs/BUNDLE_SHOPPING.md)。当前演示为MockTransport + Fixture Embedding，真实Live尚未验收。

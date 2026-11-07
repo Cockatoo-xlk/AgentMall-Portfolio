@@ -2,6 +2,12 @@
 
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
+## V2.7 商家动态商品运营（本地离线）
+
+基于V2.6 `cb70ebb6687490db7b21794eb8257a1078d6939d`，使用新独占PostgreSQL17/pgvector、官方Checkpoint及MockTransport/Fixture。完整后端 **981 passed / 14 skipped**，Vitest **102 passed**，完整Playwright **111 passed / 0 retries**；最后商品运营专项 **4 passed**（含3项重复覆盖，不相加为115）。Ruff、格式、TypeScript、ESLint和build均退出0。[本轮结果与保留失败](evidence/v27/report.md)及[命令/源码树/日志SHA](evidence/v27/verification.json)。只读审核、分立发布、版本/库存保护和新品Single/Multi/Bundle交易均有数据库断言。
+
+本轮未重新加载真实BGE、未执行真实Provider、远程CI或部署。既有14项跳过不变；当前Commit通过的是本地离线验收，不能借用历史远程或Live成绩。
+
 ## V2.5 多品类目录验证
 
 扩容基于V2 RC `6062c89965aee5dfa7d6ab3ec74917d5a706fe37`，在独占Linux aarch64 PostgreSQL17/pgvector中验证。实际测试数字、源码内容绑定、命令和日志SHA见[本轮摘要](evidence/v25/verification.json)。[目录说明](EXPANDED_CATALOG.md)记录Legacy/Expanded数据身份、迁移、重建和浏览器操作；旧评测和R8记录仍绑定各自历史源码。

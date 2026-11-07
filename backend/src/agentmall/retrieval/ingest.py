@@ -140,3 +140,23 @@ async def index_policies(session, documents, encoder):
                     )
                 )
     return len(texts)
+
+
+async def index_product(session, product, encoder):
+    """Targeted upsert for a locked current product; caller owns the transaction."""
+    text = product_text(product)
+    vector = (await encode(encoder, [text]))[0]
+    values = dict(
+        product_id=product.id,
+        source_version=product.catalog_version,
+        content_hash=digest(text),
+        **indexed(text, vector, encoder),
+    )
+    values["tokenizer_version"] = PRODUCT_INDEX_VERSION
+    statement = insert(ProductSearch).values(**values)
+    await session.execute(
+        statement.on_conflict_do_update(
+            index_elements=["product_id"],
+            set_={k: v for k, v in values.items() if k != "product_id"},
+        )
+    )

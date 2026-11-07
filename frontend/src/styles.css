@@ -3155,3 +3155,10 @@ main:focus {
 .bundle-specs dt { color: #687c76; }
 .bundle-specs dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
 .bundle-total { font-weight: 700; font-size: 1.1rem; }
+
+/* Merchant catalog: bounded readable source/evidence on mobile. */
+.catalog-operations { display: grid; gap: 1rem; margin-top: 1rem; }
+.catalog-operation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); gap: 1rem; }
+.catalog-operations pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 18rem; overflow: auto; }
+.catalog-operations article, .catalog-operations .panel { overflow-wrap: anywhere; }
+.catalog-operations fieldset { min-width: 0; border: 1px solid var(--line, #ddd); border-radius: 12px; padding: 1rem; }
