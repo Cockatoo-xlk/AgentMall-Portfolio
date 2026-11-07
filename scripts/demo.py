@@ -145,7 +145,9 @@ async def serve(args):
     )
     os.environ.update(dotenv_values(ROOT / ".env.rag"))
     os.environ.update(
-        AGENTMALL_API_TARGET="http://127.0.0.1:8001", VITE_AGENT_MODE="fixture"
+        AGENTMALL_API_TARGET="http://127.0.0.1:8001",
+        VITE_AGENT_MODE="fixture",
+        AGENTMALL_DEMO_CATALOG_PROFILE=args.catalog_profile,
     )
     stop = asyncio.Event()
     for sig in (signal.SIGINT, signal.SIGTERM):
@@ -259,6 +261,9 @@ async def serve(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepare-return", action="store_true")
+    parser.add_argument(
+        "--catalog-profile", choices=("legacy", "expanded"), default="expanded"
+    )
     parser.add_argument("--seconds", type=int, default=900, choices=range(1, 3601))
     args = parser.parse_args()
     if not Path("/.dockerenv").exists() or not os.environ.get(

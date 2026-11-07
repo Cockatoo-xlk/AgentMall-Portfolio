@@ -17,6 +17,7 @@ from agentmall.agents.evidence import policy_support
 from agentmall.cart import service as cart
 from agentmall.cart.models import Cart
 from agentmall.catalog import service as catalog
+from agentmall.catalog.categories import KIND_ATTRIBUTES
 from agentmall.identity.models import User
 from agentmall.identity.service import actor_for, require_buyer
 from agentmall.infra.errors import DomainError
@@ -136,6 +137,10 @@ def product_allowed(runtime, product):
 
     c = runtime.constraints
     needs = c.product_needs
+    if needs.product_kind:
+        category, attribute, term = KIND_ATTRIBUTES[needs.product_kind]
+        if product.category != category or term not in product.attributes.get(attribute, ""):
+            return False
     return (
         product.id not in runtime.exclusions
         and product.available > 0
@@ -143,6 +148,11 @@ def product_allowed(runtime, product):
         and (c.max_price_cents is None or product.price_cents <= c.max_price_cents)
         and (c.noise_preference is None or product.attributes.get("noise") == "较安静")
         and (needs.layout is None or product.attributes.get("size") == needs.layout)
+        and (
+            needs.screen_inches is None
+            or product.attributes.get("screen_inches") == needs.screen_inches
+        )
+        and (needs.activity is None or product.attributes.get("usage") == "公路车骑行")
         and connection_matches(product.attributes, needs.connection, needs.excluded_connections)
         and (
             needs.keyboard_type is None
@@ -227,6 +237,9 @@ class SpecialistTools:
                         max_price_cents=maximum,
                         noise_preference=r.constraints.noise_preference,
                         layout=r.constraints.product_needs.layout,
+                        screen_inches=r.constraints.product_needs.screen_inches,
+                        activity=r.constraints.product_needs.activity,
+                        product_kind=r.constraints.product_needs.product_kind,
                         connection=r.constraints.product_needs.connection,
                         excluded_connections=r.constraints.product_needs.excluded_connections,
                         keyboard_type=r.constraints.product_needs.keyboard_type,

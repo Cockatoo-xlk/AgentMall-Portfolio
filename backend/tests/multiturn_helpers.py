@@ -9,6 +9,8 @@ from uuid import uuid4
 
 import httpx
 
+from agentmall.catalog.categories import CATEGORY_LABELS
+
 
 class ContextSDK:
     def __init__(self):
@@ -60,7 +62,7 @@ class ContextSDK:
                 else:
                     name, args = (
                         "retrieve_products",
-                        {"query": "键盘" if constraints["category"] == "keyboard" else "鼠标"},
+                        {"query": CATEGORY_LABELS.get(constraints["category"], "商品")},
                     )
             elif selected and any(
                 i["id"] not in {t.get("data", {}).get("id") for t in tools if t.get("ok")}

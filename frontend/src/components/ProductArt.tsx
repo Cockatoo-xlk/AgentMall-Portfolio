@@ -59,6 +59,39 @@ export default function ProductArt({ category, variant = '', className = '' }: P
           <feGaussianBlur stdDeviation="11" />
         </filter>
       </defs>
+      {(['smartphone', 'tablet'].includes(category)) && <g transform="rotate(-10 240 170)">
+        <ellipse cx="245" cy="285" rx="105" ry="14" fill={dark} opacity=".1" />
+        <rect x={category === 'tablet' ? 125 : 164} y="48" width={category === 'tablet' ? 230 : 150} height="242" rx="23" fill={dark} />
+        <rect x={category === 'tablet' ? 135 : 174} y="59" width={category === 'tablet' ? 210 : 130} height="218" rx="16" fill={`url(#${id}-body)`} />
+        <circle cx="240" cy="66" r="3" fill={dark} /><path d="M180 235 Q240 120 300 210" stroke="#f4f0d6" strokeWidth="20" />
+      </g>}
+      {(['laptop', 'monitor'].includes(category)) && <g transform="rotate(-5 240 170)">
+        <rect x="75" y="62" width="330" height="205" rx="14" fill={dark} />
+        <rect x="87" y="75" width="306" height="175" rx="7" fill={`url(#${id}-body)`} />
+        <path d="M100 220 L180 130 L245 192 L310 110 L382 220Z" fill={body} /><circle cx="330" cy="111" r="18" fill="#e6e7b7" />
+        {category === 'laptop' ? <path d="M75 267H405L437 290Q240 317 43 290Z" fill={body} stroke={dark} strokeWidth="3" /> : <><path d="M224 267H256L264 300H216Z" fill={dark} /><rect x="174" y="300" width="132" height="9" rx="4" fill={body} /></>}
+      </g>}
+      {category === 'camera' && <g transform="rotate(-9 240 170)">
+        <path d="M152 119L168 92H231L249 119" fill={dark} /><rect x="82" y="117" width="316" height="168" rx="26" fill={`url(#${id}-body)`} stroke={dark} strokeWidth="4" />
+        <rect x="101" y="131" width="35" height="137" rx="12" fill={dark} /><circle cx="249" cy="201" r="75" fill={dark} /><circle cx="249" cy="201" r="58" fill={body} /><circle cx="249" cy="201" r="39" fill="#173f3a" /><circle cx="235" cy="185" r="14" fill="#a9c3bd" opacity=".7" /><rect x="339" y="135" width="36" height="17" rx="3" fill="#f4f0d6" />
+      </g>}
+      {category === 'smartwatch' && <g transform="rotate(-15 240 170)">
+        <rect x="201" y="20" width="78" height="300" rx="20" fill={body} /><rect x="172" y="96" width="136" height="152" rx="32" fill={dark} /><rect x="182" y="106" width="116" height="132" rx="24" fill={`url(#${id}-body)`} /><circle cx="240" cy="172" r="42" stroke={dark} strokeWidth="4" /><path d="M240 142V172L266 186" stroke={dark} strokeWidth="6" strokeLinecap="round" /><rect x="308" y="139" width="8" height="22" rx="4" fill={body} />
+      </g>}
+      {category === 'speaker' && <g transform="rotate(-8 240 170)">
+        <rect x="147" y="40" width="186" height="260" rx="28" fill={`url(#${id}-body)`} stroke={dark} strokeWidth="4" /><circle cx="240" cy="110" r="35" fill={dark} /><circle cx="240" cy="213" r="64" fill={dark} /><circle cx="240" cy="213" r="45" fill={body} /><circle cx="240" cy="213" r="20" fill={dark} />
+      </g>}
+      {category === 'cycling' && <g transform="rotate(-12 240 170)">
+        <path d="M89 211Q82 80 234 71Q385 77 397 205L315 231L139 239Z" fill={`url(#${id}-body)`} stroke={dark} strokeWidth="4" /><path d="M132 228L196 295L308 226M196 295L214 309" stroke={dark} strokeWidth="12" strokeLinejoin="round" />
+        {[159,212,265,318].map(x => <path key={x} d={`M${x} 112L${x+19} 172`} stroke={dark} strokeWidth="15" strokeLinecap="round" />)}<path d="M97 213Q239 246 390 203" stroke={dark} strokeWidth="10" />
+      </g>}
+      {category === 'fitness' && <g transform="rotate(-23 240 170)">
+        <rect x="118" y="154" width="242" height="38" rx="12" fill={body} stroke={dark} strokeWidth="4" />
+        {[101,321].map(x => <g key={x}><rect x={x} y="101" width="58" height="147" rx="16" fill={dark} /><rect x={x+11} y="111" width="36" height="127" rx="12" fill={`url(#${id}-body)`} /></g>)}
+      </g>}
+      {category === 'home_appliance' && <g transform="rotate(-5 240 170)">
+        <rect x="127" y="49" width="191" height="245" rx="24" fill={`url(#${id}-body)`} stroke={dark} strokeWidth="4" /><rect x="145" y="86" width="151" height="56" rx="8" fill={dark} /><circle cx="266" cy="111" r="12" fill={body} /><rect x="167" y="166" width="134" height="97" rx="10" fill={dark} /><path d="M179 190H246V241Q211 254 179 241Z" fill="#f8f4e7" /><path d="M246 198H265Q286 218 246 230" stroke="#f8f4e7" strokeWidth="8" /><path d="M201 160V178M222 160V178" stroke={dark} strokeWidth="5" /><rect x="111" y="282" width="224" height="18" rx="8" fill={dark} />
+      </g>}
       {category === 'keyboard' && (
         <g transform="translate(5 1) rotate(-13 240 170)">
           <ellipse

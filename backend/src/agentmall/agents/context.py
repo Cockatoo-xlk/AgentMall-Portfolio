@@ -7,6 +7,13 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, model_serializer, model_validator
 
 from agentmall.aftersales.schemas import ReasonCode
+from agentmall.catalog.categories import (
+    KIND_ATTRIBUTES,
+    Category,
+    ProductKind,
+    infer_category,
+    infer_product_kind,
+)
 
 Target = Literal["shopping", "order", "aftersales"]
 Goal = Literal[
@@ -24,6 +31,9 @@ class Strict(BaseModel):
 
 
 class ProductNeeds(Strict):
+    screen_inches: str | None = Field(None, pattern=r"^\d{1,2}(?:\.\d)?$", max_length=4)
+    activity: Literal["road_cycling"] | None = None
+    product_kind: ProductKind | None = None
     layout: Literal["61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"] | None = None
     connection: Literal["有线", "无线", "双模", "三模"] | None = None
     excluded_connections: list[Literal["双模", "三模"]] = Field(default_factory=list, max_length=2)
@@ -33,6 +43,9 @@ class ProductNeeds(Strict):
     @model_serializer(mode="wrap")
     def compatible_payload(self, handler):
         data = handler(self)
+        for key in ("screen_inches", "activity", "product_kind"):
+            if data.get(key) is None:
+                data.pop(key, None)
         # Preserve legacy handoff and request hashes when the new optional field is absent.
         if not self.excluded_connections and "excluded_connections" not in self.model_fields_set:
             data.pop("excluded_connections", None)
@@ -41,13 +54,23 @@ class ProductNeeds(Strict):
     def terms(self):
         kind = {"mechanical": "机械", "membrane": "薄膜"}.get(self.keyboard_type)
         return " ".join(
-            value for value in (self.layout, self.connection, kind, self.usage) if value
+            value
+            for value in (
+                self.layout,
+                self.connection,
+                kind,
+                self.usage,
+                self.screen_inches + "英寸" if self.screen_inches else None,
+                "公路车骑行" if self.activity else None,
+                KIND_ATTRIBUTES[self.product_kind][2] if self.product_kind else None,
+            )
+            if value
         )
 
 
 class Constraints(Strict):
     max_price_cents: int | None = Field(None, ge=0, le=100_000_000, strict=True)
-    category: Literal["keyboard", "mouse", "headphones"] | None = None
+    category: Category | None = None
     noise_preference: Literal["quiet"] | None = None
     exclude_product_ids: list[UUID] = Field(default_factory=list, max_length=20)
     exclude_original: bool = Field(False, strict=True)
@@ -175,6 +198,13 @@ def user_constraints(request):
 
     values = {}
     needs = {}
+    if kind := infer_product_kind(message):
+        needs["product_kind"] = kind
+    screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", message)
+    if screen:
+        needs["screen_inches"] = screen[1]
+    if "公路车" in message:
+        needs["activity"] = "road_cycling"
     layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键", message)
     if layout:
         needs["layout"] = layout[1] + "键"
@@ -200,9 +230,8 @@ def user_constraints(request):
     values["product_needs"] = needs
     if amount:
         values["max_price_cents"] = int(Decimal(amount[1]) * 100)
-    for word, category in [("键盘", "keyboard"), ("鼠标", "mouse"), ("耳机", "headphones")]:
-        if word in message:
-            values["category"] = category
+    if category := infer_category(message):
+        values["category"] = category
     if any(x in message for x in ("安静", "静音", "低噪声")):
         values["noise_preference"] = "quiet"
     if any(x in message for x in ("一款", "一件", "一个")):

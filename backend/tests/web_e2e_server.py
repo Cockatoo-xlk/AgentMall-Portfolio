@@ -249,6 +249,7 @@ class Harness:
     boundary: Boundary
     sdk_program: object = None
     sdk_directory: object = None
+    catalog_profile: str = "legacy"
     mode: Mode = "proposal"
     workflow_mode: str = "purchase"
     answer_failure_used: bool = False
@@ -263,6 +264,9 @@ class Harness:
             "schema": self.schema,
             "checkpoint_schema": self.settings.checkpoint_schema,
             "fixture_mode": FIXTURE_MODE,
+            "catalog_dataset": "expanded-120-v1"
+            if self.catalog_profile == "expanded"
+            else "legacy-12-v1",
             "mode": self.mode,
             "provider_http_requests": self.boundary.provider_http_requests,
             "real_model_calls": self.boundary.real_model_calls,
@@ -416,7 +420,12 @@ class Harness:
         self.agent_traces.clear()
         self.boundary.fake_model_calls = 0
         async with self.app.state.sessions.begin() as session:
-            await seed(session, self.settings)
+            await seed(
+                session,
+                self.settings,
+                profile=os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy"),
+            )
+            self.catalog_profile = os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy")
         from retrieval_helpers import index
 
         await index((None, self.db, self.app, self.settings))
@@ -623,6 +632,19 @@ def mount_controls(harness):
             "server_clock_offset_seconds": harness.offset.total_seconds(),
         }
 
+    @router.post("/expanded-catalog")
+    async def expanded_catalog():
+        # Local test-control boundary only; never a public product mutation API.
+        from agentmall.seed import seed
+
+        harness.catalog_profile = "expanded"
+        async with harness.app.state.sessions.begin() as session:
+            await seed(session, harness.settings, profile="expanded")
+        from retrieval_helpers import index
+
+        count = await index((None, harness.db, harness.app, harness.settings))
+        return {"dataset": "expanded-120-v1", "model": "FIXTURE", "indexed": count is not None}
+
     @router.post("/reset")
     async def reset():
         await harness.reset()
@@ -784,7 +806,12 @@ async def isolated_app():
 
             cleanup.enter_context(patch.object(payments, "database_now", test_clock))
             async with app.state.sessions.begin() as session:
-                await seed(session, settings)
+                await seed(
+                    session,
+                    settings,
+                    profile=os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy"),
+                )
+                harness.catalog_profile = os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy")
             from retrieval_helpers import index
 
             await index((None, db, app, settings))

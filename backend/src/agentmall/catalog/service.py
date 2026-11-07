@@ -1,5 +1,6 @@
 from sqlalchemy import or_, select
 
+from agentmall.catalog.categories import bare_category
 from agentmall.catalog.models import Product
 from agentmall.catalog.schemas import ProductDTO, ProductFilters, ProductPage
 from agentmall.identity.service import ActorContext
@@ -22,10 +23,12 @@ def product_dto(product: Product) -> ProductDTO:
 async def search_products(session, actor: ActorContext, filters: ProductFilters) -> ProductPage:
     query = select(Product).where(Product.store_id == actor.store_id, Product.active.is_(True))
     if filters.query:
+        inferred = bare_category(filters.query)
         query = query.where(
             or_(
                 Product.name.icontains(filters.query, autoescape=True),
                 Product.description.icontains(filters.query, autoescape=True),
+                Product.category == inferred if inferred else False,
             )
         )
     if filters.category:

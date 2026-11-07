@@ -30,7 +30,7 @@ export default defineConfig({
     reuseExistingServer: false,
     gracefulShutdown: { signal: 'SIGTERM', timeout: 10000 },
   }] : MANAGED_DEMO ? [{
-    command: 'docker compose -p agentmall-t14-p1 -f ../compose.ci.yaml -f ../compose.cart-local.yaml run --no-deps --name agentmall-t14-p1-native-servers --rm runner python scripts/demo.py --seconds 600',
+    command: 'docker compose -p agentmall-t14-p1 -f ../compose.ci.yaml -f ../compose.cart-local.yaml run --no-deps --name agentmall-t14-p1-native-servers --rm runner python scripts/demo.py --catalog-profile legacy --seconds 600',
     url: WEB_ORIGIN,
     reuseExistingServer: false,
     gracefulShutdown: { signal: 'SIGTERM', timeout: 15000 },

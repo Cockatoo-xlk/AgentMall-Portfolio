@@ -1,4 +1,5 @@
 import type { Address, Category, OrderStatus } from './types'
+import { categoryLabels } from './catalog'
 export function money(cents: number): string {
   return `¥${Math.floor(cents / 100).toLocaleString('zh-CN')}.${String(cents % 100).padStart(2, '0')}`
 }
@@ -12,7 +13,7 @@ export function parseBudget(value: string): number | null {
   return cents
 }
 export const categoryLabel = (category: Category) =>
-  ({ keyboard: '键盘', mouse: '鼠标', headphones: '耳机' })[category]
+  categoryLabels[category]
 export const addressLabel = (address: Address) =>
   ({ demo_dorm: '演示宿舍地址', demo_home: '演示家庭地址' })[address]
 const orderStatusLabels: Record<OrderStatus, string> = {

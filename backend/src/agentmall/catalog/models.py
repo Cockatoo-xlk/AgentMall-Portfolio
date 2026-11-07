@@ -4,6 +4,7 @@ from sqlalchemy import BigInteger, CheckConstraint, Index, String, UniqueConstra
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
+from agentmall.catalog.categories import CATEGORIES
 from agentmall.infra.db import Base, Record
 
 
@@ -14,7 +15,8 @@ class Product(Record, Base):
         CheckConstraint("price_cents >= 0", name="ck_products_price"),
         CheckConstraint("catalog_version >= 1", name="ck_products_version"),
         CheckConstraint(
-            "category IN ('keyboard','mouse','headphones')", name="ck_products_category"
+            "category IN (" + ",".join(repr(c) for c in CATEGORIES) + ")",
+            name="ck_products_category",
         ),
         UniqueConstraint("id", "store_id", name="uq_products_id_store"),
         Index("ix_products_public_filter", "store_id", "active", "category", "price_cents"),

@@ -5,8 +5,8 @@ services:
     volumes: !override
       - portfolio-data:/var/lib/postgresql/data
     ports: !override
-      - "127.0.0.1:8026:18001"
-      - "127.0.0.1:5196:15174"
+      - "127.0.0.1:${AGENTMALL_DEMO_API_PORT:-8026}:18001"
+      - "127.0.0.1:${AGENTMALL_DEMO_WEB_PORT:-5196}:15174"
     mem_limit: 1g
     cpus: 1
   runner:

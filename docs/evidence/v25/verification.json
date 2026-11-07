@@ -1,0 +1,423 @@
+{
+  "status": "AGENTMALL_V2_EXPANDED_CATALOG_READY",
+  "date_utc": "2026-11-07",
+  "git_base": "6062c89965aee5dfa7d6ab3ec74917d5a706fe37",
+  "branch": "codex/v2-expanded-catalog",
+  "source_binding": {
+    "git_commit": "The commit containing this receipt; verified executable inputs must match this content hash.",
+    "input_files": 373,
+    "input_sha256": "65168da2d776f28550f672758daff848f2e07783057948e7f98d7fa30a7a6dda",
+    "algorithm": "SHA256 of sorted UTF-8 lines path + TAB + file SHA256 + LF",
+    "scope": "backend, frontend, evals, scripts, fixtures and Compose inputs; documentation and local outputs excluded"
+  },
+  "catalog": {
+    "legacy_dataset": "legacy-12-v1",
+    "expanded_dataset": "expanded-120-v1",
+    "categories": 13,
+    "skus": 120,
+    "new_skus": 108,
+    "counts": {
+      "keyboard": 8,
+      "mouse": 6,
+      "headphones": 6,
+      "smartphone": 10,
+      "laptop": 10,
+      "tablet": 10,
+      "monitor": 10,
+      "camera": 10,
+      "smartwatch": 10,
+      "speaker": 10,
+      "cycling": 10,
+      "fitness": 10,
+      "home_appliance": 10
+    },
+    "resource_sha256": "82f033872c5580267afc01a207fcf1605cc015c1cc113c3228b229e4e201938b",
+    "legacy_products_literal_unchanged": true,
+    "legacy_ids_and_values_preserved_in_database_test": true,
+    "id_scheme": "uuid5(storefront_id, expanded-120-v1:sku)",
+    "seed_default": "legacy",
+    "ordinary_demo_default": "expanded",
+    "managed_browser_profile": "legacy"
+  },
+  "migration": {
+    "added": "0008_expanded_catalog.py",
+    "previous_migrations_unchanged": true,
+    "changes": "category CHECK only",
+    "upgrade_and_legacy_downgrade": "PASS",
+    "downgrade_with_expanded_rows": "REFUSED_WITHOUT_DATA_LOSS"
+  },
+  "environment": {
+    "platform": "Linux aarch64 on Mac Docker Desktop",
+    "database": "new PostgreSQL17/pgvector, internal55433, no host database listener",
+    "network": "new network-none database namespace shared by owned test runner",
+    "model": "Fixture and SDK MockTransport",
+    "embedding": "FixtureEncoder, real PostgreSQL vector(512) and lexical/vector/hybrid queries",
+    "checkpointer": "official PostgreSQL Checkpointer in newly owned per-test schemas",
+    "real_bge_semantic_evaluation": "NOT_RUN",
+    "real_provider_evaluation": "NOT_RUN"
+  },
+  "results": {
+    "pytest": {
+      "passed": 905,
+      "skipped": 14,
+      "failed": 0,
+      "new_tests": 39,
+      "existing_rc_tests": 866
+    },
+    "vitest": {
+      "passed": 95,
+      "new_tests": 3,
+      "files": 15
+    },
+    "playwright": {
+      "passed": 106,
+      "new_tests": 1,
+      "failed": 0,
+      "skipped": 0,
+      "retries": 0,
+      "browser": "Chromium",
+      "files": {
+        "cart_checkout.spec.ts": 14,
+        "evaluation-studio.spec.ts": 2,
+        "expanded-catalog.spec.ts": 1,
+        "merchant.spec.ts": 3,
+        "multiturn.spec.ts": 9,
+        "payment.spec.ts": 17,
+        "playground.spec.ts": 13,
+        "proposal_expiry.spec.ts": 3,
+        "purchase.spec.ts": 22,
+        "return_replace.spec.ts": 21,
+        "v2-rc.spec.ts": 1
+      }
+    },
+    "ruff": "PASS",
+    "format": "PASS",
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "build": "PASS",
+    "final_targeted": {
+      "passed": 58,
+      "failed": 0,
+      "scope": "39 expanded,10 original retrieval,9 original thread memory"
+    }
+  },
+  "skip_boundary": [
+    {
+      "count": 13,
+      "reason": "real BGE weight dependency under CI_OFFLINE_CORE"
+    },
+    {
+      "count": 1,
+      "reason": "private original Live comparison; synthetic regression still runs"
+    }
+  ],
+  "business_scenarios": {
+    "A": {
+      "status": "PASS",
+      "proof": "phone category, <=300000 cents, three recall modes; six eligible UI products"
+    },
+    "B": {
+      "status": "PASS",
+      "proof": "real cycling rows with road-cycling usage; helmet subtype before LIMIT and tool checks"
+    },
+    "C": {
+      "status": "PASS",
+      "proof": "real 27-inch monitors and varied prices; exact specification revalidation"
+    },
+    "D": {
+      "status": "PASS",
+      "proof": "home appliances <=50000 cents; eight eligible catalogue records"
+    },
+    "E": {
+      "status": "PASS_WITH_SCOPE",
+      "proof": "without category parameter: controlled category aliases/vlog and specific subtypes; not an open-ended semantic quality claim"
+    },
+    "F": {
+      "status": "PASS",
+      "proof": "new candidate ID -> WAITING_INPUT -> separate Confirmation -> one PENDING_PAYMENT order, zero payments"
+    },
+    "G": {
+      "status": "PASS",
+      "proof": "new phone last-unit two-buyer PostgreSQL lock contention: 201/409, reserved=1; replay leaves one order; seed preserves reservation"
+    },
+    "H": {
+      "status": "PASS",
+      "proof": "old 12 UUIDs and values preserved, all 866 existing backend tests pass; old V2 browser scenarios remain green"
+    },
+    "I": {
+      "status": "PASS",
+      "proof": "repeat expanded/legacy seed leaves 120 rows and preserves prices, reservations and orders"
+    },
+    "J": {
+      "status": "PASS",
+      "proof": "API limit7 and browser limit8 traverse 120 distinct IDs without duplicate or missing products"
+    }
+  },
+  "review_fixes": [
+    "Only bare category words may broaden keyword matching; modifiers and subtypes cannot silently become the whole category.",
+    "Strict versioned PATCH CLEAR and visible controls for screen/activity/product_kind; repeated request is idempotent.",
+    "Unrelated alternative usage does not erase a unique explicit subtype.",
+    "Managed E2E launcher explicitly selects legacy.",
+    "Chinese category remains a separate document line; aliases are additional versioned content."
+  ],
+  "index": {
+    "version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v3",
+    "old_indices_require_rebuild": true,
+    "min_similarity": 0.45,
+    "rrf_unchanged": true,
+    "pre_limit_scope": "store, active, stock, price, version, category, screen, activity, subtype and original capabilities",
+    "fresh_sql_and_tool_revalidation": true
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/v25/01-expanded-desktop.png",
+      "bytes": 403012,
+      "sha256": "78768d6dffcf6e80d3972b6bff81f4fcd9ef0e48d62ccf0bbd435884ea88f98c",
+      "synthetic": true,
+      "operator": "TEST_OPERATOR",
+      "private_metadata": false
+    },
+    {
+      "path": "docs/screenshots/v25/02-phone-confirmation.png",
+      "bytes": 120659,
+      "sha256": "5e889b1966da3ac4041b98be5d1e54641d388faf9ffedeed728071450f399813",
+      "synthetic": true,
+      "operator": "TEST_OPERATOR",
+      "private_metadata": false
+    },
+    {
+      "path": "docs/screenshots/v25/03-cycling-mobile.png",
+      "bytes": 287204,
+      "sha256": "d6ca996d283a09d5336eadee53b044b03a11febe361166ddfbefa4af7bd8a77c",
+      "synthetic": true,
+      "operator": "TEST_OPERATOR",
+      "private_metadata": false
+    }
+  ],
+  "commands": {
+    "bootstrap": {
+      "command": [
+        "python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433",
+        "--config",
+        "/rc-output/bootstrap.env"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T05:49:21.387563+00:00",
+      "seconds": 1.7,
+      "log_sha256": "c75288b72166ba8816b38e33cd10fb4b6ca309f6ab1c4f2394af521c8113727d"
+    },
+    "ruff-release": {
+      "command": [
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:47.710876+00:00",
+      "seconds": 0.173,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "format-release": {
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:48.118419+00:00",
+      "seconds": 0.116,
+      "log_sha256": "8c3c73cce79068c1c7d2facbdcd6e28be5623ab9e03dc82c7181d60440886139"
+    },
+    "pytest-release": {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "--junitxml=/rc-output/pytest-release.xml"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:45.344012+00:00",
+      "seconds": 287.789,
+      "log_sha256": "2b81af185583d499069adbd36c34a9e8260e87e0eb40d73f8842aa963c287de5"
+    },
+    "typecheck-release": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:48.452739+00:00",
+      "seconds": 2.124,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    "lint-release": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:50.789525+00:00",
+      "seconds": 1.372,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    "vitest-release": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:52.433741+00:00",
+      "seconds": 0.968,
+      "log_sha256": "367c7e88934a130eb0e5ea993d6c508c98ed5d478c1fc19e52098487387e7db0"
+    },
+    "build-release": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:53.650950+00:00",
+      "seconds": 2.676,
+      "log_sha256": "fadb000c83ebedfec46a2fb915c64b9e29e5b2808e0d6888d5ee7c2d7458c109"
+    },
+    "playwright-release": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T06:21:46.496305+00:00",
+      "seconds": 200.589,
+      "log_sha256": "d31bf0ec831bf96c7c9bb1d35f15c3026cb493b4c54ee9dacefdd0541918e756"
+    }
+  },
+  "development_failure_receipts_retained": [
+    {
+      "receipt": "agent-diagnosis-codes.json",
+      "exit_code": 1,
+      "raw_log_sha256": "27503933f944d9cc1a0e530aab5d245450d802bc54f6c21d027c61333c8e68d9"
+    },
+    {
+      "receipt": "agent-diagnosis.json",
+      "exit_code": 1,
+      "raw_log_sha256": "d0bd8db43c4467e33b9ccc0a4208afa2bab2226e6529643463fe6dd3b6cdaff4"
+    },
+    {
+      "receipt": "agent-fixed.json",
+      "exit_code": 1,
+      "raw_log_sha256": "ccf9f833f56bf22899e58fdf2cecb385b891d0cb7a5e19218f55442330d07488"
+    },
+    {
+      "receipt": "browser-expanded-login-fix.json",
+      "exit_code": 1,
+      "raw_log_sha256": "6170ebf3268a8376fc024bd60259863806db0f0b7d4785d748fffb288b700b54"
+    },
+    {
+      "receipt": "browser-expanded-repair.json",
+      "exit_code": 1,
+      "raw_log_sha256": "2f14cbe04fd69b3d13eaf1adeb2b4ae5811c9069cb4ad095c2fbf78e09703442"
+    },
+    {
+      "receipt": "browser-expanded.json",
+      "exit_code": 1,
+      "raw_log_sha256": "7831c68bdd070143f467cff5427ed82f38aaeaab1801b4faf7f4f8d08190ba65"
+    },
+    {
+      "receipt": "catalog-red.json",
+      "exit_code": 1,
+      "raw_log_sha256": "ae5c7c8ff3d803b6547902ed9e677efd33ab3434dae41d0a823792b49c495017"
+    },
+    {
+      "receipt": "expanded-agent-checks.json",
+      "exit_code": 1,
+      "raw_log_sha256": "6e988cd94a5252ef36cfd54c27d631215a665235b31426b12eec4412c6d9c645"
+    },
+    {
+      "receipt": "expanded-complete.json",
+      "exit_code": 1,
+      "raw_log_sha256": "604a8953b735a089335d8287fb59546a60e4c94d96367913eff46dd854e854ad"
+    },
+    {
+      "receipt": "expanded-tests.json",
+      "exit_code": 1,
+      "raw_log_sha256": "c83f0315ed6310e3b38bcce48b93ca4771c37222d50a0d3cf5f2fe90d179af29"
+    },
+    {
+      "receipt": "kind-usage-red.json",
+      "exit_code": 1,
+      "raw_log_sha256": "0c8730d9efe9657237c44e923014de7c782ee59c5e1ac75aaac4b30a3ebbb374"
+    },
+    {
+      "receipt": "pytest-full.json",
+      "exit_code": 1,
+      "raw_log_sha256": "e4eac9ee83277c970eb8301aab0c8c4a8d9b3aa1fa06d8cd734eca30729da694"
+    },
+    {
+      "receipt": "review-regressions-red.json",
+      "exit_code": 1,
+      "raw_log_sha256": "cd439b72399cf8a00558563748dbab670076bab8912f28e765dbd659e9e17331"
+    },
+    {
+      "receipt": "ruff.json",
+      "exit_code": 1,
+      "raw_log_sha256": "ab801719ce39a10aaaca685f50204a63b855bcba8cc781adf651001dc1190d95"
+    }
+  ],
+  "failure_notes": "Initial RED, test setup/serialization problems, three legacy document-line failures and review/parser RED are retained privately. Read-only formatting attempts are also preserved. No skip/retry was added.",
+  "security": {
+    "real_provider_requests": 0,
+    "real_provider_key_reads": 0,
+    "real_payment_or_refund": 0,
+    "push": 0,
+    "dispatch": 0,
+    "rerun": 0,
+    "old_resource_mutations": 0,
+    "transaction_domains_locks_workflows_and_frozen_evaluation_files_unchanged": true,
+    "private_originals_in_git": false,
+    "new_assets": "original code SVG and synthetic UI screenshots; no remote images",
+    "compose_ports": "fixed 127.0.0.1 binding; old defaults preserved; alternate5198/8028 statically validated"
+  },
+  "cleanup": {
+    "utc": "2026-11-07T06:28:15.034591+00:00",
+    "scope": "v25-expanded-catalog",
+    "stop_exit_code": 0,
+    "guest_absent": true,
+    "postgres_absent": true,
+    "owned_anonymous_volume_absent": true,
+    "temporary_synthetic_credentials_removed": true,
+    "historical_three_containers_still_running": true,
+    "historical_containers_not_stopped_or_modified": true,
+    "reused_images_preserved": true
+  },
+  "limitations": [
+    "Fixture validates pipes and filters, not new real-BGE semantic quality.",
+    "No new DeepSeek evaluation or Ubuntu amd64 remote CI, QPS or SLA claim.",
+    "One category per structured Thread preference; multiple explicit categories request clarification.",
+    "Future Live needs new source/environment/policy/budget authorization. Historical approvals are not reusable."
+  ]
+}

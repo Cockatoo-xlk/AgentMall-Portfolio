@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from sqlalchemy import func, or_, select, tuple_
 
 from agentmall.catalog.capabilities import connection_conditions
+from agentmall.catalog.categories import KIND_ATTRIBUTES
 from agentmall.catalog.models import Product
 from agentmall.catalog.service import product_dto
 from agentmall.identity.service import require_buyer
@@ -100,6 +101,18 @@ def product_scope(actor, filters):
         conditions.append(Product.price_cents <= filters.max_price_cents)
     if filters.in_stock:
         conditions.append(Product.on_hand > Product.reserved)
+    if filters.product_kind:
+        category, attribute, term = KIND_ATTRIBUTES[filters.product_kind]
+        conditions.extend(
+            [
+                Product.category == category,
+                Product.attributes[attribute].as_string().icontains(term, autoescape=True),
+            ]
+        )
+    if filters.screen_inches is not None:
+        conditions.append(Product.attributes["screen_inches"].as_string() == filters.screen_inches)
+    if filters.activity == "road_cycling":
+        conditions.append(Product.attributes["usage"].as_string() == "公路车骑行")
     if filters.noise_preference:
         conditions.append(Product.attributes["noise"].as_string() == "较安静")
     if filters.layout:

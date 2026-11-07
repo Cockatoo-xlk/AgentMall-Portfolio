@@ -2,6 +2,19 @@
 
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
+## V2.5 多品类目录验证
+
+扩容基于V2 RC `6062c89965aee5dfa7d6ab3ec74917d5a706fe37`，在独占Linux aarch64 PostgreSQL17/pgvector中验证。实际测试数字、源码内容绑定、命令和日志SHA见[本轮摘要](evidence/v25/verification.json)。[目录说明](EXPANDED_CATALOG.md)记录Legacy/Expanded数据身份、迁移、重建和浏览器操作；旧评测和R8记录仍绑定各自历史源码。
+
+| 本地V2.5完整验证 | 实际结果 |
+|---|---|
+| pytest | 905 passed / 14 skipped（原866 + 新39） |
+| Vitest | 95 passed（原92 + 新3） |
+| Playwright | 106 passed / 0 retries（原105 + 新1） |
+| Ruff、格式、TypeScript、ESLint、build | 全部退出0 |
+
+本轮模型为MockTransport/Fixture，Embedding为Fixture。真实BGE索引代码、固定权重Manifest及0.45阈值未修改，但没有新增真实BGE语义效果验证或真实Provider调用；不能把向量管线检查当作语义质量实测。完整离线回归结果以本轮摘要为准，没有新增skip/retry，没有运行新的900秒时钟准入或远程CI。
+
 ## V2 RC 本地集成回归（2026-11-07）
 
 RC 基于 `d6b418a0aadb7b598595560a0df4c42dc79cce39`，整合商家运营、意图编排、SSE 与 Evaluation Studio。测试运行于 Mac Docker Desktop 的独占 Linux aarch64 容器，使用新 PostgreSQL 17 / pgvector 数据库、官方 Checkpointer、MockTransport / Fixture。源码内容哈希、实际命令、UTC、退出码与日志 SHA 见 [RC 回执](evidence/v2-rc/verification.json)。最终 RC Commit 可通过包含该回执的 Git 提交定位；正文不把基线 SHA 当作已修改源码。

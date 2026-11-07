@@ -16,6 +16,10 @@
 
 截图为合成业务演示：**MockTransport + Fixture Embedding，确认操作者TEST_OPERATOR，未付款**。
 
+## V2.5 多品类目录
+
+扩展Profile提供 **13品类、120 SKU**，保留原12件及其UUID。手机、笔记本、显示器、摄影、骑行、健身和生活家电等都有独立规格及原创类别插画。Legacy仍是测试/历史评测的默认数据；普通Demo选择Expanded。详见[数据版本、启动与重建](docs/EXPANDED_CATALOG.md)。本轮验证单独记录于[结果索引](docs/RESULTS.md)，不套用旧RC或Live成绩。
+
 ## 核心能力
 
 - **Multi-Agent**：Supervisor路由；Shopping检索商品，Order核验事实并准备购买，AfterSales处理资格、政策引用、售后与人工工单。保留Single模式，不假定Multi一定更优。
@@ -73,7 +77,7 @@ docker --context desktop-linux compose -p agentmall-portfolio-demo \
   -f compose.ci.yaml -f compose.portfolio-local.yaml up -d --wait postgres
 docker --context desktop-linux compose -p agentmall-portfolio-demo \
   -f compose.ci.yaml -f compose.portfolio-local.yaml run --rm --no-deps \
-  runner python scripts/demo.py --seconds 900
+  runner python scripts/demo.py --catalog-profile expanded --seconds 900
 ```
 
 另开终端，按[健康检查与场景选择](docs/PORTFOLIO_DEMO.md#启动)启用已有`context-catalog` **MockTransport**场景。登录[网页](http://127.0.0.1:5196)，合成账号`buyer1` / `AgentMall-demo-2026!` → “工作流” → 创建Multi Thread，依次输入：
@@ -86,7 +90,7 @@ docker --context desktop-linux compose -p agentmall-portfolio-demo \
 
 订单详情另有“模拟付款”，需要新的支付Proposal与Confirmation，与购买确认分开；所有资金均为合成数据，不发生真实扣款。普通购物车与Agent订单共用同一详情页。刷新后需重新登录，再用原Thread ID恢复，不能把浏览器导航引用当作权限。
 
-## V2 RC 集成验收
+## V2 RC 历史集成验收（6062c899）
 
 本地 RC 从 `d6b418a0aadb7b598595560a0df4c42dc79cce39` 整合四项 V2 功能。完整离线回归、实际源码内容绑定、失败与修复、平台及日志哈希见[RC 回执](docs/evidence/v2-rc/verification.json)和[结果索引](docs/RESULTS.md)。演示采用 MockTransport / Fixture，真实 Provider 请求为 0。当前 RC 的 Ubuntu amd64 远程 CI 为 `NOT_RUN`。
 

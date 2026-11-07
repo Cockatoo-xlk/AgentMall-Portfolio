@@ -2,6 +2,8 @@
 
 适合3—5分钟作品集展示。React、FastAPI、PostgreSQL、工具、LangGraph和官方Checkpoint真实运行；模型由受控 **SDK MockTransport** 返回，检索使用 **Fixture Embedding**。这条演示验证应用链路，不验证模型智能或语义向量质量。真实BGE另有[已完成的R8 CI](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/41972687787)。
 
+V2.5新增13类/120SKU演示入口和端口避让方法见[扩展目录指南](EXPANDED_CATALOG.md)。下面的三轮键盘片段仍可复现；历史截图保持原数据版本。
+
 ## 启动
 
 需要Docker及支持`!override`的Docker Compose v2；先用下面的`config --quiet`验证兼容性。本配置使用已有CI镜像构建与Demo启动器，没有新的服务框架。先核对当前Docker Context、本目录归属和端口；不要停止不属于自己的进程。以下在Docker Desktop使用显式context，其他机器应替换成自己已确认的引擎。
@@ -17,7 +19,7 @@ docker --context desktop-linux compose -p agentmall-portfolio-demo \
   -f compose.ci.yaml -f compose.portfolio-local.yaml up -d --wait postgres
 docker --context desktop-linux compose -p agentmall-portfolio-demo \
   -f compose.ci.yaml -f compose.portfolio-local.yaml run --rm --no-deps \
-  runner python scripts/demo.py --seconds 900
+  runner python scripts/demo.py --catalog-profile expanded --seconds 900
 ```
 
 最后一个命令保持前台运行。它会检查新库、迁移、Seed，并启动API/Vite。打开[商城](http://127.0.0.1:5196)，[API文档](http://127.0.0.1:8026/docs)。脚本打印的5174/8001是容器内部地址；宿主访问5196/8026。数据库内部55433，**不发布宿主数据库端口**。使用新项目和专属Volume，不能把历史PGDATA挂进去。约3GiB的服务限额不是完整CI资源需求，也不是Live容量证明。

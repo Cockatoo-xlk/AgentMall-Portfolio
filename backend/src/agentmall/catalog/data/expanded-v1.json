@@ -1,0 +1,1678 @@
+{
+  "dataset": "expanded-120-v1",
+  "notice": "All products, specifications and prices are synthetic; no brand affiliation. Adds to unchanged legacy-12-v1.",
+  "products": [
+    {
+      "sku": "smartphone-01",
+      "name": "轻行 S1 手机",
+      "category": "smartphone",
+      "price_cents": 129900,
+      "on_hand": 15,
+      "attributes": {
+        "processor_tier": "入门级",
+        "memory": "6GB",
+        "storage": "128GB",
+        "screen_size": "6.1英寸",
+        "battery_grade": "标准续航",
+        "imaging": "日常记录",
+        "usage": "轻便通勤",
+        "screen_inches": "6.1"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻行 S1 手机；processor_tier：入门级；memory：6GB；storage：128GB；screen_size：6.1英寸；battery_grade：标准续航；imaging：日常记录；usage：轻便通勤。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-02",
+      "name": "日常 S2 手机",
+      "category": "smartphone",
+      "price_cents": 169900,
+      "on_hand": 18,
+      "attributes": {
+        "processor_tier": "日常级",
+        "memory": "8GB",
+        "storage": "128GB",
+        "screen_size": "6.4英寸",
+        "battery_grade": "长续航",
+        "imaging": "日常记录",
+        "usage": "通勤学习",
+        "screen_inches": "6.4"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日常 S2 手机；processor_tier：日常级；memory：8GB；storage：128GB；screen_size：6.4英寸；battery_grade：长续航；imaging：日常记录；usage：通勤学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-03",
+      "name": "清晰 S3 手机",
+      "category": "smartphone",
+      "price_cents": 199900,
+      "on_hand": 21,
+      "attributes": {
+        "processor_tier": "日常级",
+        "memory": "8GB",
+        "storage": "256GB",
+        "screen_size": "6.5英寸",
+        "battery_grade": "标准续航",
+        "imaging": "旅行影像",
+        "usage": "旅行拍照",
+        "screen_inches": "6.5"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。清晰 S3 手机；processor_tier：日常级；memory：8GB；storage：256GB；screen_size：6.5英寸；battery_grade：标准续航；imaging：旅行影像；usage：旅行拍照。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-04",
+      "name": "长行 S4 手机",
+      "category": "smartphone",
+      "price_cents": 229900,
+      "on_hand": 24,
+      "attributes": {
+        "processor_tier": "中端级",
+        "memory": "8GB",
+        "storage": "256GB",
+        "screen_size": "6.6英寸",
+        "battery_grade": "长续航",
+        "imaging": "日常记录",
+        "usage": "户外通勤",
+        "screen_inches": "6.6"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。长行 S4 手机；processor_tier：中端级；memory：8GB；storage：256GB；screen_size：6.6英寸；battery_grade：长续航；imaging：日常记录；usage：户外通勤。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-05",
+      "name": "小屏 S5 手机",
+      "category": "smartphone",
+      "price_cents": 259900,
+      "on_hand": 27,
+      "attributes": {
+        "processor_tier": "中端级",
+        "memory": "8GB",
+        "storage": "256GB",
+        "screen_size": "6.1英寸",
+        "battery_grade": "标准续航",
+        "imaging": "生活影像",
+        "usage": "小屏便携",
+        "screen_inches": "6.1"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。小屏 S5 手机；processor_tier：中端级；memory：8GB；storage：256GB；screen_size：6.1英寸；battery_grade：标准续航；imaging：生活影像；usage：小屏便携。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-06",
+      "name": "记录 S6 手机",
+      "category": "smartphone",
+      "price_cents": 299900,
+      "on_hand": 30,
+      "attributes": {
+        "processor_tier": "中端级",
+        "memory": "12GB",
+        "storage": "256GB",
+        "screen_size": "6.5英寸",
+        "battery_grade": "长续航",
+        "imaging": "创作影像",
+        "usage": "拍摄创作",
+        "screen_inches": "6.5"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。记录 S6 手机；processor_tier：中端级；memory：12GB；storage：256GB；screen_size：6.5英寸；battery_grade：长续航；imaging：创作影像；usage：拍摄创作。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-07",
+      "name": "存储 S7 手机",
+      "category": "smartphone",
+      "price_cents": 329900,
+      "on_hand": 33,
+      "attributes": {
+        "processor_tier": "进阶级",
+        "memory": "12GB",
+        "storage": "512GB",
+        "screen_size": "6.7英寸",
+        "battery_grade": "长续航",
+        "imaging": "旅行影像",
+        "usage": "大容量资料",
+        "screen_inches": "6.7"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。存储 S7 手机；processor_tier：进阶级；memory：12GB；storage：512GB；screen_size：6.7英寸；battery_grade：长续航；imaging：旅行影像；usage：大容量资料。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-08",
+      "name": "轻影 S8 手机",
+      "category": "smartphone",
+      "price_cents": 379900,
+      "on_hand": 36,
+      "attributes": {
+        "processor_tier": "进阶级",
+        "memory": "12GB",
+        "storage": "256GB",
+        "screen_size": "6.3英寸",
+        "battery_grade": "标准续航",
+        "imaging": "创作影像",
+        "usage": "便携创作",
+        "screen_inches": "6.3"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻影 S8 手机；processor_tier：进阶级；memory：12GB；storage：256GB；screen_size：6.3英寸；battery_grade：标准续航；imaging：创作影像；usage：便携创作。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-09",
+      "name": "畅玩 S9 手机",
+      "category": "smartphone",
+      "price_cents": 429900,
+      "on_hand": 39,
+      "attributes": {
+        "processor_tier": "高性能级",
+        "memory": "16GB",
+        "storage": "512GB",
+        "screen_size": "6.8英寸",
+        "battery_grade": "长续航",
+        "imaging": "日常记录",
+        "usage": "游戏娱乐",
+        "screen_inches": "6.8"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。畅玩 S9 手机；processor_tier：高性能级；memory：16GB；storage：512GB；screen_size：6.8英寸；battery_grade：长续航；imaging：日常记录；usage：游戏娱乐。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartphone-10",
+      "name": "影像 S10 手机",
+      "category": "smartphone",
+      "price_cents": 499900,
+      "on_hand": 13,
+      "attributes": {
+        "processor_tier": "高性能级",
+        "memory": "16GB",
+        "storage": "1TB",
+        "screen_size": "6.7英寸",
+        "battery_grade": "长续航",
+        "imaging": "创作影像",
+        "usage": "旅行视频",
+        "screen_inches": "6.7"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。影像 S10 手机；processor_tier：高性能级；memory：16GB；storage：1TB；screen_size：6.7英寸；battery_grade：长续航；imaging：创作影像；usage：旅行视频。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-01",
+      "name": "轻记 L1 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 269900,
+      "on_hand": 15,
+      "attributes": {
+        "processor_tier": "入门级",
+        "memory": "8GB",
+        "storage": "256GB SSD",
+        "weight": "1.3kg",
+        "screen_size": "13.3英寸",
+        "usage": "文档学习",
+        "screen_inches": "13.3"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻记 L1 笔记本电脑；processor_tier：入门级；memory：8GB；storage：256GB SSD；weight：1.3kg；screen_size：13.3英寸；usage：文档学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-02",
+      "name": "随行 L2 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 329900,
+      "on_hand": 18,
+      "attributes": {
+        "processor_tier": "日常级",
+        "memory": "16GB",
+        "storage": "512GB SSD",
+        "weight": "1.25kg",
+        "screen_size": "14英寸",
+        "usage": "通勤办公",
+        "screen_inches": "14"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随行 L2 笔记本电脑；processor_tier：日常级；memory：16GB；storage：512GB SSD；weight：1.25kg；screen_size：14英寸；usage：通勤办公。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-03",
+      "name": "大屏 L3 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 359900,
+      "on_hand": 21,
+      "attributes": {
+        "processor_tier": "日常级",
+        "memory": "16GB",
+        "storage": "512GB SSD",
+        "weight": "1.8kg",
+        "screen_size": "15.6英寸",
+        "usage": "远程会议",
+        "screen_inches": "15.6"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。大屏 L3 笔记本电脑；processor_tier：日常级；memory：16GB；storage：512GB SSD；weight：1.8kg；screen_size：15.6英寸；usage：远程会议。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-04",
+      "name": "研学 L4 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 399900,
+      "on_hand": 24,
+      "attributes": {
+        "processor_tier": "中端级",
+        "memory": "16GB",
+        "storage": "1TB SSD",
+        "weight": "1.45kg",
+        "screen_size": "14英寸",
+        "usage": "编程学习",
+        "screen_inches": "14"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。研学 L4 笔记本电脑；processor_tier：中端级；memory：16GB；storage：1TB SSD；weight：1.45kg；screen_size：14英寸；usage：编程学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-05",
+      "name": "轻巧 L5 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 459900,
+      "on_hand": 27,
+      "attributes": {
+        "processor_tier": "中端级",
+        "memory": "16GB",
+        "storage": "512GB SSD",
+        "weight": "1.05kg",
+        "screen_size": "13.3英寸",
+        "usage": "差旅办公",
+        "screen_inches": "13.3"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻巧 L5 笔记本电脑；processor_tier：中端级；memory：16GB；storage：512GB SSD；weight：1.05kg；screen_size：13.3英寸；usage：差旅办公。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-06",
+      "name": "多用 L6 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 499900,
+      "on_hand": 30,
+      "attributes": {
+        "processor_tier": "进阶级",
+        "memory": "24GB",
+        "storage": "1TB SSD",
+        "weight": "1.55kg",
+        "screen_size": "15英寸",
+        "usage": "多任务开发",
+        "screen_inches": "15"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。多用 L6 笔记本电脑；processor_tier：进阶级；memory：24GB；storage：1TB SSD；weight：1.55kg；screen_size：15英寸；usage：多任务开发。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-07",
+      "name": "创意 L7 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 599900,
+      "on_hand": 33,
+      "attributes": {
+        "processor_tier": "进阶级",
+        "memory": "32GB",
+        "storage": "1TB SSD",
+        "weight": "1.9kg",
+        "screen_size": "16英寸",
+        "usage": "图像设计",
+        "screen_inches": "16"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。创意 L7 笔记本电脑；processor_tier：进阶级；memory：32GB；storage：1TB SSD；weight：1.9kg；screen_size：16英寸；usage：图像设计。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-08",
+      "name": "工程 L8 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 649900,
+      "on_hand": 36,
+      "attributes": {
+        "processor_tier": "高性能级",
+        "memory": "32GB",
+        "storage": "1TB SSD",
+        "weight": "2.1kg",
+        "screen_size": "16英寸",
+        "usage": "工程建模",
+        "screen_inches": "16"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。工程 L8 笔记本电脑；processor_tier：高性能级；memory：32GB；storage：1TB SSD；weight：2.1kg；screen_size：16英寸；usage：工程建模。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-09",
+      "name": "渲染 L9 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 729900,
+      "on_hand": 39,
+      "attributes": {
+        "processor_tier": "高性能级",
+        "memory": "32GB",
+        "storage": "2TB SSD",
+        "weight": "2.3kg",
+        "screen_size": "16英寸",
+        "usage": "视频剪辑",
+        "screen_inches": "16"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。渲染 L9 笔记本电脑；processor_tier：高性能级；memory：32GB；storage：2TB SSD；weight：2.3kg；screen_size：16英寸；usage：视频剪辑。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "laptop-10",
+      "name": "工作 L10 笔记本电脑",
+      "category": "laptop",
+      "price_cents": 899900,
+      "on_hand": 13,
+      "attributes": {
+        "processor_tier": "高性能级",
+        "memory": "64GB",
+        "storage": "2TB SSD",
+        "weight": "2.5kg",
+        "screen_size": "17英寸",
+        "usage": "工作站场景",
+        "screen_inches": "17"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。工作 L10 笔记本电脑；processor_tier：高性能级；memory：64GB；storage：2TB SSD；weight：2.5kg；screen_size：17英寸；usage：工作站场景。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-01",
+      "name": "随阅 T1 平板电脑",
+      "category": "tablet",
+      "price_cents": 79900,
+      "on_hand": 15,
+      "attributes": {
+        "memory": "4GB",
+        "storage": "64GB",
+        "screen_size": "8英寸",
+        "weight": "320g",
+        "usage": "轻便阅读",
+        "screen_inches": "8"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T1 平板电脑；memory：4GB；storage：64GB；screen_size：8英寸；weight：320g；usage：轻便阅读。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-02",
+      "name": "随阅 T2 平板电脑",
+      "category": "tablet",
+      "price_cents": 109900,
+      "on_hand": 18,
+      "attributes": {
+        "memory": "6GB",
+        "storage": "128GB",
+        "screen_size": "8.4英寸",
+        "weight": "350g",
+        "usage": "通勤阅读",
+        "screen_inches": "8.4"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T2 平板电脑；memory：6GB；storage：128GB；screen_size：8.4英寸；weight：350g；usage：通勤阅读。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-03",
+      "name": "随阅 T3 平板电脑",
+      "category": "tablet",
+      "price_cents": 139900,
+      "on_hand": 21,
+      "attributes": {
+        "memory": "6GB",
+        "storage": "128GB",
+        "screen_size": "10.1英寸",
+        "weight": "460g",
+        "usage": "在线学习",
+        "screen_inches": "10.1"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T3 平板电脑；memory：6GB；storage：128GB；screen_size：10.1英寸；weight：460g；usage：在线学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-04",
+      "name": "随阅 T4 平板电脑",
+      "category": "tablet",
+      "price_cents": 169900,
+      "on_hand": 24,
+      "attributes": {
+        "memory": "8GB",
+        "storage": "128GB",
+        "screen_size": "10.5英寸",
+        "weight": "480g",
+        "usage": "家庭影音",
+        "screen_inches": "10.5"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T4 平板电脑；memory：8GB；storage：128GB；screen_size：10.5英寸；weight：480g；usage：家庭影音。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-05",
+      "name": "随阅 T5 平板电脑",
+      "category": "tablet",
+      "price_cents": 199900,
+      "on_hand": 27,
+      "attributes": {
+        "memory": "8GB",
+        "storage": "256GB",
+        "screen_size": "11英寸",
+        "weight": "490g",
+        "usage": "笔记学习",
+        "screen_inches": "11"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T5 平板电脑；memory：8GB；storage：256GB；screen_size：11英寸；weight：490g；usage：笔记学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-06",
+      "name": "随阅 T6 平板电脑",
+      "category": "tablet",
+      "price_cents": 229900,
+      "on_hand": 30,
+      "attributes": {
+        "memory": "8GB",
+        "storage": "256GB",
+        "screen_size": "11.5英寸",
+        "weight": "530g",
+        "usage": "绘画入门",
+        "screen_inches": "11.5"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T6 平板电脑；memory：8GB；storage：256GB；screen_size：11.5英寸；weight：530g；usage：绘画入门。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-07",
+      "name": "随阅 T7 平板电脑",
+      "category": "tablet",
+      "price_cents": 269900,
+      "on_hand": 33,
+      "attributes": {
+        "memory": "12GB",
+        "storage": "256GB",
+        "screen_size": "12英寸",
+        "weight": "570g",
+        "usage": "多窗口办公",
+        "screen_inches": "12"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T7 平板电脑；memory：12GB；storage：256GB；screen_size：12英寸；weight：570g；usage：多窗口办公。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-08",
+      "name": "随阅 T8 平板电脑",
+      "category": "tablet",
+      "price_cents": 309900,
+      "on_hand": 36,
+      "attributes": {
+        "memory": "12GB",
+        "storage": "512GB",
+        "screen_size": "12.4英寸",
+        "weight": "610g",
+        "usage": "设计草图",
+        "screen_inches": "12.4"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T8 平板电脑；memory：12GB；storage：512GB；screen_size：12.4英寸；weight：610g；usage：设计草图。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-09",
+      "name": "随阅 T9 平板电脑",
+      "category": "tablet",
+      "price_cents": 359900,
+      "on_hand": 39,
+      "attributes": {
+        "memory": "16GB",
+        "storage": "512GB",
+        "screen_size": "13英寸",
+        "weight": "650g",
+        "usage": "创作学习",
+        "screen_inches": "13"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T9 平板电脑；memory：16GB；storage：512GB；screen_size：13英寸；weight：650g；usage：创作学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "tablet-10",
+      "name": "随阅 T10 平板电脑",
+      "category": "tablet",
+      "price_cents": 429900,
+      "on_hand": 13,
+      "attributes": {
+        "memory": "16GB",
+        "storage": "1TB",
+        "screen_size": "13.2英寸",
+        "weight": "690g",
+        "usage": "移动创作",
+        "screen_inches": "13.2"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随阅 T10 平板电脑；memory：16GB；storage：1TB；screen_size：13.2英寸；weight：690g；usage：移动创作。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-01",
+      "name": "清阅 D24 显示器",
+      "category": "monitor",
+      "price_cents": 59900,
+      "on_hand": 15,
+      "attributes": {
+        "screen_inches": "24",
+        "resolution": "1920×1080",
+        "refresh_rate": "75Hz",
+        "panel": "IPS",
+        "ports": "HDMI",
+        "usage": "日常办公",
+        "screen_size": "24英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。清阅 D24 显示器；screen_inches：24；resolution：1920×1080；refresh_rate：75Hz；panel：IPS；ports：HDMI；usage：日常办公。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-02",
+      "name": "清阅 D27 显示器",
+      "category": "monitor",
+      "price_cents": 89900,
+      "on_hand": 18,
+      "attributes": {
+        "screen_inches": "27",
+        "resolution": "1920×1080",
+        "refresh_rate": "100Hz",
+        "panel": "IPS",
+        "ports": "HDMI / DP",
+        "usage": "文档学习",
+        "screen_size": "27英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。清阅 D27 显示器；screen_inches：27；resolution：1920×1080；refresh_rate：100Hz；panel：IPS；ports：HDMI / DP；usage：文档学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-03",
+      "name": "细节 D27Q 显示器",
+      "category": "monitor",
+      "price_cents": 129900,
+      "on_hand": 21,
+      "attributes": {
+        "screen_inches": "27",
+        "resolution": "2560×1440",
+        "refresh_rate": "100Hz",
+        "panel": "IPS",
+        "ports": "HDMI / DP",
+        "usage": "编程办公",
+        "screen_size": "27英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。细节 D27Q 显示器；screen_inches：27；resolution：2560×1440；refresh_rate：100Hz；panel：IPS；ports：HDMI / DP；usage：编程办公。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-04",
+      "name": "流畅 D27G 显示器",
+      "category": "monitor",
+      "price_cents": 169900,
+      "on_hand": 24,
+      "attributes": {
+        "screen_inches": "27",
+        "resolution": "2560×1440",
+        "refresh_rate": "165Hz",
+        "panel": "IPS",
+        "ports": "HDMI / DP",
+        "usage": "游戏娱乐",
+        "screen_size": "27英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。流畅 D27G 显示器；screen_inches：27；resolution：2560×1440；refresh_rate：165Hz；panel：IPS；ports：HDMI / DP；usage：游戏娱乐。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-05",
+      "name": "色彩 D27C 显示器",
+      "category": "monitor",
+      "price_cents": 219900,
+      "on_hand": 27,
+      "attributes": {
+        "screen_inches": "27",
+        "resolution": "3840×2160",
+        "refresh_rate": "60Hz",
+        "panel": "IPS",
+        "ports": "USB-C / HDMI / DP",
+        "usage": "图像设计",
+        "screen_size": "27英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。色彩 D27C 显示器；screen_inches：27；resolution：3840×2160；refresh_rate：60Hz；panel：IPS；ports：USB-C / HDMI / DP；usage：图像设计。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-06",
+      "name": "创作 D27U 显示器",
+      "category": "monitor",
+      "price_cents": 289900,
+      "on_hand": 30,
+      "attributes": {
+        "screen_inches": "27",
+        "resolution": "3840×2160",
+        "refresh_rate": "144Hz",
+        "panel": "IPS",
+        "ports": "USB-C / HDMI / DP",
+        "usage": "视频创作",
+        "screen_size": "27英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。创作 D27U 显示器；screen_inches：27；resolution：3840×2160；refresh_rate：144Hz；panel：IPS；ports：USB-C / HDMI / DP；usage：视频创作。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-07",
+      "name": "宽阅 D29 显示器",
+      "category": "monitor",
+      "price_cents": 159900,
+      "on_hand": 33,
+      "attributes": {
+        "screen_inches": "29",
+        "resolution": "2560×1080",
+        "refresh_rate": "100Hz",
+        "panel": "IPS",
+        "ports": "HDMI / DP",
+        "usage": "多窗口办公",
+        "screen_size": "29英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。宽阅 D29 显示器；screen_inches：29；resolution：2560×1080；refresh_rate：100Hz；panel：IPS；ports：HDMI / DP；usage：多窗口办公。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-08",
+      "name": "大屏 D32 显示器",
+      "category": "monitor",
+      "price_cents": 199900,
+      "on_hand": 36,
+      "attributes": {
+        "screen_inches": "32",
+        "resolution": "2560×1440",
+        "refresh_rate": "144Hz",
+        "panel": "VA",
+        "ports": "HDMI / DP",
+        "usage": "影音游戏",
+        "screen_size": "32英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。大屏 D32 显示器；screen_inches：32；resolution：2560×1440；refresh_rate：144Hz；panel：VA；ports：HDMI / DP；usage：影音游戏。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-09",
+      "name": "细节 D32U 显示器",
+      "category": "monitor",
+      "price_cents": 299900,
+      "on_hand": 39,
+      "attributes": {
+        "screen_inches": "32",
+        "resolution": "3840×2160",
+        "refresh_rate": "60Hz",
+        "panel": "IPS",
+        "ports": "USB-C / HDMI / DP",
+        "usage": "工程设计",
+        "screen_size": "32英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。细节 D32U 显示器；screen_inches：32；resolution：3840×2160；refresh_rate：60Hz；panel：IPS；ports：USB-C / HDMI / DP；usage：工程设计。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "monitor-10",
+      "name": "宽屏 D34 显示器",
+      "category": "monitor",
+      "price_cents": 329900,
+      "on_hand": 13,
+      "attributes": {
+        "screen_inches": "34",
+        "resolution": "3440×1440",
+        "refresh_rate": "165Hz",
+        "panel": "VA",
+        "ports": "HDMI / DP",
+        "usage": "宽屏开发",
+        "screen_size": "34英寸"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。宽屏 D34 显示器；screen_inches：34；resolution：3440×1440；refresh_rate：165Hz；panel：VA；ports：HDMI / DP；usage：宽屏开发。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-01",
+      "name": "口袋 C1 相机",
+      "category": "camera",
+      "price_cents": 89900,
+      "on_hand": 15,
+      "attributes": {
+        "camera_type": "便携数码",
+        "sensor_class": "小型传感器",
+        "video": "1080p 30fps",
+        "weight": "180g",
+        "usage": "随身记录"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。口袋 C1 相机；camera_type：便携数码；sensor_class：小型传感器；video：1080p 30fps；weight：180g；usage：随身记录。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-02",
+      "name": "运动 C2 相机",
+      "category": "camera",
+      "price_cents": 129900,
+      "on_hand": 18,
+      "attributes": {
+        "camera_type": "运动相机",
+        "sensor_class": "小型传感器",
+        "video": "4K 30fps",
+        "weight": "145g",
+        "usage": "骑行视频"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。运动 C2 相机；camera_type：运动相机；sensor_class：小型传感器；video：4K 30fps；weight：145g；usage：骑行视频。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-03",
+      "name": "随拍 C3 相机",
+      "category": "camera",
+      "price_cents": 189900,
+      "on_hand": 21,
+      "attributes": {
+        "camera_type": "便携数码",
+        "sensor_class": "1英寸级",
+        "video": "4K 30fps",
+        "weight": "280g",
+        "usage": "旅行摄影"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随拍 C3 相机；camera_type：便携数码；sensor_class：1英寸级；video：4K 30fps；weight：280g；usage：旅行摄影。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-04",
+      "name": "记录 C4 相机",
+      "category": "camera",
+      "price_cents": 249900,
+      "on_hand": 24,
+      "attributes": {
+        "camera_type": "Vlog 相机",
+        "sensor_class": "1英寸级",
+        "video": "4K 30fps",
+        "weight": "310g",
+        "usage": "vlog 视频"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。记录 C4 相机；camera_type：Vlog 相机；sensor_class：1英寸级；video：4K 30fps；weight：310g；usage：vlog 视频。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-05",
+      "name": "学摄 C5 相机",
+      "category": "camera",
+      "price_cents": 329900,
+      "on_hand": 27,
+      "attributes": {
+        "camera_type": "可换镜头机身",
+        "sensor_class": "M4/3级",
+        "video": "4K 30fps",
+        "weight": "370g",
+        "usage": "摄影学习"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。学摄 C5 相机；camera_type：可换镜头机身；sensor_class：M4/3级；video：4K 30fps；weight：370g；usage：摄影学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-06",
+      "name": "轻影 C6 相机",
+      "category": "camera",
+      "price_cents": 429900,
+      "on_hand": 30,
+      "attributes": {
+        "camera_type": "可换镜头机身",
+        "sensor_class": "APS-C级",
+        "video": "4K 30fps",
+        "weight": "420g",
+        "usage": "旅行摄影"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻影 C6 相机；camera_type：可换镜头机身；sensor_class：APS-C级；video：4K 30fps；weight：420g；usage：旅行摄影。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-07",
+      "name": "创作 C7 相机",
+      "category": "camera",
+      "price_cents": 529900,
+      "on_hand": 33,
+      "attributes": {
+        "camera_type": "可换镜头机身",
+        "sensor_class": "APS-C级",
+        "video": "4K 60fps",
+        "weight": "490g",
+        "usage": "vlog 创作"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。创作 C7 相机；camera_type：可换镜头机身；sensor_class：APS-C级；video：4K 60fps；weight：490g；usage：vlog 创作。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-08",
+      "name": "街拍 C8 相机",
+      "category": "camera",
+      "price_cents": 649900,
+      "on_hand": 36,
+      "attributes": {
+        "camera_type": "固定镜头",
+        "sensor_class": "APS-C级",
+        "video": "4K 30fps",
+        "weight": "460g",
+        "usage": "街头摄影"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。街拍 C8 相机；camera_type：固定镜头；sensor_class：APS-C级；video：4K 30fps；weight：460g；usage：街头摄影。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-09",
+      "name": "影像 C9 相机",
+      "category": "camera",
+      "price_cents": 799900,
+      "on_hand": 39,
+      "attributes": {
+        "camera_type": "可换镜头机身",
+        "sensor_class": "全画幅级",
+        "video": "4K 60fps",
+        "weight": "620g",
+        "usage": "静物摄影"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。影像 C9 相机；camera_type：可换镜头机身；sensor_class：全画幅级；video：4K 60fps；weight：620g；usage：静物摄影。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "camera-10",
+      "name": "专业 C10 相机",
+      "category": "camera",
+      "price_cents": 999900,
+      "on_hand": 13,
+      "attributes": {
+        "camera_type": "可换镜头机身",
+        "sensor_class": "全画幅级",
+        "video": "6K 30fps",
+        "weight": "710g",
+        "usage": "视频创作"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。专业 C10 相机；camera_type：可换镜头机身；sensor_class：全画幅级；video：6K 30fps；weight：710g；usage：视频创作。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-01",
+      "name": "日程 W1 智能手表",
+      "category": "smartwatch",
+      "price_cents": 19900,
+      "on_hand": 15,
+      "attributes": {
+        "screen_size": "1.4英寸",
+        "battery_grade": "3天演示档",
+        "features": "通知 / 计步",
+        "usage": "日常佩戴",
+        "screen_inches": "1.4"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W1 智能手表；screen_size：1.4英寸；battery_grade：3天演示档；features：通知 / 计步；usage：日常佩戴。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-02",
+      "name": "日程 W2 智能手表",
+      "category": "smartwatch",
+      "price_cents": 29900,
+      "on_hand": 18,
+      "attributes": {
+        "screen_size": "1.5英寸",
+        "battery_grade": "5天演示档",
+        "features": "通知 / 运动记录",
+        "usage": "通勤运动",
+        "screen_inches": "1.5"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W2 智能手表；screen_size：1.5英寸；battery_grade：5天演示档；features：通知 / 运动记录；usage：通勤运动。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-03",
+      "name": "日程 W3 智能手表",
+      "category": "smartwatch",
+      "price_cents": 39900,
+      "on_hand": 21,
+      "attributes": {
+        "screen_size": "1.6英寸",
+        "battery_grade": "7天演示档",
+        "features": "日程 / 运动记录",
+        "usage": "学习生活",
+        "screen_inches": "1.6"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W3 智能手表；screen_size：1.6英寸；battery_grade：7天演示档；features：日程 / 运动记录；usage：学习生活。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-04",
+      "name": "日程 W4 智能手表",
+      "category": "smartwatch",
+      "price_cents": 49900,
+      "on_hand": 24,
+      "attributes": {
+        "screen_size": "1.7英寸",
+        "battery_grade": "5天演示档",
+        "features": "路线记录 / 通知",
+        "usage": "户外散步",
+        "screen_inches": "1.7"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W4 智能手表；screen_size：1.7英寸；battery_grade：5天演示档；features：路线记录 / 通知；usage：户外散步。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-05",
+      "name": "日程 W5 智能手表",
+      "category": "smartwatch",
+      "price_cents": 59900,
+      "on_hand": 27,
+      "attributes": {
+        "screen_size": "1.4英寸",
+        "battery_grade": "10天演示档",
+        "features": "长续航 / 计步",
+        "usage": "长途通勤",
+        "screen_inches": "1.4"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W5 智能手表；screen_size：1.4英寸；battery_grade：10天演示档；features：长续航 / 计步；usage：长途通勤。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-06",
+      "name": "日程 W6 智能手表",
+      "category": "smartwatch",
+      "price_cents": 69900,
+      "on_hand": 30,
+      "attributes": {
+        "screen_size": "1.8英寸",
+        "battery_grade": "7天演示档",
+        "features": "游泳记录 / 通知",
+        "usage": "运动训练",
+        "screen_inches": "1.8"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W6 智能手表；screen_size：1.8英寸；battery_grade：7天演示档；features：游泳记录 / 通知；usage：运动训练。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-07",
+      "name": "日程 W7 智能手表",
+      "category": "smartwatch",
+      "price_cents": 89900,
+      "on_hand": 33,
+      "attributes": {
+        "screen_size": "1.7英寸",
+        "battery_grade": "10天演示档",
+        "features": "路线记录 / 高度记录",
+        "usage": "骑行户外",
+        "screen_inches": "1.7"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W7 智能手表；screen_size：1.7英寸；battery_grade：10天演示档；features：路线记录 / 高度记录；usage：骑行户外。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-08",
+      "name": "日程 W8 智能手表",
+      "category": "smartwatch",
+      "price_cents": 109900,
+      "on_hand": 36,
+      "attributes": {
+        "screen_size": "1.9英寸",
+        "battery_grade": "7天演示档",
+        "features": "训练计划 / 日程",
+        "usage": "日常健身",
+        "screen_inches": "1.9"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W8 智能手表；screen_size：1.9英寸；battery_grade：7天演示档；features：训练计划 / 日程；usage：日常健身。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-09",
+      "name": "日程 W9 智能手表",
+      "category": "smartwatch",
+      "price_cents": 139900,
+      "on_hand": 39,
+      "attributes": {
+        "screen_size": "1.8英寸",
+        "battery_grade": "14天演示档",
+        "features": "户外路线 / 通知",
+        "usage": "长途出行",
+        "screen_inches": "1.8"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W9 智能手表；screen_size：1.8英寸；battery_grade：14天演示档；features：户外路线 / 通知；usage：长途出行。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "smartwatch-10",
+      "name": "日程 W10 智能手表",
+      "category": "smartwatch",
+      "price_cents": 169900,
+      "on_hand": 13,
+      "attributes": {
+        "screen_size": "1.9英寸",
+        "battery_grade": "10天演示档",
+        "features": "训练计划 / 路线记录",
+        "usage": "多项目运动",
+        "screen_inches": "1.9"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。日程 W10 智能手表；screen_size：1.9英寸；battery_grade：10天演示档；features：训练计划 / 路线记录；usage：多项目运动。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-01",
+      "name": "听风 B1 音箱",
+      "category": "speaker",
+      "price_cents": 7900,
+      "on_hand": 15,
+      "attributes": {
+        "speaker_type": "桌面单声道",
+        "power": "3W",
+        "connection": "有线",
+        "usage": "语音学习"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B1 音箱；speaker_type：桌面单声道；power：3W；connection：有线；usage：语音学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-02",
+      "name": "听风 B2 音箱",
+      "category": "speaker",
+      "price_cents": 12900,
+      "on_hand": 18,
+      "attributes": {
+        "speaker_type": "便携单声道",
+        "power": "5W",
+        "connection": "无线",
+        "usage": "旅行音乐"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B2 音箱；speaker_type：便携单声道；power：5W；connection：无线；usage：旅行音乐。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-03",
+      "name": "听风 B3 音箱",
+      "category": "speaker",
+      "price_cents": 19900,
+      "on_hand": 21,
+      "attributes": {
+        "speaker_type": "桌面双声道",
+        "power": "10W",
+        "connection": "有线",
+        "usage": "桌面影音"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B3 音箱；speaker_type：桌面双声道；power：10W；connection：有线；usage：桌面影音。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-04",
+      "name": "听风 B4 音箱",
+      "category": "speaker",
+      "price_cents": 24900,
+      "on_hand": 24,
+      "attributes": {
+        "speaker_type": "便携单声道",
+        "power": "12W",
+        "connection": "无线",
+        "usage": "户外音乐"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B4 音箱；speaker_type：便携单声道；power：12W；connection：无线；usage：户外音乐。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-05",
+      "name": "听风 B5 音箱",
+      "category": "speaker",
+      "price_cents": 32900,
+      "on_hand": 27,
+      "attributes": {
+        "speaker_type": "桌面双声道",
+        "power": "20W",
+        "connection": "有线",
+        "usage": "办公听音"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B5 音箱；speaker_type：桌面双声道；power：20W；connection：有线；usage：办公听音。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-06",
+      "name": "听风 B6 音箱",
+      "category": "speaker",
+      "price_cents": 39900,
+      "on_hand": 30,
+      "attributes": {
+        "speaker_type": "便携立体声",
+        "power": "24W",
+        "connection": "无线",
+        "usage": "家庭音乐"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B6 音箱；speaker_type：便携立体声；power：24W；connection：无线；usage：家庭音乐。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-07",
+      "name": "听风 B7 音箱",
+      "category": "speaker",
+      "price_cents": 59900,
+      "on_hand": 33,
+      "attributes": {
+        "speaker_type": "桌面双声道",
+        "power": "40W",
+        "connection": "有线",
+        "usage": "剪辑监听"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B7 音箱；speaker_type：桌面双声道；power：40W；connection：有线；usage：剪辑监听。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-08",
+      "name": "听风 B8 音箱",
+      "category": "speaker",
+      "price_cents": 79900,
+      "on_hand": 36,
+      "attributes": {
+        "speaker_type": "客厅立体声",
+        "power": "60W",
+        "connection": "无线",
+        "usage": "客厅影音"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B8 音箱；speaker_type：客厅立体声；power：60W；connection：无线；usage：客厅影音。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-09",
+      "name": "听风 B9 音箱",
+      "category": "speaker",
+      "price_cents": 109900,
+      "on_hand": 39,
+      "attributes": {
+        "speaker_type": "桌面监听",
+        "power": "80W",
+        "connection": "有线",
+        "usage": "音乐创作"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B9 音箱；speaker_type：桌面监听；power：80W；connection：有线；usage：音乐创作。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "speaker-10",
+      "name": "听风 B10 音箱",
+      "category": "speaker",
+      "price_cents": 149900,
+      "on_hand": 13,
+      "attributes": {
+        "speaker_type": "客厅立体声",
+        "power": "100W",
+        "connection": "无线",
+        "usage": "家庭影音"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。听风 B10 音箱；speaker_type：客厅立体声；power：100W；connection：无线；usage：家庭影音。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-01",
+      "name": "轻风 R1 公路车骑行头盔",
+      "category": "cycling",
+      "price_cents": 19900,
+      "on_hand": 15,
+      "attributes": {
+        "equipment_type": "头盔",
+        "usage": "公路车骑行",
+        "size": "M 54–58cm",
+        "material": "PC外壳 / EPS内层",
+        "weight": "240g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻风 R1 公路车骑行头盔；equipment_type：头盔；usage：公路车骑行；size：M 54–58cm；material：PC外壳 / EPS内层；weight：240g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-02",
+      "name": "通风 R2 公路车骑行头盔",
+      "category": "cycling",
+      "price_cents": 29900,
+      "on_hand": 18,
+      "attributes": {
+        "equipment_type": "头盔",
+        "usage": "公路车骑行",
+        "size": "L 58–62cm",
+        "material": "PC外壳 / EPS内层",
+        "weight": "260g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。通风 R2 公路车骑行头盔；equipment_type：头盔；usage：公路车骑行；size：L 58–62cm；material：PC外壳 / EPS内层；weight：260g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-03",
+      "name": "简行 R3 骑行头盔",
+      "category": "cycling",
+      "price_cents": 15900,
+      "on_hand": 21,
+      "attributes": {
+        "equipment_type": "头盔",
+        "usage": "城市通勤",
+        "size": "M 54–58cm",
+        "material": "ABS外壳 / EPS内层",
+        "weight": "310g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。简行 R3 骑行头盔；equipment_type：头盔；usage：城市通勤；size：M 54–58cm；material：ABS外壳 / EPS内层；weight：310g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-04",
+      "name": "稳行 R4 骑行头盔",
+      "category": "cycling",
+      "price_cents": 35900,
+      "on_hand": 24,
+      "attributes": {
+        "equipment_type": "头盔",
+        "usage": "山地骑行",
+        "size": "L 58–62cm",
+        "material": "PC外壳 / EPS内层",
+        "weight": "300g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。稳行 R4 骑行头盔；equipment_type：头盔；usage：山地骑行；size：L 58–62cm；material：PC外壳 / EPS内层；weight：300g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-05",
+      "name": "掌握 R5 骑行手套",
+      "category": "cycling",
+      "price_cents": 7900,
+      "on_hand": 27,
+      "attributes": {
+        "equipment_type": "手套",
+        "usage": "公路车骑行",
+        "size": "M",
+        "material": "合成纤维 / 防滑垫",
+        "weight": "65g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。掌握 R5 骑行手套；equipment_type：手套；usage：公路车骑行；size：M；material：合成纤维 / 防滑垫；weight：65g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-06",
+      "name": "夜行 R6 骑行车灯",
+      "category": "cycling",
+      "price_cents": 12900,
+      "on_hand": 30,
+      "attributes": {
+        "equipment_type": "车灯",
+        "usage": "公路车骑行",
+        "size": "通用绑带",
+        "material": "铝合金 / 塑料",
+        "weight": "115g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。夜行 R6 骑行车灯；equipment_type：车灯；usage：公路车骑行；size：通用绑带；material：铝合金 / 塑料；weight：115g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-07",
+      "name": "随饮 R7 骑行水壶架",
+      "category": "cycling",
+      "price_cents": 4900,
+      "on_hand": 33,
+      "attributes": {
+        "equipment_type": "水壶架",
+        "usage": "公路车骑行",
+        "size": "标准壶架孔距",
+        "material": "铝合金",
+        "weight": "42g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随饮 R7 骑行水壶架；equipment_type：水壶架；usage：公路车骑行；size：标准壶架孔距；material：铝合金；weight：42g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-08",
+      "name": "装载 R8 骑行车包",
+      "category": "cycling",
+      "price_cents": 9900,
+      "on_hand": 36,
+      "attributes": {
+        "equipment_type": "车包",
+        "usage": "城市通勤",
+        "size": "1.2L",
+        "material": "聚酯纤维",
+        "weight": "170g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。装载 R8 骑行车包；equipment_type：车包；usage：城市通勤；size：1.2L；material：聚酯纤维；weight：170g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-09",
+      "name": "便修 R9 骑行工具组",
+      "category": "cycling",
+      "price_cents": 11900,
+      "on_hand": 39,
+      "attributes": {
+        "equipment_type": "工具组",
+        "usage": "公路车骑行",
+        "size": "便携套装",
+        "material": "合金钢",
+        "weight": "180g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。便修 R9 骑行工具组；equipment_type：工具组；usage：公路车骑行；size：便携套装；material：合金钢；weight：180g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "cycling-10",
+      "name": "长行 R10 骑行服",
+      "category": "cycling",
+      "price_cents": 26900,
+      "on_hand": 13,
+      "attributes": {
+        "equipment_type": "骑行服",
+        "usage": "公路车骑行",
+        "size": "L",
+        "material": "速干合成纤维",
+        "weight": "190g"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。长行 R10 骑行服；equipment_type：骑行服；usage：公路车骑行；size：L；material：速干合成纤维；weight：190g。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-01",
+      "name": "起练 F1 哑铃",
+      "category": "fitness",
+      "price_cents": 5900,
+      "on_hand": 15,
+      "attributes": {
+        "equipment_type": "固定哑铃",
+        "resistance": "2kg / 只",
+        "usage": "上肢入门",
+        "material": "包胶铸铁"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。起练 F1 哑铃；equipment_type：固定哑铃；resistance：2kg / 只；usage：上肢入门；material：包胶铸铁。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-02",
+      "name": "稳练 F2 哑铃",
+      "category": "fitness",
+      "price_cents": 9900,
+      "on_hand": 18,
+      "attributes": {
+        "equipment_type": "固定哑铃",
+        "resistance": "5kg / 只",
+        "usage": "力量训练",
+        "material": "包胶铸铁"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。稳练 F2 哑铃；equipment_type：固定哑铃；resistance：5kg / 只；usage：力量训练；material：包胶铸铁。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-03",
+      "name": "进阶 F3 哑铃",
+      "category": "fitness",
+      "price_cents": 15900,
+      "on_hand": 21,
+      "attributes": {
+        "equipment_type": "固定哑铃",
+        "resistance": "8kg / 只",
+        "usage": "力量训练",
+        "material": "包胶铸铁"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。进阶 F3 哑铃；equipment_type：固定哑铃；resistance：8kg / 只；usage：力量训练；material：包胶铸铁。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-04",
+      "name": "可调 F4 哑铃",
+      "category": "fitness",
+      "price_cents": 32900,
+      "on_hand": 24,
+      "attributes": {
+        "equipment_type": "可调哑铃",
+        "resistance": "2–12kg / 只",
+        "usage": "渐进训练",
+        "material": "钢 / 塑料"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。可调 F4 哑铃；equipment_type：可调哑铃；resistance：2–12kg / 只；usage：渐进训练；material：钢 / 塑料。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-05",
+      "name": "拉伸 F5 阻力带",
+      "category": "fitness",
+      "price_cents": 3900,
+      "on_hand": 27,
+      "attributes": {
+        "equipment_type": "弹力阻力带",
+        "resistance": "轻阻力",
+        "usage": "拉伸训练",
+        "material": "TPE"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。拉伸 F5 阻力带；equipment_type：弹力阻力带；resistance：轻阻力；usage：拉伸训练；material：TPE。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-06",
+      "name": "增强 F6 阻力带",
+      "category": "fitness",
+      "price_cents": 6900,
+      "on_hand": 30,
+      "attributes": {
+        "equipment_type": "弹力阻力带",
+        "resistance": "中阻力",
+        "usage": "力量辅助",
+        "material": "乳胶合成材"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。增强 F6 阻力带；equipment_type：弹力阻力带；resistance：中阻力；usage：力量辅助；material：乳胶合成材。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-07",
+      "name": "起步 F7 瑜伽垫",
+      "category": "fitness",
+      "price_cents": 8900,
+      "on_hand": 33,
+      "attributes": {
+        "equipment_type": "训练垫",
+        "resistance": "6mm 厚",
+        "usage": "瑜伽拉伸",
+        "material": "TPE"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。起步 F7 瑜伽垫；equipment_type：训练垫；resistance：6mm 厚；usage：瑜伽拉伸；material：TPE。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-08",
+      "name": "稳姿 F8 瑜伽砖",
+      "category": "fitness",
+      "price_cents": 2900,
+      "on_hand": 36,
+      "attributes": {
+        "equipment_type": "支撑砖",
+        "resistance": "标准支撑",
+        "usage": "瑜伽入门",
+        "material": "EVA"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。稳姿 F8 瑜伽砖；equipment_type：支撑砖；resistance：标准支撑；usage：瑜伽入门；material：EVA。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-09",
+      "name": "节奏 F9 健身跳绳",
+      "category": "fitness",
+      "price_cents": 4900,
+      "on_hand": 39,
+      "attributes": {
+        "equipment_type": "跳绳",
+        "resistance": "绳长2.8m可调",
+        "usage": "有氧训练",
+        "material": "PVC / 钢芯"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。节奏 F9 健身跳绳；equipment_type：跳绳；resistance：绳长2.8m可调；usage：有氧训练；material：PVC / 钢芯。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "fitness-10",
+      "name": "平衡 F10 壶铃",
+      "category": "fitness",
+      "price_cents": 19900,
+      "on_hand": 13,
+      "attributes": {
+        "equipment_type": "壶铃",
+        "resistance": "8kg",
+        "usage": "全身力量",
+        "material": "包胶铸铁"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。平衡 F10 壶铃；equipment_type：壶铃；resistance：8kg；usage：全身力量；material：包胶铸铁。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-01",
+      "name": "晨起 A1 电水壶",
+      "category": "home_appliance",
+      "price_cents": 9900,
+      "on_hand": 15,
+      "attributes": {
+        "appliance_type": "电水壶",
+        "capacity": "1.5L",
+        "power": "1500W",
+        "features": "烧水",
+        "usage": "家庭厨房"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。晨起 A1 电水壶；appliance_type：电水壶；capacity：1.5L；power：1500W；features：烧水；usage：家庭厨房。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-02",
+      "name": "随饮 A2 电水壶",
+      "category": "home_appliance",
+      "price_cents": 15900,
+      "on_hand": 18,
+      "attributes": {
+        "appliance_type": "便携电水壶",
+        "capacity": "0.6L",
+        "power": "600W",
+        "features": "烧水 / 保温",
+        "usage": "差旅饮水"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随饮 A2 电水壶；appliance_type：便携电水壶；capacity：0.6L；power：600W；features：烧水 / 保温；usage：差旅饮水。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-03",
+      "name": "轻萃 A3 咖啡机",
+      "category": "home_appliance",
+      "price_cents": 29900,
+      "on_hand": 21,
+      "attributes": {
+        "appliance_type": "滴滤咖啡机",
+        "capacity": "0.6L",
+        "power": "600W",
+        "features": "滴滤咖啡",
+        "usage": "办公厨房"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻萃 A3 咖啡机；appliance_type：滴滤咖啡机；capacity：0.6L；power：600W；features：滴滤咖啡；usage：办公厨房。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-04",
+      "name": "晨萃 A4 咖啡机",
+      "category": "home_appliance",
+      "price_cents": 49900,
+      "on_hand": 24,
+      "attributes": {
+        "appliance_type": "滴滤咖啡机",
+        "capacity": "1.2L",
+        "power": "900W",
+        "features": "滴滤 / 定时",
+        "usage": "家庭厨房"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。晨萃 A4 咖啡机；appliance_type：滴滤咖啡机；capacity：1.2L；power：900W；features：滴滤 / 定时；usage：家庭厨房。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-05",
+      "name": "凉风 A5 风扇",
+      "category": "home_appliance",
+      "price_cents": 12900,
+      "on_hand": 27,
+      "attributes": {
+        "appliance_type": "桌面风扇",
+        "capacity": "桌面型",
+        "power": "15W",
+        "features": "三档送风",
+        "usage": "办公桌面"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。凉风 A5 风扇；appliance_type：桌面风扇；capacity：桌面型；power：15W；features：三档送风；usage：办公桌面。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-06",
+      "name": "轻湿 A6 加湿器",
+      "category": "home_appliance",
+      "price_cents": 19900,
+      "on_hand": 30,
+      "attributes": {
+        "appliance_type": "加湿器",
+        "capacity": "3L",
+        "power": "25W",
+        "features": "冷雾加湿",
+        "usage": "卧室日常"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻湿 A6 加湿器；appliance_type：加湿器；capacity：3L；power：25W；features：冷雾加湿；usage：卧室日常。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-07",
+      "name": "净尘 A7 吸尘器",
+      "category": "home_appliance",
+      "price_cents": 39900,
+      "on_hand": 33,
+      "attributes": {
+        "appliance_type": "手持吸尘器",
+        "capacity": "0.5L",
+        "power": "120W",
+        "features": "桌面清洁",
+        "usage": "家庭清洁"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。净尘 A7 吸尘器；appliance_type：手持吸尘器；capacity：0.5L；power：120W；features：桌面清洁；usage：家庭清洁。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-08",
+      "name": "简餐 A8 电煮锅",
+      "category": "home_appliance",
+      "price_cents": 22900,
+      "on_hand": 36,
+      "attributes": {
+        "appliance_type": "电煮锅",
+        "capacity": "1.5L",
+        "power": "800W",
+        "features": "煮 / 蒸",
+        "usage": "演示家庭"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。简餐 A8 电煮锅；appliance_type：电煮锅；capacity：1.5L；power：800W；features：煮 / 蒸；usage：演示家庭。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-09",
+      "name": "酥烤 A9 空气炸锅",
+      "category": "home_appliance",
+      "price_cents": 59900,
+      "on_hand": 39,
+      "attributes": {
+        "appliance_type": "空气炸锅",
+        "capacity": "4L",
+        "power": "1300W",
+        "features": "热风烘烤",
+        "usage": "家庭厨房"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。酥烤 A9 空气炸锅；appliance_type：空气炸锅；capacity：4L；power：1300W；features：热风烘烤；usage：家庭厨房。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "home_appliance-10",
+      "name": "进阶 A10 咖啡机",
+      "category": "home_appliance",
+      "price_cents": 129900,
+      "on_hand": 13,
+      "attributes": {
+        "appliance_type": "半自动咖啡机",
+        "capacity": "1L",
+        "power": "1100W",
+        "features": "咖啡萃取",
+        "usage": "咖啡入门"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。进阶 A10 咖啡机；appliance_type：半自动咖啡机；capacity：1L；power：1100W；features：咖啡萃取；usage：咖啡入门。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "mouse-01",
+      "name": "轻握 M3 鼠标",
+      "category": "mouse",
+      "price_cents": 7900,
+      "on_hand": 15,
+      "attributes": {
+        "connection": "有线",
+        "sensitivity": "1600DPI",
+        "weight": "80g",
+        "usage": "文档办公"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻握 M3 鼠标；connection：有线；sensitivity：1600DPI；weight：80g；usage：文档办公。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "mouse-02",
+      "name": "轻握 M4 鼠标",
+      "category": "mouse",
+      "price_cents": 14900,
+      "on_hand": 18,
+      "attributes": {
+        "connection": "无线",
+        "sensitivity": "2400DPI",
+        "weight": "72g",
+        "usage": "便携通勤"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻握 M4 鼠标；connection：无线；sensitivity：2400DPI；weight：72g；usage：便携通勤。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "mouse-03",
+      "name": "轻握 M5 鼠标",
+      "category": "mouse",
+      "price_cents": 22900,
+      "on_hand": 21,
+      "attributes": {
+        "connection": "无线",
+        "sensitivity": "6400DPI",
+        "weight": "64g",
+        "usage": "游戏入门"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻握 M5 鼠标；connection：无线；sensitivity：6400DPI；weight：64g；usage：游戏入门。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "mouse-04",
+      "name": "轻握 M6 鼠标",
+      "category": "mouse",
+      "price_cents": 29900,
+      "on_hand": 24,
+      "attributes": {
+        "connection": "有线",
+        "sensitivity": "12000DPI",
+        "weight": "59g",
+        "usage": "游戏娱乐"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。轻握 M6 鼠标；connection：有线；sensitivity：12000DPI；weight：59g；usage：游戏娱乐。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "headphones-01",
+      "name": "随听 H3 耳机",
+      "category": "headphones",
+      "price_cents": 9900,
+      "on_hand": 15,
+      "attributes": {
+        "connection": "有线",
+        "form": "入耳",
+        "driver": "10mm",
+        "usage": "语音学习"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随听 H3 耳机；connection：有线；form：入耳；driver：10mm；usage：语音学习。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "headphones-02",
+      "name": "随听 H4 耳机",
+      "category": "headphones",
+      "price_cents": 19900,
+      "on_hand": 18,
+      "attributes": {
+        "connection": "无线",
+        "form": "入耳",
+        "driver": "12mm",
+        "usage": "通勤音乐"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随听 H4 耳机；connection：无线；form：入耳；driver：12mm；usage：通勤音乐。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "headphones-03",
+      "name": "随听 H5 耳机",
+      "category": "headphones",
+      "price_cents": 39900,
+      "on_hand": 21,
+      "attributes": {
+        "connection": "有线",
+        "form": "头戴",
+        "driver": "40mm",
+        "usage": "桌面影音"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随听 H5 耳机；connection：有线；form：头戴；driver：40mm；usage：桌面影音。以此目录规格为准，不代表真实产品性能。"
+    },
+    {
+      "sku": "headphones-04",
+      "name": "随听 H6 耳机",
+      "category": "headphones",
+      "price_cents": 59900,
+      "on_hand": 24,
+      "attributes": {
+        "connection": "无线",
+        "form": "头戴",
+        "driver": "40mm",
+        "usage": "旅行听音"
+      },
+      "description": "合成演示商品，无品牌授权或真实销售承诺。随听 H6 耳机；connection：无线；form：头戴；driver：40mm；usage：旅行听音。以此目录规格为准，不代表真实产品性能。"
+    }
+  ]
+}

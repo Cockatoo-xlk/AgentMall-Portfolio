@@ -1,4 +1,5 @@
-export type Category = 'keyboard' | 'mouse' | 'headphones'
+export type Category = 'keyboard' | 'mouse' | 'headphones' | 'smartphone' | 'laptop' | 'tablet' | 'monitor'
+  | 'camera' | 'smartwatch' | 'speaker' | 'cycling' | 'fitness' | 'home_appliance'
 export type Address = 'demo_dorm' | 'demo_home'
 export type OrderStatus =
   'PENDING_PAYMENT' | 'PAID' | 'CANCELLED' | 'EXPIRED' | 'SHIPPED' | 'DELIVERED' | 'REFUNDED'

@@ -9,6 +9,7 @@ from uuid import UUID, uuid5
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert
 
+from agentmall.catalog.categories import CATEGORY_ALIASES, CATEGORY_LABELS
 from agentmall.catalog.models import Product
 from agentmall.retrieval.embedding import ROOT, identity, validate_vectors
 from agentmall.retrieval.models import KnowledgeChunk, KnowledgeDocument, ProductSearch
@@ -16,8 +17,7 @@ from agentmall.retrieval.tokenize import TOKENIZER_VERSION, document_tokens, tok
 
 # Product document vocabulary has its own identity. Policy indices retain their
 # existing tokenizer identity; old product indices require an explicit rebuild.
-PRODUCT_INDEX_VERSION = TOKENIZER_VERSION + ":catalog-zh-v2"
-CATEGORY_LABELS = {"keyboard": "键盘", "mouse": "鼠标", "headphones": "耳机"}
+PRODUCT_INDEX_VERSION = TOKENIZER_VERSION + ":catalog-zh-v3"
 
 
 def digest(value):
@@ -29,7 +29,7 @@ def digest(value):
 def product_text(product):
     category = product.category
     if category in CATEGORY_LABELS:
-        category += "\n" + CATEGORY_LABELS[category]
+        category += "\n" + CATEGORY_LABELS[category] + "\n" + " ".join(CATEGORY_ALIASES[category])
     return f"{product.name}\n{category}\n{product.description}\n" + json.dumps(
         product.attributes, ensure_ascii=False, sort_keys=True
     )

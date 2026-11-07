@@ -8,13 +8,8 @@ import { useAuth } from '../state/Auth'
 import { useCart } from '../state/Cart'
 import { useMounted } from '../state/useResource'
 import ProductArt from '../components/ProductArt'
+import { attributeLabels, attributeValue } from '../api/catalog'
 
-const attributeLabels: Record<string, string> = {
-  switch: '轴体',
-  connection: '连接方式',
-  size: '规格',
-  noise: '噪声标签',
-}
 
 export default function ProductDetail() {
   const params = useParams<{ id: string; productId: string }>()
@@ -108,7 +103,7 @@ export default function ProductDetail() {
               </div>
             </div>
             <section className="detail-content">
-              <span className="eyebrow">DESK ESSENTIALS / {categoryLabel(product.category)}</span>
+              <span className="eyebrow">EVERYDAY ESSENTIALS / {categoryLabel(product.category)}</span>
               <h1>{product.name}</h1>
               <p className="detail-description">{product.description}</p>
               <div className="detail-price-row">
@@ -124,7 +119,7 @@ export default function ProductDetail() {
                   {Object.entries(product.attributes).map(([key, value]) => (
                     <div key={key}>
                       <dt>{attributeLabels[key] ?? key}</dt>
-                      <dd>{String(value)}</dd>
+                      <dd>{attributeValue(value)}</dd>
                     </div>
                   ))}
                 </dl>
@@ -206,7 +201,7 @@ export default function ProductDetail() {
               <h2>认真选购，从了解开始。</h2>
             </div>
             <p>
-              这是自建的合成演示商品，不对应真实品牌。噪声标签为定性描述，不代表绝对无声。页面所示价格、库存与参数来自商品目录，交易为模拟演示。
+              这是自建的合成演示商品，不对应真实品牌或官方授权。参数和用途仅描述本合成目录，不代表真实产品性能、医疗建议或安全认证；交易为模拟演示。
             </p>
           </div>
         </>

@@ -3138,3 +3138,13 @@ main:focus {
     grid-template-columns: 1fr;
   }
 }
+
+/* V2.5: thirteen categories remain navigable without a horizontal button wall. */
+.catalog-toolbar { flex-direction: column; align-items: stretch; }
+.category-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(116px, 1fr)); gap: 8px; width: 100%; }
+.category-tab { justify-content: center; padding: 11px 10px; }
+.catalog-count { align-self: flex-end; margin-top: 8px; }
+@media (max-width: 600px) {
+  .category-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .category-tab { font-size: 12px; gap: 5px; padding: 10px 4px; }
+}

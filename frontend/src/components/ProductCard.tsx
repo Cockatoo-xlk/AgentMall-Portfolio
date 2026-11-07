@@ -8,6 +8,7 @@ import { useAuth } from '../state/Auth'
 import { useCart } from '../state/Cart'
 import { useMounted } from '../state/useResource'
 import ProductArt from './ProductArt'
+import { productSpecs } from '../api/catalog'
 
 export default function ProductCard({ product }: { product: Product }) {
   const { user } = useAuth()
@@ -20,9 +21,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const merchant = user?.role === 'merchant'
   const unavailable = product.available <= quantity || quantity >= 10
   const unavailableLabel = product.available <= quantity ? '库存已达上限' : '已达数量上限'
-  const attributes = ['switch', 'connection', 'size']
-    .map((key) => product.attributes[key])
-    .filter((value) => value && value !== '无')
+  const attributes = productSpecs(product)
   async function add() {
     if (!cart || lock.current || busy || unavailable || user?.role !== 'buyer') return
     lock.current = true

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ContextOperation, ThreadContext } from '../api/threadContext'
 import { money } from '../api/format'
+import { categoryLabels } from '../api/catalog'
 
 export default function ThreadMemory({ context, busy, selected, onSelect, onPatch }: {
   context: ThreadContext; busy: boolean; selected: string; onSelect: (id: string) => void
@@ -12,10 +13,13 @@ export default function ThreadMemory({ context, busy, selected, onSelect, onPatc
     <h2>本 Thread 已确认偏好</h2>
     <small data-testid="context-version">上下文版本 {context.version} · 来源 {context.provenance.type ?? '尚未建立'} {context.provenance.run_id ?? ''}</small>
     <p data-testid="context-preferences">
-      品类：{({ keyboard: '键盘', mouse: '鼠标', headphones: '耳机' } as Record<string, string>)[p.category ?? ''] ?? '未指定'} ·
+      品类：{(categoryLabels as Record<string, string>)[p.category ?? ''] ?? '未指定'} ·
       预算：{p.max_price_cents === undefined ? '未指定' : money(p.max_price_cents)} ·
       噪声：{p.noise_preference === 'quiet' ? '静音偏好' : '未指定'} ·
       连接：{p.product_needs?.connection ?? '未指定'}
+      {p.product_needs?.screen_inches && <> · 屏幕：{p.product_needs.screen_inches}英寸</>}
+      {p.product_needs?.activity && <> · 用途：公路车骑行</>}
+      {p.product_needs?.product_kind && <> · 类型：{({ helmet: '头盔', dumbbell: '哑铃', coffee_machine: '咖啡机' } as Record<string, string>)[p.product_needs.product_kind]}</>}
     </p>
     {!!p.product_needs?.excluded_connections?.length && <p>排除连接标签：{p.product_needs.excluded_connections.join('、')}</p>}
     <p className="muted">仅记住结构化偏好和已核验的商品引用；购买意图、数量、地址和授权不跨轮继承。</p>
@@ -24,6 +28,9 @@ export default function ThreadMemory({ context, busy, selected, onSelect, onPatc
       <button type="button" className="button secondary" disabled={busy || budget === '' || !Number.isFinite(Number(budget)) || Number(budget) < 0} onClick={() => onPatch([{ op: 'REPLACE', field: 'max_price_cents', value: Math.round(Number(budget) * 100) }])}>保存预算</button>
       <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'max_price_cents' }])}>清除预算</button>
       <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'connection' }])}>清除连接偏好</button>
+      {p.product_needs?.screen_inches && <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'screen_inches' }])}>清除屏幕尺寸</button>}
+      {p.product_needs?.activity && <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'activity' }])}>清除骑行用途</button>}
+      {p.product_needs?.product_kind && <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'product_kind' }])}>清除商品类型</button>}
       {!!p.product_needs?.excluded_connections?.length && <button type="button" className="text-button" disabled={busy} onClick={() => onPatch([{ op: 'CLEAR', field: 'excluded_connections' }])}>清除连接排除</button>}
     </div>
     {context.candidate_sets.map(set => <section key={set.id} data-testid="candidate-set" className="stack">

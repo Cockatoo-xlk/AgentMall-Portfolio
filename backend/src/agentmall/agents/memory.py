@@ -12,6 +12,7 @@ from agentmall.agents.context import Constraints, MultiRequest, user_constraints
 from agentmall.agents.models import CandidateSet, ContextMutation, ThreadContext
 from agentmall.agents.purchase_intent import ORDINAL, purchase_intent
 from agentmall.catalog import service as catalog
+from agentmall.catalog.categories import categories_in_text
 from agentmall.infra.errors import DomainError
 
 FIELDS = {
@@ -23,8 +24,20 @@ FIELDS = {
     "excluded_connections",
     "keyboard_type",
     "usage",
+    "screen_inches",
+    "activity",
+    "product_kind",
 }
-NEEDS = {"layout", "connection", "excluded_connections", "keyboard_type", "usage"}
+NEEDS = {
+    "layout",
+    "connection",
+    "excluded_connections",
+    "keyboard_type",
+    "usage",
+    "screen_inches",
+    "activity",
+    "product_kind",
+}
 
 
 def conflict(code="CONTEXT_CLARIFICATION_REQUIRED"):
@@ -47,8 +60,9 @@ def resolve_preferences(previous, payload):
         r"(?:不接受|排除|拒绝)(?:双模|三模)(?:[／/、和或]*(?:双模|三模))*", "", text
     )
     connections = {v for v in ("有线", "无线", "双模", "三模") if v in connection_text}
+    if len(categories_in_text(text)) > 1:
+        raise conflict()
     for choices in (
-        ("键盘", "鼠标", "耳机"),
         ("机械", "薄膜"),
         ("61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"),
     ):
@@ -91,6 +105,10 @@ def resolve_preferences(previous, payload):
             raise conflict()
         changes[field] = value
     prefs = deepcopy(previous)
+    if changes.get("category") and changes["category"] != prefs.get("category"):
+        # A new category invalidates old category-specific requirements, not budgets.
+        prefs.pop("product_needs", None)
+        prefs.pop("noise_preference", None)
     for field in clears:
         if field in NEEDS:
             prefs.get("product_needs", {}).pop(field, None)

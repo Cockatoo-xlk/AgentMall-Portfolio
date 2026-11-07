@@ -28,3 +28,13 @@ it('shows explicit excluded connection labels independently from wireless capabi
   expect(html).toContain('排除连接标签：双模、三模')
   expect(html).toContain('清除连接排除')
 })
+
+it('shows expanded category constraints with explicit clear actions', () => {
+  const html = renderToStaticMarkup(<ThreadMemory busy={false} selected="" onSelect={vi.fn()} onPatch={vi.fn()} context={{
+    version: 2, preferences: { category: 'monitor', product_needs: { screen_inches: '27' } },
+    provenance: {}, updated_at: null, candidate_sets: [],
+  }} />)
+  expect(html).toContain('显示器')
+  expect(html).toContain('27')
+  expect(html).toContain('清除屏幕尺寸')
+})

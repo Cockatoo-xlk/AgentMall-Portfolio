@@ -13,7 +13,7 @@ export interface CandidateItem {
 export interface ThreadContext {
   version: number
   preferences: { category?: string; max_price_cents?: number; noise_preference?: string;
-    product_needs?: { connection?: string; layout?: string; keyboard_type?: string; usage?: string; excluded_connections?: string[] } }
+    product_needs?: { connection?: string; layout?: string; keyboard_type?: string; usage?: string; screen_inches?: string; activity?: string; product_kind?: string; excluded_connections?: string[] } }
   provenance: { type?: string; run_id?: string; request_id?: string }
   updated_at: string | null
   candidate_sets: { id: string; run_id: string; valid: boolean; items: CandidateItem[] }[]

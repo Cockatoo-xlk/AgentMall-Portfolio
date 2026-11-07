@@ -52,6 +52,9 @@ class ContextOperation(Strict):
         "excluded_connections",
         "keyboard_type",
         "usage",
+        "screen_inches",
+        "activity",
+        "product_kind",
     ]
     value: StrictStr | StrictInt | list[Literal["双模", "三模"]] | None = None
 

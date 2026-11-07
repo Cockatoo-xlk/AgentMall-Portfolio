@@ -1,20 +1,21 @@
 # 商品检索文档与重建
 
 商品文档由可信目录记录生成：名称、英文品类、确定性中文品类名、描述和原始属性。
-品类词汇仅有 `keyboard → 键盘`、`mouse → 鼠标`、`headphones → 耳机`。
+V2.5词表包含13个确定性类别及中文同义词，见[目录词表](../backend/src/agentmall/catalog/categories.py)。
+原keyboard、mouse、headphones保留；扩展品类和受控细分类型见[目录说明](EXPANDED_CATALOG.md)。
 未知品类不猜测标签；不改商品名称、连接标签或性能事实。
 
 这样通用查询“键盘”能命中词法召回，仍须经过当前店铺、上架、库存、预算、
 静音与连接能力过滤。RRF、BGE 的 0.45 相似度门槛和工具级二次校验保持原状。
-没有空结果兜底商品，也没有修改 MockTransport 的查询。
+没有空结果兜底商品。MockTransport按当前可信类别选择检索词，读取真实工具结果，不硬编码SKU。
 
 ## 旧索引兼容
 
-商品使用独立文档标识 `jieba-0.42.1-search-nfkc-v1:catalog-zh-v2`，保存在现有
+商品使用独立文档标识 `jieba-0.42.1-search-nfkc-v1:catalog-zh-v3`，保存在现有
 `product_search.tokenizer_version` 字段中。政策 chunk 仍使用原 tokenizer 标识，
-没有数据库结构迁移，也没有重新标记历史政策或修改 Frozen Manifest。
+没有检索表结构迁移，也没有重新标记历史政策或修改 Frozen Manifest。产品类别CHECK的增量迁移0008单独处理。
 
-旧商品索引不会被自动视为新版。升级源码后，管理员必须对经过授权的准确数据库、
+旧v1/v2商品索引不会被自动视为新版。升级源码后，管理员必须对经过授权的准确数据库、
 Schema 和店铺显式调用 `index_products(session, store_id, encoder)`，使用真实本地
 `LocalEncoder`，并由调用者在事务中提交。该入口锁定商品行，原子更新文档哈希、
 向量、词法索引和文档标识；目录未变化时保留原 Catalog Version。
