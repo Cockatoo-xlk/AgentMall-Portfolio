@@ -115,7 +115,7 @@ test('expiry: deadline read failure is uncertain, no auto quote or decision loop
     await route.abort('failed')
   })
   await page.clock.fastForward(301000)
-  await expect(page.getByRole('alert')).toBeVisible()
+  await expect(page.getByTestId('workflow-confirmation').getByRole('alert')).toBeVisible()
   await expect(page.getByText('提案已过期，需要新提案和重新确认。')).toHaveCount(0)
   await page.clock.fastForward(30000)
   expect(gets).toBe(1)

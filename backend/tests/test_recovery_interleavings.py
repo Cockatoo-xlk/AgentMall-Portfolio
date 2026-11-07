@@ -77,7 +77,8 @@ async def test_parallel_journals_recover_without_repeating_completed_calls(
     monkeypatch.setattr(run_service.NodeStore, "save", save)
     tid = await thread(env, buyer)
     rid = str(uuid4())
-    first = (await start(env, buyer, tid, rid)).json()
+    goal = "推荐键盘并查询本人的订单，不要购买"
+    first = (await start(env, buyer, tid, rid, message=goal)).json()
     assert first["status"] == "PARTIAL"
     before = await capture(env, tid, first, models, order + "-before", exceptions)
     counts = {k: len(m.seen) for k, m in models.items()}
@@ -91,11 +92,11 @@ async def test_parallel_journals_recover_without_repeating_completed_calls(
             raise OperationalError("synthetic recovery disconnect", {}, None)
 
         monkeypatch.setattr(run_service.NodeStore, "cached", unavailable)
-        failed = (await start(env, buyer, tid, rid)).json()
+        failed = (await start(env, buyer, tid, rid, message=goal)).json()
         assert failed["last_error"] == "DATABASE_UNAVAILABLE"
         assert {k: len(m.seen) for k, m in models.items()} == counts
         monkeypatch.setattr(run_service.NodeStore, "cached", cached)
-    done = (await start(env, buyer, tid, rid)).json()
+    done = (await start(env, buyer, tid, rid, message=goal)).json()
     after = await capture(env, tid, done, models, order + "-after", exceptions)
     assert done["status"] == "COMPLETED", after
     assert {x["subtask_id"] for x in done["result"]["results"]} == {"shop", "inspect"}

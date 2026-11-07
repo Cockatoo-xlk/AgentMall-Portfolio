@@ -126,8 +126,26 @@ export default function RunTimeline({ run, live = false, onStatusChange }: {
         retry = Math.min(5000, retry * 2)
       }
     }
+    async function initialize() {
+      // An explicit refresh must still exercise the legacy GET contract, even
+      // while SSE is available. Preserve its error until the user reconciles.
+      if (reload > 0) {
+        try {
+          await readHistory()
+          if (signal.aborted) return
+          setError('')
+        } catch (e) {
+          if (!signal.aborted) {
+            setError(errorMessage(e))
+            setConnection('history')
+          }
+          return
+        }
+      }
+      await read()
+    }
     setConnection(live ? 'connecting' : 'history')
-    void read()
+    void initialize()
     return () => {
       controller.abort()
       clearTimeout(timer)

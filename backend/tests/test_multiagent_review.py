@@ -19,9 +19,10 @@ async def test_aftersales_write_cannot_switch_to_another_owned_order(
     first = await delivered_order(env[0], buyer, product)
     second = await delivered_order(env[0], buyer, product)
     args = {**arguments, "order_id": second["id"]}
+    goal = "prepare_return" if tool == "prepare_return" else "human_support"
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", goal, "return", read_only=False),
             route("finish"),
         ],
         aftersales=[ai(call(tool, args))],

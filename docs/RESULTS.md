@@ -2,6 +2,27 @@
 
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
+## V2 RC 本地集成回归（2026-11-07）
+
+RC 基于 `d6b418a0aadb7b598595560a0df4c42dc79cce39`，整合商家运营、意图编排、SSE 与 Evaluation Studio。测试运行于 Mac Docker Desktop 的独占 Linux aarch64 容器，使用新 PostgreSQL 17 / pgvector 数据库、官方 Checkpointer、MockTransport / Fixture。源码内容哈希、实际命令、UTC、退出码与日志 SHA 见 [RC 回执](evidence/v2-rc/verification.json)。最终 RC Commit 可通过包含该回执的 Git 提交定位；正文不把基线 SHA 当作已修改源码。
+
+| 验证 | RC 实际结果 |
+|---|---|
+| 完整 pytest / CI_OFFLINE_CORE | 866 passed / 14 skipped |
+| 完整 Vitest | 92 passed |
+| 完整 Playwright / Chromium | 105 passed / 0 retries / 0 skipped |
+| Ruff、format、TypeScript、ESLint、build | 全部退出0 |
+
+14 项原跳过保持不变：13 项依赖真实 BGE 权重，1 项比较未公开的原始 Live 材料。本轮没有执行新的 BGE 专项或付费模型评测，Provider 请求为0；RC 的 GitHub Ubuntu amd64 CI 为 `NOT_RUN`。历史 R8 Run41972687787 对应 `e60ee792…`，不能充当 RC 的远程结果。
+
+首轮完整后端为828 passed / 38 failed / 14 skipped，浏览器为101 passed / 4 failed。失败原件私密保留；没有改成 skip 或增加 retry。修复范围为过期退货提案的持久化事实同步、SSE 页面手动 GET 补读与恢复卡可见性，以及旧测试目标/临时授权 Fixture 与现有意图合同的对齐。修复后的完整结果单独记录。
+
+跨模块浏览器场景用 TEST_OPERATOR 独立确认，串联只推荐且订单0 → SSE 真实进度 → 独立确认下单 → 独立模拟付款 → 商家发货/送达 → 只读评测页面。既有用例另覆盖售后两份独立确认、租户隔离、幂等恢复、部分成功与断流补读。Evaluation Studio 的18个Fixture Episode仍绑定历史运行源码 `8cb788de…`，不是新 RC 的真实模型效果指标。
+
+## 历史验证记录
+
+以下记录按其原阶段、源码与平台保留，不作为 V2 RC 的新运行结果。
+
 | 原研发RC环境 | 实测 | 身份 |
 |---|---|---|
 | Mac完整后端 | 656 passed | R1本地完整验证，含真实BGE |

@@ -4,7 +4,7 @@
 
 用户可以在同一个Thread中说“300元以内静音键盘”，下一轮改为“400元、支持无线”，再选择**当前名单第二款**。服务端保存版本化偏好与候选绑定，重新核验商品后只准备提案；独立批准并Resume后才创建订单。
 
-**[运行三轮Demo](docs/PORTFOLIO_DEMO.md) · [面试技术说明](docs/PORTFOLIO_INTERVIEW.md) · [架构细节](docs/ARCHITECTURE.md) · [本次浏览器结果](docs/evidence/portfolio-demo/verification.json)**
+**[V2 演示路线](docs/PORTFOLIO_DEMO.md#v2-rc-三至五分钟演示) · [评测工作台](docs/EVALUATION_STUDIO.md) · [运行三轮Demo](docs/PORTFOLIO_DEMO.md) · [面试技术说明](docs/PORTFOLIO_INTERVIEW.md) · [架构细节](docs/ARCHITECTURE.md) · [RC集成结果](docs/evidence/v2-rc/verification.json)**
 
 | 模式 | 可以证明什么 |
 |---|---|
@@ -19,6 +19,9 @@
 ## 核心能力
 
 - **Multi-Agent**：Supervisor路由；Shopping检索商品，Order核验事实并准备购买，AfterSales处理资格、政策引用、售后与人工工单。保留Single模式，不假定Multi一定更优。
+- **意图感知编排**：仅推荐时完成 Shopping 即可结束。退货加推荐先独立确认退货，再推荐替代品；明确替代购买需要另一份确认。交接前校验当前轮购买意图、数量、地址、候选与写工具范围。
+- **实时进度**：React 在启动 POST 返回前用原 request_id 读取已持久化 Run，通过带内存认证头的 SSE 接收 RunEvent；按 seq 补读、去重并恢复。断流不会重启业务，原 GET 仍可查历史。
+- **Evaluation Studio**：公开只读页面 `/engineering/evals` 比较配对成功率、P50/P95、调用数和安全诊断；复用原 metrics 与 Oracle，显示计划分母、未运行项和数据来源。
 - **Thread上下文**：结构化SET / REPLACE / CLEAR、context_version；候选保存名单ID、稳定rank、Product ID与Catalog Version。偏好变化使旧名单失效，购买授权不跨Run继承。
 - **Hybrid RAG**：PostgreSQL词法检索 + 固定BGE / pgvector向量召回 + RRF；店铺、价格、库存、状态与属性过滤在LIMIT前应用，工具重新读取当前事实。
 - **HITL与恢复**：不可变Proposal → 独立Confirmation → 原Run Resume。官方PostgreSQL Checkpointer、RunEvent、节点Journal与Epoch Fence支持等待和恢复；JWT只存浏览器内存。
@@ -47,6 +50,12 @@ flowchart LR
   X --> DB
   G <--> CP[("官方Checkpoint / Thread Context / RunEvent")]
   CP --> DB
+  DB --> ES["只读 RunEvent / SSE"]
+  ES --> U
+  U --> M["商家工作台 / 本店订单与售后"]
+  M --> API
+  E["版本化脱敏评测 JSON"] --> ST["Evaluation Studio"]
+  ST --> U
 ```
 
 模型只能调用白名单工具，不能自行批准购买、付款或退款。事务边界位于领域服务，Checkpoint保存图进度，不代替订单事务。详细实现：[工具及参数](backend/src/agentmall/agents/specialist_tools.py)、[持久图](backend/src/agentmall/agents/durable_graph.py)、[Run协调](backend/src/agentmall/agents/run_service.py)、[Thread Memory](backend/src/agentmall/agents/memory.py)、[交易服务](backend/src/agentmall/orders/service.py)。
@@ -77,18 +86,18 @@ docker --context desktop-linux compose -p agentmall-portfolio-demo \
 
 订单详情另有“模拟付款”，需要新的支付Proposal与Confirmation，与购买确认分开；所有资金均为合成数据，不发生真实扣款。普通购物车与Agent订单共用同一详情页。刷新后需重新登录，再用原Thread ID恢复，不能把浏览器导航引用当作权限。
 
-## 已完成的工程验证
+## V2 RC 集成验收
 
-下表是 V1 的历史验收。R8 的 **CI/执行器提交为 `e60ee792d6809dad696f27aac1e40272dd04f141`，冻结产品提交为 `77b215878edbce50ce107c6e77e31de4d2044ff9`**。V2 商家工作台另做本地定向回归；历史结果不代表 V2 已通过完整远程 CI。
+本地 RC 从 `d6b418a0aadb7b598595560a0df4c42dc79cce39` 整合四项 V2 功能。完整离线回归、实际源码内容绑定、失败与修复、平台及日志哈希见[RC 回执](docs/evidence/v2-rc/verification.json)和[结果索引](docs/RESULTS.md)。演示采用 MockTransport / Fixture，真实 Provider 请求为 0。当前 RC 的 Ubuntu amd64 远程 CI 为 `NOT_RUN`。
 
-| 验证 | 结果 | 范围 |
-|---|---|---|
-| [R8 Run41972687787 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/41972687787) | pytest **834 passed / 14 skipped**，Vitest **85**，Playwright **96** | CI `e60ee792…` / 产品 `77b21587…`；Ubuntu24.04 x86_64 |
-| 同Run专项Stage B | 真实固定BGE、512维CPU、14项检索、三轮Mock、独立PostgreSQL Oracle、Checkpoint、原900秒观察通过 | 真实检索与模拟模型分开；不是付费Live |
-| 本次Mac浏览器Demo | 2→3件候选；预算300→400；TEST_OPERATOR批准后唯一待支付订单；付款0；刷新登录与Thread恢复通过 | SDK MockTransport + Fixture Embedding；[脱敏摘要](docs/evidence/portfolio-demo/verification.json) |
-| 本次必要回归 | Demo启动器pytest **4 passed**；相关前端Vitest **16 passed** | 运行模式、上下文引用、工作流与时间线；不冒充全量新回归 |
+| 验证 | 结果与范围 |
+|---|---|
+| V2 RC 本地完整回归 | pytest 866 passed / 14 skipped；Vitest 92 passed；Playwright 105 passed、0 retries。Linux aarch64、独占 PostgreSQL 17 / pgvector、官方 Checkpoint、Chromium |
+| [历史 R8 Run41972687787 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/41972687787) | pytest 834 passed / 14 skipped、Vitest 85、Playwright 96；CI提交 `e60ee792…`、冻结产品 `77b21587…`，Ubuntu24.04 x86_64 |
+| 同一历史 Run Stage B | 固定 BGE、512维CPU、14项检索、三轮Mock及独立Oracle通过；适用范围仍绑定其历史源码 |
+| Evaluation Studio 随附批次 | 9任务 × Single/Multi，共18个开发集Fixture Episode；运行源码 `8cb788de…`，两架构各9/9，详见页面Evidence |
 
-14项skip仅13项真实BGE权重依赖和1项私有Live原件比较；真实BGE另由Stage B验证。旧失败没有删除：[T16-A3历史环境阻塞](docs/evidence/t16-a3/report.md)、[工程案例](docs/ENGINEERING_CASES.md)、[历史结果索引](docs/RESULTS.md)。本次未重复900秒CI、未增加skip/retry或放宽安全校验。
+离线核心沿用原14项skip边界，即13项真实BGE权重依赖和1项私有Live原件比较。历史真实BGE验收与当前Fixture回归分别记录。旧OOM、时钟与中断失败保留在[工程案例](docs/ENGINEERING_CASES.md)及各阶段报告。
 
 ## 已知限制与后续工作
 
@@ -98,7 +107,7 @@ docker --context desktop-linux compose -p agentmall-portfolio-demo \
 - Mac本地虚拟化曾有时钟回退与采样吞吐不足；原JWT与60/900秒合同未降低。本次短Demo不是新的Live环境准入。历史约1.91GiB环境的OOM/143、137均保留，不能称为完整单容器CI成功。
 - Journal的node_journal/resume_journal直接字段快照不在R8冻结Oracle范围；镜像及托管Runner最终物理销毁UNKNOWN。图恢复不保证任意SIGKILL下外部模型调用exactly-once。
 - 没有真实支付/退款、生产负载/SLA/灾难恢复验收或云部署。`VIDEO_NOT_RECORDED`；已提供截图及3—5分钟录制脚本。未来工作优先是获授权的真实多轮Pilot和面向使用者的交互优化。
-- 本次限时停止未完成API临时Schema的优雅清理；业务原件保存后，专属PG和Volume等资源已删除并查无。内部停止原因UNKNOWN，不能将stop退出0当作清理证明。复现时按[专属清理步骤](docs/PORTFOLIO_DEMO.md#停止及清理)处理，不触及历史数据。
+- 历史作品集Demo限时停止未完成API临时Schema的优雅清理；业务原件保存后，专属PG和Volume等资源已删除并查无。内部停止原因UNKNOWN，不能将stop退出0当作清理证明。复现时按[专属清理步骤](docs/PORTFOLIO_DEMO.md#停止及清理)处理，不触及历史数据。
 
 ## 许可与贡献说明
 

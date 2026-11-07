@@ -232,6 +232,9 @@ def build_durable_graph(base, saver, store):
                 if proposal.status != "EXPIRED" or proposal.result is not None:
                     raise DomainError(409, "STALE_INTERRUPT", "仅可自动结束已过期提案的等待")
             runtime.errors.append("STALE_PROPOSAL")
+            # Reconcile the expired DB receipt before the next routing decision.
+            # The checkpoint can still contain the old PENDING projection.
+            await recover_receipts(runtime)
             return {
                 "handled": [*state.get("handled", []), payload["proposal_id"]],
                 "next": "single" if runtime.single else "supervisor",

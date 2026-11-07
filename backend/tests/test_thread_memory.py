@@ -4,7 +4,7 @@ from uuid import uuid4
 
 import pytest
 from conftest import row
-from multiagent_helpers import install, make_models, route
+from multiagent_helpers import ai, call, final, install, make_models, route
 from t09_helpers import durable_env as durable_env
 from t09_helpers import thread
 
@@ -30,11 +30,18 @@ async def turn(env, buyer, tid, message, version, **extra):
 
 async def test_budget_replace_clear_and_old_run_snapshot_are_independent(durable_env, buyer):
     env = durable_env
-    await install(env, make_models(supervisor=[route("finish")] * 4), indexed=False)
+    await install(
+        env,
+        make_models(
+            supervisor=[route("shopping", "find_products", "initial"), *[route("finish")] * 3],
+            shopping=[ai(call("retrieve_products", {"query": "静音键盘"})), final()],
+        ),
+    )
     tid = await thread(env, buyer)
     first = await turn(env, buyer, tid, "推荐一款300元以内的静音键盘", 0)
     assert first.status_code == 201, first.text
     original = first.json()
+    assert original["status"] == "COMPLETED", original
     context = (await read(env, buyer, tid))["context"]
     assert context["preferences"] == {
         "category": "keyboard",

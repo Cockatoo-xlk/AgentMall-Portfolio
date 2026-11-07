@@ -468,8 +468,10 @@ async def test_parallel_threads_start_resume_recover_and_event_reread(durable_en
     await install(env, make_models(supervisor=[delayed, delayed]), indexed=False)
     tids = [await thread(env, buyer), await thread(env, buyer)]
     requests = [str(uuid4()), str(uuid4())]
+    goal = "结束本次测试，不要购买"
     tasks = [
-        asyncio.create_task(start(env, buyer, t, r)) for t, r in zip(tids, requests, strict=True)
+        asyncio.create_task(start(env, buyer, t, r, message=goal))
+        for t, r in zip(tids, requests, strict=True)
     ]
     try:
         await asyncio.wait_for(ready.wait(), 5)
@@ -491,7 +493,7 @@ async def test_parallel_threads_start_resume_recover_and_event_reread(durable_en
             0
         ]
         responses = await asyncio.gather(
-            start(env, buyer, tids[0], requests[0]),
+            start(env, buyer, tids[0], requests[0], message=goal),
             env[0].post(
                 f"/api/v1/agent/threads/{tids[0]}/resume",
                 headers=buyer,

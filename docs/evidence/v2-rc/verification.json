@@ -1,0 +1,306 @@
+{
+  "status": "AGENTMALL_V2_RELEASE_CANDIDATE_READY",
+  "date_utc": "2026-11-07",
+  "base_commit": "d6b418a0aadb7b598595560a0df4c42dc79cce39",
+  "branch": "codex/v2-release-candidate",
+  "source_binding": {
+    "git_commit": "The RC commit containing this receipt; its executable inputs must match the following content digest. The base SHA alone does not identify the repaired code.",
+    "input_files": 367,
+    "input_content_sha256": "056b568708d838f9f117827a8a7f25cdf16007f706e37106cb37115e0d96913b",
+    "algorithm": "sha256(UTF-8 concatenation of path + TAB + file SHA-256 + LF, paths sorted lexicographically)",
+    "scope": "Tracked backend, evals, scripts, fixtures, frontend and root test/Compose inputs, including the new V2 RC integration spec. Documentation is excluded from executable input binding.",
+    "cached_image_config_matches": "7/7 package, lock and compiler configuration hashes match the checkout"
+  },
+  "environment": {
+    "platform": "Linux aarch64 on Mac Docker Desktop",
+    "python": "3.12.10",
+    "database": "new isolated PostgreSQL 17 + pgvector; internal 55433; no host database port",
+    "network": "runner shares the new network-none PostgreSQL namespace; only loopback is available",
+    "model": "Fixture and DeepSeek SDK MockTransport; no real Provider",
+    "embedding": "Fixture for CI_OFFLINE_CORE; no new real-BGE benchmark",
+    "runner_image": "agentmall-portfolio-demo-runner:local (reused local cache)"
+  },
+  "results": {
+    "pytest": {
+      "passed": 866,
+      "skipped": 14,
+      "failed": 0
+    },
+    "vitest": {
+      "passed": 92,
+      "test_files": 14
+    },
+    "playwright": {
+      "passed": 105,
+      "failed": 0,
+      "skipped": 0,
+      "retries": 0,
+      "browser": "Chromium",
+      "files": {
+        "cart_checkout.spec.ts": 14,
+        "evaluation-studio.spec.ts": 2,
+        "merchant.spec.ts": 3,
+        "multiturn.spec.ts": 9,
+        "payment.spec.ts": 17,
+        "playground.spec.ts": 13,
+        "proposal_expiry.spec.ts": 3,
+        "purchase.spec.ts": 22,
+        "return_replace.spec.ts": 21,
+        "v2-rc.spec.ts": 1
+      }
+    },
+    "ruff": "PASS",
+    "format": "PASS",
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "build": "PASS"
+  },
+  "skip_boundary": [
+    {
+      "count": 13,
+      "scope": "real BGE weight dependent tests under CI_OFFLINE_CORE"
+    },
+    {
+      "count": 1,
+      "scope": "comparison with private original Live evidence; synthetic regression remains enabled"
+    }
+  ],
+  "cross_module": {
+    "case": "frontend/tests/v2-rc.spec.ts",
+    "verified": [
+      "Recommendation completes without checkout, order or confirmation; durable progress appears while RUNNING.",
+      "Independent TEST_OPERATOR checkout confirmation creates one pending order; payment count is zero before the separate payment action.",
+      "Another explicit mock payment confirmation yields SUCCEEDED; merchant ships and delivers the same order.",
+      "Evaluation Studio navigation leaves orders, confirmations and payments unchanged."
+    ],
+    "other_full_suite_coverage": [
+      "Store and user isolation; merchant aftersales and separate refund confirmation/execution",
+      "Return plus recommendation without unsolicited checkout; independent return and checkout confirmations",
+      "SSE disconnect, replay, deduplication and history GET; response-loss and checkpoint recovery",
+      "Planned evaluation denominators, paired comparisons, UNKNOWN and provenance separation"
+    ]
+  },
+  "fixes": [
+    "Reconcile authoritative EXPIRED return proposal facts before resumed routing; keep STALE_PROPOSAL and independent purchase authorization.",
+    "Manual timeline refresh uses the legacy events GET before resubscribing; failures retain prior rows and a visible error.",
+    "Keep the existing confirmation/reconciliation card visible for RUNNING with a pending interrupt after a post-commit answer failure.",
+    "Align old synthetic recovery goals and temporary prompt hashes with current V2 intent/admission contracts; no historical manifest was edited.",
+    "Scope expiry error assertion to its confirmation panel and correct the new integration reset to POST."
+  ],
+  "prior_failures_retained": {
+    "initial_backend": {
+      "passed": 828,
+      "failed": 38,
+      "skipped": 14,
+      "log_sha256": "c4c2dccc31fb90577f4d245811e11ce271908986e3e2045d86eeca0c2778c8eb"
+    },
+    "initial_browser": {
+      "passed": 101,
+      "failed": 4,
+      "log_sha256": "2231fde87cdb8dd9b4cbbf500c4b2c0886b2f0c4b05877349c34b9ef46d2920a"
+    },
+    "intermediate_targeted_backend": {
+      "passed": 88,
+      "failed": 1,
+      "log_sha256": "35985954390a482d758b263400c90abf436723dd8b5e8688ea7b0fcc8d7a7a25"
+    },
+    "expiry_targeted_backend": {
+      "passed": 30,
+      "failed": 0,
+      "log_sha256": "8a14edcd506fd9b4858a7e118a45aba501b545f676502518f7a0f122e7300dd5"
+    },
+    "fixed_targeted_browser": {
+      "passed": 25,
+      "failed": 0,
+      "log_sha256": "1a697d8f519361959c01e90be240d570715c9e988eb5da05dc3d5164cc3cce78"
+    },
+    "policy": "No new skip or retry. Full reruns followed actual source or test repairs; historical failures remain private originals."
+  },
+  "verification_commands": {
+    "bootstrap": {
+      "command": [
+        "/work/backend/.venv/bin/python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433",
+        "--config",
+        "/rc-output/bootstrapped.env"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:42:00.969337+00:00",
+      "elapsed_seconds": 1.68,
+      "log_sha256": "ff1db3d3620b544a7a761b5b9a4b62db8ac9696227e28cc5adb9e16c5aae30a5",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "ruff-final": {
+      "command": [
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:50:55.189216+00:00",
+      "elapsed_seconds": 0.167,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "format-final": {
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:50:55.357733+00:00",
+      "elapsed_seconds": 0.117,
+      "log_sha256": "999a839c35dc03f3f34663ba68a8a3ed1913c9e7c466b22b04a16eb263bb9eec",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "pytest-final": {
+      "command": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "--junitxml=/rc-output/pytest-final.xml"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:50:55.475431+00:00",
+      "elapsed_seconds": 276.68,
+      "log_sha256": "e905bdd46d775f42f7b68eb8953ca63f906316e92165b6092569c099128dedb5",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "typecheck-verified": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:56:55.000958+00:00",
+      "elapsed_seconds": 1.942,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "lint-verified": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:56:56.943746+00:00",
+      "elapsed_seconds": 1.145,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "vitest-verified": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:56:58.090627+00:00",
+      "elapsed_seconds": 0.719,
+      "log_sha256": "7be391750304ef45ae3015c03acfb893b9d8b571c6335db02c854c1233fef7ca",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "build-verified": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:56:58.810156+00:00",
+      "elapsed_seconds": 2.496,
+      "log_sha256": "0e90cc0f5ab55ebdfdb9dc5b546beb5446bc929190932e524825eedf33642ef9",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    },
+    "playwright-final": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T04:56:55.002506+00:00",
+      "elapsed_seconds": 183.052,
+      "log_sha256": "be09d8d7ebbcd98d5d3cb20790f38f43a2404455e90efbb1143c7dcb15407e06",
+      "os": "Linux",
+      "architecture": "aarch64",
+      "python": "3.12.10"
+    }
+  },
+  "publication_review": {
+    "baseline_reachable_history": {
+      "commit_count": 23,
+      "unique_blob_count": 747,
+      "text_blobs": 716,
+      "image_blobs": 29,
+      "scope": "reachable from the d6b418a baseline, plus the RC delta separately reviewed"
+    },
+    "confirmed_real_secrets_found": 0,
+    "private_raw_evidence_added": false,
+    "synthetic_credentials": "Only documented demo/test fixtures; redaction-test negative-control literals were classified as synthetic.",
+    "images": "29 existing synthetic UI screenshots: metadata checked, visual review performed; none added or changed in the RC.",
+    "license": "MIT project attribution and Lucide/Feather notices retained; no dependency or third-party binary additions.",
+    "domain_and_safety_contracts": "No changes to orders, payment/refund domains, identity, migrations, locks, workflows or frozen evidence.",
+    "mermaid": "Two flowcharts statically inspected; GitHub rendering NOT_RUN",
+    "raw_logs": "Retained only in ignored private local output; this is a reviewed summary."
+  },
+  "cleanup": {
+    "scoped_guest_database_and_anonymous_volume": "REMOVED_AND_ABSENCE_VERIFIED",
+    "temporary_synthetic_credential_files": "REMOVED",
+    "historical_running_containers": "3/3 still running; no stop/delete was issued to them",
+    "reused_runner_image": "PRESERVED",
+    "receipt_sha256": "d6086b5ebf66cda96c32ad6b42d9628cb6259422352ec7cfd8941908bb64b1b0"
+  },
+  "boundaries": {
+    "real_provider_requests": 0,
+    "real_provider_key_reads": 0,
+    "push": 0,
+    "remote_workflow_triggers": 0,
+    "current_rc_github_ubuntu_amd64_ci": "NOT_RUN",
+    "current_v2_live_evaluation": "NOT_RUN",
+    "bundled_evaluation_fixture_source": "8cb788dea4e02d763faeafbfad0fc7f639d91868; 18 historical Fixture episodes",
+    "historical_live_smoke": "T15-B1 at 617cdf29 only; not current V2 Live validation",
+    "historical_r8_ci": "41972687787 attempt 1 at e60ee792; not this RC",
+    "new_900_second_admission": "NOT_RUN; out of scope",
+    "journal_direct_field_snapshot": "NOT_COVERED",
+    "demo_video": "NOT_RECORDED"
+  }
+}

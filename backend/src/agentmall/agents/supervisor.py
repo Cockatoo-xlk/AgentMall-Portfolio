@@ -87,7 +87,7 @@ def awaits_return_decision(runtime, tasks):
     if not runtime.constraints.return_requested or any(
         kind == "proposal"
         and fact["action_type"] == "RETURN_REQUEST"
-        and fact["status"] in {"EXECUTED", "REJECTED"}
+        and fact["status"] in {"EXECUTED", "REJECTED", "EXPIRED"}
         for (kind, _), fact in runtime.facts.items()
     ):
         return False

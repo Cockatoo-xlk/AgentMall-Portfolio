@@ -30,3 +30,8 @@ T14发布候选保留原公开独立根、已有文档提交、P0模拟付款及
 T15-C复用上述公开父链，增加服务端提案时钟、展示交互与脱敏B1摘要。B1真实Smoke绑定历史617cdf29和旧源码指纹；当前源码改变后Live=NOT_RUN，未重封存旧Manifest、未复用历史授权。原`.playground`账本、授权及完整Checkpoint不随本作品分发。本轮公开内容审查见[T15-C](docs/evidence/t15-c/publication-audit.json)，新的发布须另行批准准确SHA。
 
 T15-C1在未改变生产源码和既有测试的前提下，使用独立稳定Linux aarch64 VM和Mac Chromium完成完整87项浏览器回归；旧共享VM时钟问题及81/6历史失败保留。T15-D1继续沿用这条公开父链，仅整理展示文档、忽略规则和审查证据，不修改功能或历史原件。[最终审查范围与清单规则](docs/evidence/t15-d1/report.md)明确区分候选准备、远程CI和实际发布；本文的来源说明不因后续上传而改变。
+
+
+## V2 RC 的后续修订
+
+V2在上述公开独立父链上增加商家工作台、意图感知编排、SSE事件读取和静态Evaluation Studio。旧快照数量、哈希与历史验收仍指原阶段；当前RC范围和本地回归以[结果索引](docs/RESULTS.md)及[RC回执](docs/evidence/v2-rc/verification.json)为准。当前可达图片历史为29个Blob，V2四个功能提交未新增图片。GitHub上传及远程CI仍需针对最终RC SHA另行授权。

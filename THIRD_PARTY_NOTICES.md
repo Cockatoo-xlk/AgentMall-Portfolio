@@ -4,7 +4,7 @@ AgentMall原创源码、文档和合成项目素材由权利人Cockatoo-xlk选�
 
 ## 本次实际分发的材料
 
-本源码分发范围包含项目源码、合成数据/政策、迁移、测试、依赖锁、构建配方、说明文档、脱敏摘要及15张经审查的合成UI截图（R5三张、P0四张、P1三张Fixture，以及T15-A五张SDK MockTransport离线截图）。可达Git历史来自公开独立根及必要修订，不包含原Private研发历史。Live原始账本/授权/对话、私有Checkpoint、本地.env、模型权重、node_modules、site-packages、dist、浏览器和Docker镜像层不在本源码分发文件中。没有把未来构建产物纳入本次源码分发审查。
+本源码分发范围包含项目源码、合成数据/政策、迁移、测试、依赖锁、构建配方、说明文档、脱敏摘要及经审查的合成UI截图（各阶段范围见下文；V2 RC 共29张）。可达Git历史来自公开独立根及必要修订，不包含原Private研发历史。Live原始账本/授权/对话、私有Checkpoint、本地.env、模型权重、node_modules、site-packages、dist、浏览器和Docker镜像层不在本源码分发文件中。没有把未来构建产物纳入本次源码分发审查。
 
 | 组件或素材 | 目录中的实际内容与许可处理 |
 |---|---|
@@ -35,3 +35,8 @@ T14-P1另有三张[购物车Fixture截图](docs/evidence/t14-p1/screenshots.json
 ## T15源码与截图范围
 
 T15-A五张[SDK MockTransport截图](docs/evidence/t15-a/screenshots.json)展示离线合成Provider响应、独立人工确认、恢复和超时UNKNOWN，并非真实DeepSeek调用截图。T15-D1核验全部15张及其可达历史Blob，检查PNG元数据并逐张审阅可见内容；未发现Key、JWT、个人路径、真实身份或未经审阅的第三方图片。旧截图保持原字节与哈希，不把历史界面当成最新Live验收。[本阶段许可与截图审查](docs/evidence/t15-d1/license-and-images.json)保留具体范围。Python/Node锁文件及原Lucide/Feather完整许可未变，没有新增第三方分发物。
+
+
+## V2 RC 源码分发范围
+
+V2.1—V2.4沿用既有依赖和图标声明，没有新增第三方包或图片。当前可达历史包含29个合成UI图片Blob，15张的旧审核清单继续绑定其历史阶段，另有后续截图保持原字节。RC只分发源码和经过审查的静态评测投影；本地原始日志、Oracle快照与新验证截图留在忽略目录。

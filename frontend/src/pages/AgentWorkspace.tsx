@@ -368,7 +368,7 @@ function Workspace({
                       </>
                     )}
                   </section>
-                  <div hidden={run.status !== 'WAITING_INPUT' || !run.pending_confirmation}>
+                  <div hidden={!['WAITING_INPUT', 'RUNNING'].includes(run.status) || !run.pending_confirmation}>
                     {run.pending_confirmation?.proposal_id && (
                       <WorkflowConfirmationCard
                         key={run.pending_confirmation.interrupt_id}

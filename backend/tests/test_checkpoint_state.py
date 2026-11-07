@@ -56,11 +56,12 @@ async def test_parallel_branches_keep_both_results_after_checkpoint_failure(
     monkeypatch.setattr(run_service.NodeStore, "save", fail_after_journal)
     tid = await thread(env, buyer)
     rid = str(uuid4())
-    partial = (await start(env, buyer, tid, rid)).json()
+    goal = "推荐键盘并查询本人的订单，不要购买"
+    partial = (await start(env, buyer, tid, rid, message=goal)).json()
     assert partial["status"] == "PARTIAL"
     counts = {k: len(v.seen) for k, v in models.items()}
     monkeypatch.setattr(run_service.NodeStore, "save", original)
-    done = (await start(env, buyer, tid, rid)).json()
+    done = (await start(env, buyer, tid, rid, message=goal)).json()
     assert done["status"] == "COMPLETED", done
     assert {r["subtask_id"] for r in done["result"]["results"]} == {"shop", "inspect"}
     assert len(models["shopping"].seen) == counts["shopping"]

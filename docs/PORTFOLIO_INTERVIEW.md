@@ -41,9 +41,25 @@ HITL划定权限：WAITING_INPUT前没有订单，用户审阅不可变快照并
 | 购物车下单后仍残留商品 | 购买提案绑定Cart来源和版本，订单创建时同事务安全消费；变化后的购物车保留。 |
 | 本次Docker Hub元数据超时 | 使用可信本地依赖缓存与当前源码完成离线镜像构建；没有修改网络、依赖锁或业务逻辑。 |
 
+## V2 如何把功能连成可演示的产品？
+
+商家工作台补齐订单履约与售后界面，复用原领域API和店铺授权。买家Agent生成订单，用户独立模拟付款后，商家才能发货；版本冲突读取当前状态，退款保留提案、批准、执行三步。[跨模块浏览器测试](../frontend/tests/v2-rc.spec.ts)覆盖推荐、购买确认、模拟付款、商家送达和只读评测展示。
+
+动态编排的问题最先暴露在固定AfterSales→Shopping→Order的Mock脚本。生产Supervisor原来已有动态路由提示，修复进一步把购买意图、必要信息与交接范围变成服务端前置校验。推荐不自动转成购买，真实推荐失败仍保留PARTIAL；旧确认不能授权另一次购买。
+
+## SSE如何在同步POST未结束时工作？
+
+Run先独立提交，页面根据同一request_id用Thread GET找到它，再建立fetch SSE连接。SSE只是已提交RunEvent的只读投影。服务端按seq分页、短事务、有限连接窗口；客户端用最后接收的seq补读和去重。JWT放在内存和Authorization头，退出登录会取消连接。新状态事件还触发Thread核对，防止跨窗口跳过短暂RUNNING后仍显示旧的人工确认。
+
+## 如何让评测工作台的数字可信？
+
+导出器使用现有scheduled_rows和paired_report，未运行项继续留在计划分母。机器延迟取已有测量，新增业务副作用取Oracle前后快照的ID差集计数，公开JSON不带实体ID和原始Trace。页面分别显示Oracle判定与Run状态，安全拒绝或预期部分成功可以通过Oracle。Fixture只能证明此批链路与业务检查，历史Live Pilot的开发集成绩不能外推成当前版本的真实模型提升。
+
 ## 可以讲的实测结果
 
+当前 RC 的完整本地回归、平台、源码绑定和失败修复见[RC 回执](evidence/v2-rc/verification.json)及[结果索引](RESULTS.md)。讲述时以对应版本为单位，下面的R8与原三轮Demo继续作为历史证据。
+
 - 历史[R8 Ubuntu CI](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/41972687787)：CI/执行器提交`e60ee792d6809dad696f27aac1e40272dd04f141`，冻结产品提交`77b215878edbce50ce107c6e77e31de4d2044ff9`；pytest834/14skip、Vitest85、Playwright96，Stage B真实BGE/14检索/三轮Mock/只读Oracle通过。
-- [本次浏览器记录](evidence/portfolio-demo/verification.json)：三轮2→3件候选、预算300→400、TEST_OPERATOR批准后唯一¥399待支付订单，目标库存预留1，付款0；刷新登录和Thread恢复后不重复下单。
-- 本次12次SDK MockTransport交互不是真实Provider调用；真实Provider请求及Key读取0。历史T15-B1仅在旧617cdf29做过一个真实购物Smoke，不能冒充当前T16真实多轮成功。
+- [历史三轮浏览器记录](evidence/portfolio-demo/verification.json)：三轮2→3件候选、预算300→400、TEST_OPERATOR批准后唯一¥399待支付订单，目标库存预留1，付款0；刷新登录和Thread恢复后不重复下单。
+- 该历史演示的12次SDK MockTransport交互不是真实Provider调用；真实Provider请求及Key读取0。历史T15-B1仅在旧617cdf29做过一个真实购物Smoke，不能冒充当前T16真实多轮成功。
 - 没有本次性能基准、真实支付/退款、生产部署、模型泛化结论或正式录屏；Journal两个字段直接快照仍不在冻结验收范围内。

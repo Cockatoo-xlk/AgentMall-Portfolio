@@ -70,6 +70,25 @@ curl --fail --silent --show-error -X POST http://127.0.0.1:8026/__test/sdk-mode 
 
 购买演示可在当前 Run 结束后，把上面配置中的 `program` 改为 `purchase`，创建新 Thread 并输入「帮我找一款300元以内静音键盘准备购买，送演示宿舍」。到 `WAITING_INPUT` 时核对购买快照，再手动批准并观察 Resume 与业务回执。演示到待支付结束。
 
+## V2 RC 三至五分钟演示
+
+使用上面的独占环境与合成账号。主路线展示四项V2能力，先在买家窗口完成订单与独立模拟付款，再切换商家账户履约。Fixture设置只在当前Run结束后切换。
+
+| 时间 | 页面与操作 | 可核对的事实 |
+|---|---|---|
+| 0:00—0:30 | 打开 `/engineering/evals`，看Evidence与一次失败详情 | 随附18条Fixture、源码8cb788de；历史Live单列，缺失指标UNKNOWN |
+| 0:30—1:20 | 用上一节的recommend延时场景，以buyer1创建Multi Thread并输入「推荐300元以内的静音键盘，不要购买。」 | POST未返回时看到RUNNING、Supervisor与Shopping事件；结束时没有购买提案 |
+| 1:20—2:30 | 当前Run结束后将sdk-mode改为purchase，创建新Thread并输入「帮我找一款300元以内静音键盘准备购买，送演示宿舍」 | WAITING_INPUT；核对快照再手动批准，唯一待支付订单 |
+| 2:30—3:10 | 从订单详情点「模拟付款」，核对另一份提案并批准 | 独立付款确认，服务端回执SUCCEEDED，合成订单PAID |
+| 3:10—4:15 | 退出买家，以merchant登录，进 `/merchant` 找到该订单并发货、确认送达 | 只能操作本店；状态从PAID到SHIPPED再到DELIVERED |
+| 4:15—4:50 | 回到评测工作台或重新登录恢复原Thread | 评测页面只读；原Run事件与订单状态可以再读，页面刷新不重复下单 |
+
+这里的付款是显式扩展的模拟资金步骤，所以此路线有一条模拟付款记录。原三轮购物历史截图仍保持其付款0的范围。所有自动化批准明确由TEST_OPERATOR执行。
+
+退货与退款可作为后续展开的独立片段。原订单送达后，买家通过退货提案单独确认申请，商家在售后列表审核、收货，再依次生成退款提案、批准和执行。详细步骤见[商家工作台](MERCHANT_WORKBENCH.md)，不要为了压缩时长跳过确认。
+
+完整RC集成浏览器场景见[测试脚本](../frontend/tests/v2-rc.spec.ts)。旧三轮上下文片段保留在下节；要展示偏好覆盖和候选编号，可将其替换进购物部分。定向测试中的延迟、网络中断和响应丢失均是显式Mock故障注入。
+
 ## 浏览器六步
 
 | 步骤 | 操作 | 核对 |
@@ -85,7 +104,7 @@ curl --fail --silent --show-error -X POST http://127.0.0.1:8026/__test/sdk-mode 
 
 本场景到待支付为止，**不要点击模拟付款**。订单详情确有独立模拟支付入口，付款需新的提案及Confirmation，不复用购买批准。若另行录制支付闭环，应明确标为扩展的模拟资金场景，不能继续宣称付款0。
 
-## 本次截图与事实
+## V1 历史截图与事实
 
 全部是合成数据，确认操作者为 **TEST_OPERATOR**；不是本人真实购物授权。完整结果及截图哈希见[验收摘要](evidence/portfolio-demo/verification.json)。
 
@@ -100,7 +119,7 @@ curl --fail --silent --show-error -X POST http://127.0.0.1:8026/__test/sdk-mode 
 
 本次3个Run均COMPLETED，85条连续事件；官方Checkpoint均`next=done`、`pending_writes=0`。独立只读SQL核对订单/OrderItem/Confirmation/库存：目标on_hand20、reserved1；其他SKU不变；付款0。浏览器刷新重新登录后仍只有同一订单。没有用HTTP200代替这些事实。没有额外扩展Journal采集，直接两字段证据继续NOT_COVERED。
 
-## 3—5分钟录制脚本
+## 原三轮片段录制脚本
 
 | 时间 | 画面 | 讲解 |
 |---|---|---|
@@ -127,4 +146,4 @@ docker --context desktop-linux volume ls --filter label=com.docker.compose.proje
 
 `--volumes`仅销毁本例新建的合成专用Volume。项目若已经存在不明数据，不执行该命令，先核对归属。不要使用全局prune、删除历史Volume或停止旧容器。停止后临时Thread/订单不可继续查询，应先保存所需截图与合成结果。重新运行会创建新Thread/订单，截图中的UUID不是永久演示地址。
 
-**本次停止异常保留**：`docker stop --time 30`约30.10秒返回后，API两份临时Schema仍在、未观察到最终子进程退出回执；不能称为优雅Schema清理通过，内部原因UNKNOWN。完成业务取证后，核对专属项目/Volume归属，最终删除本次Guest、PG、Volume、网络和新镜像tag并独立查无；原24容器不变。此异常没有修改交易结果，也未触发业务重试。本轮未为此扩大关闭机制开发，复现时须执行上述专属资源清理并核对结果，不能仅凭stop退出0认为清理完成。
+**历史作品集Demo停止异常保留**：`docker stop --time 30`约30.10秒返回后，API两份临时Schema仍在、未观察到最终子进程退出回执；不能称为优雅Schema清理通过，内部原因UNKNOWN。完成业务取证后，核对专属项目/Volume归属，最终删除本次Guest、PG、Volume、网络和新镜像tag并独立查无；原24容器不变。此异常没有修改交易结果，也未触发业务重试。本轮未为此扩大关闭机制开发，复现时须执行上述专属资源清理并核对结果，不能仅凭stop退出0认为清理完成。
