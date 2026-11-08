@@ -50,6 +50,8 @@ function Workspace({
     order ? `订单${order}有质量问题，申请退货，再帮我推荐一款500元以内的静音键盘。` : '',
   )
   const [busy, setBusy] = useState(false)
+  const [durableAsync, setDurableAsync] = useState(false)
+  const startAsync = useRef(false)
   const [requote, setRequote] = useState(false)
   const [notice, setNotice] = useState('')
   const [revision, setRevision] = useState(0)
@@ -87,7 +89,7 @@ function Workspace({
           setThread(value)
           const discovering = pendingStartId && !value.runs.some((item) => item.request_id === pendingStartId)
           failures = 0
-          if ((busy || value.runs[0]?.status === 'RUNNING') && ++reads < 150)
+          if ((busy || value.runs[0]?.status === 'RUNNING' || ['QUEUED', 'EXECUTING'].includes(value.runs[0]?.job?.status ?? '')) && ++reads < 150)
             timer = setTimeout(() => void read(), discovering ? 350 : 1500)
         }
       } catch (e) {
@@ -120,6 +122,7 @@ function Workspace({
   }
   async function start(text: string, retry = false, constraints?: Record<string, unknown>) {
     if (!thread || !text.trim()) return
+    if (!retry) startAsync.current = durableAsync
     const op =
       retry && startOperation.current
         ? startOperation.current
@@ -140,7 +143,7 @@ function Workspace({
           return
         }
       }
-      await api.post<Run>(`/agent/threads/${id}/runs`, op)
+      await api.post<Run>(`/agent/threads/${id}/runs${startAsync.current ? "/async" : ""}`, op)
       setSelectedSet('')
       setSelectedBundle('')
       setRequote(false)
@@ -192,7 +195,7 @@ function Workspace({
   async function recover() {
     if (!run) return
     try {
-      await api.post(`/agent/threads/${id}/runs/${run.id}/recover`, { request_id: run.request_id })
+      await api.post(`/agent/threads/${id}/runs/${run.id}/recover${run.job ? "/async" : ""}`, { request_id: run.request_id })
     } finally {
       apply(await api.get<Thread>(`/agent/threads/${id}`))
     }
@@ -283,6 +286,10 @@ function Workspace({
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="例如：找一款300元以内的静音键盘，准备购买，送演示宿舍"
                 />
+                <label className="muted">
+                  <input type="checkbox" checked={durableAsync} disabled={busy} onChange={(e) => setDurableAsync(e.target.checked)} />
+                  Durable Async（需单独启动 Worker；默认 Legacy Sync）
+                </label>
                 <button
                   className="button primary"
                   disabled={
@@ -315,9 +322,14 @@ function Workspace({
                     </span>
                     <h2>{statusLabels[run.status]}</h2>
                     <strong data-testid="run-status">{run.status}</strong>
+                    {run.job && <div className="notice" data-testid="job-state">
+                      <strong>Durable Async · {run.job.status}</strong>
+                      <p>{run.job.status === 'QUEUED' ? '任务已可靠排队；Worker 启动并认领后执行。关闭浏览器不会取消任务。' : run.job.status === 'EXECUTING' ? '独立 Worker 正在执行。' : run.job.status === 'BLOCKED' ? '任务等待人工检查，未自动重试。' : '任务状态以服务端业务结果为准。'}</p>
+                      <small>尝试 {run.job.attempts} · {run.job.last_error ?? '无调度错误'}</small>
+                    </div>}
                     <small>run_id {run.id}</small>
                     <small>模型配置指纹 {run.model_id}</small>
-                    {recoverable(run) && (
+                    {(recoverable(run) || (run.job && run.status === "WAITING_INPUT")) && !["QUEUED", "EXECUTING"].includes(run.job?.status ?? "") && (
                       <div className="notice warning">
                         <p>
                           工作流尚未完成，可从持久状态继续原
@@ -328,7 +340,7 @@ function Workspace({
                           disabled={busy}
                           onClick={() => void perform(recover)}
                         >
-                          恢复原 Run
+                          {run.job && run.status === "WAITING_INPUT" ? "恢复调度 / 结束过期等待" : "恢复原 Run"}
                         </button>
                       </div>
                     )}
@@ -383,7 +395,7 @@ function Workspace({
                         onThread={apply}
                         onRequote={() => {
                           setRequote(true)
-                          setNotice('请在本次任务中重新明确需求，再启动新 Run。新快照仍需重新批准。')
+                          setNotice(run.job ? '请先点击“恢复调度 / 结束过期等待”，待 Worker 结束旧等待后再启动新 Run；不会批准旧提案。' : '请在本次任务中重新明确需求，再启动新 Run。新快照仍需重新批准。')
                         }}
                       />
                     )}

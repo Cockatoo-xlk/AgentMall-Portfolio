@@ -18,6 +18,7 @@ const goals: Record<string, string> = {
 }
 export function timelineSummary(event: RunEvent): string {
   const p = event.payload_summary
+  if (event.event_type.startsWith('job_')) return `${p.status ?? 'UNKNOWN'}${p.error_code ? ` · ${p.error_code}` : ''}`
   if (event.event_type === 'route_decision') {
     if (p.terminal === 'finish') return 'Supervisor · 完成当前工作流'
     return Array.isArray(p.tasks)

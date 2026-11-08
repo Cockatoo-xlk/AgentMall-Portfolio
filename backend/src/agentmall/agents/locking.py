@@ -66,15 +66,7 @@ class RunFence:
             or run.epoch != self.epoch
         ):
             raise DomainError(409, "STALE_EXECUTOR", "运行执行者已失效")
-        key = lock_key(self.thread_id) & ((1 << 64) - 1)
-        held = await session.scalar(
-            text(
-                "SELECT EXISTS(SELECT 1 FROM pg_locks WHERE locktype='advisory' "
-                "AND pid=:pid AND classid=:hi AND objid=:lo AND objsubid=1 AND granted "
-                "AND database=(SELECT oid FROM pg_database WHERE datname=current_database()))"
-            ),
-            {"pid": self.pid, "hi": key >> 32, "lo": key & 0xFFFFFFFF},
-        )
+        held = await advisory_held(session, self.thread_id, self.pid)
         if not held:
             raise DomainError(409, "STALE_EXECUTOR", "会话锁连接已丢失")
         return run
@@ -88,3 +80,16 @@ async def claim_execution(session, run, connection, sessions):
     run.finished_at = None
     await session.flush()
     return RunFence(sessions, run.id, run.thread_id, run.worker_token, run.epoch, run.lock_pid)
+
+
+async def advisory_held(session, thread_id, pid):
+    key = lock_key(thread_id) & ((1 << 64) - 1)
+    held = await session.scalar(
+        text(
+            "SELECT EXISTS(SELECT 1 FROM pg_locks WHERE locktype='advisory' "
+            "AND pid=:pid AND classid=:hi AND objid=:lo AND objsubid=1 AND granted "
+            "AND database=(SELECT oid FROM pg_database WHERE datname=current_database()))"
+        ),
+        {"pid": pid, "hi": key >> 32, "lo": key & 0xFFFFFFFF},
+    )
+    return held

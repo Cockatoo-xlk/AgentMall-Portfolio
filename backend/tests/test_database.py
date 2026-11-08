@@ -36,11 +36,12 @@ async def test_migration_empty_schema_and_repeat_upgrade(env):
         "agent_candidate_sets",
         "agent_context_mutations",
         "agent_runs",
+        "agent_jobs",
         "run_events",
     }
     with db.begin() as conn:
         migrate(conn)
-    assert row(db, "SELECT version_num FROM alembic_version")["version_num"] == "0010"
+    assert row(db, "SELECT version_num FROM alembic_version")["version_num"] == "0011"
     assert row(db, "SELECT version() AS value")["value"].startswith("PostgreSQL")
 
 
@@ -121,7 +122,7 @@ async def test_upgrade_from_t01_preserves_seed_and_existing_cart(env, buyer, pro
         migrate(connection)
     assert (await client.get("/api/v1/cart", headers=buyer)).json() == saved.json()
     assert row(db, "SELECT count(*) AS n FROM products") == before
-    assert row(db, "SELECT version_num FROM alembic_version")["version_num"] == "0010"
+    assert row(db, "SELECT version_num FROM alembic_version")["version_num"] == "0011"
 
 
 async def test_incomplete_idempotency_claim_cannot_commit(env):

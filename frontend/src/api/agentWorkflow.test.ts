@@ -130,3 +130,18 @@ it('recommendation retry retains original constraints and excludes returned prod
   expect(next.message).toContain('owned-order')
   expect(next.message).not.toContain('500')
 })
+
+
+it('async confirmation queues the original decision without executing or repeating it', async () => {
+  const writes: string[] = []
+  const queued = { ...run, job: { status: 'QUEUED' } }
+  const api = client((path, method) => {
+    if (method === 'POST') writes.push(path)
+    if (path === '/agent/threads/t1') return { id: 't1', runs: [queued] }
+    if (path === '/proposals/p1') return { status: 'APPROVED', confirmation: { confirmation_id: 'c1', decision: 'approve' } }
+    if (path === '/agent/threads/t1/resume/async') return queued
+    throw new Error('Unexpected request: ' + path)
+  })
+  await decide(api, 't1', { ...op }, () => {})
+  expect(writes).toEqual(['/agent/threads/t1/resume/async'])
+})

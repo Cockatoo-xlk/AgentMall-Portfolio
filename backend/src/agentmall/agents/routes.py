@@ -131,3 +131,23 @@ async def patch_context(request: Request, actor: Actor, thread_id: UUID, payload
     from agentmall.agents.memory import patch_context as apply_patch
 
     return await apply_patch(request.app, actor, thread_id, payload)
+
+
+@router.post("/agent/threads/{thread_id}/runs/async", status_code=202)
+async def enqueue_run(request: Request, actor: Actor, thread_id: UUID, payload: RunCreate):
+    result, _ = await run_service.start_run(request.app, actor, thread_id, payload, deferred=True)
+    return result
+
+
+@router.post("/agent/threads/{thread_id}/resume/async", status_code=202)
+async def enqueue_resume(request: Request, actor: Actor, thread_id: UUID, payload: ResumeRequest):
+    return await run_service.resume_thread(request.app, actor, thread_id, payload, deferred=True)
+
+
+@router.post("/agent/threads/{thread_id}/runs/{run_id}/recover/async", status_code=202)
+async def enqueue_recovery(
+    request: Request, actor: Actor, thread_id: UUID, run_id: UUID, payload: RecoverRequest
+):
+    return await run_service.recover_run(
+        request.app, actor, thread_id, run_id, payload.request_id, deferred=True
+    )

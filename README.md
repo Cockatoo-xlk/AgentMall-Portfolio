@@ -142,3 +142,7 @@ docker --context desktop-linux compose -p agentmall-portfolio-demo \
 原创内容采用[MIT](LICENSE)，Copyright (c) 2026 Cockatoo-xlk。第三方组件分别遵守[自身许可证](THIRD_PARTY_NOTICES.md)；[版权](COPYRIGHT.md)、[许可决定](docs/LICENSE_DECISION.md)与[公开快照边界](SNAPSHOT.md)可核查。公开仓库不包含原Private研发历史、原始Live账本、批准回执、模型权重或原始Checkpoint。
 
 面试表述应按事实说明个人设计、实现、调试与AI辅助范围，不把仓库规模或测试数字等同于个人独立贡献。发布、Push、远程Actions及部署仍是独立操作，不由本地演示准备自动授权。
+
+### V2.12 · Durable Async Worker (local)
+
+Buyer Single/Multi and Bundle workflows can explicitly enqueue durable PostgreSQL jobs and run in independent Python Worker processes. Original advisory locks, epoch fencing, Node Journal, Checkpoint, HITL and domain idempotency remain authoritative; Legacy Sync is retained. See the [architecture, API and Mock demo guide](docs/V212_DURABLE_WORKER.md) and [current local evidence](docs/evidence/v212/report.md). At-least-once attempts do not imply exactly-once model calls or production SLA.

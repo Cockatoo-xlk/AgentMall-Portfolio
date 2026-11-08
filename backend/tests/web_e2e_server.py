@@ -371,6 +371,12 @@ class Harness:
         from agentmall.seed import seed
 
         await self.close_sdk()
+        close_worker = getattr(self.app.state, "worker_close", None)
+        if close_worker:
+            await close_worker()
+            self.app.state.worker_close = None
+        if hasattr(self.app.state, "worker_execution_identity"):
+            del self.app.state.worker_execution_identity
         tables = (
             "catalog_commands",
             "catalog_index_jobs",
@@ -379,6 +385,7 @@ class Harness:
             "agent_context_mutations",
             "agent_candidate_sets",
             "agent_thread_contexts",
+            "agent_jobs",
             "run_events",
             "agent_runs",
             "agent_threads",
@@ -448,7 +455,9 @@ def mount_controls(harness):
                 mode = harness.request_mode.get(harness.mode)
                 return None if mode in {"blocked", "done"} else fake_model(mode, harness.boundary)
             if name in {"multi_models", "durable_single_model"}:
-                if self._state.get("playground") is not None:
+                if self._state.get("playground") is not None or self._state.get(
+                    "worker_execution_identity"
+                ):
                     return self._state[name]
                 from workflow_e2e import models
 
@@ -656,6 +665,54 @@ def mount_controls(harness):
 
         count = await index((None, harness.db, harness.app, harness.settings))
         return {"dataset": "expanded-120-v1", "model": "FIXTURE", "indexed": count is not None}
+
+    @router.post("/worker-mode")
+    async def worker_mode():
+        from retrieval_helpers import index
+        from worker_process_helpers import configure
+
+        await harness.close_sdk()
+        await index((None, harness.db, harness.app, harness.settings))
+        await configure(harness.app)
+        return {"model": "MockTransport", "embedding": "Fixture", "execution": "independent-worker"}
+
+    @router.post("/worker-tick")
+    async def worker_tick():
+        import sys
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory(prefix="agentmall-worker-e2e-") as directory:
+            config = Path(directory) / "config.json"
+            config.write_text(
+                json.dumps(
+                    {"schema": harness.schema, "checkpoint": harness.settings.checkpoint_schema}
+                )
+            )
+            config.chmod(0o600)
+            child = await asyncio.create_subprocess_exec(
+                sys.executable,
+                "-m",
+                "agentmall.agents.worker",
+                "--factory",
+                "worker_process_helpers:create_app",
+                "--once",
+                env={
+                    **os.environ,
+                    "PYTHONPATH": str(Path(__file__).parent),
+                    "AGENTMALL_WORKER_TEST_CONFIG": str(config),
+                },
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.DEVNULL,
+            )
+            try:
+                code = await asyncio.wait_for(child.wait(), 30)
+            finally:
+                if child.returncode is None:
+                    child.kill()
+                    await child.wait()
+            if code:
+                raise RuntimeError("Offline Worker failed")
+            return {"exit_code": code, "independent_process": True}
 
     @router.post("/reset")
     async def reset():
