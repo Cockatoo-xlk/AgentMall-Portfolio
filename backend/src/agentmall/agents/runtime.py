@@ -323,5 +323,10 @@ class RunContext:
             self.signatures.add(signature)
             self.pending[task.subtask_id] = envelope
             result.append(envelope)
-            self.event("handoff", payload=envelope.model_dump(mode="json"))
+            self.event(
+                "handoff",
+                payload=envelope.model_dump(mode="json"),
+                constraint_source="THREAD_CONTEXT" if self.thread_snapshot else "CURRENT_REQUEST",
+                context_version=self.thread_snapshot.get("version"),
+            )
         return result

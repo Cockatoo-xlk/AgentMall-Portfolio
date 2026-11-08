@@ -21,7 +21,13 @@ async def model_call(runtime, role, invoke):
         raise RunStopped("HIDDEN_RETRIES_FORBIDDEN")
     reservation = await runtime.budget.start_model()
     cap = runtime.budget.reservations[reservation]
-    runtime.event("model_start", role=role, attempt=reservation, max_output_tokens=cap)
+    runtime.event(
+        "model_start",
+        role=role,
+        attempt=reservation,
+        max_output_tokens=cap,
+        budget=dict(runtime.budget.used),
+    )
     if hasattr(runtime.budget, "record_model_event"):
         await runtime.budget.record_model_event(runtime.trace["events"][-1])
     message = None
@@ -57,6 +63,7 @@ async def model_call(runtime, role, invoke):
                 status="completed" if message and not settlement_error else "failed",
                 error_code=settlement_error,
                 role=role,
+                budget=dict(runtime.budget.used),
                 attempt=reservation,
                 usage=usage or "UNKNOWN",
                 response_model=message.response_metadata.get("model_name", "UNKNOWN")

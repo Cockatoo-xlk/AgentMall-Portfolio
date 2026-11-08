@@ -62,6 +62,67 @@ def uuid(value):
         return None
 
 
+def safe_constraints(value):
+    """Known enums/numbers/IDs only; typed Bundle queries can still contain private prose."""
+    from agentmall.agents.context import Constraints
+
+    omitted_layouts = set()
+    if isinstance(value, dict) and isinstance(value.get("bundle"), dict):
+        # Re-project stored summaries without restoring discarded free text.
+        parts = []
+        for index, raw in enumerate(value["bundle"].get("parts", [])):
+            part = dict(raw)
+            omitted = part.pop("requirements_omitted_fields", None)
+            if omitted is not None:
+                if omitted not in (["query"], ["query", "layout"]):
+                    raise ValueError("Invalid omitted fields")
+                requirements = dict(part["requirements"])
+                if "query" in requirements:
+                    raise ValueError("Unexpected restored query")
+                requirements["query"] = "omitted"  # Validation only; never exported.
+                part["requirements"] = requirements
+                if "layout" in omitted:
+                    omitted_layouts.add(index)
+            parts.append(part)
+        value = {**value, "bundle": {**value["bundle"], "parts": parts}}
+    data = Constraints.model_validate(value).model_dump(mode="json")
+    result = {k: data[k] for k in CONSTRAINT_FIELDS if k in data and k != "bundle"}
+    if "bundle" in data:
+        parts = []
+        allowed = {
+            "mode",
+            "category",
+            "screen_inches",
+            "usage",
+            "activity",
+            "product_kind",
+            "max_price_cents",
+            "in_stock",
+            "noise_preference",
+            "connection",
+            "excluded_connections",
+            "keyboard_type",
+            "exclude_product_ids",
+        }
+        for index, part in enumerate(data["bundle"]["parts"]):
+            requirements = {k: v for k, v in part["requirements"].items() if k in allowed}
+            omitted = ["query"]
+            layout = part["requirements"].get("layout")
+            if layout in {"61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"}:
+                requirements["layout"] = layout
+            elif layout is not None or index in omitted_layouts:
+                omitted.append("layout")
+            parts.append(
+                {
+                    **{k: part[k] for k in ("category", "quantity", "prefer_quiet") if k in part},
+                    "requirements": requirements,
+                    "requirements_omitted_fields": omitted,
+                }
+            )
+        result["bundle"] = {"budget_cents": data["bundle"]["budget_cents"], "parts": parts}
+    return result
+
+
 def public_summary(kind, event):
     """Allow types/known enums and resource IDs; discard all free-form prose."""
     result = {}
@@ -96,6 +157,35 @@ def public_summary(kind, event):
         value = data.get(key)
         if isinstance(value, str) and re.fullmatch(r"[A-Za-z_]{1,64}", value) and identifier(value):
             result[key] = value
+    if kind == "handoff":
+        from pydantic import ValidationError
+
+        try:
+            result["constraints"] = safe_constraints(data["constraints"])
+        except (KeyError, TypeError, ValueError, ValidationError):
+            pass
+        if isinstance(data.get("depends_on"), list):
+            result["depends_on"] = [v for x in data["depends_on"][:4] if (v := identifier(x))]
+        if data.get("constraint_source") in {"CURRENT_REQUEST", "THREAD_CONTEXT"}:
+            result["constraint_source"] = data["constraint_source"]
+        else:
+            result["constraint_source"] = "PROPOSED_NOT_AUTHORIZED"
+        if type(data.get("context_version")) is int and data["context_version"] >= 0:
+            result["context_version"] = data["context_version"]
+    if kind in {
+        "model_start",
+        "model_end",
+        "specialist_started",
+        "specialist_goal_incomplete",
+        "specialist_result",
+    }:
+        budget = data.get("budget")
+        if isinstance(budget, dict):
+            result["budget"] = {
+                k: budget[k]
+                for k in ("models", "tools", "delegations", "steps", "output_tokens")
+                if type(budget.get(k)) is int and budget[k] >= 0
+            }
     if kind in {
         "bundle_computed",
         "bundle_revision_requested",

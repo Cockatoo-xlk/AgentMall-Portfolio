@@ -290,6 +290,7 @@ async def _run_episode(
 
 async def run_episode(task, architecture, repetition_id, **kwargs):
     output = {}
+    diagnostics_dir = kwargs.pop("diagnostics_dir", None)
     try:
         return await _run_episode(
             task, architecture, repetition_id, output=output, **kwargs
@@ -333,6 +334,25 @@ async def run_episode(task, architecture, repetition_id, **kwargs):
                 architecture,
             )
         return output
+    finally:
+        if diagnostics_dir is not None:
+            from evals.agent_diagnostics import write_diagnostic
+
+            try:
+                path = await asyncio.to_thread(
+                    write_diagnostic, output, diagnostics_dir
+                )
+                output["agent_diagnostics"] = {
+                    "status": "SAVED",
+                    "sha256": hashlib.sha256(
+                        await asyncio.to_thread(path.read_bytes)
+                    ).hexdigest(),
+                }
+            except (OSError, ValueError, TypeError):
+                output["agent_diagnostics"] = {
+                    "status": "FAILED",
+                    "error_code": "DIAGNOSTIC_EXPORT_FAILED",
+                }
 
 
 def reconcile_live(output, ledger, task_id, repetition_id, architecture):
@@ -423,6 +443,7 @@ async def execute(args):
             item["architecture"],
             item["repetition_id"],
             mode=args.mode,
+            diagnostics_dir=getattr(args, "agent_diagnostics_dir", None),
             live_ledger=ledger,
             live_key=key,
         )
@@ -477,6 +498,11 @@ def main():
         "--manifest",
         type=Path,
         help="Explicit amended freeze; original sealed manifest stays immutable",
+    )
+    parser.add_argument(
+        "--agent-diagnostics-dir",
+        type=Path,
+        help="Optional new owner-only directory for allowlisted diagnostics; not raw prompts",
     )
     parser.add_argument("--confirm-live", action="store_true")
     parser.add_argument("--pilot", action="store_true")

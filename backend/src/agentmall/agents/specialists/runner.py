@@ -7,7 +7,11 @@ from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import SpecialistResult
 from agentmall.agents.model_control import SpecialistGuard
 from agentmall.agents.runtime import fingerprint
-from agentmall.agents.specialist_tools import SpecialistTools, build_specialist_tools
+from agentmall.agents.specialist_tools import (
+    WRITE_TOOLS_BY_GOAL,
+    SpecialistTools,
+    build_specialist_tools,
+)
 from agentmall.agents.specialists import aftersales, order, shopping
 
 PROMPTS = {
@@ -59,9 +63,41 @@ def incomplete_purchase(runtime, context, terminal):
     )
 
 
+def required_write_tool(runtime, goal):
+    tool = WRITE_TOOLS_BY_GOAL.get(goal)
+    return (
+        "prepare_bundle_checkout"
+        if tool == "prepare_checkout" and runtime.constraints.bundle
+        else tool
+    )
+
+
+def incomplete_write_goal(runtime, context):
+    """Read receipts do not fulfill a requested write goal. Never create the action here."""
+    tool = required_write_tool(runtime, context.envelope.goal)
+    if runtime.single or tool is None or not context.records:
+        return False
+    if runtime.errors or any("error_code" in record for record in context.records):
+        return False
+    if any(
+        (record["name"] == "check_eligibility" and record.get("data", {}).get("eligible") is False)
+        or record.get("data", {}).get("support") == "unsupported"
+        for record in context.records
+    ):
+        return False  # A deterministic refusal is not a reason to try a write.
+    return not any(record["name"] == tool for record in context.records)
+
+
 async def run_specialist(runtime, envelope):
     role = envelope.target
     context = SpecialistTools(runtime, envelope)
+    runtime.event(
+        "specialist_started",
+        role=role,
+        subtask_id=envelope.subtask_id,
+        goal=envelope.goal,
+        budget=dict(runtime.budget.used),
+    )
     runtime.trace["prompts"][role] = fingerprint(PROMPTS[role])
     runtime.trace["tool_allowlists"][role] = list(runtime.tool_allowlist(role))
     prompt = SINGLE_PROMPT if runtime.single else PROMPTS[role]
@@ -138,18 +174,35 @@ async def run_specialist(runtime, envelope):
                     and incomplete_purchase(runtime, context, terminal)
                 ):
                     raise RunStopped("INCOMPLETE_PURCHASE")
+            message = output["messages"][-1]
+            if (
+                message.type == "ai"
+                and not message.tool_calls
+                and incomplete_write_goal(runtime, context)
+            ):
+                runtime.event(
+                    "specialist_goal_incomplete",
+                    role=role,
+                    subtask_id=envelope.subtask_id,
+                    goal=envelope.goal,
+                    error_code="INCOMPLETE_WRITE_GOAL",
+                )
+                raise RunStopped("INCOMPLETE_WRITE_GOAL")
             break
         except RunStopped as exc:
             error = exc.code
-            if error in {"UNORDERED_WRITE_BATCH", "INCOMPLETE_PURCHASE"}:
+            if error in {"UNORDERED_WRITE_BATCH", "INCOMPLETE_PURCHASE", "INCOMPLETE_WRITE_GOAL"}:
                 allowed = await runtime.budget.claim_repair(error)
                 if not runtime.budget.persists_rejections:
                     runtime.event("orchestration_rejected", role=role, error_code=error)
                 if not attempt and allowed:
                     feedback = {
                         "error_code": error,
+                        "goal": envelope.goal,
+                        "required_tool": required_write_tool(runtime, envelope.goal),
                         "instruction": (
-                            "非法批次全部未执行；写工具必须独占。"
+                            "非法批次全部未执行；写工具必须独占。读到事实不等于已完成指定写目标。"
+                            "依据prior_tool_results中已经核验的结果继续未完成的目标，不必重复相同读取。"
                             "原购买目标尚未处理时选择合法候选准备提案，或明确澄清。"
                             "不得重做已有提案或确认。"
                         ),
@@ -215,5 +268,9 @@ async def run_specialist(runtime, envelope):
     )
     runtime.completed[envelope.subtask_id] = result
     runtime.pending.pop(envelope.subtask_id, None)
-    runtime.event("specialist_result", payload=result.model_dump(mode="json"))
+    runtime.event(
+        "specialist_result",
+        payload=result.model_dump(mode="json"),
+        budget=dict(runtime.budget.used),
+    )
     return result

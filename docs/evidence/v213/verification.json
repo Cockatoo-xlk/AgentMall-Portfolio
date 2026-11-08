@@ -1,0 +1,196 @@
+{
+  "status": "AGENTMALL_V213_B2_DIAGNOSIS_INCOMPLETE",
+  "offline_generic_defect_fixed": true,
+  "historical_b2_root_cause": "UNKNOWN_MISSING_ROUTE_TOOL_AND_SQL_TRACE",
+  "base_commit": "b5d6a685dac44a8bf28aaf357af0e4f4b69f7d5f",
+  "branch": "codex/v2-live-b2-remediation",
+  "source_sha256": "5f502b14a17bf155a609085fa98293e56f80f4cd90cfba3b7eb6827bc92d0540",
+  "source_files": 438,
+  "source_fingerprint_algorithm": "sha256 canonical compact sorted JSON list of path/sha256, git nonignored files under backend/evals/scripts/frontend",
+  "commit_binding": "Containing local commit; exact executable hashes checked before and after full regression. No self-referential commit hash.",
+  "evidence_category": "LOCAL_LINUX_AARCH64_REAL_POSTGRES_CHECKPOINTER_SDK_MOCKTRANSPORT_FIXTURE_EMBEDDING",
+  "new_tests": 12,
+  "pytest": {
+    "passed": 1118,
+    "skipped": 14,
+    "failed": 0,
+    "skip_scope": "Unchanged real_bge opt-in tests under CI_OFFLINE_CORE"
+  },
+  "vitest": {
+    "passed": 127,
+    "failed": 0
+  },
+  "playwright": {
+    "passed": 119,
+    "failed": 0,
+    "retries": 0
+  },
+  "static_checks": {
+    "ruff": 0,
+    "format": 0,
+    "typescript": 0,
+    "eslint": 0,
+    "frontend_build": 0
+  },
+  "final_receipts": {
+    "pytest": {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T18:15:25.739185+00:00",
+      "seconds": 556.325,
+      "log_sha256": "97c1672ede6984f6b62e00fae321a13ef756ff922bf0b380d44ec328b4f24ca2"
+    },
+    "frontend": {
+      "command": [
+        "sh",
+        "-c",
+        "uv run --project backend ruff check backend scripts evals && uv run --project backend ruff format --check backend scripts evals && cd frontend && npm run typecheck && npm run lint && npm test && npm run build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T18:15:33.302198+00:00",
+      "seconds": 10.4,
+      "log_sha256": "41202c9b78b1cef175bb27c74a02b4c8da1fbf60b7e7ccd3d1856d6acf9008f7"
+    },
+    "playwright": {
+      "command": [
+        "sh",
+        "-c",
+        "cd frontend && npm run test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T18:24:55.527486+00:00",
+      "seconds": 216.343,
+      "log_sha256": "6e854606e5d02d89c453af17e48fdb4cede4cf0eb4114bae546321778168251e"
+    }
+  },
+  "development_receipts": {
+    "bundle-review-red-corrected": {
+      "exit_code": 1,
+      "log_sha256": "ef6859ed37a98796ed98f3b702902f02e641c36191963d83f7b28d5d00ff0e27"
+    },
+    "diagnostic-family-red": {
+      "exit_code": 1,
+      "log_sha256": "eb10f75f1c5ee8b5a65725169352e04ceea615aff4126ecb984c290e2c0a60d8"
+    },
+    "diagnostic-scope-red": {
+      "exit_code": 1,
+      "log_sha256": "3a1e0e946d8043545d9bc0289cefaa2296e8a9068782d7d1cda7d38e847ee89d"
+    },
+    "diagnostics-green": {
+      "exit_code": 1,
+      "log_sha256": "f18adcf9a137d8ca39885011b6595014e7af144596c5146894e53b2a48368a42"
+    },
+    "diagnostics-red": {
+      "exit_code": 1,
+      "log_sha256": "ff011262c40d3f9cdf68ccafe799cfb4f028aa74d955203472ee0567d50bda9f"
+    },
+    "directed-v213-final": {
+      "exit_code": 0,
+      "log_sha256": "a742f1f0acc321fd9b034fb7bc93079aa0e6d96d04d573a2c2201360fcdb2345"
+    },
+    "directed-v213": {
+      "exit_code": 0,
+      "log_sha256": "10f856f195a53824ba0175c4c46b456114c89bfb5840321a1851e4ee13471363"
+    },
+    "final-directed-v213": {
+      "exit_code": 0,
+      "log_sha256": "ef9c02ba8276f7cd2383b961c2b65cf39f1c8ce7231ea8be9b978d85b7899caf"
+    },
+    "final-new-tests": {
+      "exit_code": 0,
+      "log_sha256": "3632eed693f2d3b32d4fe21b823d428397d690b7042cf8a7f4432b82925f0db7"
+    },
+    "full-playwright": {
+      "exit_code": 0,
+      "log_sha256": "6e854606e5d02d89c453af17e48fdb4cede4cf0eb4114bae546321778168251e"
+    },
+    "full-pytest": {
+      "exit_code": 0,
+      "log_sha256": "97c1672ede6984f6b62e00fae321a13ef756ff922bf0b380d44ec328b4f24ca2"
+    },
+    "full-static-frontend": {
+      "exit_code": 0,
+      "log_sha256": "41202c9b78b1cef175bb27c74a02b4c8da1fbf60b7e7ccd3d1856d6acf9008f7"
+    },
+    "projection-red": {
+      "exit_code": 1,
+      "log_sha256": "3a7d810f401b61fd6c4e4c1eb30c140043ad6900f8370c7e49a814e14c02e573"
+    },
+    "refusal-red": {
+      "exit_code": 1,
+      "log_sha256": "c4bf1ee03de53cbce5d538d4f66df406b71c4dfbb7aad773e27399bbafa586a4"
+    },
+    "review-green": {
+      "exit_code": 0,
+      "log_sha256": "412c11f1464a69e88a3a5fea421b4dd9288199adf9d91303f13dcbecf63a8913"
+    },
+    "review-red": {
+      "exit_code": 1,
+      "log_sha256": "62a97f26cf3d7346834bcb3c02b1d36b652b47bf51d485e5a187282dfd2a4e7d"
+    },
+    "write-goal-green": {
+      "exit_code": 0,
+      "log_sha256": "0805dae6f03130069286fa7525ecc1ccabbaa107e5668201d3a840a00a92fe9b"
+    },
+    "write-goal-red": {
+      "exit_code": 1,
+      "log_sha256": "2f209fa266e2990bc6f3fcedafd9e0f3a22af4b448df77c7171bb04194eee006"
+    }
+  },
+  "historical_pilot_hashes_unchanged": {
+    "summary.json": "03241d2ca61092e707c150450b240b533bceaff078807ae6759c44b1cdd2f38a",
+    "manifest.json": "d1b062cc320421e3f1829cc0393def2904a64cad1b9dc207c05b7b1943566604",
+    "ledger.json": "39b39f3af50b5d9bfcbdb1e1c468b1b704389cdca9bdf01a1f776448f1d2ad96"
+  },
+  "protected_files_unchanged": 72,
+  "business_assertions": {
+    "reconstructed_flow_models": 11,
+    "reconstructed_flow_tools": 6,
+    "independent_confirmations": 2,
+    "new_requested_cases": 1,
+    "new_pending_payment_orders": 1,
+    "payment_delta": 0,
+    "replayed_resumes_have_no_additional_effect": true,
+    "bundle_order_items": 4,
+    "unchanged_limits": {
+      "models": 12,
+      "tools": 16,
+      "delegations": 4,
+      "steps": 24,
+      "seconds": 90,
+      "output_tokens": 12000
+    }
+  },
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "remote_writes": 0,
+  "cleanup": {
+    "passed": true,
+    "utc": "2026-11-08T18:29:12.500545+00:00",
+    "owner": "agentmall-v213-b719be0c",
+    "remaining_owned_schemas_before_deletion": 0,
+    "owned_guest_remaining": 0,
+    "owned_pg_volume_and_runner_tag_absent": true,
+    "owned_cache_and_credentials_removed": true,
+    "historical_container_count": 25,
+    "historical_ids_states_unchanged_across_cleanup": true,
+    "default_context": "colima",
+    "private_raw_evidence_retained": true,
+    "buildkit_cache_pruned": false
+  },
+  "limitations": [
+    "Historical exact B2 causal attribution unknown; generic reproduction is not an original model trace.",
+    "Real DeepSeek retest NOT_RUN; separate frozen source/environment/price/budget authorization required.",
+    "No new real BGE/reranker or remote CI verification.",
+    "Optional diagnostics may be truncated; future retest must require untruncated complete originals."
+  ]
+}
