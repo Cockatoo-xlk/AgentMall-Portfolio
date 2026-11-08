@@ -766,6 +766,21 @@ async def isolated_app():
             from agentmall.catalog_operations.parser import MockCatalogParser
 
             app.state.catalog_parser = MockCatalogParser()
+            # Test transport delays only the mock decision, never invents business tool data.
+            import httpx
+
+            from agentmall.merchant_copilot.model import MockMerchantModel
+
+            merchant_fixture = MockMerchantModel()
+
+            async def merchant_response(request):
+                if b"select_verified_advice" in request.content:
+                    await asyncio.sleep(0.5)
+                return merchant_fixture.respond(request)
+
+            app.state.merchant_copilot_model = MockMerchantModel(
+                httpx.MockTransport(merchant_response)
+            )
             cleanup.push_async_callback(app.state.engine.dispose)
             harness = Harness(app, db, settings, schema, boundary)
             cleanup.push_async_callback(harness.close_sdk)

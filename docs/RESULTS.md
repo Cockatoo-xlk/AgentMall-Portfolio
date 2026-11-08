@@ -2,6 +2,12 @@
 
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
+## V2.11 商家AI运营助手（本地完整累计回归）
+
+基于`9424b7d6d0b0ccebb52f219282a93e03038c6120`，独立商家只读LangGraph和8个工具名复用原领域/MCP映射，确定性统计与引用校验，草稿仅填原表单。模型SDK MockTransport，业务为独占真实PG；未调用真实LLM，不借用V2.10语义质量成绩。[架构与演示](MERCHANT_COPILOT.md) · [A—N及保留失败](evidence/v211/report.md) · [源码和日志SHA](evidence/v211/verification.json)。
+
+一次完整累计回归 **pytest1083 passed /14 skipped、Vitest126 passed、Playwright118 passed /0 retries**；Ruff、格式、TypeScript、ESLint和build全部退出0。新后端27、Vitest8、浏览器3。实际工具样例与独立快照证明分析新增订单/付款/退款/Case/提案/Confirmation为0；基线含2笔合成订单和2笔模拟付款，不能写成付款总数0。历史文件与原skip边界不变，资源清理查无；Provider/Key/远程写0。当前V2.11远程CI和真实模型验收NOT_RUN。
+
 ## V2.10 真实本地检索质量与离线回归
 
 基于`5bdf717280dbd623da8e842905e1757c098774f6`修改工作树，真实本地BGE512 + Cross-Encoder、PG17.11/pgvector0.8.7、Expanded120+动态1+探针7。160条查询执行完成，非法/过期结果0，业务查询前后快照一致，商品发布/变更/下架/重建检查通过。[本轮报告](evidence/v210/report.md)、[源码内容与日志SHA](evidence/v210/verification.json)、[模型和复现](REAL_RETRIEVAL.md)。

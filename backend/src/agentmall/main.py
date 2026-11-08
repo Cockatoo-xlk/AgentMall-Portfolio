@@ -20,6 +20,7 @@ from agentmall.infra.config import Settings
 from agentmall.infra.db import database
 from agentmall.infra.errors import DomainError
 from agentmall.infra.llm import Budget
+from agentmall.merchant_copilot.routes import router as merchant_copilot_router
 from agentmall.orders.routes import router as orders_router
 from agentmall.payments.routes import router as payments_router
 from agentmall.payments.service import MockPaymentAdapter
@@ -93,6 +94,7 @@ def create_app(settings: Settings | None = None):
         identity_router,
         catalog_router,
         catalog_operations_router,
+        merchant_copilot_router,
         cart_router,
         actions_router,
         orders_router,
@@ -108,6 +110,7 @@ def create_app(settings: Settings | None = None):
     app.state.multi_budget_factory = GraphBudget
     app.state.multi_trace_factory = dict
     app.state.catalog_parser = DisabledParser()
+    app.state.merchant_copilot_model = None  # Explicit offline composition root only.
     app.state.retrieval_encoder = None
     app.state.agent_model = None  # Explicit injection only; ordinary startup never loads a key.
     app.state.agent_budget_factory = Budget

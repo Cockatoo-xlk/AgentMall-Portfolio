@@ -59,3 +59,7 @@ V2.1—V2.4沿用既有依赖和图标声明，没有新增第三方包或图片
 本轮仅分发自有适配代码、固定文件SHA/大小Manifest、合成相关性标签、脱敏数值与自建界面截图。公开模型[BAAI/bge-small-zh-v1.5](https://huggingface.co/BAAI/bge-small-zh-v1.5)和[BAAI/bge-reranker-base](https://huggingface.co/BAAI/bge-reranker-base)的官方模型卡声明MIT；分别固定Revision `7999e1d3359715c523056ef9478215996d62a620`、`2cfc18c9415c912f9d8155881c133215df768a70`。实际模型仅在本地忽略缓存中使用，没有将权重、分词器文件、模型README、Torch/Transformers安装包或镜像分发进Git。Manifest记录文件哈希与来源，不以项目MIT替代模型许可；未来若分发模型/镜像仍需单独检查上游通知与依赖许可。
 
 本轮未新增或升级包锁依赖。两张[检索截图](docs/REAL_RETRIEVAL.md#页面截图)仅显示合成商品、单标注者查询与真实本地CPU指标；不含真人、真实客户资料、原始Prompt、JWT或DSN，原Lucide/Feather完整署名继续适用。
+
+## V2.11 商家Copilot素材
+
+本轮没有新增依赖、下载模型或第三方图片。两张[商家助手界面截图](docs/MERCHANT_COPILOT.md#截图与限制)来自独占测试库的合成商家、订单、Case与公开演示政策，模型明确为MockTransport；不是实际客户或真实LLM对话。仅分发经过审阅的自有界面、脱敏JSON及测试记录，原Lucide/Feather许可与署名继续适用。原始日志、JWT、DSN、模型内部Prompt及私有数据库不入Git。既有MIT及第三方依赖声明保持原适用范围。

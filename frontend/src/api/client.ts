@@ -98,15 +98,16 @@ export class ApiClient {
       signal?.removeEventListener('abort', abort)
     }
   }
-  async stream(path: string, onFrame: (event: string, data: string) => void, signal: AbortSignal) {
+  async stream(path: string, onFrame: (event: string, data: string) => void, signal: AbortSignal, body?: unknown) {
     if (!path.startsWith('/') || path.startsWith('//')) throw new Error('Invalid API path')
     const headers = new Headers({ Accept: 'text/event-stream' })
     if (this.token) headers.set('Authorization', `Bearer ${this.token}`)
+    if (body !== undefined) headers.set('Content-Type', 'application/json')
     const bounded = AbortSignal.any([signal, AbortSignal.timeout(35000)])
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
     try {
       const response = await fetch(`/api/v1${path}`, {
-        method: 'GET', headers, signal: bounded, cache: 'no-store', redirect: 'error',
+        method: body === undefined ? 'GET' : 'POST', body: body === undefined ? undefined : JSON.stringify(body), headers, signal: bounded, cache: 'no-store', redirect: 'error',
       })
       reader = response.body?.getReader()
       if (!response.ok) throw new ApiError(response.status, 'STREAM_HTTP_ERROR')

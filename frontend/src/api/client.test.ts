@@ -155,3 +155,17 @@ describe('event stream', () => {
     expect(fetch).toHaveBeenCalledTimes(2)
   })
 })
+
+it('posts a merchant question in the body with memory auth and streams read progress without retries', async () => {
+  const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('event: progress\ndata: {"phase":"tool"}\n\n', { headers: { 'Content-Type': 'text/event-stream' } }))
+  const receive=vi.fn()
+  await new ApiClient('merchant-memory-token').stream('/merchant/copilot/analyze/stream', receive, new AbortController().signal, { question: '待发货订单' })
+  const [url, options] = fetch.mock.calls[0]
+  expect(url).toBe('/api/v1/merchant/copilot/analyze/stream')
+  expect(options?.method).toBe('POST')
+  expect(options?.body).toBe(JSON.stringify({question:'待发货订单'}))
+  expect(new Headers(options?.headers).get('Authorization')).toBe('Bearer merchant-memory-token')
+  expect(String(url)).not.toContain('token')
+  expect(receive).toHaveBeenCalledWith('progress','{"phase":"tool"}')
+  expect(fetch).toHaveBeenCalledOnce()
+})

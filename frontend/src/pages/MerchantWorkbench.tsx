@@ -11,6 +11,8 @@ import type {
 } from '../api/types'
 import MerchantRefund from '../components/MerchantRefund'
 import MerchantCatalog from '../components/MerchantCatalog'
+import MerchantCopilot from '../components/MerchantCopilot'
+import type { ReviewSuggestion } from '../api/merchantCopilot'
 import type { RefundDraft } from '../components/MerchantRefund'
 import { useAuth } from '../state/Auth'
 import { useMerchantAction } from '../state/useMerchantAction'
@@ -66,13 +68,15 @@ export default function MerchantWorkbench() {
         </Link>
       </main>
     )
-  return <Workbench key={user.user_id} />
+  return <Workbench key={`${user.user_id}:${user.store_id}`} />
 }
 
 function Workbench() {
-  const [tab, setTab] = useState<'orders' | 'cases' | 'catalog'>('orders')
+  const [tab, setTab] = useState<'orders' | 'cases' | 'catalog' | 'copilot'>('orders')
   const [orderId, setOrderId] = useState<string | null>(null)
   const [caseId, setCaseId] = useState<string | null>(null)
+  const [copilotCase, setCopilotCase] = useState<string>()
+  const [reviewSuggestion, setReviewSuggestion] = useState<ReviewSuggestion>()
   // Keep operation identities while inspecting another record in this login.
   const [refunds, setRefunds] = useState<Record<string, RefundDraft>>({})
   return (
@@ -100,11 +104,14 @@ function Workbench() {
           售后管理
         </button>
         <button className={`button ${tab === 'catalog' ? 'primary' : 'secondary'}`} aria-pressed={tab === 'catalog'} onClick={() => setTab('catalog')}>商品管理</button>
+        <button className={`button ${tab === 'copilot' ? 'primary' : 'secondary'}`} aria-pressed={tab === 'copilot'} onClick={() => setTab('copilot')}>AI运营助手</button>
       </nav>
-      {tab === 'catalog' ? <MerchantCatalog /> : tab === 'orders' ? (
+      {tab === 'copilot' ? <MerchantCopilot caseId={copilotCase} onOpen={(kind,id)=>{if(kind==='order'){setOrderId(id);setTab('orders')}else if(kind==='case'){setCaseId(id);setTab('cases')}else setTab('catalog')}} onUseDraft={value=>{setReviewSuggestion(value);setCaseId(value.case_id);setTab('cases')}} /> : tab === 'catalog' ? <MerchantCatalog /> : tab === 'orders' ? (
         <OrdersPanel selected={orderId} select={setOrderId} />
       ) : (
         <CasesPanel
+          reviewSuggestion={reviewSuggestion}
+          askAI={id=>{setCopilotCase(id);setTab('copilot')}}
           selected={caseId}
           select={setCaseId}
           draft={caseId ? refunds[caseId] : undefined}
@@ -332,12 +339,16 @@ function OrderDetail({ id, reloadList }: { id: string; reloadList: () => void })
 }
 
 function CasesPanel({
+  reviewSuggestion,
+  askAI,
   selected,
   select,
   showOrder,
   draft,
   saveDraft,
 }: {
+  reviewSuggestion: ReviewSuggestion | undefined
+  askAI: (id: string) => void
   selected: string | null
   select: (id: string) => void
   showOrder: (id: string) => void
@@ -398,6 +409,8 @@ function CasesPanel({
       {selected ? (
         <CaseDetail
           key={selected}
+          reviewSuggestion={reviewSuggestion?.case_id===selected ? reviewSuggestion : undefined}
+          askAI={askAI}
           id={selected}
           reloadList={page.reload}
           showOrder={showOrder}
@@ -415,12 +428,16 @@ function CasesPanel({
 }
 
 function CaseDetail({
+  reviewSuggestion,
+  askAI,
   id,
   reloadList,
   showOrder,
   draft,
   saveDraft,
 }: {
+  reviewSuggestion: ReviewSuggestion | undefined
+  askAI: (id: string) => void
   id: string
   reloadList: () => void
   showOrder: (id: string) => void
@@ -429,15 +446,17 @@ function CaseDetail({
 }) {
   const { client } = useAuth()
   const detail = useResource<AfterSalesCase>(`${casesPath}/${id}`)
-  const [reason, setReason] = useState('')
+  const [reason, setReason] = useState(reviewSuggestion?.text ?? '')
+  const [discardedSuggestion, setDiscardedSuggestion] = useState(false)
   const reload = () => {
     detail.reload()
     reloadList()
   }
   const action = useMerchantAction(reload)
   const record = detail.data
+  const staleSuggestion = !!reviewSuggestion && !discardedSuggestion && !!record && record.version !== reviewSuggestion.case_version
   function review(decision: 'approve' | 'reject') {
-    if (!record || record.status !== 'REQUESTED' || !reason.trim()) return
+    if (!record || record.status !== 'REQUESTED' || !reason.trim() || staleSuggestion) return
     void action.run(async () => {
       await client.post(`${casesPath}/${id}/review`, {
         decision,
@@ -495,6 +514,9 @@ function CaseDetail({
           </button>
           {record.status === 'REQUESTED' && (
             <>
+              <button className="button secondary small" onClick={()=>askAI(id)}>让AI草拟审核说明</button>
+              {reviewSuggestion && <p className="notice warning">AI建议，未经商家执行。仍需独立选择审核决定。</p>}
+              {staleSuggestion && <p className="notice error" role="alert">售后版本已变化，旧AI草稿不能执行。<button className="text-button" onClick={()=>{setReason('');setDiscardedSuggestion(true)}}>放弃旧建议并重新填写</button></p>}
               <label className="field">
                 审核说明
                 <textarea
@@ -506,14 +528,14 @@ function CaseDetail({
               <div className="inline-actions">
                 <button
                   className="button primary"
-                  disabled={action.busy || !reason.trim()}
+                  disabled={action.busy || !reason.trim() || staleSuggestion}
                   onClick={() => review('approve')}
                 >
                   审核通过
                 </button>
                 <button
                   className="button secondary"
-                  disabled={action.busy || !reason.trim()}
+                  disabled={action.busy || !reason.trim() || staleSuggestion}
                   onClick={() => review('reject')}
                 >
                   审核拒绝

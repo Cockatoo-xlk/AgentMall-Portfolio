@@ -16,6 +16,10 @@
 
 截图为合成业务演示：**MockTransport + Fixture Embedding，确认操作者TEST_OPERATOR，未付款**。
 
+## V2.11 商家AI运营助手
+
+商家通过自然语言选择本店订单、售后、库存与索引只读工具；独立LangGraph执行受控计划、确定性统计、证据验证及审核说明草稿。每条建议显示业务ID、状态、版本和读取时间，分页截断如实标注；草稿只能填入原审核表单，仍需商家独立执行。默认API为MODEL_DISABLED，本地演示明确为SDK MockTransport，实际工具使用PostgreSQL。[操作、权限、MCP复用及演示](docs/MERCHANT_COPILOT.md) · [A—N及本地回归](docs/evidence/v211/report.md)。没有真实LLM能力或远程发布结论。
+
 ## V2.10 真实本地检索质量
 
 新增固定BGE512维、CPU Cross-Encoder与四条同数据Pipeline对比；Expanded40查询保留分级标签、候选召回上限、无答案失败及真实延迟。新只读页面 `/engineering/evals/retrieval` 显示模型Revision、源码内容SHA和Top5差异。**重排默认关闭**：本次小型单标注者实验排序略有收益、召回下降且CPU延迟明显增加，不宣称生产或真实LLM优势。[模型、复现与证据边界](docs/REAL_RETRIEVAL.md) · [实际结果](docs/evidence/v210/report.md)。原Agent、Bundle和购买安全路径不变；真实Provider请求0。
