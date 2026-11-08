@@ -1,0 +1,30 @@
+{
+  "dataset_version": "expanded-retrieval-v1",
+  "annotation": "SINGLE_ANNOTATOR: assistant manual catalog review; not independent human annotation",
+  "frozen_before_model_results": true,
+  "planned_queries": {
+    "dev": 20,
+    "test": 20
+  },
+  "catalog": "expanded-120-v1 + one merchant-published dynamic SKU + seven fixed adversarial sentinels",
+  "catalog_sha256": "82f033872c5580267afc01a207fcf1605cc015c1cc113c3228b229e4e201938b",
+  "splits": {
+    "dev": "b697e42451b7ba7dce51b2ebd56396b1388d2534930d3bc180d7b31df4783694",
+    "test": "611c5eb6c354f0fc9dd80e739f62e33d7ce033060dae709b7a5f44e215218422"
+  },
+  "protocol": {
+    "candidate_count": 20,
+    "final_k": 5,
+    "rrf_k": 60,
+    "min_similarity": 0.45,
+    "rerank_max_tokens": 256,
+    "rerank_batch": 4,
+    "dcg": "sum((2^grade-1)/log2(rank+1))",
+    "quality_denominator": "all planned answer queries; any execution unknown yields null aggregate, no dropping failures",
+    "no_answer_denominator": "all planned no-answer queries",
+    "test_tuning": "NOT_ALLOWED; one final test evaluation, labels never adjusted after results"
+  },
+  "dynamic_binding": "Only dynamic:monitor resolves to original merchant publication receipt Product ID; all other judgment Product IDs fixed before execution",
+  "scope": "Synthetic catalog, small descriptive benchmark; not independent human study or statistical superiority claim",
+  "judgment_audit": "All relevant category rows reviewed before model runs; grade1 explicitly partial match, unlisted documents grade0. No labels changed after any result."
+}

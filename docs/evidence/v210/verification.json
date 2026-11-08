@@ -1,0 +1,555 @@
+{
+  "status": "AGENTMALL_V210_REAL_RAG_RERANKER_READY",
+  "verified_at": "2026-11-08T05:53:51.148891+00:00",
+  "git_base_sha": "5bdf717280dbd623da8e842905e1757c098774f6",
+  "delivery_binding": "Containing commit preserves exact experiment source_files; base is not the modified-source commit",
+  "experiment_source": {
+    "git_base_sha": "5bdf717280dbd623da8e842905e1757c098774f6",
+    "worktree_dirty": true,
+    "source_tree_sha256": "6ca413a0c0fd051b0544b0c109511d6c5e070ff390aae30cc71d81640c28eb66",
+    "source_files": {
+      "backend/src/agentmall/catalog/capabilities.py": "618f570f513dddf320413ef39d336806785738faeb05c9bfc9949d56676ab889",
+      "backend/src/agentmall/catalog/categories.py": "a85b5e949951f6df7a19c23ca8f67e9fc4dc3fccfb0be7cff60c099ae315962b",
+      "backend/src/agentmall/catalog/data/expanded-v1.json": "82f033872c5580267afc01a207fcf1605cc015c1cc113c3228b229e4e201938b",
+      "backend/src/agentmall/catalog/models.py": "fa7bce0fafd70c5c7b1f7d24b146f0f0d9575c22b8e0f3d1aa8c87193b5b24e7",
+      "backend/src/agentmall/catalog/profiles.py": "94a8863904440f97b153b701c2bc72074585e3e3eddd0c1c33eaa47ff83451a4",
+      "backend/src/agentmall/catalog/routes.py": "8e4927ca988a0b87e39db1980e73f3c4c8a0e01689fc5db2aeffc82c8f25612f",
+      "backend/src/agentmall/catalog/schemas.py": "9ee775679e6a2581135e4b5f635a00b830a57123b72eeb6b6ddb31ba2d756353",
+      "backend/src/agentmall/catalog/service.py": "1bcd3c5156d990fa3de506f9d820200e23f9dadbbd7d74107e2c13d296acb3d4",
+      "backend/src/agentmall/retrieval/__init__.py": "9696cbd36caab0f874d934c741b05b2e40e4c1bd9809daa5945db65ffe0d26e5",
+      "backend/src/agentmall/retrieval/embedding.py": "9ef82ecad218f073e05226640289556abb7fc82b9f5de5fe426101e15b8fa127",
+      "backend/src/agentmall/retrieval/ingest.py": "379be7b9823d4fd6a7da0b8602dd9dcea8a604d8706640a400c96ab835ad160c",
+      "backend/src/agentmall/retrieval/models.py": "75accd3951f216878d407610cad3d26dcdb11d939df09de9d33000628d61c672",
+      "backend/src/agentmall/retrieval/public_policy.py": "84230a771b0ac10598854a59bb23546c4a8ce47aaf6771035b0d4b85758083f0",
+      "backend/src/agentmall/retrieval/ranking.py": "dd5ba64a0767806b5f1fbdaae27e066cfc633be78a7ad2d55ca6b0abfca54ccf",
+      "backend/src/agentmall/retrieval/reranker.py": "5781eb2389b83aab08e959d5c3ff0c16ca45770f5c1bebcacbaf5ec33d6bc2d3",
+      "backend/src/agentmall/retrieval/routes.py": "77b91978c67b313c34989a25d56f8db15f5f045d2830800021db6097958f07e5",
+      "backend/src/agentmall/retrieval/schemas.py": "e8efd4efd32f7eb139834c125ca10eb0e46e71eabe65e0003d591ba2dd50a2d6",
+      "backend/src/agentmall/retrieval/search.py": "1f214e2b221b159c64f7a7d55896889f379fc7756cd765f3e7f6a664dbf8a2aa",
+      "backend/src/agentmall/retrieval/tokenize.py": "4514d5ae25fd50cb4fdbf2be255deba348175a5fc10e2f7ed561803d7dcc44fc",
+      "backend/src/agentmall/seed.py": "3433f2939fbe70728e653829c21a8d2d891f7ac8602497377b3e96b1abbc68c1",
+      "evals/data/embedding_manifest.json": "ad3148b5ab67ddc377d228476957f1c2d6c1c69ac220f28f3a55ae6c0b0233d6",
+      "evals/data/expanded-retrieval-v1/dev.jsonl": "b697e42451b7ba7dce51b2ebd56396b1388d2534930d3bc180d7b31df4783694",
+      "evals/data/expanded-retrieval-v1/manifest.json": "7b7b24ac65a8cfe722be5b7b7193ad323dd38e048841bea6e31726b82257381a",
+      "evals/data/expanded-retrieval-v1/test.jsonl": "611c5eb6c354f0fc9dd80e739f62e33d7ce033060dae709b7a5f44e215218422",
+      "evals/data/reranker_manifest.json": "a436acde7260b692f67450fce080c5d330c6b853be42ba12a5e2c6de3b3a00c3",
+      "evals/expanded_retrieval.py": "48c8869ef04615ef1efcd5a3b38e365b8c37b246c61e334cd49f3d7401d28af9",
+      "evals/retrieval_quality.py": "f0267e86cc8d2247f235db8daefc11dc49ea1e5db540d6a1f5db15c9ff560ac3"
+    },
+    "binding": "Experiment ran modified worktree; base SHA is NOT the modified-source commit. Containing delivery commit preserves these exact files."
+  },
+  "raw_report_sha256": "1419c0f4cb85f093b9b0e847bef586a330b19bdbeed79b455c4962abf2061b30",
+  "public_report_sha256": "1f63246260ae301b13eb8473e3abdc03a90446f0ef20bcd6459eb4b0c4bc0a18",
+  "evaluation_run_id": "expanded-20261108T054426-1419c0f4cb",
+  "platform": {
+    "platform": "Linux",
+    "architecture": "aarch64",
+    "python": "3.12.10",
+    "device": "cpu",
+    "threads_per_model": 2
+  },
+  "models": {
+    "embedding": {
+      "model_id": "BAAI/bge-small-zh-v1.5",
+      "revision": "7999e1d3359715c523056ef9478215996d62a620",
+      "dimension": 512,
+      "cold_load_ms": 3250.482417992316
+    },
+    "reranker": {
+      "model_id": "BAAI/bge-reranker-base",
+      "revision": "2cfc18c9415c912f9d8155881c133215df768a70",
+      "cold_load_ms": 3124.3994599790312,
+      "max_tokens": 256,
+      "batch_size": 4,
+      "max_candidates": 20,
+      "raw_scores": "logits, not probabilities"
+    }
+  },
+  "model_integrity": {
+    "embedding": {
+      "model_id": "BAAI/bge-small-zh-v1.5",
+      "revision": "7999e1d3359715c523056ef9478215996d62a620",
+      "dimension": 512,
+      "license": "MIT",
+      "source": "https://huggingface.co/BAAI/bge-small-zh-v1.5/tree/7999e1d3359715c523056ef9478215996d62a620",
+      "files": {
+        "config.json": {
+          "sha256": "3853a7979202c348751b753e36f579c41d8da7d36af617d3d907e1fc9b441f2a",
+          "size_bytes": 776
+        },
+        "model.safetensors": {
+          "sha256": "354763b9b1357bc9c44f62c6be2276321081ed2567773608c0d0785b61d5a026",
+          "size_bytes": 95827648
+        },
+        "special_tokens_map.json": {
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "size_bytes": 125
+        },
+        "tokenizer.json": {
+          "sha256": "48cea5d44424912a6fd1ea647bf4fe50b55ab8b1e5879c3275f80e339e8fae26",
+          "size_bytes": 439125
+        },
+        "tokenizer_config.json": {
+          "sha256": "e6f3b96db926a37d4039995fbf5ad17de158dfb8f6343d607e4dbaad18d75f5a",
+          "size_bytes": 367
+        },
+        "vocab.txt": {
+          "sha256": "45bbac6b341c319adc98a532532882e91a9cefc0329aa57bac9ae761c27b291c",
+          "size_bytes": 109540
+        }
+      },
+      "query_prefix": "为这个句子生成表示以用于检索相关文章：",
+      "document_prefix": "",
+      "pooling": "CLS",
+      "normalization": "L2",
+      "max_length": 512,
+      "device": "cpu",
+      "dtype": "float32"
+    },
+    "reranker": {
+      "model_id": "BAAI/bge-reranker-base",
+      "revision": "2cfc18c9415c912f9d8155881c133215df768a70",
+      "license": "MIT",
+      "source": "https://huggingface.co/BAAI/bge-reranker-base/tree/2cfc18c9415c912f9d8155881c133215df768a70",
+      "metadata_sha256": "f985e47ac51e817b0dffb7a612a0366173a996b383e1f01f7dd9151becbe70be",
+      "files": {
+        "README.md": {
+          "sha256": "b4223c8c1e95538f8c79168afc501f8b2da06c63221f013b79b28af78b59366d",
+          "size_bytes": 34111
+        },
+        "config.json": {
+          "sha256": "289adf7ada1eb6b4afa7589a48a032d45a076cf2e46dcdb3b4cabc33be14f708",
+          "size_bytes": 799
+        },
+        "model.safetensors": {
+          "sha256": "ced967c45fd1902eb92716c9ceeca7c95a936770ea9db611f5a841b926e33fbd",
+          "size_bytes": 1112206140
+        },
+        "sentencepiece.bpe.model": {
+          "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+          "size_bytes": 5069051
+        },
+        "special_tokens_map.json": {
+          "sha256": "d5469a60db23249c7f8945013d78df30b44b6bf686c6bb4740f4223f77b1b535",
+          "size_bytes": 279
+        },
+        "tokenizer.json": {
+          "sha256": "9eb652ac4e40cc093272bbbe0f55d521cf67570060227109b5cdc20945a4489e",
+          "size_bytes": 17098107
+        },
+        "tokenizer_config.json": {
+          "sha256": "a1d6bc8734a6f635dc158508bef000f8e2e5a759c7d92f984b2c86e5ff53425b",
+          "size_bytes": 443
+        }
+      },
+      "device": "cpu",
+      "dtype": "float32",
+      "max_length": 256,
+      "batch_size": 4,
+      "max_candidates": 20,
+      "load_timeout_seconds": 60,
+      "inference_timeout_seconds": 10,
+      "license_source": "Pinned publisher model card declares MIT; binary weights are not distributed with source."
+    }
+  },
+  "dataset": {
+    "dataset_version": "expanded-retrieval-v1",
+    "annotation": "SINGLE_ANNOTATOR: assistant manual catalog review; not independent human annotation",
+    "frozen_before_model_results": true,
+    "planned_queries": {
+      "dev": 20,
+      "test": 20
+    },
+    "catalog": "expanded-120-v1 + one merchant-published dynamic SKU + seven fixed adversarial sentinels",
+    "catalog_sha256": "82f033872c5580267afc01a207fcf1605cc015c1cc113c3228b229e4e201938b",
+    "splits": {
+      "dev": "b697e42451b7ba7dce51b2ebd56396b1388d2534930d3bc180d7b31df4783694",
+      "test": "611c5eb6c354f0fc9dd80e739f62e33d7ce033060dae709b7a5f44e215218422"
+    },
+    "protocol": {
+      "candidate_count": 20,
+      "final_k": 5,
+      "rrf_k": 60,
+      "min_similarity": 0.45,
+      "rerank_max_tokens": 256,
+      "rerank_batch": 4,
+      "dcg": "sum((2^grade-1)/log2(rank+1))",
+      "quality_denominator": "all planned answer queries; any execution unknown yields null aggregate, no dropping failures",
+      "no_answer_denominator": "all planned no-answer queries",
+      "test_tuning": "NOT_ALLOWED; one final test evaluation, labels never adjusted after results"
+    },
+    "dynamic_binding": "Only dynamic:monitor resolves to original merchant publication receipt Product ID; all other judgment Product IDs fixed before execution",
+    "scope": "Synthetic catalog, small descriptive benchmark; not independent human study or statistical superiority claim",
+    "judgment_audit": "All relevant category rows reviewed before model runs; grade1 explicitly partial match, unlisted documents grade0. No labels changed after any result."
+  },
+  "tests": {
+    "pytest_passed": 1056,
+    "pytest_skipped": 14,
+    "vitest_passed": 118,
+    "playwright_passed": 16,
+    "playwright_scope": "Directed: new retrieval, original Studio, Bundle/replan, merchant, catalog operations, expanded catalog and RC integration; not full browser suite",
+    "playwright_retries": 0,
+    "new_backend_cases": 18,
+    "new_vitest_cases": 14,
+    "new_playwright_cases": 2
+  },
+  "commands": {
+    "real-reranker-probe": {
+      "command": [
+        "backend/.venv/bin/python",
+        "-m",
+        "evals.reranker_model",
+        "--output",
+        "/rc-output/reranker-probe.json"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:15:26.235330+00:00",
+      "seconds": 5.951,
+      "log_sha256": "1e32ee60406e7f3d80403793fd4ef0497db2d06f89f06be4a9bcc1fdce6d97fa"
+    },
+    "real-experiment-final": {
+      "command": [
+        "backend/.venv/bin/python",
+        "-m",
+        "evals.expanded_retrieval",
+        "--git-sha",
+        "5bdf717280dbd623da8e842905e1757c098774f6",
+        "--output",
+        "/rc-output/expanded-real-final.json"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:44:17.631058+00:00",
+      "seconds": 46.321,
+      "log_sha256": "161961879285f639eb42f034456bf1f4e30456cfcd7deee57db0aa67c377a338"
+    },
+    "directed-rerank": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_retrieval_rerank.py",
+        "backend/tests/test_retrieval_quality.py",
+        "backend/tests/test_retrieval_versions.py",
+        "backend/tests/test_catalog_operations.py",
+        "backend/tests/test_bundle_replanning.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:20:18.591260+00:00",
+      "seconds": 38.983,
+      "log_sha256": "e171682b1a7801e0aeed5bc0ee9719b4c28aab088e9e5f379914177cb6c20c9b"
+    },
+    "independent-oracle-green-2": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_retrieval_rerank.py",
+        "backend/tests/test_retrieval_quality.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:30:39.136550+00:00",
+      "seconds": 5.56,
+      "log_sha256": "14df906ac54680826533b3dc9c5a02e77a9d17a2c0ba8de25d5d0cd4a61114f7"
+    },
+    "review-ui-green": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test",
+        "--",
+        "retrievalQuality"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:42:57.365503+00:00",
+      "seconds": 0.927,
+      "log_sha256": "d340ad599a8765b6deba18e76f18e34d19e584c13ba2c625ec2706b6bb0732ae"
+    },
+    "full-offline-pytest": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:45:23.835065+00:00",
+      "seconds": 359.066,
+      "log_sha256": "b029dbae1ceb305e28503b08cd4bcae282fbca35864c7d8449760ef0f404fd7a"
+    },
+    "final-vitest": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:48:44.352884+00:00",
+      "seconds": 0.971,
+      "log_sha256": "2438be0ae25b98db10c59598807cff5afcba4627a54e7101af80309c76b9fc96"
+    },
+    "browser-final": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "retrieval-quality.spec.ts",
+        "evaluation-studio.spec.ts",
+        "bundle.spec.ts",
+        "bundle-replanning.spec.ts",
+        "catalog-operations.spec.ts",
+        "merchant.spec.ts",
+        "expanded-catalog.spec.ts",
+        "v2-rc.spec.ts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:46:14.611355+00:00",
+      "seconds": 42.969,
+      "log_sha256": "09ea8a2249838e6ff9803858e8210db5e01994bd6efbb4d10e4e399e2f686812"
+    },
+    "final-static": {
+      "command": [
+        "sh",
+        "-c",
+        "backend/.venv/bin/ruff check backend evals scripts && backend/.venv/bin/ruff format --check backend evals scripts && npm --prefix frontend run typecheck && npm --prefix frontend run lint && npm --prefix frontend run build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T05:43:56.397629+00:00",
+      "seconds": 5.32,
+      "log_sha256": "cb619f928f139e23a48fbf4941ec078964267aaf98cb1869585a9659c7b15e71"
+    }
+  },
+  "database": {
+    "postgres": "17.11 (Debian 17.11-1.pgdg12+2)",
+    "pgvector": "0.8.7",
+    "catalog_products": 128,
+    "reserved_before": 0,
+    "read_only_snapshot_before": "c500809f78dd477323545ce1c6ec09d18141f77a3640ef5c1ba3c091471f675d",
+    "read_only_snapshot_after": "c500809f78dd477323545ce1c6ec09d18141f77a3640ef5c1ba3c091471f675d",
+    "orders": 0,
+    "payments": 0,
+    "action_proposals": 0
+  },
+  "lifecycle": {
+    "new_dynamic_published_indexed": true,
+    "version_change_old_index_hidden": true,
+    "explicit_reindex_current_visible": true,
+    "deactivated_hidden": true,
+    "price_change_versioned": true,
+    "republished_requires_fresh_index": true
+  },
+  "safety": {
+    "passed": true,
+    "checked_at": "2026-11-08T05:54:42.529980+00:00",
+    "base_sha": "5bdf717280dbd623da8e842905e1757c098774f6",
+    "all_original_tracked_files": 659,
+    "protected_unchanged_count": 652,
+    "protected_contents_tree_sha256": "c8668a2080144579d7573a361d64334d14f808f2f7498b00a82b231938750e4f",
+    "changed_original_files": [
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "backend/src/agentmall/retrieval/routes.py",
+      "docs/RESULTS.md",
+      "frontend/src/App.tsx",
+      "frontend/src/pages/EvaluationStudio.tsx",
+      "frontend/src/pages/evaluationStudio.css"
+    ],
+    "allowed_original_changes": [
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "backend/src/agentmall/retrieval/routes.py",
+      "docs/RESULTS.md",
+      "frontend/src/App.tsx",
+      "frontend/src/pages/EvaluationStudio.tsx",
+      "frontend/src/pages/evaluationStudio.css"
+    ],
+    "private_or_model_files_in_upload": 0,
+    "secret_pattern_hits": 0,
+    "experiment_source_hashes_match": true,
+    "historical_models_and_manifests_unchanged": true,
+    "scope": "All original tracked bytes outside seven explicitly allowed presentation/router files unchanged; new files audited separately; not a new audit of old private evidence"
+  },
+  "cleanup": {
+    "passed": true,
+    "checked_at": "2026-11-08T05:53:51.112537+00:00",
+    "owner": "agentmall-v210-221a3476",
+    "schema_count_before_resource_deletion": 0,
+    "schema_query_sha256": "d994bad80d0fcfacdccc94b5e22903f888b95f6ced0c83a94a81e1481c49f71e",
+    "owned_database_removed": true,
+    "owned_volume_removed": true,
+    "owned_runner_tag_removed": true,
+    "owned_guests_remaining": 0,
+    "owned_jieba_runtime_removed": true,
+    "owned_credential_files_removed": true,
+    "owned_temporary_pointer_removed": true,
+    "historical_container_count": 25,
+    "historical_container_ids_and_states_unchanged": true,
+    "default_context": "colima",
+    "model_cache_retained": true,
+    "raw_evidence_retained": true,
+    "retained_new_model_and_partial_bytes": 2641329185,
+    "buildkit_cache_pruned": false,
+    "peak_memory": "NOT_MEASURED",
+    "first_cleanup_attempt": {
+      "command": "python3 <private>/safety_and_cleanup.py",
+      "exit_code": 1,
+      "stage": "final temporary pointer representation guard, after owned resources were already removed and historical states compared",
+      "exception": "AssertionError at line 54: relative stored path compared directly with absolute path",
+      "evidence": "Original completed stdout/stderr files cleanup-01 through cleanup-12 preserved; no resource-removal commands repeated"
+    },
+    "independent_read_only_followup_commands": [
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "ps",
+          "-aq",
+          "--filter",
+          "label=agentmall.owner=agentmall-v210-221a3476"
+        ],
+        "exit_code": 0,
+        "started_at": "2026-11-08T05:53:50.934610+00:00",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "volume",
+          "ls",
+          "-q"
+        ],
+        "exit_code": 0,
+        "started_at": "2026-11-08T05:53:51.007334+00:00",
+        "stdout_sha256": "1af5d41b57f01351be13e79c62256a7d3e2ea15621f83f9b20448f1534b614aa",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "image",
+          "ls",
+          "-q",
+          "agentmall-v210-221a3476-runner:local"
+        ],
+        "exit_code": 0,
+        "started_at": "2026-11-08T05:53:51.025584+00:00",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "ps",
+          "-a",
+          "--no-trunc",
+          "--format",
+          "json"
+        ],
+        "exit_code": 0,
+        "started_at": "2026-11-08T05:53:51.044182+00:00",
+        "stdout_sha256": "975953a49ec453419f29257d4e762c8cfa3ecd2b70571fac223c2920656bb82a",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/v210/retrieval-overview.png",
+      "sha256": "1dbee45a1183c2266ad50577ddb07b3ff472cae3f8a86d0a5f41d7962fd0bdc3",
+      "bytes": 558428,
+      "dimensions": [
+        1280,
+        3939
+      ],
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "visual_review": "Synthetic catalog, public model/source identities and real CPU metrics; no token, path, DSN or prompt visible"
+    },
+    {
+      "path": "docs/screenshots/v210/retrieval-mobile.png",
+      "sha256": "dda4bcaab7b672e847dfd36119d5f1db7e68b16a02aa2058b4ec7f318a741f85",
+      "bytes": 592104,
+      "dimensions": [
+        390,
+        6102
+      ],
+      "png_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ],
+      "visual_review": "Synthetic catalog, public model/source identities and real CPU metrics; no token, path, DSN or prompt visible"
+    }
+  ],
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "hosted_embedding_requests": 0,
+  "remote_writes": 0,
+  "known_limitations": [
+    "SINGLE_ANNOTATOR synthetic small corpus; not independent human labels or significance",
+    "Reranker cannot recover a missing candidate or remove false positives without an abstention rule",
+    "Git base identifies modified worktree ancestry; source contents hash identifies executed code",
+    "dev-01 lacks a positive judgment for the dynamically published 27-inch QHD monitor, which also satisfies this query. Frozen labels and all denominators retained; interpret dev metrics with this known omission. Test labels were not edited.",
+    "No new Ubuntu amd64 CI, real LLM evaluation, production load, or statistical significance",
+    "Historical original 14 skip boundaries retained; real-model experiment is separately executed without skip",
+    "Download/dependency failures, RED tests and intermediate failures retained privately; no labels or parameters changed after results",
+    "Run-level UUID tie ordering can differ when dynamic publication creates a new ID; same corpus binding within each comparison"
+  ],
+  "public_audit": {
+    "checked_at": "2026-11-08T05:54:42.564147+00:00",
+    "file_count": 30,
+    "files": [
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "backend/src/agentmall/retrieval/ranking.py",
+      "backend/src/agentmall/retrieval/reranker.py",
+      "backend/src/agentmall/retrieval/routes.py",
+      "backend/tests/test_retrieval_quality.py",
+      "backend/tests/test_retrieval_rerank.py",
+      "docs/REAL_RETRIEVAL.md",
+      "docs/RESULTS.md",
+      "docs/evidence/v210/report.md",
+      "docs/evidence/v210/verification.json",
+      "docs/screenshots/v210/retrieval-mobile.png",
+      "docs/screenshots/v210/retrieval-overview.png",
+      "docs/superpowers/plans/2026-11-08-real-retrieval.md",
+      "docs/superpowers/specs/2026-11-08-real-retrieval-design.md",
+      "evals/data/expanded-retrieval-v1/dev.jsonl",
+      "evals/data/expanded-retrieval-v1/manifest.json",
+      "evals/data/expanded-retrieval-v1/test.jsonl",
+      "evals/data/reranker_manifest.json",
+      "evals/expanded_retrieval.py",
+      "evals/reranker_model.py",
+      "evals/retrieval_quality.py",
+      "frontend/public/evals/retrieval-v1.json",
+      "frontend/src/App.tsx",
+      "frontend/src/api/retrievalQuality.test.tsx",
+      "frontend/src/api/retrievalQuality.ts",
+      "frontend/src/pages/EvaluationStudio.tsx",
+      "frontend/src/pages/RetrievalQuality.tsx",
+      "frontend/src/pages/evaluationStudio.css",
+      "frontend/tests/retrieval-quality.spec.ts"
+    ],
+    "local_markdown_links": "PASS",
+    "secret_private_path_dsn_pattern_hits": 0,
+    "max_new_file_bytes": 592104,
+    "experiment_source_binding": "MATCH",
+    "review_findings": "Both P2 parser findings reproduced and fixed, 14 frontend tests green",
+    "unmodified_original_files": 652
+  }
+}

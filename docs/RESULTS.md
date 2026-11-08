@@ -2,6 +2,14 @@
 
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
+## V2.10 真实本地检索质量与离线回归
+
+基于`5bdf717280dbd623da8e842905e1757c098774f6`修改工作树，真实本地BGE512 + Cross-Encoder、PG17.11/pgvector0.8.7、Expanded120+动态1+探针7。160条查询执行完成，非法/过期结果0，业务查询前后快照一致，商品发布/变更/下架/重建检查通过。[本轮报告](evidence/v210/report.md)、[源码内容与日志SHA](evidence/v210/verification.json)、[模型和复现](REAL_RETRIEVAL.md)。
+
+最终Test Hybrid → Reranker：Recall@5 **92.53%→91.84%**，MRR **96.88%→100%**，NDCG **95.82%→97.40%**，P50 **22.35→654.77ms**；无答案正确率均25%。**DEFAULT_OFF**，小型SINGLE_ANNOTATOR合成实验不证明统计显著优势，dev-01标签缺口保留。Fixture回归与真实模型成绩分开。
+
+完整离线pytest **1056 passed /14 skipped**、完整Vitest **118 passed**、定向Playwright **16 passed /0 retries**，静态/格式/类型/lint/build通过。没有新远程CI、真实LLM、Provider或Key读取。旧测试/冻结数据和失败回执未改；本轮资源清理已独立查无，模型缓存与私有原件保留。
+
 ## V2.9 多轮组合重规划（本地累计完整回归）
 
 基于`8a8d54bd7b21d7e084c7a8d02f312d64f0203b4b`，新增七种可信差分、按品类增量检索与当前事实复核、历史方案只读和前后价格对比。完整后端 **1038 passed / 14 skipped**（含22项新增）、完整Vitest **104 passed**、完整Playwright **113 passed / 0 retries**；Ruff、格式、TypeScript、ESLint、build全部退出0。[A—L场景及保留失败](evidence/v29/report.md)、[命令/日志/源码内容绑定](evidence/v29/verification.json)。

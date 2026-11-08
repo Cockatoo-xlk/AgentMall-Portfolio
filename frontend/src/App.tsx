@@ -14,6 +14,7 @@ import Orders, { OrderDetail } from './pages/Orders'
 import ChatPanel from './components/ChatPanel'
 import MerchantWorkbench from './pages/MerchantWorkbench'
 import EvaluationStudio from './pages/EvaluationStudio'
+import RetrievalQuality from './pages/RetrievalQuality'
 function StoreRoutes() {
   const { user } = useAuth()
   return (
@@ -40,6 +41,7 @@ function StoreRoutes() {
           <Route path="login" element={<Login />} />
           <Route path="merchant" element={<MerchantWorkbench />} />
           <Route path="engineering/evals" element={<EvaluationStudio />} />
+          <Route path="engineering/evals/retrieval" element={<RetrievalQuality />} />
           <Route path="products/:id" element={<ProductDetail />} />
           <Route
             path="cart"

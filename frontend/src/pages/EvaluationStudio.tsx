@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { Activity, FlaskConical, GitCompareArrows, ShieldCheck } from 'lucide-react'
 import {
   architectures,
@@ -456,6 +457,7 @@ export default function EvaluationStudio() {
 
   return (
     <main className="page eval-studio">
+      <Link className="text-button" to="/engineering/evals/retrieval">真实本地 BGE / Cross-Encoder 检索质量实验室</Link>
       <header className="eval-hero">
         <div>
           <span className="eyebrow">

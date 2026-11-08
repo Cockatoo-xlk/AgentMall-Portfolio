@@ -16,6 +16,10 @@
 
 截图为合成业务演示：**MockTransport + Fixture Embedding，确认操作者TEST_OPERATOR，未付款**。
 
+## V2.10 真实本地检索质量
+
+新增固定BGE512维、CPU Cross-Encoder与四条同数据Pipeline对比；Expanded40查询保留分级标签、候选召回上限、无答案失败及真实延迟。新只读页面 `/engineering/evals/retrieval` 显示模型Revision、源码内容SHA和Top5差异。**重排默认关闭**：本次小型单标注者实验排序略有收益、召回下降且CPU延迟明显增加，不宣称生产或真实LLM优势。[模型、复现与证据边界](docs/REAL_RETRIEVAL.md) · [实际结果](docs/evidence/v210/report.md)。原Agent、Bundle和购买安全路径不变；真实Provider请求0。
+
 ## V2.9 多轮组合重规划
 
 同一Thread可保留SKU、替换为更便宜商品、按品类修改规格、增删品类、调整整套预算与数量。只有受影响品类重新检索，其他SKU重读当前事实；展示新旧价格和方案差异，失败保留缺口与重检义务。购买仍需最新方案和一份独立Confirmation，不继承旧授权。[七种差分、增量检索与可复现演示](docs/BUNDLE_REPLANNING.md)。

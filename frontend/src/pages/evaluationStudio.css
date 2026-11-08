@@ -343,3 +343,8 @@
     justify-self: start;
   }
 }
+
+/* Retrieval evidence keeps long source identities and wide tables inside the viewport. */
+.retrieval-quality, .retrieval-quality .panel { min-width: 0; }
+.retrieval-quality small, .retrieval-quality code { overflow-wrap: anywhere; }
+.retrieval-quality select { max-width: 100%; }
