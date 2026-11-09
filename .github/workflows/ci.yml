@@ -39,9 +39,9 @@ jobs:
       recipient_certificate: ${{ inputs.recipient_certificate }}
       certificate_sha256: ${{ inputs.certificate_sha256 }}
 
-  offline-core:
+  backend-core:
     if: github.ref != 'refs/heads/codex/t16-a3-ci-verify'
-    name: CI_OFFLINE_CORE
+    name: CI_OFFLINE_CORE / backend
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
@@ -73,22 +73,128 @@ jobs:
           --health-retries 30
     steps:
       - name: Check out source
+        id: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Set up Python
+        id: python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12.10"
 
       - name: Set up uv
+        id: uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.9.18"
+          enable-cache: false
+
+      - name: Install locked Python dependencies without BGE extras
+        id: python-deps
+        run: uv sync --project backend --locked --no-extra embedding
+
+      - name: Initialize fresh owned PostgreSQL and verify migration/seed/checkpoint
+        id: bootstrap
+        run: backend/.venv/bin/python scripts/ci/bootstrap.py --port 55433
+
+      - name: Ruff check
+        id: ruff
+        run: backend/.venv/bin/ruff check backend evals scripts
+
+      - name: Ruff format check
+        id: format
+        run: backend/.venv/bin/ruff format --check backend evals scripts
+
+      - name: PostgreSQL, checkpoint, invariants, oracle and provider protocol tests
+        id: pytest
+        shell: bash
+        run: |
+          set -a
+          source ./.env.rag
+          set +a
+          backend/.venv/bin/python -m pytest --ci-offline-core --strict-markers -ra
+
+      - name: Write bounded status-only summary
+        id: summary
+        if: always()
+        env:
+          RESULT_CHECKOUT: ${{ steps.checkout.outcome }}
+          RESULT_PYTHON: ${{ steps.python.outcome }}
+          RESULT_UV: ${{ steps.uv.outcome }}
+          RESULT_PYTHON_DEPS: ${{ steps.python-deps.outcome }}
+          RESULT_BOOTSTRAP: ${{ steps.bootstrap.outcome }}
+          RESULT_RUFF: ${{ steps.ruff.outcome }}
+          RESULT_FORMAT: ${{ steps.format.outcome }}
+          RESULT_PYTEST: ${{ steps.pytest.outcome }}
+        run: python3 scripts/ci/release_gate.py --suite backend
+
+      - name: Upload only public status summary
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: ci-offline-core-backend
+          path: ci-public-summary/backend.json
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: false
+
+  frontend-e2e:
+    if: github.ref != 'refs/heads/codex/t16-a3-ci-verify'
+    name: CI_OFFLINE_CORE / frontend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      AGENTMALL_EVIDENCE_DIR: ${{ github.workspace }}/.t13/screenshots/purchase
+      AGENTMALL_WORKFLOW_EVIDENCE_DIR: ${{ github.workspace }}/.t13/screenshots/workflow
+      # Public synthetic credentials, valid only in this disposable runner.
+      AGENTMALL_CI_DB_PASSWORD: "713f1b802a344cf28f099c7ef6099b46"
+      AGENTMALL_DATABASE_URL: postgresql+psycopg://agentmall:713f1b802a344cf28f099c7ef6099b46@127.0.0.1:55433/agentmall_test
+      AGENTMALL_TEST_DATABASE_URL: postgresql+psycopg://agentmall:713f1b802a344cf28f099c7ef6099b46@127.0.0.1:55433/agentmall_test
+      AGENTMALL_JWT_SECRET: "c1d5b3c7de9f1c9c656201bf811b4e68c1d5b3c7de9f1c9c656201bf811b4e68"
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+    services:
+      postgres:
+        # Same locked PostgreSQL 17 / pgvector 0.8.7 image as compose.rag.yaml.
+        image: pgvector/pgvector:0.8.7-pg17-bookworm@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
+        env:
+          POSTGRES_USER: agentmall
+          POSTGRES_PASSWORD: "713f1b802a344cf28f099c7ef6099b46"
+          POSTGRES_DB: agentmall_test
+        ports:
+          - 127.0.0.1:55433:5432
+        options: >-
+          --health-cmd "pg_isready -U agentmall -d agentmall_test"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+    steps:
+      - name: Check out source
+        id: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        id: python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12.10"
+
+      - name: Set up uv
+        id: uv
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "0.9.18"
           enable-cache: false
 
       - name: Set up Node
+        id: node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24.21.0"
@@ -113,23 +219,6 @@ jobs:
       - name: Initialize fresh owned PostgreSQL and verify migration/seed/checkpoint
         id: bootstrap
         run: backend/.venv/bin/python scripts/ci/bootstrap.py --port 55433
-
-      - name: Ruff check
-        id: ruff
-        run: backend/.venv/bin/ruff check backend evals scripts
-
-      - name: Ruff format check
-        id: format
-        run: backend/.venv/bin/ruff format --check backend evals scripts
-
-      - name: PostgreSQL, checkpoint, invariants, oracle and provider protocol tests
-        id: pytest
-        shell: bash
-        run: |
-          set -a
-          source ./.env.rag
-          set +a
-          backend/.venv/bin/python -m pytest --ci-offline-core --strict-markers -ra
 
       - name: Frontend typecheck
         id: typecheck
@@ -160,59 +249,75 @@ jobs:
           set +a
           npm --prefix frontend run test:e2e
 
-      - name: Write bounded public CI summary
+      - name: Write bounded status-only summary
+        id: summary
         if: always()
         env:
+          RESULT_CHECKOUT: ${{ steps.checkout.outcome }}
+          RESULT_PYTHON: ${{ steps.python.outcome }}
+          RESULT_UV: ${{ steps.uv.outcome }}
+          RESULT_NODE: ${{ steps.node.outcome }}
           RESULT_PYTHON_DEPS: ${{ steps.python-deps.outcome }}
           RESULT_NODE_DEPS: ${{ steps.node-deps.outcome }}
           RESULT_CHROMIUM: ${{ steps.chromium.outcome }}
           RESULT_BOOTSTRAP: ${{ steps.bootstrap.outcome }}
-          RESULT_RUFF: ${{ steps.ruff.outcome }}
-          RESULT_FORMAT: ${{ steps.format.outcome }}
-          RESULT_PYTEST: ${{ steps.pytest.outcome }}
           RESULT_TYPECHECK: ${{ steps.typecheck.outcome }}
           RESULT_LINT: ${{ steps.lint.outcome }}
           RESULT_VITEST: ${{ steps.vitest.outcome }}
           RESULT_BUILD: ${{ steps.build.outcome }}
           RESULT_PLAYWRIGHT: ${{ steps.playwright.outcome }}
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-
-          checks = (
-              "PYTHON_DEPS", "NODE_DEPS", "CHROMIUM", "BOOTSTRAP", "RUFF", "FORMAT",
-              "PYTEST", "TYPECHECK", "LINT", "VITEST", "BUILD", "PLAYWRIGHT",
-          )
-          outcomes = {key: os.environ[f"RESULT_{key}"] for key in checks}
-          allowed = {"success", "failure", "cancelled", "skipped", ""}
-          if any(value not in allowed for value in outcomes.values()):
-              raise SystemExit("Unexpected step outcome; summary refused")
-          summary = {
-              "mode": "CI_OFFLINE_CORE",
-              "real_bge": "NOT_RUN: 13 marked cases require project-local weights",
-              "model": "FIXTURE_MODEL_AND_MOCK_PROVIDER_ONLY",
-              "checks": outcomes,
-          }
-          output = Path("ci-public-summary")
-          output.mkdir(exist_ok=True)
-          payload = json.dumps(summary, indent=2) + "\n"
-          if len(payload.encode()) > 4096:
-              raise SystemExit("Summary exceeds public artifact size limit")
-          (output / "ci-summary.json").write_text(payload)
-          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as stream:
-              stream.write("### CI_OFFLINE_CORE\n\nReal BGE: NOT_RUN (13 marked cases).\n\n")
-              for name, outcome in outcomes.items():
-                  stream.write(f"- {name}: {outcome or 'not_started'}\n")
-          PY
+        run: python3 scripts/ci/release_gate.py --suite frontend
 
       - name: Upload only public status summary
+        id: upload
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
-          name: ci-offline-core-summary
-          path: ci-public-summary/ci-summary.json
+          name: ci-offline-core-frontend
+          path: ci-public-summary/frontend.json
           if-no-files-found: error
           retention-days: 7
           include-hidden-files: false
+
+  release-gate:
+    if: ${{ always() && github.ref != 'refs/heads/codex/t16-a3-ci-verify' }}
+    name: CI_OFFLINE_CORE / release gate
+    needs: [backend-core, frontend-e2e]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out source
+        id: checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Write bounded aggregate decision (not final workflow status)
+        id: summary
+        if: always()
+        env:
+          RESULT_BACKEND: ${{ needs.backend-core.result }}
+          RESULT_FRONTEND: ${{ needs.frontend-e2e.result }}
+        run: python3 scripts/ci/release_gate.py --suite gate
+
+      - name: Upload only public gate decision
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: ci-offline-core-gate
+          path: ci-public-summary/gate.json
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: false
+
+      - name: Enforce both required jobs and gate export success
+        id: enforce
+        if: always()
+        env:
+          RESULT_BACKEND: ${{ needs.backend-core.result }}
+          RESULT_FRONTEND: ${{ needs.frontend-e2e.result }}
+          RESULT_CHECKOUT: ${{ steps.checkout.outcome }}
+          RESULT_SUMMARY: ${{ steps.summary.outcome }}
+          RESULT_UPLOAD: ${{ steps.upload.outcome }}
+        run: python3 scripts/ci/release_gate.py --suite gate --enforce

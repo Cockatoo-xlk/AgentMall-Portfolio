@@ -1,6 +1,16 @@
 # 正式GitHub发布前的权利人审核清单
 
-## V2.14 发布候选检查（本地，不是发布授权）
+## V2.14-R2：CI候选追加检查
+
+- [x] 复核[本轮R2回执](evidence/v214-r2/verification.json)中的新测试、全量回归、独立审查、安全扫描与资源清理，不用旧V2.14成绩代替。
+- [x] V2.14准确01f0115首次Push成功；Run42655215470 / Attempt1因30m0s超时cancelled，Playwright未通过，历史不重写。
+- [x] 普通CI改为各自独立PG的Backend和Frontend Job；聚合Gate检查failure/cancel/skip及自身导出失败。T16隔离及业务安全边界不变。
+- [ ] 所有者另行批准本轮准确新SHA、目标审核分支及一次普通Push；本轮无任何远程写入。
+- [ ] 观察新SHA的完整Ubuntu24.04 amd64自动CI，Backend、Frontend、Release Gate及Artifact均有真实回执；**REMOTE_CI_NOT_RUN_FOR_R2**，不能预先勾选。
+
+本轮详细[根因和发布步骤](evidence/v214-r2/report.md)。下文为此前V2.14本地及更早阶段的历史清单，原“未Push”是当时事实；已被01f0115首次Push及cancelled的追加记录更新。
+
+## 原V2.14本地发布检查快照（01f0115首次Push前）
 
 - [x] 独立分支`codex/v214-portfolio-release-candidate`，产品基线`280ec90816ed3d70079b7fb89457f7f13a4d2278`；最终Commit由 `git log -1 --format=%H -- docs/evidence/v214/verification.json` 定位，准确40位值随最终交付。
 - [x] 功能冻结：不进入L8，不增加角色/API/工具/支付或改变事务、HITL、预算、Oracle。

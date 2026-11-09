@@ -1,6 +1,12 @@
 # 验证结果与证据边界
 
-## V2.14 当前候选：新的执行与历史事实分开
+## 最新追加：V2.14-R2 CI可靠性候选
+
+原V2.14已Push准确`01f0115f6fa704dec7a272eab57579d21d8f4ae5`；[Run42655215470 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42655215470)的pytest1220/14skip、Vitest127和build步骤成功，但Playwright在108项通过后因Job30分钟超时被取消。**远程整体cancelled，浏览器未验收成功**。
+
+新R2拆分独立Backend/Frontend测试及Release Gate。本地实际执行、日志SHA、清理与源码绑定见[新回执](evidence/v214-r2/verification.json)，时间预算及完整旧新映射见[专项报告](evidence/v214-r2/report.md)。新Ubuntu架构 **REMOTE_CI_NOT_RUN_FOR_R2 / AMD64_REMOTE_CI_NOT_RUN_FOR_R2**；不要与下文V2.14、R8等历史成绩混用。无新Provider请求；L7 B2仍PARTIAL。
+
+## 原V2.14本地阶段快照：不替代R2执行
 
 产品源码冻结于`280ec90816ed3d70079b7fb89457f7f13a4d2278`，本轮只收敛作品集与发布材料。[本轮命令/退出码/源码绑定/日志SHA](evidence/v214/verification.json)已实际完成：**pytest1220 passed/14 skipped，Vitest127，Playwright119/0 retries**，Ruff/格式/TypeScript/ESLint/build全0。不是复用L6回执；独占Linux aarch64 PG17.11/pgvector0.8.7，代码冻结280ec908，Fixture/SDK MockTransport。默认Single三轮Demo、独立确认、唯一待支付订单、付款0及官方Checkpoint已另行通过。[能力矩阵](V214_RELEASE_CANDIDATE.md)覆盖全部V2模块。
 

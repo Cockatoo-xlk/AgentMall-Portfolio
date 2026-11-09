@@ -1,5 +1,13 @@
 # AgentMall · 可恢复工作流与事务电商
 
+## V2.14-R2：普通CI并行化候选（本地）
+
+V2.14已推送`01f0115f6fa704dec7a272eab57579d21d8f4ae5`，[首次Run42655215470 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42655215470)因GitHub明确的30分钟Job超时取消：pytest1220/14skip、Vitest127、build步骤通过，Playwright仅记录108项通过，**未取得119项成功回执**。
+
+R2本地新回归：**pytest1291 passed /14 skipped（原1220+新增71），Vitest127，Playwright119 /0 retries**，静态检查与构建通过；两套独立PG，Linux aarch64。
+
+R2把原完整检查拆为独立Backend / Frontend-E2E及fail-closed Release Gate，保留每测试Job30分钟、Playwright单Worker/零重试和T16隔离。[根因、步骤耗时、集合等价性与本轮结果](docs/evidence/v214-r2/report.md) · [命令/日志SHA](docs/evidence/v214-r2/verification.json)。R2新架构尚未上传或远程验证；**REMOTE_CI_NOT_RUN_FOR_R2 / AMD64_REMOTE_CI_NOT_RUN_FOR_R2**。下文“本轮V2.14”成绩属于原本地阶段，不能冒充R2或已通过的Ubuntu成绩。真实L7 B2仍PARTIAL。
+
 AgentMall 将 **LLM 工具调用、可恢复 Agent 工作流与确定性电商事务**分开：模型可以检索、比较和准备提案；用户独立确认后，服务端才校验身份、版本与库存并提交业务。
 
 **FastAPI · PostgreSQL 17 / SQLAlchemy · LangGraph · pgvector / 本地 BGE · React / TypeScript · MCP · Docker**
@@ -85,7 +93,7 @@ V2.14 的本轮实际命令、退出码、环境与日志 SHA 在[最终回执](
 
 普通离线核心入口为 `uv run --project backend pytest --ci-offline-core`，必须先准备专属 PG17 / pgvector 与合成配置；前端为 `npm test` / `npm run test:e2e`。[测试/源码绑定](docs/V214_RELEASE_CANDIDATE.md#本轮离线验证)说明完整运行范围。
 
-最近已发布远程 CI 是 [V2.5 Run42348866265 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42348866265)，绑定 `c8e96835…`。当前完整累计版本 **REMOTE_CI_NOT_RUN_FOR_V214**；[历史 R8](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/41972687787)也不能替代它。
+最近一次完整累计版本的远程执行是上文 V2.14 Run42655215470，结论 **cancelled**。较早的 [V2.5 Run42348866265 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42348866265) success仅绑定 `c8e96835…`；[历史 R8](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/41972687787)也不能替代当前R2远程验收。**REMOTE_CI_NOT_RUN_FOR_R2**。
 
 ## Real-LLM Evaluation：成功与失败分开
 

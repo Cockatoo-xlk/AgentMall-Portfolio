@@ -1,5 +1,11 @@
 # V2.14 · Final Portfolio Release Candidate
 
+## R2追加：首次远程超时后的CI可靠性修复
+
+V2.14 `01f0115f6fa704dec7a272eab57579d21d8f4ae5`已发布至原审核分支；[Run42655215470 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42655215470)为cancelled，GitHub annotation确认30m0s Job超时。pytest步骤1345秒，Playwright剩余预算5分32秒，记录108项通过后取消；不能当成完整119项通过。
+
+本轮R2仅拆分CI为独立Backend、Frontend-E2E及严格Release Gate，原T16/业务/模型预算/PW设置不变。[专项报告](evidence/v214-r2/report.md)与[新回执](evidence/v214-r2/verification.json)记录本地Linux aarch64执行和新源码指纹。**REMOTE_CI_NOT_RUN_FOR_R2 / AMD64_REMOTE_CI_NOT_RUN_FOR_R2**；原L7 B2仍PARTIAL。以下V2.14阶段内容为当时历史快照；其中“远程未运行/未Push”不代表当前追加状态。后续发布需批准R2准确SHA，不能复用01f0115授权。
+
 状态以[最终检查清单](RELEASE_CHECKLIST.md)和[本轮回执](evidence/v214/verification.json)为准。功能冻结，不进行L8或新业务开发。产品源码基线 **`280ec90816ed3d70079b7fb89457f7f13a4d2278`**；包含本文的本地提交为V2.14文档/发布候选，不把该新Git身份冒充已执行的真实模型实验。
 
 ## 能力与证据矩阵
