@@ -37,10 +37,16 @@ class SDKProgram:
             and constraints["return_requested"]
             and "return" not in completed
         ):
-            if not any(ref["kind"] == "order" for ref in state["entity_refs"]):
+            if "assessment" not in completed:
                 decision = route("aftersales", "assess_return", "assessment")
             else:
-                decision = route("aftersales", "prepare_return", "return", read_only=False)
+                decision = route(
+                    "aftersales",
+                    "prepare_return",
+                    "return",
+                    depends=["assessment"],
+                    read_only=False,
+                )
         elif "shop" not in completed:
             decision = route("shopping", "find_products", "shop")
         elif (
@@ -101,7 +107,11 @@ class SDKProgram:
                     ),
                 ]
                 goal = payload(human)["goal"]
-                if goal == "assess_return" and index >= 2:
+                if self.program == "return_replace" and goal == "assess_return":
+                    message = (
+                        ai(*steps[0].tool_calls, *steps[1].tool_calls) if index == 0 else final()
+                    )
+                elif goal == "assess_return" and index >= 2:
                     message = final()
                 else:
                     message = steps[min(index, 2)]

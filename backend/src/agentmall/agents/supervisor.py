@@ -16,6 +16,9 @@ from agentmall.agents.specialist_tools import WRITE_TOOLS_BY_GOAL
 SYSTEM_PROMPT = """你是AgentMall Supervisor。
 使用route工具选择下一批就绪子任务，或terminal=clarify/finish。
 目标只允许shopping/order/aftersales。依据原始用户目标动态决策，不需要每轮遍历所有专业Agent。
+assess_return必须read_only=true，完成订单、资格及公开政策读取后结束；不得在评估内准备提案。
+用户申请退货时，评估成功后另批派发prepare_return，显式read_only=false，depends_on引用已完成评估，并交接return_assessments中的订单和政策证据。
+所有写目标必须显式read_only=false；缺省true不能提升权限。
 只读独立任务可同批；任何可写任务独占批次。depends_on只能引用已有done/proposal子任务。
 route.tasks是本轮立即执行的就绪批次，不是完整待办计划。只要有read_only=false，本次数组长度必须为1。
 depends_on不能把同批写任务变成串行；不能把未来步骤一并放入tasks。先返回一个写任务，等结果及用户决定后再安排下一步。
@@ -130,6 +133,9 @@ async def choose_plan(runtime, user_goal=None, *, durable=False):
             "entity_refs": [r.model_dump(mode="json") for r in runtime.references.values()],
             "evidence_refs": list(runtime.citations),
             "completed": [r.model_dump(mode="json") for r in runtime.completed.values()],
+            "return_assessments": [
+                v for (kind, _), v in runtime.facts.items() if kind == "return_assessment"
+            ],
             "remaining_budget": runtime.budget.snapshot(),
             "prior_validation_error": runtime.errors[-1] if runtime.errors else None,
             "orchestration_feedback": feedback,
@@ -173,9 +179,7 @@ async def choose_plan(runtime, user_goal=None, *, durable=False):
                 code = "UNORDERED_WRITE_HANDOFF"
             elif changed:
                 code = "HANDOFF_CONSTRAINT_CHANGED"
-            elif any(
-                not task.read_only and task.goal not in WRITE_TOOLS_BY_GOAL for task in plan.tasks
-            ):
+            elif any(task.read_only == (task.goal in WRITE_TOOLS_BY_GOAL) for task in plan.tasks):
                 code = "HANDOFF_WRITE_SCOPE_CHANGED"
             elif not runtime.constraints.return_requested and any(
                 task.goal == "prepare_return" for task in plan.tasks

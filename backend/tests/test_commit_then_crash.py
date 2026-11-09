@@ -155,7 +155,10 @@ async def test_return_receipt_recovers_after_real_process_kill(
         "body": {"request_id": str(uuid4()), "message": f"订单 {order['id']} 有质量问题，申请退货"},
     }
     run = (await child(env, tmp_path, task))["body"]
-    assert run["status"] == "WAITING_INPUT", run
+    assert run["status"] == "WAITING_INPUT", (
+        run.get("last_error"),
+        run.get("result", {}).get("error_codes"),
+    )
     cid = await confirm(env, buyer, run["pending_confirmation"]["proposal_id"])
     resume_task = {
         **task,

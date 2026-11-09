@@ -157,6 +157,13 @@ def public_summary(kind, event):
         value = data.get(key)
         if isinstance(value, str) and re.fullmatch(r"[A-Za-z_]{1,64}", value) and identifier(value):
             result[key] = value
+    if kind in {"task_tools_visible", "return_assessment_completed", "return_evidence_revalidated"}:
+        if type(data.get("read_only")) is bool:
+            result["read_only"] = data["read_only"]
+        if isinstance(data.get("tool_names"), list):
+            result["tool_names"] = sorted(
+                {name for name in data["tool_names"] if isinstance(name, str) and name in TOOLS}
+            )
     if kind == "handoff":
         if type(data.get("read_only")) is bool:
             result["read_only"] = data["read_only"]

@@ -425,6 +425,9 @@ class SpecialistTools:
                 if not r.constraints.return_requested:
                     raise DomainError(409, "RETURN_INTENT_REQUIRED", "需要明确退货意图")
                 order = await orders.get_order(session, actor, args.order_id)
+                from agentmall.agents.return_handoff import revalidate_return
+
+                await revalidate_return(r, self.envelope, session, actor, order)
                 request = ReturnRequest(
                     request_id=r.return_request_id,
                     proposal_slot="t08_return",
@@ -511,7 +514,13 @@ class SpecialistTools:
                 "preferences_digest": payload_hash(preferences),
             }
         self.records.append(
-            {"name": name, "data": data, "entities": entities, "citations": citations}
+            {
+                "name": name,
+                "data": data,
+                "entities": entities,
+                "citations": citations,
+                "source_order_id": str(args.order_id) if hasattr(args, "order_id") else None,
+            }
         )
         return {
             "ok": True,
@@ -539,9 +548,20 @@ class SpecialistTools:
         }
 
 
+def task_tool_names(runtime, envelope):
+    """Discovery narrows role authority; it never grants an otherwise forbidden tool."""
+    names = runtime.tool_allowlist(envelope.target)
+    if runtime.single and not envelope.read_only:
+        return names  # Single's existing legal union, independently guarded.
+    write = WRITE_TOOLS_BY_GOAL.get(envelope.goal) if not envelope.read_only else None
+    if write == "prepare_checkout" and runtime.constraints.bundle:
+        write = "prepare_bundle_checkout"
+    return tuple(name for name in names if name not in WRITES or name == write)
+
+
 def build_specialist_tools(context):
     tools = []
-    for name in context.runtime.tool_allowlist(context.envelope.target):
+    for name in task_tool_names(context.runtime, context.envelope):
 
         def make_call(tool_name):
             async def execute(**kwargs):

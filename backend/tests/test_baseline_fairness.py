@@ -10,6 +10,7 @@ from conftest import row
 from multiagent_helpers import (
     MultiModel,
     ai,
+    assessment_reads,
     call,
     choose_purchase,
     final,
@@ -76,12 +77,15 @@ async def test_same_goal_two_independent_business_confirmations(
     search = ai(call("retrieve_products", {"query": "静音键盘"}))
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            ),
             route("shopping", "find_products", "shop"),
             route("order", "prepare_checkout", "buy", depends=["shop"], read_only=False),
             route("finish"),
         ],
-        aftersales=[inspect, prepare],
+        aftersales=[*assessment_reads(old["id"]), prepare],
         shopping=[search, final()],
         order=[choose_purchase],
     )
@@ -242,13 +246,14 @@ async def test_return_confirmation_then_purchase_clarification(
     search = ai(call("retrieve_products", {"query": "静音键盘"}))
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "ret", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route("aftersales", "prepare_return", "ret", depends=["assessment"], read_only=False),
             route("clarify"),
             route("shopping", "find_products", "shop"),
             route("order", "prepare_checkout", "buy", read_only=False),
             route("finish"),
         ],
-        aftersales=[inspect, prepare],
+        aftersales=[*assessment_reads(old["id"]), prepare],
         shopping=[search, final()],
         order=[choose_purchase],
     )
@@ -288,6 +293,6 @@ async def test_return_confirmation_then_purchase_clarification(
     assert (await resume(env, buyer, tid, next_run, cid)).status_code == 409
     next_cid = await confirm(env, buyer, next_run["pending_confirmation"]["proposal_id"])
     done = (await resume(env, buyer, tid, next_run, next_cid)).json()
-    assert done["status"] == "COMPLETED", done
+    assert done["status"] == "COMPLETED", json.dumps(done, ensure_ascii=False)
     assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 1
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 2

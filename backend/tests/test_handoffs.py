@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import pytest
+from multiagent_helpers import assessment_reads
 from pydantic import ValidationError
 
 
@@ -37,7 +38,16 @@ async def test_multiagent_endpoint_auth_and_disabled_default(client, buyer):
 
 async def test_explicit_owned_order_reaches_aftersales_without_raw_user_text(env, buyer, product):
     from aftersales_helpers import delivered_order
-    from multiagent_helpers import ai, call, final, install, make_models, payload, route, send
+    from multiagent_helpers import (
+        ai,
+        call,
+        final,
+        install,
+        make_models,
+        payload,
+        route,
+        send,
+    )
 
     order = await delivered_order(env[0], buyer, product)
 
@@ -88,10 +98,14 @@ async def test_order_handoff_rejects_private_return_proposal(env, buyer, product
 
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            ),
             read_proposal,
         ],
         aftersales=[
+            *assessment_reads(order["id"]),
             ai(
                 call(
                     "prepare_return",
@@ -101,7 +115,7 @@ async def test_order_handoff_rejects_private_return_proposal(env, buyer, product
                         "description": "质量问题",
                     },
                 )
-            )
+            ),
         ],
     )
     await install(env, models)

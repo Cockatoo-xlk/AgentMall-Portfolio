@@ -5,7 +5,7 @@ from uuid import uuid4
 import pytest
 from aftersales_helpers import delivered_order
 from conftest import row
-from multiagent_helpers import ai, call, final, install, make_models, route
+from multiagent_helpers import ai, assessment_reads, call, final, install, make_models, route
 from playground_helpers import install_sdk
 from t09_helpers import confirm, resume, start, thread
 from t09_helpers import durable_env as durable_env
@@ -214,9 +214,13 @@ async def test_return_decision_precedes_replacement_purchase(durable_env, buyer,
     models = make_models(
         supervisor=[
             route("order", "prepare_checkout", "too_early", read_only=False),
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            ),
         ],
         aftersales=[
+            *assessment_reads(order["id"]),
             ai(
                 call(
                     "prepare_return",
@@ -226,7 +230,7 @@ async def test_return_decision_precedes_replacement_purchase(durable_env, buyer,
                         "description": "故障",
                     },
                 )
-            )
+            ),
         ],
     )
     await install(env, models)
@@ -288,11 +292,15 @@ async def test_return_receipt_survives_real_shopping_failure(durable_env, buyer,
     before = dict(business(env[1]))
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            ),
             route("shopping", "find_products", "replacement"),
             route("finish"),
         ],
         aftersales=[
+            *assessment_reads(order["id"]),
             ai(
                 call(
                     "prepare_return",
@@ -302,7 +310,7 @@ async def test_return_receipt_survives_real_shopping_failure(durable_env, buyer,
                         "description": "故障",
                     },
                 )
-            )
+            ),
         ],
         shopping=[RuntimeError("synthetic shopping failure")],
     )

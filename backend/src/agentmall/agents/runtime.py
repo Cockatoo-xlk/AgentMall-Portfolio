@@ -298,6 +298,12 @@ class RunContext:
         async with self.sessions.begin() as session:
             actor = await authenticate(self, session)
             for task in tasks:
+                from agentmall.agents.return_handoff import validate_return_task
+                from agentmall.agents.specialist_tools import WRITE_TOOLS_BY_GOAL
+
+                if task.read_only == (task.goal in WRITE_TOOLS_BY_GOAL):
+                    raise RunStopped("HANDOFF_WRITE_SCOPE_CHANGED")
+                await validate_return_task(self, task, session, actor)
                 if task.constraints != self.handoff_constraints():
                     raise RunStopped("HANDOFF_CONSTRAINT_CHANGED")
                 if task.target == "shopping" and self.constraints.exclude_original:

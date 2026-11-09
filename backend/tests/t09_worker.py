@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 from httpx import ASGITransport, AsyncClient
-from multiagent_helpers import ai, call, final, make_models, payload, route
+from multiagent_helpers import ai, assessment_reads, call, final, make_models, payload, route
 
 from agentmall.infra.config import Settings
 from agentmall.main import create_app
@@ -38,6 +38,15 @@ async def main():
     )
     assert settings.db_schema.startswith("test_")
     app = create_app(settings)
+    if task.get("order"):
+        from retrieval_helpers import FixtureEncoder
+
+        from agentmall.retrieval.ingest import index_policies, load_policies
+
+        # The separated readonly assessment requires a real public policy source.
+        app.state.retrieval_encoder = FixtureEncoder()
+        async with app.state.sessions.begin() as session:
+            await index_policies(session, load_policies(), app.state.retrieval_encoder)
     marker = Path(task["marker"])
 
     async def boundary(label):
@@ -58,6 +67,12 @@ async def main():
                     "order", "prepare_checkout", "new", depends=["replacement"], read_only=False
                 )(messages)
             return route("finish")(messages)
+        if task.get("order") and "return" not in {r["subtask_id"] for r in state["completed"]}:
+            if "assessment" not in {r["subtask_id"] for r in state["completed"]}:
+                return route("aftersales", "assess_return", "assessment")(messages)
+            return route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            )(messages)
         return (
             route("finish")(messages)
             if state["completed"]
@@ -74,6 +89,7 @@ async def main():
         order=[purchase],
         shopping=[ai(call("get_product", {"product_id": task["product"]})), final()],
         aftersales=[
+            *assessment_reads(task["order"]),
             ai(
                 call(
                     "prepare_return",
@@ -83,7 +99,7 @@ async def main():
                         "description": "按键故障",
                     },
                 )
-            )
+            ),
         ]
         if task.get("order")
         else [],

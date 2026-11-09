@@ -52,11 +52,10 @@ async def test_sdk_b2_repairs_in_place_keeps_reads_and_two_confirmations(
                     next(m["content"] for m in body["messages"] if m["role"] == "user")
                 )
                 assert content["orchestration_feedback"]["error_code"] == "INVALID_TOOL_BATCH"
-                assert {r["name"] for r in content["prior_tool_results"]} == {
-                    "get_order",
-                    "check_eligibility",
-                    "retrieve_policies",
-                }
+                assert content["prior_tool_results"] == []
+                proof = content["verified_assessments"][0]
+                assert proof["ready"] and proof["order_id"] == order["id"]
+                assert proof["evidence_refs"] and proof["original_product_ids"] == [product]
                 c = content["constraints"]
                 assert c["max_price_cents"] == 50000 and c["quantity"] == 1
                 assert c["noise_preference"] == "quiet" and c["address_label"] == "demo_dorm"
@@ -118,7 +117,7 @@ async def test_sdk_b2_repairs_in_place_keeps_reads_and_two_confirmations(
         rid2 = str(uuid4())
         done = (await resume(env, buyer, tid, second, cid2, rid2)).json()
         assert done["status"] == "COMPLETED", done
-        assert done["budget"]["models"] == 11 and done["budget"]["tools"] == 6
+        assert done["budget"]["models"] == 12 and done["budget"]["tools"] == 6
         calls = len(wire.requests)
         assert (await resume(env, buyer, tid, second, cid2, rid2)).json() == done
         assert (await resume(env, buyer, tid, first, cid1, rid1)).json() == done

@@ -6,6 +6,7 @@ from aftersales_helpers import delivered_order
 from conftest import row
 from multiagent_helpers import (
     ai,
+    assessment_reads,
     call,
     choose_purchase,
     final,
@@ -21,8 +22,12 @@ from t09_helpers import durable_env as durable_env
 def verified_flow(order_id):
     def plan(messages):
         completed = {r["subtask_id"] for r in payload(messages)["completed"]}
+        if "assessment" not in completed:
+            return route("aftersales", "assess_return", "assessment")(messages)
         if "return" not in completed:
-            return route("aftersales", "prepare_return", "return", read_only=False)(messages)
+            return route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            )(messages)
         if "shop" not in completed:
             return route("shopping", "find_products", "shop", depends=["return"])(messages)
         if "buy" not in completed:
@@ -34,11 +39,8 @@ def verified_flow(order_id):
     def repair(messages):
         value = payload(messages)
         assert value["orchestration_feedback"]["error_code"] == "INCOMPLETE_WRITE_GOAL"
-        assert {r["name"] for r in value["prior_tool_results"]} == {
-            "get_order",
-            "check_eligibility",
-            "retrieve_policies",
-        }
+        assert value["prior_tool_results"] == []
+        assert value["verified_assessments"][0]["ready"]
         return ai(
             call(
                 "prepare_return",
@@ -53,11 +55,7 @@ def verified_flow(order_id):
     return make_models(
         supervisor=[plan] * 6,
         aftersales=[
-            ai(call("get_order", {"order_id": order_id})),
-            ai(
-                call("check_eligibility", {"order_id": order_id, "reason_code": "QUALITY_ISSUE"}),
-                call("retrieve_policies", {"order_id": order_id, "query": "质量问题退货期限"}),
-            ),
+            *assessment_reads(order_id),
             final("资格和政策已经核验。"),
             repair,
         ],
@@ -104,7 +102,7 @@ async def test_read_facts_are_not_completion_of_write_goal_two_independent_decis
     rid2 = str(uuid4())
     done = (await resume(env, buyer, tid, second, cid2, rid2)).json()
     assert done["status"] == "COMPLETED", done
-    assert done["budget"]["models"] == 11 and done["budget"]["tools"] == 6
+    assert done["budget"]["models"] == 12 and done["budget"]["tools"] == 6
     assert (
         len(models["aftersales"].seen) == 4
     )  # one local repair; no repeated supervisor/delegation

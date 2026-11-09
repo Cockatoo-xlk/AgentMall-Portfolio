@@ -46,7 +46,7 @@ async def test_return_resume_keeps_constraints_and_independent_confirmations(
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 1
     assert all(payload(m)["canonical_constraints"] == canonical for m in models["supervisor"].seen)
     assert (
-        payload(models["supervisor"].seen[2])["orchestration_feedback"]["error_code"]
+        payload(models["supervisor"].seen[3])["orchestration_feedback"]["error_code"]
         == "HANDOFF_CONSTRAINT_CHANGED"
     )
     assert (await resume(env, buyer, tid, second, cid1)).status_code == 409
@@ -54,7 +54,7 @@ async def test_return_resume_keeps_constraints_and_independent_confirmations(
     assert cid1 != cid2
     done = (await resume(env, buyer, tid, second, cid2)).json()
     assert done["status"] == ("PARTIAL" if second_drift else "COMPLETED"), done
-    assert done["budget"]["models"] == 10
+    assert done["budget"]["models"] == 12
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 2
     assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 1
     assert (
@@ -95,8 +95,8 @@ async def test_still_drifting_tasks_are_rejected_without_losing_case(
     done = (await resume(env, buyer, tid, first, cid)).json()
     assert done["status"] == "PARTIAL"
     assert "HANDOFF_CONSTRAINT_CHANGED" in done["result"]["error_codes"]
-    assert done["budget"]["models"] == 5
-    assert done["budget"]["delegations"] == 1
+    assert done["budget"]["models"] == 7
+    assert done["budget"]["delegations"] == 2
     assert not models["shopping"].seen
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 1
     assert row(env[1], "SELECT status FROM aftersales_cases")["status"] == "REQUESTED"
@@ -106,23 +106,39 @@ async def test_still_drifting_tasks_are_rejected_without_losing_case(
     )  # original order only
 
 
+@pytest.mark.parametrize("cap", [4, 6])
 async def test_constraint_correction_cannot_extend_model_budget(
-    durable_env, buyer, product, monkeypatch
+    durable_env, buyer, product, monkeypatch, cap
 ):
     from agentmall.agents import run_service
     from agentmall.agents.budgets import Limits
     from agentmall.agents.durable_budget import DurableBudget
 
     monkeypatch.setattr(
-        run_service, "DurableBudget", lambda fence: DurableBudget(fence, Limits(models=4))
+        run_service, "DurableBudget", lambda fence: DurableBudget(fence, Limits(models=cap))
     )
     tid, first, _ = await two_proposals(durable_env, buyer, product)
+    if cap == 4:
+        # The separate assessment now consumes the former four-call allowance.
+        # Keep that boundary covered: never grant a free preparation call.
+        assert first["status"] == "PARTIAL", first
+        assert first["budget"]["models"] == cap
+        assert "BUDGET_EXCEEDED" in first["result"]["error_codes"]
+        assert row(durable_env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 0
+        assert (
+            row(
+                durable_env[1],
+                "SELECT count(*) n FROM action_proposals WHERE action_type='RETURN_REQUEST'",
+            )["n"]
+            == 0
+        )
+        return
     assert first["status"] == "WAITING_INPUT"
     models = durable_env[2].state.multi_models
     models["supervisor"].script.insert(0, drifting("quantity", 2))
     cid = await confirm(durable_env, buyer, first["pending_confirmation"]["proposal_id"])
     done = (await resume(durable_env, buyer, tid, first, cid)).json()
-    assert done["budget"]["models"] == 4
+    assert done["budget"]["models"] == cap
     assert "BUDGET_EXCEEDED" in done["result"]["error_codes"]
     assert row(durable_env[1], "SELECT status FROM aftersales_cases")["status"] == "REQUESTED"
     assert not models["shopping"].seen

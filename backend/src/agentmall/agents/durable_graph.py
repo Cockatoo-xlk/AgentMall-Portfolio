@@ -122,6 +122,20 @@ def build_durable_graph(base, saver, store):
     async def supervisor(runtime, state):
         plan = await choose_plan(runtime, state.get("user_goal"), durable=True)
         envelopes = await runtime.validate_tasks(plan.tasks) if plan.tasks else []
+        # A validated model finish still reconciles domain receipts and checks HITL.
+        # With nothing pending, avoid two empty administrative graph nodes. No
+        # model/tool/delegation is free, and old checkpoint node names remain valid.
+        if plan.terminal == "finish":
+            final = await choose_confirmation(
+                runtime, {**state, "plan": plan.model_dump(), "next": "finish"}
+            )
+            if final["next"] == "finish":
+                return {
+                    "plan": plan.model_dump(mode="json"),
+                    "dispatch": [],
+                    "pending_action": None,
+                    "next": "done",
+                }
         return {
             "round": state.get("round", 0) + 1,
             "plan": plan.model_dump(mode="json"),
@@ -283,6 +297,8 @@ def build_durable_graph(base, saver, store):
         return {"next": "done"}
 
     def dispatch(state):
+        if state["next"] == "done":
+            return END
         if state["next"] in {"finish", "clarify"}:
             return "choose_confirmation"
         return [
@@ -315,7 +331,7 @@ def build_durable_graph(base, saver, store):
     graph.add_edge(START, "bootstrap")
     graph.add_conditional_edges("bootstrap", lambda s: s["next"], ["single", "supervisor"])
     graph.add_conditional_edges(
-        "supervisor", dispatch, ["shopping", "order", "aftersales", "choose_confirmation"]
+        "supervisor", dispatch, ["shopping", "order", "aftersales", "choose_confirmation", END]
     )
     for role in ("shopping", "order", "aftersales"):
         graph.add_edge(role, "merge")

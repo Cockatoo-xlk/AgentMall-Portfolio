@@ -11,6 +11,7 @@ from agentmall.agents.specialist_tools import (
     WRITE_TOOLS_BY_GOAL,
     SpecialistTools,
     build_specialist_tools,
+    task_tool_names,
 )
 from agentmall.agents.specialists import aftersales, order, shopping
 
@@ -75,7 +76,7 @@ def required_write_tool(runtime, goal):
 def incomplete_write_goal(runtime, context):
     """Read receipts do not fulfill a requested write goal. Never create the action here."""
     tool = required_write_tool(runtime, context.envelope.goal)
-    if runtime.single or tool is None or not context.records:
+    if runtime.single or tool is None:
         return False
     if runtime.errors or any("error_code" in record for record in context.records):
         return False
@@ -99,7 +100,15 @@ async def run_specialist(runtime, envelope):
         budget=dict(runtime.budget.used),
     )
     runtime.trace["prompts"][role] = fingerprint(PROMPTS[role])
-    runtime.trace["tool_allowlists"][role] = list(runtime.tool_allowlist(role))
+    runtime.trace["tool_allowlists"][role] = list(task_tool_names(runtime, envelope))
+    runtime.event(
+        "task_tools_visible",
+        role=role,
+        subtask_id=envelope.subtask_id,
+        goal=envelope.goal,
+        read_only=envelope.read_only,
+        tool_names=list(task_tool_names(runtime, envelope)),
+    )
     prompt = SINGLE_PROMPT if runtime.single else PROMPTS[role]
     if runtime.thread_snapshot:
         from agentmall.agents.context import THREAD_CONTEXT_PROMPT
@@ -139,6 +148,10 @@ async def run_specialist(runtime, envelope):
                 prior_results=[r.model_dump(mode="json") for r in runtime.completed.values()],
                 error_codes=list(runtime.errors),
             )
+        if not runtime.single and envelope.goal == "prepare_return":
+            content["verified_assessments"] = [
+                v for (kind, _), v in runtime.facts.items() if kind == "return_assessment"
+            ]
         if runtime.thread_snapshot:
             content["thread_context"] = runtime.thread_snapshot
         if feedback:
@@ -269,6 +282,17 @@ async def run_specialist(runtime, envelope):
     )
     if unsupported:
         status = "blocked"
+    if (
+        not runtime.single
+        and envelope.goal == "assess_return"
+        and runtime.constraints.return_requested
+        and any(
+            row.get("data", {}).get("eligible") is False
+            for row in context.records
+            if row["name"] == "check_eligibility"
+        )
+    ):
+        status, error = "blocked", "AFTERSALES_INELIGIBLE"
     result = SpecialistResult(
         subtask_id=envelope.subtask_id,
         target=role,
@@ -289,6 +313,9 @@ async def run_specialist(runtime, envelope):
     )
     if status in {"error", "blocked"} and not runtime.single:
         runtime.signatures.add(runtime.failed_goal_signature(envelope))
+    from agentmall.agents.return_handoff import record_assessment
+
+    record_assessment(runtime, context, result)
     runtime.completed[envelope.subtask_id] = result
     runtime.pending.pop(envelope.subtask_id, None)
     runtime.event(

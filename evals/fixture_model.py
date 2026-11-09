@@ -19,9 +19,11 @@ class FixtureModel(MultiModel):
 
     @property
     def _llm_type(self):
-        return "fixture-t12-program-v1"
+        return "fixture-t12-program-v2-l4"
 
     def bind_tools(self, tools, **kwargs):
+        if not self.single:
+            return super().bind_tools(tools, **kwargs)
         self.bound = [
             t["function"]["name"] if isinstance(t, dict) else t.name for t in tools
         ]
@@ -227,15 +229,26 @@ def fixture_models(program, goal, refs, fault):
             if end == "ticket"
             else "assess_return",
         }[role]
+        dependencies = []
+        specialist_stages = stages
+        if target_goal == "prepare_return":
+            assessment_id = f"stage_{index}_assessment"
+            scripts["supervisor"].append(
+                route("aftersales", "assess_return", assessment_id)
+            )
+            scripts[role].extend(script(stages[:-1]))
+            dependencies = [assessment_id]
+            specialist_stages = ["return"]
         scripts["supervisor"].append(
             route(
                 role,
                 target_goal,
                 f"stage_{index}",
+                depends=dependencies,
                 read_only=end not in {"checkout", "return", "ticket"},
             )
         )
-        steps = script(stages)
+        steps = script(specialist_stages)
         if stages == ["checkout"]:
             steps = [inspect_candidates, choose_observed]
         scripts[role].extend(steps)
