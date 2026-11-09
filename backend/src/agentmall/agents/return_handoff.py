@@ -10,13 +10,13 @@ from agentmall.infra.errors import DomainError
 from agentmall.orders.lifecycle import owned_order
 
 
-def record_assessment(runtime, context, result):
+def assessment_receipt(context):
     envelope = context.envelope
-    if runtime.single or envelope.goal != "assess_return":
-        return
     # Even an incomplete assessment is recorded; a later write cannot bypass it.
-    proof = {"subtask_id": envelope.subtask_id, "ready": False}
-    rows = [row for row in context.records if not row.get("error_code")]
+    proof = {"subtask_id": envelope.subtask_id, "ready": False, "reads_complete": False}
+    if any(row.get("error_code") for row in context.records):
+        return proof
+    rows = context.records
     orders = {row.get("source_order_id") for row in rows if row["name"] == "get_order"}
     if envelope.read_only and len(orders) == 1:
         order_id = next(iter(orders))
@@ -37,11 +37,22 @@ def record_assessment(runtime, context, result):
             reason_code=eligibility.get("reason_code"),
             eligible=eligibility.get("eligible") is True,
             evidence_refs=evidence,
-            ready=result.status == "done"
-            and bool(evidence)
+            reads_complete=bool(evidence)
+            and type(eligibility.get("eligible")) is bool
+            and eligibility.get("policy_version") == order["policy_version"],
+            ready=bool(evidence)
             and eligibility.get("eligible") is True
             and eligibility.get("policy_version") == order["policy_version"],
         )
+    return proof
+
+
+def record_assessment(runtime, context, result):
+    envelope = context.envelope
+    if runtime.single or envelope.goal != "assess_return":
+        return
+    proof = assessment_receipt(context)
+    proof["ready"] = proof["ready"] and result.status == "done"
     runtime.facts[("return_assessment", envelope.subtask_id)] = proof
     runtime.event(
         "return_assessment_completed",

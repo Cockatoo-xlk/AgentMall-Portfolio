@@ -47,7 +47,7 @@ async def test_sdk_b2_repairs_in_place_keeps_reads_and_two_confirmations(
         async def respond(request):
             index = program.counts.get(role, 0)
             body = json.loads(request.content)
-            if role == "aftersales" and index == 3:
+            if role == "aftersales" and index == 2:
                 content = json.loads(
                     next(m["content"] for m in body["messages"] if m["role"] == "user")
                 )
@@ -62,7 +62,7 @@ async def test_sdk_b2_repairs_in_place_keeps_reads_and_two_confirmations(
                 assert product in c["exclude_product_ids"]
                 checked.append(content)
             response = await base.handle_async_request(request)
-            if role == "aftersales" and index == 2:
+            if role == "aftersales" and index == 1:
                 value = response.json()
                 value["choices"][0]["message"]["tool_calls"][0]["function"]["arguments"] = (
                     '{"order_id":' if fault == "json" else json.dumps({"order_id": order["id"]})
@@ -98,7 +98,7 @@ async def test_sdk_b2_repairs_in_place_keeps_reads_and_two_confirmations(
             "counts": wire.counts,
         }
         assert first["pending_confirmation"]["action_type"] == "RETURN_REQUEST"
-        assert len(checked) == 1 and wire.counts["aftersales"] == 4
+        assert len(checked) == 1 and wire.counts["aftersales"] == 3
         assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 0
         cid1 = await confirm(env, buyer, first["pending_confirmation"]["proposal_id"])
         rid1 = str(uuid4())
@@ -117,7 +117,7 @@ async def test_sdk_b2_repairs_in_place_keeps_reads_and_two_confirmations(
         rid2 = str(uuid4())
         done = (await resume(env, buyer, tid, second, cid2, rid2)).json()
         assert done["status"] == "COMPLETED", done
-        assert done["budget"]["models"] == 12 and done["budget"]["tools"] == 6
+        assert done["budget"]["models"] == 10 and done["budget"]["tools"] == 6
         calls = len(wire.requests)
         assert (await resume(env, buyer, tid, second, cid2, rid2)).json() == done
         assert (await resume(env, buyer, tid, first, cid1, rid1)).json() == done
@@ -167,10 +167,10 @@ async def test_sdk_nonrecoverable_or_second_repair_stops_without_new_writes(
         async def respond(request):
             index = program.counts.get(role, 0)
             response = await base.handle_async_request(request)
-            if (fault != "exhausted" and role == "aftersales" and index == 2) or (
+            if (fault != "exhausted" and role == "aftersales" and index == 1) or (
                 fault == "exhausted"
                 and role in {"aftersales", "order"}
-                and index == (2 if role == "aftersales" else 0)
+                and index == (1 if role == "aftersales" else 0)
             ):
                 value = response.json()
                 function = value["choices"][0]["message"]["tool_calls"][0]["function"]
@@ -211,7 +211,7 @@ async def test_sdk_nonrecoverable_or_second_repair_stops_without_new_writes(
             first = (await resume(env, buyer, tid, first, cid)).json()
             assert wire.counts["order"] == 1  # no second specialist-local repair allowance
         else:
-            assert wire.counts["aftersales"] == 3  # policy/duplicate failures do not retry
+            assert wire.counts["aftersales"] == 2  # policy/duplicate failures do not retry
         assert first["status"] == "PARTIAL", first
         assert first["result"]["error_codes"]
         assert first["budget"]["models"] <= 12

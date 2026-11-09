@@ -152,7 +152,7 @@ async def test_cross_domain_return_and_replacement_preserve_identity(
         c["policy_version"] == "demo-v1" and c["visibility"] == "public"
         for c in result["citations"]
     )
-    assert result["budget"]["used"]["models"] == 11
+    assert result["budget"]["used"]["models"] == 9
     from multiagent_helpers import save_evidence
 
     save_evidence("return-replacement-" + embedding, env, trace, result, baseline_counts=baseline)

@@ -262,6 +262,8 @@ class RunContext:
         )
 
     async def validate_tasks(self, tasks):
+        from agentmall.agents.read_completion import read_goal_signature
+
         if len(tasks) > 1 and any(not t.read_only for t in tasks):
             raise RunStopped("UNORDERED_WRITE_HANDOFF")
         task = next(
@@ -270,6 +272,7 @@ class RunContext:
                 for task in tasks
                 if task.subtask_id in self.seen_tasks
                 or self.failed_goal_signature(task) in self.signatures
+                or read_goal_signature(self, task) in self.signatures
             ),
             None,
         )

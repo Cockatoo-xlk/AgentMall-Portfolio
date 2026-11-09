@@ -17,7 +17,8 @@ async def test_state_reopens_with_completed_tasks_references_and_budget(durable_
         assert set(state["completed"]) == {"shop", "buy"}
         assert state["completed"]["buy"]["proposal_ids"] == run["result"]["proposal_ids"]
         assert state["pending"] == {}
-        assert state["budget"]["used"]["models"] >= 5
+        # Completed Shopping receipts no longer need a model-final round.
+        assert state["budget"]["used"]["models"] == run["budget"]["models"] == 4
         assert state["references"] and state["seen_tasks"]
         assert await saver.aget_tuple(checkpoint_config(str(uuid4()), run["id"])) is None
 

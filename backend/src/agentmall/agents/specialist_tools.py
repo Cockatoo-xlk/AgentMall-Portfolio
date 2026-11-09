@@ -210,6 +210,9 @@ class SpecialistTools:
         self.records = []
         self.repairing = False
         self.observed = set()
+        self.pending_tool_ids = set()
+        self.read_batch_settled = None
+        self.bound_tools = {}
 
     async def execute(self, name, arguments):
         runtime = self.runtime
@@ -304,6 +307,18 @@ class SpecialistTools:
                         }
                         for i, h in enumerate(accepted)
                     ]
+                evidence.append(
+                    (
+                        "retrieval_candidates",
+                        self.envelope.subtask_id,
+                        {
+                            "items": [
+                                {"rank": i + 1, **hit.model_dump(mode="json")}
+                                for i, hit in enumerate(accepted)
+                            ]
+                        },
+                    )
+                )
                 for hit in accepted:
                     entities.append(ref("product", hit.id, "replacement"))
                     evidence.append(("product", hit.id, hit.product.model_dump(mode="json")))
@@ -560,6 +575,12 @@ def task_tool_names(runtime, envelope):
 
 
 def build_specialist_tools(context):
+    from agentmall.agents.read_completion import supports_read_completion
+
+    # Declare the SDK's existing END edge at compile time. The guard disarms
+    # these per-Handoff read tools BEFORE execution, and only complete server
+    # receipts re-arm them after the entire validated batch has settled.
+    read_completion = supports_read_completion(context.runtime, context.envelope)
     tools = []
     for name in task_tool_names(context.runtime, context.envelope):
 
@@ -575,10 +596,14 @@ def build_specialist_tools(context):
                 name=name,
                 description=DESCRIPTIONS[name],
                 args_schema=ALL_SCHEMAS[name],
-                return_direct=name in WRITES
-                and not (context.runtime.single and name == "create_support_ticket"),
+                return_direct=read_completion
+                or (
+                    name in WRITES
+                    and not (context.runtime.single and name == "create_support_ticket")
+                ),
             )
         )
+    context.bound_tools = {tool.name: tool for tool in tools}
     return tools
 
 

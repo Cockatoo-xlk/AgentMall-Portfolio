@@ -111,6 +111,8 @@ class SDKProgram:
                     message = (
                         ai(*steps[0].tool_calls, *steps[1].tool_calls) if index == 0 else final()
                     )
+                elif self.program == "return_replace" and goal == "prepare_return":
+                    message = steps[2]
                 elif goal == "assess_return" and index >= 2:
                     message = final()
                 else:

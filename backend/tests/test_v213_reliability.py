@@ -102,9 +102,9 @@ async def test_read_facts_are_not_completion_of_write_goal_two_independent_decis
     rid2 = str(uuid4())
     done = (await resume(env, buyer, tid, second, cid2, rid2)).json()
     assert done["status"] == "COMPLETED", done
-    assert done["budget"]["models"] == 12 and done["budget"]["tools"] == 6
+    assert done["budget"]["models"] == 10 and done["budget"]["tools"] == 6
     assert (
-        len(models["aftersales"].seen) == 4
+        len(models["aftersales"].seen) == 3
     )  # one local repair; no repeated supervisor/delegation
     assert (await resume(env, buyer, tid, second, cid2, rid2)).json() == done
     assert (await resume(env, buyer, tid, first, cid1, rid1)).json() == done
@@ -199,5 +199,5 @@ async def test_completed_task_is_not_delegated_again(durable_env, buyer):
     assert result["status"] == "PARTIAL"
     assert "REPEATED_DELEGATION" in result["result"]["error_codes"]
     assert result["budget"]["delegations"] == 1
-    assert len(models["shopping"].seen) == 2
+    assert len(models["shopping"].seen) == 1
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 0

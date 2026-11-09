@@ -23,8 +23,8 @@ async def test_failed_goal_cannot_be_redelegated_with_new_id_or_new_evidence(
                     "check_eligibility", {"order_id": order["id"], "reason_code": "QUALITY_ISSUE"}
                 ),
                 call("retrieve_policies", {"order_id": order["id"], "query": "退货政策"}),
+                call("execute_confirmed_action", {}),
             ),
-            ai(call("execute_confirmed_action", {})),
             final(),
         ],
     )
@@ -36,7 +36,7 @@ async def test_failed_goal_cannot_be_redelegated_with_new_id_or_new_evidence(
     assert result["status"] == "PARTIAL"
     assert "REPEATED_DELEGATION" in result["result"]["error_codes"]
     assert result["budget"]["delegations"] == 1
-    assert len(models["aftersales"].seen) == 3
+    assert len(models["aftersales"].seen) == 2
     assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 0
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 1
     assert (

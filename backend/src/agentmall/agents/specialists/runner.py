@@ -6,6 +6,11 @@ from langgraph.errors import GraphRecursionError
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import SpecialistResult
 from agentmall.agents.model_control import SpecialistGuard, ToolBatchRejected
+from agentmall.agents.read_completion import (
+    read_goal_signature,
+    verified_candidates,
+)
+from agentmall.agents.return_handoff import assessment_receipt
 from agentmall.agents.runtime import fingerprint
 from agentmall.agents.specialist_tools import (
     WRITE_TOOLS_BY_GOAL,
@@ -152,6 +157,12 @@ async def run_specialist(runtime, envelope):
             content["verified_assessments"] = [
                 v for (kind, _), v in runtime.facts.items() if kind == "return_assessment"
             ]
+        if (
+            not runtime.single
+            and envelope.goal == "prepare_checkout"
+            and not runtime.constraints.bundle
+        ):
+            content["verified_candidates"] = verified_candidates(runtime, envelope)
         if runtime.thread_snapshot:
             content["thread_context"] = runtime.thread_snapshot
         if feedback:
@@ -293,6 +304,14 @@ async def run_specialist(runtime, envelope):
         )
     ):
         status, error = "blocked", "AFTERSALES_INELIGIBLE"
+    if (
+        not runtime.single
+        and envelope.goal == "assess_return"
+        and runtime.constraints.return_requested
+        and status == "done"
+        and not assessment_receipt(context)["reads_complete"]
+    ):
+        status, error = "blocked", "INCOMPLETE_ASSESSMENT"
     result = SpecialistResult(
         subtask_id=envelope.subtask_id,
         target=role,
@@ -316,6 +335,8 @@ async def run_specialist(runtime, envelope):
     from agentmall.agents.return_handoff import record_assessment
 
     record_assessment(runtime, context, result)
+    if status == "done" and getattr(context, "read_goal_completed", False):
+        runtime.signatures.add(read_goal_signature(runtime, envelope))
     runtime.completed[envelope.subtask_id] = result
     runtime.pending.pop(envelope.subtask_id, None)
     runtime.event(

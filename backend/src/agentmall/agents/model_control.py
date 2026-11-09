@@ -10,6 +10,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 from pydantic import ValidationError
 
 from agentmall.agents.budgets import RunStopped
+from agentmall.agents.read_completion import finish_read_batch, supports_read_completion
 from agentmall.agents.runtime import fingerprint
 from agentmall.agents.specialist_tools import ALL_SCHEMAS, WRITE_TOOLS_BY_GOAL, WRITES
 
@@ -389,6 +390,11 @@ class SpecialistGuard(AgentMiddleware):
         return await model_call(self.runtime, self.role, invoke)
 
     async def aafter_model(self, state, runtime):
+        if supports_read_completion(self.runtime, self.context.envelope):
+            # END is a compiled SDK destination, not evidence of completion.
+            # Disarm before any tool can run, including rejected/partial batches.
+            for tool in self.context.bound_tools.values():
+                tool.return_direct = False
         message = state["messages"][-1]
         try:
             calls, new_ids, signatures = validate_batch(self.runtime, self.context, message)
@@ -457,6 +463,12 @@ class SpecialistGuard(AgentMiddleware):
                 )
             raise
         if calls:
+            self.context.pending_tool_ids = set(new_ids)
+            self.context.read_batch_settled = (
+                asyncio.Event()
+                if supports_read_completion(self.runtime, self.context.envelope)
+                else None
+            )
             self.runtime.tool_ids.update(new_ids)
             for signature in signatures:
                 self.runtime.tool_repeats[signature] = (
@@ -511,4 +523,16 @@ class SpecialistGuard(AgentMiddleware):
         )
         if body.get("error_code"):
             self.context.records.append({"name": call["name"], "error_code": body["error_code"]})
+        self.context.pending_tool_ids.discard(call["id"])
+        if not self.context.pending_tool_ids:
+            try:
+                finish_read_batch(self.runtime, self.context)
+            finally:
+                if self.context.read_batch_settled is not None:
+                    self.context.read_batch_settled.set()
+        if self.context.read_batch_settled is not None:
+            # SDK tools run as parallel Send branches: an early sibling must not
+            # route back to the model before the final sibling's receipt commits.
+            # Cancellation propagates normally; this creates no detached task.
+            await self.context.read_batch_settled.wait()
         return result

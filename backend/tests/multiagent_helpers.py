@@ -234,5 +234,4 @@ def assessment_reads(order_id):
             call("check_eligibility", {"order_id": str(order_id), "reason_code": "QUALITY_ISSUE"}),
             call("retrieve_policies", {"order_id": str(order_id), "query": "质量问题退货期限"}),
         ),
-        final(),
     ]

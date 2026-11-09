@@ -28,6 +28,7 @@ def guard(*, read_only=False, role="aftersales", goal="prepare_return"):
     context = SimpleNamespace(
         envelope=SimpleNamespace(target=role, goal=goal, read_only=read_only, subtask_id="step"),
         records=[],
+        bound_tools={},
     )
     return SpecialistGuard(runtime, context), runtime, events
 

@@ -157,7 +157,7 @@ async def test_sdk_assess_then_authorized_return_then_purchase(durable_env, buye
         assert now == {"on_hand": inventory["on_hand"], "reserved": inventory["reserved"] + 1}
         assert actual["reserved"] == 1
         budgets = done["budget"]
-        assert budgets["models"] == len(program.requests) == 11
+        assert budgets["models"] == len(program.requests) == 9
         assert budgets["tools"] == 6 and budgets["delegations"] == 4
         assert budgets["steps"] <= 24 and budgets["output_tokens"] <= 12000
         events = row(
@@ -199,7 +199,7 @@ async def test_invalid_write_handoff_has_no_business_writes(durable_env, buyer, 
         result = (await start(env, buyer, await thread(env, buyer), message=goal(order))).json()
         assert result["status"] == "PARTIAL", result
         assert counts(env) == before
-        assert program.counts["aftersales"] == 2
+        assert program.counts["aftersales"] == 1
 
 
 async def test_policy_only_never_prepares_return(durable_env, buyer):
@@ -253,7 +253,7 @@ async def test_changed_order_or_policy_cannot_use_assessed_evidence(
         result = (await start(env, buyer, await thread(env, buyer), message=goal(order))).json()
         assert result["status"] == "PARTIAL", result
         assert counts(env) == before
-        assert program.counts["aftersales"] == (2 if when == "before_dispatch" else 3)
+        assert program.counts["aftersales"] == (1 if when == "before_dispatch" else 2)
         current = row(
             env[1], "SELECT version, policy_version FROM orders WHERE id=:id", id=order["id"]
         )

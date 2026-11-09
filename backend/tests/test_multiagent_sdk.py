@@ -84,7 +84,7 @@ async def test_real_sdk_routing_and_tool_loop_offline(env, buyer):
             trace = await install(env, models)
             result = await send(env, buyer, message="搜索300元以内静音键盘")
             assert result["error_codes"] == [], (result, trace)
-            assert result["budget"]["used"]["models"] == len(requests) == 4
+            assert result["budget"]["used"]["models"] == len(requests) == 3
             assert result["budget"]["used"]["tools"] == 1
             assert any(f["kind"] == "product" for f in result["facts"])
             assert result["proposal_ids"] == []

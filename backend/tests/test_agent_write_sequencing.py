@@ -146,7 +146,7 @@ async def test_multi_repair_serializes_writes_and_waits_between_two_actions(
             route("order", "prepare_checkout", "buy", depends=["replacement"], read_only=False),
             route("finish"),
         ],
-        aftersales=[read, final(), prepare],
+        aftersales=[read, prepare],
         shopping=[ai(call("retrieve_products", {"query": "静音键盘"})), final()],
         order=[choose_purchase],
     )
@@ -178,7 +178,7 @@ async def test_multi_repair_serializes_writes_and_waits_between_two_actions(
     assert cid2 != cid1
     done = (await resume(env, buyer, tid, next_run, cid2)).json()
     assert done["status"] == "COMPLETED", done
-    assert done["budget"]["models"] == 12
+    assert done["budget"]["models"] == 10
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 2
     assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 1
     assert row(env[1], "SELECT count(*) n FROM agent_runs")["n"] == 1
