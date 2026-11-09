@@ -81,7 +81,15 @@ def models(mode, boundary):
                 if not tools:
                     response = choose_purchase(messages)
             elif self.role == "single":
-                if not tools:
+                decided_checkout = any(
+                    fact.get("kind") == "proposal"
+                    and fact.get("data", {}).get("action_type") == "CHECKOUT"
+                    and fact.get("data", {}).get("status") in {"EXECUTED", "REJECTED"}
+                    for fact in data.get("committed_facts", [])
+                )
+                if decided_checkout:
+                    response = AIMessage(content='{"terminal":"finish"}')
+                elif not tools:
                     response = ai(call("retrieve_products", {"query": "静音键盘"}))
                 elif constraints["purchase_requested"] and "prepare_checkout" not in names:
                     body = json.loads(tools[-1].content)

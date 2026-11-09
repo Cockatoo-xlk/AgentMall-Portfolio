@@ -5,7 +5,7 @@ from langgraph.errors import GraphRecursionError
 
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import SpecialistResult
-from agentmall.agents.model_control import SpecialistGuard
+from agentmall.agents.model_control import SpecialistGuard, ToolBatchRejected
 from agentmall.agents.runtime import fingerprint
 from agentmall.agents.specialist_tools import (
     WRITE_TOOLS_BY_GOAL,
@@ -191,7 +191,11 @@ async def run_specialist(runtime, envelope):
             break
         except RunStopped as exc:
             error = exc.code
-            if error in {"UNORDERED_WRITE_BATCH", "INCOMPLETE_PURCHASE", "INCOMPLETE_WRITE_GOAL"}:
+            repairable = (isinstance(exc, ToolBatchRejected) and exc.repairable) or error in {
+                "INCOMPLETE_PURCHASE",
+                "INCOMPLETE_WRITE_GOAL",
+            }
+            if repairable:
                 allowed = await runtime.budget.claim_repair(error)
                 if not runtime.budget.persists_rejections:
                     runtime.event("orchestration_rejected", role=role, error_code=error)
@@ -199,17 +203,34 @@ async def run_specialist(runtime, envelope):
                     feedback = {
                         "error_code": error,
                         "goal": envelope.goal,
+                        "diagnostic_code": getattr(exc, "diagnostic_code", error),
+                        "violation_fields": getattr(exc, "fields", []),
                         "required_tool": required_write_tool(runtime, envelope.goal),
                         "instruction": (
-                            "非法批次全部未执行；写工具必须独占。读到事实不等于已完成指定写目标。"
+                            "本次输出未通过校验，非法批次全部未执行；写工具必须独占。"
+                            "只在原目标和权限内修正工具调用结构，读到事实不等于已完成写目标。"
                             "依据prior_tool_results中已经核验的结果继续未完成的目标，不必重复相同读取。"
                             "原购买目标尚未处理时选择合法候选准备提案，或明确澄清。"
                             "不得重做已有提案或确认。"
                         ),
                     }
-                    runtime.event("orchestration_repair", role=role, error_code=error)
+                    context.repairing = True
+                    runtime.event(
+                        "orchestration_repair", role=role, error_code=error, repair_consumed=True
+                    )
                     error = None
                     continue
+                runtime.event(
+                    "orchestration_repair_exhausted",
+                    role=role,
+                    subtask_id=envelope.subtask_id,
+                    error_code=error,
+                    failure_class="REPAIR_EXHAUSTED",
+                    repair_consumed=True,
+                    tools_executed=False,
+                    phase="MODEL_OUTPUT_VALIDATION",
+                    budget=dict(runtime.budget.used),
+                )
         except GraphRecursionError:
             error = (
                 "BUDGET_EXCEEDED"
@@ -266,6 +287,8 @@ async def run_specialist(runtime, envelope):
         citations=citations,
         error_code=error,
     )
+    if status in {"error", "blocked"} and not runtime.single:
+        runtime.signatures.add(runtime.failed_goal_signature(envelope))
     runtime.completed[envelope.subtask_id] = result
     runtime.pending.pop(envelope.subtask_id, None)
     runtime.event(

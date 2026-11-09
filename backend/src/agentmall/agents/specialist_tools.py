@@ -208,6 +208,7 @@ class SpecialistTools:
     def __init__(self, runtime, envelope):
         self.runtime, self.envelope = runtime, envelope
         self.records = []
+        self.repairing = False
         self.observed = set()
 
     async def execute(self, name, arguments):

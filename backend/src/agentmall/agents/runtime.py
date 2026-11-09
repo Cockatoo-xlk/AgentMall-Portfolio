@@ -252,15 +252,52 @@ class RunContext:
         if order_id != selected or order_id not in refs:
             raise DomainError(409, "ORDER_SCOPE_MISMATCH", "写操作必须绑定用户选定且已交接的订单")
 
+    def failed_goal_signature(self, task):
+        return "failed_goal:" + fingerprint(
+            {
+                "target": task.target,
+                "goal": task.goal,
+                "constraints": self.constraints.model_dump(mode="json"),
+            }
+        )
+
     async def validate_tasks(self, tasks):
         if len(tasks) > 1 and any(not t.read_only for t in tasks):
             raise RunStopped("UNORDERED_WRITE_HANDOFF")
+        task = next(
+            (
+                task
+                for task in tasks
+                if task.subtask_id in self.seen_tasks
+                or self.failed_goal_signature(task) in self.signatures
+            ),
+            None,
+        )
+        if task is not None:
+            async with self.sessions.begin() as session:
+                await authenticate(self, session)
+            event = {
+                "kind": "delegation_rejected",
+                "role": task.target,
+                "goal": task.goal,
+                "subtask_id": task.subtask_id,
+                "error_code": "REPEATED_DELEGATION",
+                "failure_class": "DELEGATION_REJECTED",
+                "phase": "DELEGATION_VALIDATION",
+                "redispatch_requested": True,
+                "delegation_executed": False,
+                "tools_executed": False,
+                "budget": dict(self.budget.used),
+                "attempt": self.budget.used["models"],
+            }
+            self.event(**event)
+            if hasattr(self.budget, "record_model_event"):
+                await self.budget.record_model_event(self.trace["events"][-1])
+            raise RunStopped("REPEATED_DELEGATION")
         envelopes = []
         async with self.sessions.begin() as session:
             actor = await authenticate(self, session)
             for task in tasks:
-                if task.subtask_id in self.seen_tasks:
-                    raise RunStopped("REPEATED_DELEGATION")
                 if task.constraints != self.handoff_constraints():
                     raise RunStopped("HANDOFF_CONSTRAINT_CHANGED")
                 if task.target == "shopping" and self.constraints.exclude_original:

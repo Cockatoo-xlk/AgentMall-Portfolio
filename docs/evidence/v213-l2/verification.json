@@ -1,0 +1,413 @@
+{
+  "status": "AGENTMALL_V213_L2_TOOL_BATCH_REPAIR_READY",
+  "base_commit": "342c3c199984efb89bc649dcb3b1892aeb82da41",
+  "branch": "codex/v213-l2-tool-batch-repair",
+  "source_sha256": "730e46e642804e2c7d53cdb16ef22d570ed391d6659122b454a4c4c090577fb3",
+  "source_files": 442,
+  "backend_full_verified_source_sha256": "cf5850c08790273036883fd13b3b16a00ee1abc9a04a72d9e20091d127d3cac2",
+  "production_sources_unchanged_after_full_backend": true,
+  "source_fingerprint_algorithm": "sha256 compact sorted JSON path/sha256 list of nonignored Git candidate files under backend/frontend/evals/scripts",
+  "commit_binding": "Containing local commit, executable hashes verified after final full regression; no self-referential commit hash.",
+  "evidence_category": "LOCAL_LINUX_AARCH64_REAL_POSTGRES_CHECKPOINTER_SDK_MOCKTRANSPORT_FIXTURE_EMBEDDING",
+  "new_tests": 43,
+  "new_tests_in_full_backend": 39,
+  "additional_fixture_targeted_tests": 4,
+  "pytest": {
+    "passed": 1157,
+    "skipped": 14,
+    "failed": 0,
+    "skip_scope": "Unchanged real_bge opt-in tests under CI_OFFLINE_CORE"
+  },
+  "vitest": {
+    "passed": 127,
+    "failed": 0,
+    "source_unchanged_since_task_full_frontend_run": true
+  },
+  "playwright": {
+    "passed": 119,
+    "failed": 0,
+    "retries": 0
+  },
+  "static_checks": {
+    "ruff": 0,
+    "format": 0,
+    "typescript": 0,
+    "eslint": 0,
+    "frontend_build": 0
+  },
+  "final_receipts": {
+    "full-pytest-authority-final": {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T03:35:33.679000+00:00",
+      "seconds": 586.624,
+      "log_sha256": "e7a259b671311200518284891a59edbe38aa0c7b29feea0d60e095555393b0c1"
+    },
+    "full-static-frontend": {
+      "command": [
+        "sh",
+        "-c",
+        "uv run --project backend ruff check backend scripts evals && uv run --project backend ruff format --check backend scripts evals && cd frontend && npm run typecheck && npm run lint && npm test && npm run build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T02:16:24.828452+00:00",
+      "seconds": 14.042,
+      "log_sha256": "5ec122605065cd0c022045ea8683f4e7ad5d2abfd112ad652f97c6d869104b9b"
+    },
+    "python-static-authority-final": {
+      "command": [
+        "sh",
+        "-c",
+        "uv run --project backend ruff check backend scripts evals && uv run --project backend ruff format --check backend scripts evals"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T03:35:34.746920+00:00",
+      "seconds": 2.942,
+      "log_sha256": "138883bc76db3a2007dd8c38c9046e268bff4000e55786af46e04a7803a678e0"
+    },
+    "full-playwright-final": {
+      "command": [
+        "sh",
+        "-c",
+        "cd frontend && npm run test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T03:55:35.563551+00:00",
+      "seconds": 232.03,
+      "log_sha256": "6f8a132ba61b28377b399d1a6f0f70b87c40e2acc641a25e587682ab3283974f"
+    },
+    "final-harness-static": {
+      "command": [
+        "sh",
+        "-c",
+        "uv run --project backend ruff check backend scripts evals && uv run --project backend ruff format --check backend scripts evals"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T03:55:36.692782+00:00",
+      "seconds": 4.17,
+      "log_sha256": "58201d9512561f8850458b2b1ef140ccd4133da96fe6846e5fc5f796d5f6aef7"
+    },
+    "fixture-green": {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "pytest",
+        "backend/tests/test_v213_l2_browser_fixture.py",
+        "-q",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T03:55:08.686817+00:00",
+      "seconds": 5.964,
+      "log_sha256": "6e014f41cb1e619fef8fbe42b6a94ceee5bb1168efd70229882c3b495ffd3aab"
+    }
+  },
+  "first_full_regression": {
+    "passed": 1152,
+    "skipped": 14,
+    "failed": 1,
+    "source_sha256": "bf6c755de75c57a0fa2b340e39baa7898aac71fd97d2a41c9e93efafb8951d1f",
+    "test": "test_single_mixed_write_repair_is_one_per_run_across_resume",
+    "expected_public_code": "UNORDERED_WRITE_BATCH",
+    "observed_public_code": "REPEATED_TOOL_CALL",
+    "receipt": {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "--ci-offline-core"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-09T02:16:17.429811+00:00",
+      "seconds": 600.573,
+      "log_sha256": "19be00d0f97322d5f6c38b85f476b312865e8fd3949debbc443920939911de5d"
+    }
+  },
+  "second_full_regression": {
+    "passed": 1154,
+    "skipped": 14,
+    "failed": 0,
+    "receipt": {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T02:31:11.379368+00:00",
+      "seconds": 628.455,
+      "log_sha256": "1d2522688850b9e949a9a82940af63768fc021c3edd249a9170731c3a8cf8a9b"
+    },
+    "source_sha256": "67711a41a6f235c26836de54fb4527a4adeb3dd92a5b80787317ed38f2719496",
+    "scope": "Before final Single intent repair-eligibility safety check"
+  },
+  "first_browser_regression": {
+    "passed": 118,
+    "failed": 1,
+    "retries": 0,
+    "receipt": {
+      "command": [
+        "sh",
+        "-c",
+        "cd frontend && npm run test:e2e"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-09T03:45:38.133205+00:00",
+      "seconds": 237.902,
+      "log_sha256": "58cf91627d11f29122a4a7b58c5b6c39bd7ffef110ea77bfecf6a589bab7ef3f"
+    },
+    "cause": "Test-only Single fixture ignored committed checkout and tried a repeated prepare; production guard correctly rejected."
+  },
+  "post_full_backend_changes": [
+    "backend/tests/workflow_e2e.py",
+    "backend/tests/test_v213_l2_browser_fixture.py"
+  ],
+  "retained_development_receipts": {
+    "final-harness-static": {
+      "exit_code": 0,
+      "log_sha256": "58201d9512561f8850458b2b1ef140ccd4133da96fe6846e5fc5f796d5f6aef7"
+    },
+    "fixture-green": {
+      "exit_code": 0,
+      "log_sha256": "6e014f41cb1e619fef8fbe42b6a94ceee5bb1168efd70229882c3b495ffd3aab"
+    },
+    "fixture-red": {
+      "exit_code": 1,
+      "log_sha256": "4f514b6632d1165d94b7958c2202801aaeaf0905a2791c86afe45457b501bef6"
+    },
+    "full-playwright-final": {
+      "exit_code": 0,
+      "log_sha256": "6f8a132ba61b28377b399d1a6f0f70b87c40e2acc641a25e587682ab3283974f"
+    },
+    "collect-current": {
+      "exit_code": 0,
+      "log_sha256": "922e1ef9592497898488a25b767bc8e9d55ae5e98b9cd9b86a0aa21641ca1be0"
+    },
+    "durable-and-flags-red": {
+      "exit_code": 1,
+      "log_sha256": "72cb5a65599c92adf686f25447d45bad19b1e2644171d3960990ffff8470ce76"
+    },
+    "final-review-complete-green": {
+      "exit_code": 0,
+      "log_sha256": "6dfe8c7438b000ddf2e501755235d920870a55398ca5df4d34cb71228a41d951"
+    },
+    "final-review-green": {
+      "exit_code": 0,
+      "log_sha256": "fa1254c45a1c987a4b2f02a852b62c511541d80eb6bbbe1f72f730e4c58a66e5"
+    },
+    "final-review-red": {
+      "exit_code": 1,
+      "log_sha256": "3e734783c790277387fd68cce6fb529312fddd5a923627f323417479ddc76944"
+    },
+    "full-batch-preflight-green": {
+      "exit_code": 0,
+      "log_sha256": "7730bbd4a4fbd378f35cf67bc55c03dddb7c17f2c7049b4ef5b2c92b0c2e857e"
+    },
+    "full-batch-preflight-red": {
+      "exit_code": 1,
+      "log_sha256": "0eb95094662ad9d69aef296ab02540bad0237ccff3874edbcc5d095a12331214"
+    },
+    "full-playwright": {
+      "exit_code": 1,
+      "log_sha256": "58cf91627d11f29122a4a7b58c5b6c39bd7ffef110ea77bfecf6a589bab7ef3f"
+    },
+    "full-pytest-authority-final": {
+      "exit_code": 0,
+      "log_sha256": "e7a259b671311200518284891a59edbe38aa0c7b29feea0d60e095555393b0c1"
+    },
+    "full-pytest-final": {
+      "exit_code": 0,
+      "log_sha256": "1d2522688850b9e949a9a82940af63768fc021c3edd249a9170731c3a8cf8a9b"
+    },
+    "full-pytest": {
+      "exit_code": 1,
+      "log_sha256": "19be00d0f97322d5f6c38b85f476b312865e8fd3949debbc443920939911de5d"
+    },
+    "full-static-frontend": {
+      "exit_code": 0,
+      "log_sha256": "5ec122605065cd0c022045ea8683f4e7ad5d2abfd112ad652f97c6d869104b9b"
+    },
+    "intent-authority-final-green": {
+      "exit_code": 0,
+      "log_sha256": "dae52e7edac6d4bb773a8bc0cb819c8d0c5968ea84f66497f4be5d0e49ac612c"
+    },
+    "intent-authority-green": {
+      "exit_code": 0,
+      "log_sha256": "077a2d88f94e2eb2301d2fbf017bf194f529bf84b2e6fb529677ae58f4168fd8"
+    },
+    "intent-authority-red": {
+      "exit_code": 1,
+      "log_sha256": "7ad6f496e2b3e79f3bbb98e5f28929855a90195c990716cb96e48ed00ff22970"
+    },
+    "l2-directed-green": {
+      "exit_code": 0,
+      "log_sha256": "b688fbb0ab69aacf9c0d8f57f11abc7b9be81952fc2bafc885f6ef6c646d7c43"
+    },
+    "l2-final-directed": {
+      "exit_code": 0,
+      "log_sha256": "e522b36d28392f5a2d541ebb068d867c3eae80a7590644b5816352a1143c8abf"
+    },
+    "l2-first-green": {
+      "exit_code": 0,
+      "log_sha256": "8ca2875d4f7dba2d5c87f23dc43a664ded51ae92563321ad0958153329a31a51"
+    },
+    "l2-red": {
+      "exit_code": 1,
+      "log_sha256": "cb11a35af653b5aefb54754b90afe9a620c45a7b7dae6ada1b22644845bd0a13"
+    },
+    "l2-sdk-all": {
+      "exit_code": 1,
+      "log_sha256": "51768747636735013ed832653769bdf9772969e8293f4bb75caa70e6d6018838"
+    },
+    "l2-sdk-direct-green": {
+      "exit_code": 1,
+      "log_sha256": "03fc42de28d659ecf756c654177cf63df4bc827a222f5122277250c76141f000"
+    },
+    "l2-sdk-green-2": {
+      "exit_code": 1,
+      "log_sha256": "b7827e951458a6897850db4b709cd77e8e32b23a138d7463e39f5de3701d088c"
+    },
+    "l2-sdk-green": {
+      "exit_code": 1,
+      "log_sha256": "430d01b439ae2e6724ec0c6832201b26312f8f2a1faa03364484cb5850577b82"
+    },
+    "l2-sdk-wire-green": {
+      "exit_code": 1,
+      "log_sha256": "2e8c5aa780886bb9c86aa422a18ce25b1bd5b6f9f26e0abe811acd6a674ea1e3"
+    },
+    "malformed-structure-red": {
+      "exit_code": 1,
+      "log_sha256": "0cc2eea0de5f51224e7de1c37f8cbd9cf5b673ba385413304366a6b0ff3db538"
+    },
+    "public-contract-green": {
+      "exit_code": 0,
+      "log_sha256": "ecad8fd9ecb177e5d55010ed468d36a516366816dfa70c00c1bd9b98ae43a990"
+    },
+    "public-contract-red": {
+      "exit_code": 1,
+      "log_sha256": "3cae73e34d41adc82bf8912133cf612b32b0f99379e8fd56453224db3b2c9661"
+    },
+    "python-static-authority-final": {
+      "exit_code": 0,
+      "log_sha256": "138883bc76db3a2007dd8c38c9046e268bff4000e55786af46e04a7803a678e0"
+    },
+    "python-static-final": {
+      "exit_code": 0,
+      "log_sha256": "63a2a17f2867f3b399e3679fac7b868b76a90473e00fa123b57d1ff05f8656ba"
+    },
+    "review-argument-reconciliation-red": {
+      "exit_code": 1,
+      "log_sha256": "f66633b2b24f23c163b70e048c3e2c4e3cd485d83f16951171d59402e4328e74"
+    },
+    "sdk-and-diagnostics-red": {
+      "exit_code": 1,
+      "log_sha256": "6af20532cb0c97b20cdc14d48bfe2f4900d3a8d3f6661fefe608bb6e2c13ebf6"
+    },
+    "sdk-safe-debug": {
+      "exit_code": 1,
+      "log_sha256": "041d539d63580d24872bf3d7b6a0da6401d0452c219a5ed17ceaa704e5a1b092"
+    }
+  },
+  "historical_l1": {
+    "file_count": 9,
+    "original_hashes_unchanged": true,
+    "hash_manifest_sha256": "1e3c9890d90b0c6c54a8a690ab8b278980c6510e33a082b56e2b04ed77813c08",
+    "source_commit": "342c3c199984efb89bc649dcb3b1892aeb82da41",
+    "requests": 9,
+    "settled_requests": 9,
+    "tools": 6,
+    "status": "PARTIAL",
+    "exact_argument_error_subtype": "UNKNOWN_NOT_PRESERVED"
+  },
+  "protected_files_unchanged": 74,
+  "business_assertions": {
+    "b2_models": 11,
+    "b2_tools": 6,
+    "b2_delegations": 3,
+    "independent_confirmations": 2,
+    "new_requested_cases": 1,
+    "new_pending_payment_orders": 1,
+    "quantity_and_reserved": 1,
+    "payment_delta": 0,
+    "replayed_resumes_add_no_requests_or_effects": true,
+    "readonly_tools_each_once_before_repair": true,
+    "second_repair_denied_preserves_confirmed_case": true,
+    "invalid_batch_tools_executed": 0,
+    "failed_goal_redelegation_count": 0
+  },
+  "unchanged_run_limits": {
+    "models": 12,
+    "tools": 16,
+    "delegations": 4,
+    "steps": 24,
+    "output_tokens": 12000,
+    "seconds": 90
+  },
+  "review": {
+    "fresh_reviews": 1,
+    "important_findings": 2,
+    "findings_fixed_with_red_green": true,
+    "deferred_minors": []
+  },
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "remote_writes": 0,
+  "cleanup": {
+    "first_owned_environment": {
+      "passed": true,
+      "utc": "2026-11-09T03:51:39.550577+00:00",
+      "owner": "agentmall-v213l2-a50ff643",
+      "remaining_owned_schemas_before_deletion": 0,
+      "owned_guest_remaining": 0,
+      "owned_pg_volume_and_runner_tag_absent": true,
+      "owned_cache_and_credentials_removed": true,
+      "historical_container_count": 25,
+      "historical_ids_states_unchanged_across_cleanup": true,
+      "default_context": "colima",
+      "private_raw_evidence_retained": true,
+      "buildkit_cache_pruned": false
+    },
+    "final_browser_environment": {
+      "passed": true,
+      "utc": "2026-11-09T03:59:58.155965+00:00",
+      "owner": "agentmall-v213l2-browser-70b31c73",
+      "remaining_owned_schemas_before_deletion": 0,
+      "owned_guest_remaining": 0,
+      "owned_pg_volume_and_runner_tag_absent": true,
+      "owned_cache_and_credentials_removed": true,
+      "historical_container_count": 25,
+      "historical_ids_states_unchanged_across_cleanup": true,
+      "default_context": "colima",
+      "private_raw_evidence_retained": true,
+      "buildkit_cache_pruned": false
+    },
+    "premature_first_cleanup_recorded": true,
+    "failure_evidence_preserved": true
+  },
+  "limitations": [
+    "L1 exact invalid arguments unavailable; new synthetic cases are not historical model response replays.",
+    "Real DeepSeek retest NOT_RUN; old authorization cannot be reused.",
+    "Nonstream SDK hook bound to current locked dependencies; upgrades require compatibility tests.",
+    "No new real BGE/reranker or remote CI verification; no universal exactly-once model execution."
+  ]
+}

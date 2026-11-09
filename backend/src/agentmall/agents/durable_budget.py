@@ -8,6 +8,13 @@ from agentmall.agents.budgets import GraphBudget, RunStopped
 node_key = ContextVar("agentmall_node_key", default="outside")
 
 
+def model_event_key(event):
+    key = f"{event['kind']}:{event.get('attempt')}"
+    if event["kind"] not in {"model_start", "model_end"}:
+        key += f":{event.get('role')}:{event.get('subtask_id')}"
+    return key
+
+
 class DurableBudget(GraphBudget):
     persists_rejections = True
 
@@ -19,7 +26,7 @@ class DurableBudget(GraphBudget):
         """
         from agentmall.agents.run_service import add_event
 
-        key = f"{event['kind']}:{event['attempt']}"
+        key = model_event_key(event)
         async with self.lock:
             async with self.fence.sessions.begin() as session:
                 run = await self.fence.check(session, exclusive=True)
@@ -36,6 +43,7 @@ class DurableBudget(GraphBudget):
         self.fence = fence
 
     def adopt(self, data):
+        self.orchestration_repair = data.get("orchestration_repair")
         self.used.update(data.get("used", {}))
         self.reservations = {int(k): v for k, v in data.get("reservations", {}).items()}
 
@@ -112,6 +120,7 @@ class DurableBudget(GraphBudget):
                     )
                     recorded.append(key)
                 run.budget = data
+                self.orchestration_repair = data.get("orchestration_repair")
                 return allowed
 
     async def claim_tools(self, identifiers, signatures):

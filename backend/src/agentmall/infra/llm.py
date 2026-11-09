@@ -94,7 +94,24 @@ def deepseek_model(key, *, http_client=None, http_async_client=None):
     # Explicit key/base avoids SDK environment fallback and alternate endpoints.
     from langchain_deepseek import ChatDeepSeek
 
-    return ChatDeepSeek(
+    class CheckedToolWireDeepSeek(ChatDeepSeek):
+        def _create_chat_result(self, response, generation_info=None):
+            # SDK normalization discards valid calls' original JSON spelling.
+            # Retain fixed error enums ONLY, never raw arguments or model prose.
+            from agentmall.agents.model_control import raw_tool_wire_failures
+
+            body = response if isinstance(response, dict) else response.model_dump()
+            checks = [
+                raw_tool_wire_failures(choice.get("message", {}).get("tool_calls") or [])
+                for choice in body.get("choices", [])
+            ]
+            result = super()._create_chat_result(response, generation_info)
+            for generation, flags in zip(result.generations, checks, strict=False):
+                if flags:
+                    generation.message.response_metadata["agentmall_tool_wire_failures"] = flags
+            return result
+
+    return CheckedToolWireDeepSeek(
         model=MODEL_ID,
         api_key=key,
         base_url="https://api.deepseek.com",

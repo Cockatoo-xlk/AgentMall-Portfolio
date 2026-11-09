@@ -158,6 +158,8 @@ def public_summary(kind, event):
         if isinstance(value, str) and re.fullmatch(r"[A-Za-z_]{1,64}", value) and identifier(value):
             result[key] = value
     if kind == "handoff":
+        if type(data.get("read_only")) is bool:
+            result["read_only"] = data["read_only"]
         from pydantic import ValidationError
 
         try:
@@ -185,6 +187,66 @@ def public_summary(kind, event):
                 k: budget[k]
                 for k in ("models", "tools", "delegations", "steps", "output_tokens")
                 if type(budget.get(k)) is int and budget[k] >= 0
+            }
+    if kind in {
+        "tool_batch_rejected",
+        "orchestration_repair",
+        "orchestration_repair_exhausted",
+        "delegation_rejected",
+        "tool",
+    }:
+        from agentmall.agents.model_control import BATCH_DIAGNOSTICS, FAILURE_CLASSES
+        from agentmall.agents.specialist_tools import ALL_SCHEMAS
+
+        if (
+            isinstance(data.get("diagnostic_code"), str)
+            and data["diagnostic_code"] in BATCH_DIAGNOSTICS
+        ):
+            result["diagnostic_code"] = data["diagnostic_code"]
+        if isinstance(data.get("failure_class"), str) and data["failure_class"] in FAILURE_CLASSES:
+            result["failure_class"] = data["failure_class"]
+        if isinstance(data.get("phase"), str) and data["phase"] in {
+            "MODEL_OUTPUT_VALIDATION",
+            "TOOL_EXECUTION",
+            "DELEGATION_VALIDATION",
+        }:
+            result["phase"] = data["phase"]
+        if isinstance(data.get("tool_names"), list):
+            result["tool_names"] = sorted(
+                {n for n in data["tool_names"] if isinstance(n, str) and n in TOOLS}
+            )[:20]
+        known_fields = {f for schema in ALL_SCHEMAS.values() for f in schema.model_fields} | {
+            "actor_id",
+            "user_id",
+            "role",
+            "store_id",
+            "approved",
+            "confirmation_id",
+            "price_cents",
+            "total_cents",
+            "on_hand",
+            "reserved",
+        }
+        if isinstance(data.get("violation_fields"), list):
+            result["violation_fields"] = sorted(
+                {f for f in data["violation_fields"] if isinstance(f, str) and f in known_fields}
+            )[:10]
+        for key in (
+            "repairable",
+            "repair_consumed",
+            "tools_executed",
+            "redispatch_requested",
+            "delegation_executed",
+        ):
+            if type(data.get(key)) is bool:
+                result[key] = data[key]
+        if isinstance(data.get("budget"), dict):
+            result["budget"] = {
+                k: v
+                for k, v in data["budget"].items()
+                if k in {"models", "tools", "delegations", "steps", "output_tokens"}
+                and type(v) is int
+                and v >= 0
             }
     if kind in {
         "bundle_computed",

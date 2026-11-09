@@ -15,7 +15,7 @@ from sqlalchemy.exc import DBAPIError
 from agentmall.actions.service import database_now, get_proposal, payload_hash
 from agentmall.agents.budgets import Limits, RunStopped
 from agentmall.agents.context import Constraints, MultiRequest, user_constraints
-from agentmall.agents.durable_budget import DurableBudget
+from agentmall.agents.durable_budget import DurableBudget, model_event_key
 from agentmall.agents.durable_graph import build_durable_graph
 from agentmall.agents.graph import render
 from agentmall.agents.locking import claim_execution, thread_lock
@@ -249,9 +249,9 @@ class NodeStore:
                 if event["kind"] in {
                     "model_start",
                     "model_end",
-                } and f"{event['kind']}:{event.get('attempt')}" in run.budget.get(
-                    "model_events", []
-                ):
+                    "tool_batch_rejected",
+                    "delegation_rejected",
+                } and model_event_key(event) in run.budget.get("model_events", []):
                     continue
                 summary = public_summary(event["kind"], event)
                 add_event(
