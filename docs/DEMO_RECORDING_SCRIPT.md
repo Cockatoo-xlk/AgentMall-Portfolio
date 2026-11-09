@@ -1,17 +1,14 @@
-# 3–5分钟录屏脚本（VIDEO_NOT_RECORDED）
+# 五分钟讲解脚本 · VIDEO_NOT_RECORDED
 
-本文件是待录制脚本，不是已经存在的视频。先选清楚演示模式：默认Fixture可无Key；现场Live需要针对当前提交、最终指纹、环境、策略和费用的新独立授权。T15-B1已经结束，不能为录屏复用它的许可；未批准时只展示其经过审阅的历史汇总，不开启新Live。
+这是待录制路线，不是已交付视频。先按[默认Demo](PORTFOLIO_DEMO.md)启动独占本地环境、选择context-catalog、创建 **Single / Legacy Sync**。全程 **SDK MockTransport / Fixture Embedding / TEST_OPERATOR**，不读取Key、不打开付费Provider。
 
-| 时间 | 画面和操作 | 旁白与检查点 |
+| 时间 | 画面 | 可以直接讲的内容 |
 |---|---|---|
-| 0:00–0:30 | 首页、服务端模式区 | “这是合成电商，资金为模拟。此刻页面显示的是Fixture/Live DeepSeek，以服务端为准。”若无新授权，说Fixture，并将B1历史成绩与当前版本分开。 |
-| 0:30–1:15 | buyer1登录，创建Multi Thread，输入300元以内静音键盘任务 | “Supervisor由模型决定路由，Shopping检索商品，Order读取事实后准备提案。”指出持久时间线的Agent、工具、状态、耗时，不展示内部推理。Fixture时说明路由由Fake Model提供。 |
-| 1:15–2:00 | WAITING_INPUT、购买快照和倒计时 | “现在还没有订单。服务端快照确定SKU、价格、地址与期限；倒计时只是提示，不能延长或授权。由我亲自独立批准。”录制者本人操作批准。 |
-| 2:00–2:40 | 同Run Resume、业务回执、订单详情 | “领域事务创建唯一订单并预留库存。这里仍是PENDING_PAYMENT。”指出Agent直接SKU下单不清购物车；购物车快照下单才在同事务安全消费。B1只验收至此，不曾付款。 |
-| 2:40–3:15 | 刷新、重新登录、按原Thread恢复 | “JWT没有存在本地存储。持久RunEvent/Checkpoint重建时间线，先读真实订单，不换新请求下单。”若已结束的历史Live服务未开放，不假装现场恢复，改用本次Fixture演示。 |
-| 3:15–4:00 | 服务端用量、预算、UNKNOWN；展示B1公开汇总 | “历史617cdf29一次真实任务7次请求，Supervisor3/Shopping2/Order2；12,048输入、1,109输出，估算上界¥0.032968，平台账单UNKNOWN。单场景不等于泛化评测，新源码尚未重做Live。” |
-| 4:00–4:45 | 代码/测试矩阵及局限 | “PostgreSQL行锁、幂等回执、人工确认、Epoch Fence和Checkpoint把模型与确定性写事务隔开。已核对本地713/14skip、Vitest80、Playwright87通过且0retry，环境是独立Linux aarch64加Mac Chromium；不是当前版本GitHub Ubuntu amd64 CI。原Docker OOM和旧VM时钟问题保留。没有真实支付、生产SLA或云部署。” |
+| 0:00–0:40 | 商品目录和模式区 | “这是合成商城。模型建议、持久工作流和真实数据库事务是三层；当前模型回包和向量都是Fixture。” |
+| 0:40–1:30 | 推荐300元静音键盘 | “工具查询当前目录，结果有SKU、版本和来源。推荐不等于购买。” |
+| 1:30–2:15 | 改无线、预算400 | “服务端更新可信Context，让旧名单失效。第二款引用必须绑定这一次实际显示的集合和rank。” |
+| 2:15–3:10 | 请求购买当前第二款 | “先重新核对商品并生成不可变提案；WAITING_INPUT时尚无新订单。” |
+| 3:10–4:00 | TEST_OPERATOR批准、订单详情 | “独立Confirmation之后，原Resume中的领域事务创建唯一PENDING_PAYMENT订单并预留库存。没有付款。” |
+| 4:00–5:00 | 刷新恢复、架构/证据表 | “Checkpoint记录图位置，领域回执决定真实写入。Multi有额外交接成本；真实五题Pilot的Multi为4/5，当前B2还失败，不能把Mock通过当成模型可靠。” |
 
-若另录完整模拟购物车闭环，使用Fixture模式：加入购物车→购买快照→创建订单后确认购物车→订单详情另建模拟支付提案→本人独立批准→GET订单PAID。这是额外Fixture演示，不把它接到B1真实Smoke上冒称B1付过款。主视频控制在5分钟内，不必同时展示所有售后场景。
-
-录制前收起终端环境、原始账本、授权文件、Checkpoint和完整对话；确认截图无个人路径、JWT或Key。不要展示浏览器开发者工具请求Authorization。录制失败、超时、部分成功要如实解释，不剪辑成不存在的业务成功。
+额外问题再打开[Worker](V212_DURABLE_WORKER.md)、[MCP](MCP_GATEWAY.md)、[商家Copilot](MERCHANT_COPILOT.md)或[评测](EVALUATION_STUDIO.md)，不要在主线里自动付款、退款或kill进程。录屏前收起终端凭据、原始账本、授权、Checkpoint及开发者工具Authorization头；UUID仅为合成临时资源。若失败就保留说明，不剪辑成不存在的成功。

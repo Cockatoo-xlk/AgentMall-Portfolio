@@ -1,5 +1,13 @@
 # 验证结果与证据边界
 
+## V2.14 当前候选：新的执行与历史事实分开
+
+产品源码冻结于`280ec90816ed3d70079b7fb89457f7f13a4d2278`，本轮只收敛作品集与发布材料。[本轮命令/退出码/源码绑定/日志SHA](evidence/v214/verification.json)已实际完成：**pytest1220 passed/14 skipped，Vitest127，Playwright119/0 retries**，Ruff/格式/TypeScript/ESLint/build全0。不是复用L6回执；独占Linux aarch64 PG17.11/pgvector0.8.7，代码冻结280ec908，Fixture/SDK MockTransport。默认Single三轮Demo、独立确认、唯一待支付订单、付款0及官方Checkpoint已另行通过。[能力矩阵](V214_RELEASE_CANDIDATE.md)覆盖全部V2模块。
+
+真实V2.12五题配对Pilot在`b5d6a685…`为Single5/5、Multi4/5，56次请求，估算¥0.393226而非账单。L1/L3/L5/L7分别9/5/12/6次真实请求，均PARTIAL；同当前产品源码的L7为CONTEXT_SCOPE_VIOLATION，具体非法字段未保存。不能把不同源码的成绩合并成“当前已通过”。[逐版本审核投影](evidence/v214/live-summary.json)。
+
+本轮 **NO_PUSH / REMOTE_CI_NOT_RUN_FOR_V214 / NO_LIVE_REQUESTS / NO_DEPLOY**，VIDEO_NOT_RECORDED。以下旧章节保留原有数据与阶段限制，不作为V2.14新回执。
+
 本页是公开作品版的脱敏验证摘要，不包含原始Live账本、授权或私有模型对话。历史研发原件留在Private仓库；其远程CI成绩不代表独立作品版在GitHub上的运行结果。
 
 ## V2.11 商家AI运营助手（本地完整累计回归）
