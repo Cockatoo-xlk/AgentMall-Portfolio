@@ -1,5 +1,34 @@
 # 正式GitHub发布前的权利人审核清单
 
+## 当前状态追加：V2.14-R4（2026-11-10）
+
+V2.14产品已通过PR #2合并main **`59f84ebbfdfb1d87287ad6c4ae83a1748183d30c`**；[main Push CI / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42770031624) 的Backend、Frontend、Release Gate全部success，原始日志核验pytest **1291 passed /14 skipped**、Vitest **127**、Playwright **119 /0 retries**。具体身份、源码树和三个Artifact SHA见[post-merge回执](evidence/v214-r4/verification.json)。这些是main CI成绩，不是本轮重新运行全量回归。
+
+本轮仅更新发布文档，仍待独立文档PR；建议版本`v2.14.0`尚无Tag/GitHub Release。没有生产部署或真实付款，真实L7 B2仍PARTIAL。下文原阶段的NOT_RUN、cancelled、pending或“本轮”字样保留历史含义，不覆盖本节最新状态，不代表旧失败被改写。
+
+### 已核验的产品状态
+
+- [x] main59f84ebb与合并候选900bf3d的源代码树一致；PR #2 Merged。
+- [x] main事件push / branch main / Attempt1，三个必需Job和测试原件全部通过。
+- [x] main已保护：Require PR、Backend/Frontend/Gate三项检查、审批数0、禁强推/删除；本轮只读核对，没有修改Settings。
+- [x] 旧PR #1为包含提交进入main后的GitHub自动Merged标记；没有另一次人工合并操作。
+- [x] 当前未发现`v2.14.0` Tag或GitHub Release冲突；此结论是查询时快照，正式发布前须重查。
+
+### 正式Tag与Release流程（尚未授权执行）
+
+1. 所有者审核本轮准确文档Commit、Diff、公开证据和许可边界，另行批准新文档分支Push及新PR；不是直接向main写入。
+2. 文档PR通过所需检查、审阅和保护规则后，再单独批准合并main；不跳过Gate、不Rerun挑绿。
+3. 读取文档合并后准确main SHA及其新Push CI / Attempt、三个Job、真实日志与摘要。旧59f84ebb CI只覆盖此前产品源树，不能冒充后续文档提交的新CI。
+4. 冻结最终发布Commit，并重新核对Tag/Release冲突、源码树及说明。**RELEASE_COMMIT=UNBOUND**，不得现在对旧59f84ebb直接打正式版本Tag。
+5. 另行批准创建注释Tag `v2.14.0`；若已核验签名身份与安全要求，可改为签名注释Tag。当前未配置可用签名身份，本轮不访问签名私钥、不创建任何本地/远程Tag。
+6. 独立批准准确Tag推送及GitHub Release创建，复制[Release Notes草稿](RELEASE_NOTES_v2.14.0.md)，填入步骤4的最终准确发布SHA，并在Tag实际建立、即将正式发布时更新DRAFT/UNBOUND状态及固定版本文档链接。标题建议`AgentMall v2.14.0 — Portfolio Release`，目前不是已存在Release。
+7. 发布后读取Tag对象及peeled commit、Release target、源码包和说明链接，确认都属于最终发布Commit；这不自动授权部署、镜像/权重分发或真实模型调用。
+
+当前原件记录见[post-merge报告](evidence/v214-r4/report.md)。以下旧清单保留当时状态，不要把历史NOT_RUN批量替换为success。
+
+---
+
+
 ## V2.14-R2：CI候选追加检查
 
 - [x] 复核[本轮R2回执](evidence/v214-r2/verification.json)中的新测试、全量回归、独立审查、安全扫描与资源清理，不用旧V2.14成绩代替。
