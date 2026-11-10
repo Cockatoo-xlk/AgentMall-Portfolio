@@ -1,5 +1,16 @@
 # 架构：模型决策、持久执行、领域事务
 
+## 当前状态追加：V2.14-R4（2026-11-10）
+
+V2.14产品已通过PR #2合并main **`59f84ebbfdfb1d87287ad6c4ae83a1748183d30c`**；[main Push CI / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42770031624) 的Backend、Frontend、Release Gate全部success，原始日志核验pytest **1291 passed /14 skipped**、Vitest **127**、Playwright **119 /0 retries**。具体身份、源码树和三个Artifact SHA见[post-merge回执](evidence/v214-r4/verification.json)。这些是main CI成绩，不是本轮重新运行全量回归。
+
+本轮仅更新发布文档，仍待独立文档PR；建议版本`v2.14.0`尚无Tag/GitHub Release。没有生产部署或真实付款，真实L7 B2仍PARTIAL。下文原阶段的NOT_RUN、cancelled、pending或“本轮”字样保留历史含义，不覆盖本节最新状态，不代表旧失败被改写。
+
+下文架构和代码入口仍对应同一产品源树；MCP不是内部工具的必经链路，Checkpoint不替代业务事务，异步202不代表业务成功。R4没有修改Agent、交易、Worker或检索代码。
+
+---
+
+
 V2.14 只整理已有系统，不新增角色或架构。入口与模式以服务端实际配置为准；普通 `agentmall.main` 默认 MODEL_DISABLED，下面的无Key演示使用 MockTransport。
 
 ```mermaid

@@ -1,5 +1,24 @@
 # 验证结果与证据边界
 
+## 当前状态追加：V2.14-R4（2026-11-10）
+
+V2.14产品已通过PR #2合并main **`59f84ebbfdfb1d87287ad6c4ae83a1748183d30c`**；[main Push CI / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42770031624) 的Backend、Frontend、Release Gate全部success，原始日志核验pytest **1291 passed /14 skipped**、Vitest **127**、Playwright **119 /0 retries**。具体身份、源码树和三个Artifact SHA见[post-merge回执](evidence/v214-r4/verification.json)。这些是main CI成绩，不是本轮重新运行全量回归。
+
+本轮仅更新发布文档，仍待独立文档PR；建议版本`v2.14.0`尚无Tag/GitHub Release。没有生产部署或真实付款，真实L7 B2仍PARTIAL。下文原阶段的NOT_RUN、cancelled、pending或“本轮”字样保留历史含义，不覆盖本节最新状态，不代表旧失败被改写。
+
+| 发布时间线 | 源码 / 结果 |
+|---|---|
+| 首次串行CI | `01f0115…` / Run42655215470 Attempt1，30分钟超时cancelled；Playwright未完成 |
+| R2本地并行改造 | `900bf3d…` / 独立Backend、Frontend、Release Gate，原始本地证据保留 |
+| Push CI | Run42741037766 Attempt1 / success，绑定900bf3d |
+| PR CI | Run42762410422 Attempt1 / success；PR head900bf3d，测试合并2df5307，同代码树 |
+| PR #2合并 | 2026-11-10 06:39:56 UTC，merge59f84ebb；GitHub随后自动将已包含提交的旧PR #1标记Merged，并非额外人工合并 |
+| 最终main CI | Run42770031624 Attempt1 / success，绑定59f84ebb |
+| 真实模型 | L7同产品源码B2仍PARTIAL / CONTEXT_SCOPE_VIOLATION，未完成第二次购买确认 |
+
+---
+
+
 ## 最新追加：V2.14-R2 CI可靠性候选
 
 原V2.14已Push准确`01f0115f6fa704dec7a272eab57579d21d8f4ae5`；[Run42655215470 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42655215470)的pytest1220/14skip、Vitest127和build步骤成功，但Playwright在108项通过后因Job30分钟超时被取消。**远程整体cancelled，浏览器未验收成功**。

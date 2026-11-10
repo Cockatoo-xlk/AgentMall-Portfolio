@@ -1,5 +1,16 @@
 # V2.14 · Final Portfolio Release Candidate
 
+## 当前状态追加：V2.14-R4（2026-11-10）
+
+V2.14产品已通过PR #2合并main **`59f84ebbfdfb1d87287ad6c4ae83a1748183d30c`**；[main Push CI / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42770031624) 的Backend、Frontend、Release Gate全部success，原始日志核验pytest **1291 passed /14 skipped**、Vitest **127**、Playwright **119 /0 retries**。具体身份、源码树和三个Artifact SHA见[post-merge回执](evidence/v214-r4/verification.json)。这些是main CI成绩，不是本轮重新运行全量回归。
+
+本轮仅更新发布文档，仍待独立文档PR；建议版本`v2.14.0`尚无Tag/GitHub Release。没有生产部署或真实付款，真实L7 B2仍PARTIAL。下文原阶段的NOT_RUN、cancelled、pending或“本轮”字样保留历史含义，不覆盖本节最新状态，不代表旧失败被改写。
+
+本页保留候选阶段的能力矩阵和证据限制；产品已正式进入main，R4文档提交尚未进入main。新[Release Notes草稿](RELEASE_NOTES_v2.14.0.md)、[一页介绍](PORTFOLIO_ONE_PAGE.md)及[发布步骤](RELEASE_CHECKLIST.md#正式tag与release流程尚未授权执行)用于后续所有者审核。
+
+---
+
+
 ## R2追加：首次远程超时后的CI可靠性修复
 
 V2.14 `01f0115f6fa704dec7a272eab57579d21d8f4ae5`已发布至原审核分支；[Run42655215470 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42655215470)为cancelled，GitHub annotation确认30m0s Job超时。pytest步骤1345秒，Playwright剩余预算5分32秒，记录108项通过后取消；不能当成完整119项通过。

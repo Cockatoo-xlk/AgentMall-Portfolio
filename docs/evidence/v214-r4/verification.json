@@ -1,0 +1,568 @@
+{
+  "schema_version": 1,
+  "status": "AGENTMALL_V214_R4_RELEASE_DOCS_READY",
+  "product_main_commit": "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c",
+  "merged_candidate": "900bf3dda50eec4d2d9583f46001991ac39fb707",
+  "verified_main_tree": "cd817c61858095f7d57baa0abf619baf88f4ec88",
+  "same_tree_as_reviewed_candidate": true,
+  "documentation_branch": "codex/v214-r4-postmerge-release",
+  "documentation_parent": "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c",
+  "documentation_delivery_binding": {
+    "kind": "commit_containing_this_record",
+    "locator": "git log -1 --format=%H -- docs/evidence/v214-r4/verification.json",
+    "current_document_commit_remote_ci": "NOT_RUN; local docs awaiting separately authorized PR"
+  },
+  "main_ci": {
+    "run_id": 42770031624,
+    "url": "https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42770031624",
+    "event": "push",
+    "branch": "main",
+    "head_sha": "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c",
+    "attempt": 1,
+    "actor": "Cockatoo-xlk",
+    "status": "completed",
+    "conclusion": "success",
+    "run_started_at": "2026-11-10T06:39:59Z",
+    "updated_at": "2026-11-10T07:01:45Z",
+    "runner": "Ubuntu24.04 x86_64 per fixed workflow and x64 tool cache observed",
+    "jobs": [
+      {
+        "id": 129675413979,
+        "name": "CI_OFFLINE_CORE / backend",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Initialize containers",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check out source",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up uv",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install locked Python dependencies without BGE extras",
+            "conclusion": "success"
+          },
+          {
+            "name": "Initialize fresh owned PostgreSQL and verify migration/seed/checkpoint",
+            "conclusion": "success"
+          },
+          {
+            "name": "Ruff check",
+            "conclusion": "success"
+          },
+          {
+            "name": "Ruff format check",
+            "conclusion": "success"
+          },
+          {
+            "name": "PostgreSQL, checkpoint, invariants, oracle and provider protocol tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "Write bounded status-only summary",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload only public status summary",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up uv",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Check out source",
+            "conclusion": "success"
+          },
+          {
+            "name": "Stop containers",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 129675414218,
+        "name": "CI_OFFLINE_CORE / frontend",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Initialize containers",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check out source",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Python",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up uv",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Node",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install locked Python dependencies without BGE extras",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install locked frontend dependencies",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install Playwright Chromium and Linux dependencies",
+            "conclusion": "success"
+          },
+          {
+            "name": "Initialize fresh owned PostgreSQL and verify migration/seed/checkpoint",
+            "conclusion": "success"
+          },
+          {
+            "name": "Frontend typecheck",
+            "conclusion": "success"
+          },
+          {
+            "name": "Frontend lint",
+            "conclusion": "success"
+          },
+          {
+            "name": "Frontend unit tests",
+            "conclusion": "success"
+          },
+          {
+            "name": "Frontend build",
+            "conclusion": "success"
+          },
+          {
+            "name": "Real FastAPI, PostgreSQL and checkpoint with fixture model E2E",
+            "conclusion": "success"
+          },
+          {
+            "name": "Write bounded status-only summary",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload only public status summary",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Node",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up uv",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Python",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Check out source",
+            "conclusion": "success"
+          },
+          {
+            "name": "Stop containers",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 129683041288,
+        "name": "CI_OFFLINE_CORE / release gate",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check out source",
+            "conclusion": "success"
+          },
+          {
+            "name": "Write bounded aggregate decision (not final workflow status)",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload only public gate decision",
+            "conclusion": "success"
+          },
+          {
+            "name": "Enforce both required jobs and gate export success",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Check out source",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "t16_expected_skip": true,
+    "actual_counts": {
+      "pytest_passed": 1291,
+      "pytest_skipped": 14,
+      "vitest_passed": 127,
+      "playwright_passed": 119,
+      "playwright_retries": 0
+    },
+    "new_full_suite_execution_in_R4": false,
+    "source": "newly downloaded actual main CI logs; not PR inference or a new local full run",
+    "logs": {
+      "129675414218": {
+        "bytes": 221644,
+        "decoded_log_sha256": "b72c0a23ab1924dd6fc615608803ef3cdba810ab09e4ae60af403569df8d2a15",
+        "count_lines": [
+          "19 passed (19)",
+          "127 passed (127)",
+          "119 passed (6.3m)"
+        ],
+        "failed_footers": [],
+        "playwright_pass_lines": 119,
+        "gate_passed": false,
+        "actual_merge_sha_in_log": true,
+        "x64_cache_observed": true,
+        "skips": []
+      },
+      "129675413979": {
+        "bytes": 95462,
+        "decoded_log_sha256": "7e25523280292ef2a9dd5abbf1085d0a476a8f7162cc7aec0fa2e8959ff03c8b",
+        "count_lines": [
+          "1291 passed, 14 skipped, 3 warnings in 1250.17s (0:20:50) ==========="
+        ],
+        "failed_footers": [],
+        "playwright_pass_lines": 0,
+        "gate_passed": false,
+        "actual_merge_sha_in_log": true,
+        "x64_cache_observed": true,
+        "skips": [
+          "SKIPPED [1] backend/tests/test_eval_monitor_policy.py:50: Raw private Live evidence not present; synthetic regression still required",
+          "SKIPPED [10] backend/tests/test_live_preflight.py:272: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+          "SKIPPED [1] backend/tests/test_multiagent_integration.py:28: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+          "SKIPPED [1] backend/tests/test_multiagent_integration.py:86: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE",
+          "SKIPPED [1] backend/tests/test_retrieval_ingest.py:114: CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+        ]
+      },
+      "129683041288": {
+        "bytes": 18014,
+        "decoded_log_sha256": "e86c2a09a2d0af0789ff07bb485b2a68f43e889997764768946cd7c9ec034512",
+        "count_lines": [],
+        "failed_footers": [],
+        "playwright_pass_lines": 0,
+        "gate_passed": true,
+        "actual_merge_sha_in_log": true,
+        "x64_cache_observed": false,
+        "skips": []
+      }
+    },
+    "artifacts": [
+      {
+        "id": 13742312421,
+        "suite": "backend",
+        "bytes": 469,
+        "zip_sha256": "5ba308e1e6b1c384a7606a62c509d7c5f62c1399a0b1121162f4a5b35670ec96",
+        "summary_sha256": "cd7e0c4bd825c816005e6ea1377fde6b6835ecd2f22d86bb6fef85a2670f0ff4",
+        "commit_sha": "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c",
+        "run_id": 42770031624,
+        "attempt": 1,
+        "all_outcomes_success": true,
+        "expiry": "2026-11-17T07:01:32Z",
+        "exit_code": 0,
+        "seconds": 1.598
+      },
+      {
+        "id": 13742125962,
+        "suite": "frontend",
+        "bytes": 507,
+        "zip_sha256": "5b5a1fcf79bd583e80f70774d0cc9cf6c7ffa00e41edaf8155e54288b1ecc713",
+        "summary_sha256": "8802d723124c5ee749910b742ef8e861fa6adfb6372a2725a964ff157d257cde",
+        "commit_sha": "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c",
+        "run_id": 42770031624,
+        "attempt": 1,
+        "all_outcomes_success": true,
+        "expiry": "2026-11-17T06:48:34Z",
+        "exit_code": 0,
+        "seconds": 1.104
+      },
+      {
+        "id": 13741929111,
+        "suite": "gate",
+        "bytes": 420,
+        "zip_sha256": "c07a8f21cd899dbe7d5082b4a929ed65394ac0196b525ba5e12cf4ecb380c9f7",
+        "summary_sha256": "eedcbccbd8eaa559edc7606df4d6b5ab5ce4f8e424d5338da5418f53cc605a47",
+        "commit_sha": "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c",
+        "run_id": 42770031624,
+        "attempt": 1,
+        "all_outcomes_success": true,
+        "expiry": "2026-11-17T07:01:41Z",
+        "exit_code": 0,
+        "seconds": 0.919
+      }
+    ],
+    "playwright_retry_basis": "unchanged config retries0, command without override, 119 passed log entries; not only Job success"
+  },
+  "merge_history": {
+    "pr2": {
+      "merged": true,
+      "merged_at": "2026-11-10T06:39:56Z",
+      "merge_commit": "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c"
+    },
+    "pr1": {
+      "github_state": "Merged",
+      "merged_at": "2026-11-10T06:39:58Z",
+      "commit": "bd0f58368bd40e2b479599fa270b30e43703d2b8",
+      "interpretation": "AUTO_MARKED_INCLUDED_COMMITS_NOT_EXTRA_MANUAL_MERGE",
+      "operations_by_R4": 0
+    },
+    "first_serial_ci": {
+      "run_id": 42655215470,
+      "attempt": 1,
+      "conclusion": "cancelled / job30m timeout; incomplete Playwright"
+    },
+    "r2_push_ci": {
+      "run_id": 42741037766,
+      "conclusion": "success",
+      "sha": "900bf3dda50eec4d2d9583f46001991ac39fb707"
+    },
+    "pr_ci": {
+      "run_id": 42762410422,
+      "conclusion": "success",
+      "head_sha": "900bf3dda50eec4d2d9583f46001991ac39fb707",
+      "test_merge_sha": "2df5307b9639cd4f057569cfc925240e2f4703dd"
+    }
+  },
+  "main_protection": {
+    "verified_via": "read-only branch API + GH CLI GET200; no settings change",
+    "required_pull_request": true,
+    "required_approvals": 0,
+    "contexts": [
+      "CI_OFFLINE_CORE / backend",
+      "CI_OFFLINE_CORE / frontend",
+      "CI_OFFLINE_CORE / release gate"
+    ],
+    "strict_up_to_date": false,
+    "allow_force_push": false,
+    "allow_deletion": false,
+    "changed_by_R4": false
+  },
+  "tag_and_release": {
+    "suggested_version": "v2.14.0",
+    "suggested_title": "AgentMall v2.14.0 — Portfolio Release",
+    "tag_query": "GH CLI REST GET200; no existing tags",
+    "release_query": "GitHub REST GET200; no releases",
+    "conflict_observed": false,
+    "tag_created": false,
+    "release_created": false,
+    "final_release_commit": "UNBOUND_UNTIL_DOCS_MERGED_AND_NEW_MAIN_CI_VERIFIED",
+    "local_signing_identity_configured": false,
+    "plan": "owner reviews docs -> newPR -> merge -> newmainCI -> freeze exactreleaseSHA -> separately approved annotated/signedTag -> Release -> target verification"
+  },
+  "real_model_boundaries": {
+    "current_complex_B2": "L7 PARTIAL / CONTEXT_SCOPE_VIOLATION; second purchase confirmation not completed",
+    "historical_v212": "9/10 development episodes, Single5/5 Multi4/5, sourceb5d6a685; not current production success rate",
+    "l6": "10-11 MockTransport calls, not real model success",
+    "real_retrieval": "V210 local Linux aarch64 CPU, fixed40 synthetic queries, not realLLM assessment",
+    "default_demo": "SDK MockTransport / Fixture Embedding / TEST_OPERATOR; payment0",
+    "ordinary_fastapi_default": "MODEL_DISABLED",
+    "mcp": "REMOTE_AUTH_NOT_IMPLEMENTED",
+    "video": "VIDEO_NOT_RECORDED",
+    "production_deployment": false,
+    "real_payments": 0
+  },
+  "scope": {
+    "existing_docs_modified": 7,
+    "new_docs_expected": 5,
+    "production_code_changed": false,
+    "ci_or_dependency_or_lock_changed": false,
+    "historical_evidence_overwritten": false,
+    "historical_body_suffix_preserved": 6,
+    "new_images_or_third_party_assets": false
+  },
+  "local_document_checks": {
+    "mermaid": {
+      "graphs": 2,
+      "exit_code": 0,
+      "version": "11.12.0 existing trusted local cache",
+      "log_sha256": "2e269675e037ce45bd6c08b3442fdbdb210ddc24f41c431f2c79834d997b0317",
+      "runtime": "owned read-only no-network container; removed independently verified",
+      "source_hashes_match_after_editorial_updates": true
+    },
+    "full_pytest_or_playwright_rerun": "NOT_RUN_DOCS_ONLY",
+    "demo_cold_start": "NOT_RUN_R4; static commands and exact existing product Demo evidence reused",
+    "markdown": {
+      "exit_code": 0,
+      "markdown_files": 11,
+      "local_or_repo_target_links": 219,
+      "anchors": 13,
+      "missing_paths": [],
+      "missing_anchors": [],
+      "release_notes_absolute_copy_safe_repo_links": 10,
+      "remote_new_doc_links": "prospective until docs merged; local targets validated, not claimed HTTP200"
+    },
+    "json_evidence_parsed": true,
+    "exact_git_sha_references_validated": true,
+    "release_notes_facts_checked": true,
+    "release_note_relative_links": 0,
+    "quick_start_static": {
+      "exit_code": 0,
+      "operation": "static config only; no DB or Demo started",
+      "ports": [
+        {
+          "host": "127.0.0.1",
+          "published": "8026",
+          "target": 18001
+        },
+        {
+          "host": "127.0.0.1",
+          "published": "5196",
+          "target": 15174
+        }
+      ],
+      "runner_network_mode": "service:postgres",
+      "default_env_file_read": false,
+      "provider_environment_forwarded": false,
+      "product_demo_script_sha256": "1b44042cc95ea4fea15cb3b40dac57a6406807bcf2230578331c2332d834c4f2",
+      "playground_control": "dedicated local MockTransport fixture only",
+      "cold_start": "NOT_RUN_R4"
+    },
+    "public_safety_and_source": {
+      "exit_code": 0,
+      "proposed_files": [
+        "README.md",
+        "docs/ARCHITECTURE.md",
+        "docs/PORTFOLIO_DEMO.md",
+        "docs/PORTFOLIO_INTERVIEW.md",
+        "docs/PORTFOLIO_ONE_PAGE.md",
+        "docs/RELEASE_CHECKLIST.md",
+        "docs/RELEASE_NOTES_v2.14.0.md",
+        "docs/RESULTS.md",
+        "docs/RESUME_PROJECT_BLURB.md",
+        "docs/V214_RELEASE_CANDIDATE.md",
+        "docs/evidence/v214-r4/report.md",
+        "docs/evidence/v214-r4/verification.json"
+      ],
+      "sensitive_pattern_hits": 0,
+      "exact_git_refs": {
+        "59f84ebbfdfb1d87287ad6c4ae83a1748183d30c": {
+          "kind": "commit",
+          "proof": "local Git object"
+        },
+        "900bf3dda50eec4d2d9583f46001991ac39fb707": {
+          "kind": "commit",
+          "proof": "local Git object"
+        },
+        "cd817c61858095f7d57baa0abf619baf88f4ec88": {
+          "kind": "tree",
+          "proof": "local Git object"
+        },
+        "2df5307b9639cd4f057569cfc925240e2f4703dd": {
+          "kind": "commit",
+          "proof": "fresh GitHub Git commit GET; historical PR test tree verified"
+        },
+        "bd0f58368bd40e2b479599fa270b30e43703d2b8": {
+          "kind": "commit",
+          "proof": "local Git object"
+        }
+      },
+      "protected_base_files": 739,
+      "historical_doc_bodies_preserved": 6,
+      "old_evidence_files_changed": 0,
+      "new_assets": 0,
+      "license_files_unchanged": true,
+      "source_and_dependency_changes": 0,
+      "only_local_doc_changes": true,
+      "scope_limit": "Pattern/source audit is not proof of absolute absence of every secret; old image/rights audit reused by unchanged hashes"
+    },
+    "final_remote_identity_rechecked": true
+  },
+  "failed_attempts": [
+    {
+      "stage": "native worktree",
+      "classification": "chat sourceRoot scope rejected",
+      "result": "safe independent git worktree fallback; original checkout unchanged"
+    },
+    {
+      "stage": "first Artifact reference",
+      "artifact_id": 13742312421,
+      "exit_code": 1,
+      "error_type": "HTTPError",
+      "partial_bytes": 0,
+      "classification": "first binary GET failed with0bytes; subsequent HEAD403 and expired signedse metadata preserved; fresh references verified",
+      "result": "fresh authenticated references, new attempt directory, all3 ZIP server size/digest verified; first failure retained",
+      "original_http_status": "UNKNOWN_NOT_RECORDED",
+      "same_reference_head_diagnosis": 403
+    },
+    {
+      "stage": "reference checker",
+      "classification": "historical PR test merge2df not fetched into local Git; not an invalid source reference",
+      "correction": "fresh read-only GitHub Git commit metadata verified exact SHA/tree/parents; no extra fetch or source change"
+    }
+  ],
+  "boundaries": {
+    "provider_requests": 0,
+    "provider_key_reads": 0,
+    "push": 0,
+    "dispatch": 0,
+    "rerun": 0,
+    "pr_created_or_modified": 0,
+    "merge": 0,
+    "main_protection_changes": 0,
+    "tag_created_or_pushed": 0,
+    "github_release_published": 0,
+    "deploy": 0,
+    "historical_docker_resource_changes": 0
+  },
+  "private_evidence_location": ".playground/v214-r4-20261110T071718Z/",
+  "raw_logs_or_private_records_published": false,
+  "independent_review": {
+    "result": "PASS",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "scope": "fresh read-only document/fact/source/CI evidence review",
+    "declined_to_judge": [
+      "final local commit/CLEAN not yet executed at review time",
+      "future documents PR and subsequent main CI",
+      "future tag/release publication"
+    ],
+    "raw_report_sha256": "9825a5a940643699c00fe4b819763d58abe4ab038afb83dc9fc33a30cc69dd04"
+  }
+}

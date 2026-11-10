@@ -1,5 +1,16 @@
 # 无Key默认Demo：Single + SDK MockTransport + Fixture
 
+## 当前状态追加：V2.14-R4（2026-11-10）
+
+V2.14产品已通过PR #2合并main **`59f84ebbfdfb1d87287ad6c4ae83a1748183d30c`**；[main Push CI / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42770031624) 的Backend、Frontend、Release Gate全部success，原始日志核验pytest **1291 passed /14 skipped**、Vitest **127**、Playwright **119 /0 retries**。具体身份、源码树和三个Artifact SHA见[post-merge回执](evidence/v214-r4/verification.json)。这些是main CI成绩，不是本轮重新运行全量回归。
+
+本轮仅更新发布文档，仍待独立文档PR；建议版本`v2.14.0`尚无Tag/GitHub Release。没有生产部署或真实付款，真实L7 B2仍PARTIAL。下文原阶段的NOT_RUN、cancelled、pending或“本轮”字样保留历史含义，不覆盖本节最新状态，不代表旧失败被改写。
+
+以下无Key启动路径和合成截图继续适用。R4验证静态Compose/命令/文档并复用已核对的同源码Demo证据，没有新录屏、冷机器构建或实时DeepSeek演示；**VIDEO_NOT_RECORDED**。最终main CI独立证明离线代码路径，不意味着该手册中的历史演示被重新执行。
+
+---
+
+
 真实 React / FastAPI / PostgreSQL / LangGraph / Checkpoint，模型决策由 **SDK MockTransport** 提供，向量为 **Fixture Embedding**；合成数据，确认操作者为 **TEST_OPERATOR**。不是 DeepSeek 实况或本地 BGE 语义质量实测。**VIDEO_NOT_RECORDED**。
 
 ## 启动

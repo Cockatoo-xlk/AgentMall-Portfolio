@@ -1,5 +1,16 @@
 # 六类技术深挖：代码、证据和限制
 
+## 当前状态追加：V2.14-R4（2026-11-10）
+
+V2.14产品已通过PR #2合并main **`59f84ebbfdfb1d87287ad6c4ae83a1748183d30c`**；[main Push CI / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42770031624) 的Backend、Frontend、Release Gate全部success，原始日志核验pytest **1291 passed /14 skipped**、Vitest **127**、Playwright **119 /0 retries**。具体身份、源码树和三个Artifact SHA见[post-merge回执](evidence/v214-r4/verification.json)。这些是main CI成绩，不是本轮重新运行全量回归。
+
+本轮仅更新发布文档，仍待独立文档PR；建议版本`v2.14.0`尚无Tag/GitHub Release。没有生产部署或真实付款，真实L7 B2仍PARTIAL。下文原阶段的NOT_RUN、cancelled、pending或“本轮”字样保留历史含义，不覆盖本节最新状态，不代表旧失败被改写。
+
+面试时将“工程路径正确”“当前真实模型能力”和“本人实际贡献”分别说明；main CI不是LLM生产可靠性评测。另见[可编辑中英文项目描述与30秒/2分钟介绍](RESUME_PROJECT_BLURB.md)，按本人真实参与范围取舍。
+
+---
+
+
 本页是基于源码的答题提纲，不证明个人独立手写全部代码。说明自己实际负责的设计/实现/调试及AI辅助范围；不虚构用户量、QPS、SLA或模型提升。[当前证据矩阵](V214_RELEASE_CANDIDATE.md)与[本轮回执](evidence/v214/verification.json)提供版本归属。
 
 ## 1. 50个并发请求争10件库存，为什么不会超卖？
