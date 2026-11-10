@@ -1,0 +1,45 @@
+{
+  "model_id": "BAAI/bge-reranker-base",
+  "revision": "2cfc18c9415c912f9d8155881c133215df768a70",
+  "license": "MIT",
+  "source": "https://huggingface.co/BAAI/bge-reranker-base/tree/2cfc18c9415c912f9d8155881c133215df768a70",
+  "metadata_sha256": "f985e47ac51e817b0dffb7a612a0366173a996b383e1f01f7dd9151becbe70be",
+  "files": {
+    "README.md": {
+      "sha256": "b4223c8c1e95538f8c79168afc501f8b2da06c63221f013b79b28af78b59366d",
+      "size_bytes": 34111
+    },
+    "config.json": {
+      "sha256": "289adf7ada1eb6b4afa7589a48a032d45a076cf2e46dcdb3b4cabc33be14f708",
+      "size_bytes": 799
+    },
+    "model.safetensors": {
+      "sha256": "ced967c45fd1902eb92716c9ceeca7c95a936770ea9db611f5a841b926e33fbd",
+      "size_bytes": 1112206140
+    },
+    "sentencepiece.bpe.model": {
+      "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+      "size_bytes": 5069051
+    },
+    "special_tokens_map.json": {
+      "sha256": "d5469a60db23249c7f8945013d78df30b44b6bf686c6bb4740f4223f77b1b535",
+      "size_bytes": 279
+    },
+    "tokenizer.json": {
+      "sha256": "9eb652ac4e40cc093272bbbe0f55d521cf67570060227109b5cdc20945a4489e",
+      "size_bytes": 17098107
+    },
+    "tokenizer_config.json": {
+      "sha256": "a1d6bc8734a6f635dc158508bef000f8e2e5a759c7d92f984b2c86e5ff53425b",
+      "size_bytes": 443
+    }
+  },
+  "device": "cpu",
+  "dtype": "float32",
+  "max_length": 256,
+  "batch_size": 4,
+  "max_candidates": 20,
+  "load_timeout_seconds": 60,
+  "inference_timeout_seconds": 10,
+  "license_source": "Pinned publisher model card declares MIT; binary weights are not distributed with source."
+}

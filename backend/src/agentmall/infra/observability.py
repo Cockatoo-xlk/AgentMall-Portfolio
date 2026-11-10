@@ -14,6 +14,8 @@ GOALS = {
     "human_support",
 }
 TOOLS = {
+    "retrieve_bundle_candidates",
+    "prepare_bundle_checkout",
     "retrieve_products",
     "retrieve_policies",
     "get_product",
@@ -28,6 +30,7 @@ TOOLS = {
     "get_support_ticket",
 }
 CONSTRAINT_FIELDS = {
+    "bundle",
     "max_price_cents",
     "category",
     "noise_preference",
@@ -59,6 +62,67 @@ def uuid(value):
         return None
 
 
+def safe_constraints(value):
+    """Known enums/numbers/IDs only; typed Bundle queries can still contain private prose."""
+    from agentmall.agents.context import Constraints
+
+    omitted_layouts = set()
+    if isinstance(value, dict) and isinstance(value.get("bundle"), dict):
+        # Re-project stored summaries without restoring discarded free text.
+        parts = []
+        for index, raw in enumerate(value["bundle"].get("parts", [])):
+            part = dict(raw)
+            omitted = part.pop("requirements_omitted_fields", None)
+            if omitted is not None:
+                if omitted not in (["query"], ["query", "layout"]):
+                    raise ValueError("Invalid omitted fields")
+                requirements = dict(part["requirements"])
+                if "query" in requirements:
+                    raise ValueError("Unexpected restored query")
+                requirements["query"] = "omitted"  # Validation only; never exported.
+                part["requirements"] = requirements
+                if "layout" in omitted:
+                    omitted_layouts.add(index)
+            parts.append(part)
+        value = {**value, "bundle": {**value["bundle"], "parts": parts}}
+    data = Constraints.model_validate(value).model_dump(mode="json")
+    result = {k: data[k] for k in CONSTRAINT_FIELDS if k in data and k != "bundle"}
+    if "bundle" in data:
+        parts = []
+        allowed = {
+            "mode",
+            "category",
+            "screen_inches",
+            "usage",
+            "activity",
+            "product_kind",
+            "max_price_cents",
+            "in_stock",
+            "noise_preference",
+            "connection",
+            "excluded_connections",
+            "keyboard_type",
+            "exclude_product_ids",
+        }
+        for index, part in enumerate(data["bundle"]["parts"]):
+            requirements = {k: v for k, v in part["requirements"].items() if k in allowed}
+            omitted = ["query"]
+            layout = part["requirements"].get("layout")
+            if layout in {"61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"}:
+                requirements["layout"] = layout
+            elif layout is not None or index in omitted_layouts:
+                omitted.append("layout")
+            parts.append(
+                {
+                    **{k: part[k] for k in ("category", "quantity", "prefer_quiet") if k in part},
+                    "requirements": requirements,
+                    "requirements_omitted_fields": omitted,
+                }
+            )
+        result["bundle"] = {"budget_cents": data["bundle"]["budget_cents"], "parts": parts}
+    return result
+
+
 def public_summary(kind, event):
     """Allow types/known enums and resource IDs; discard all free-form prose."""
     result = {}
@@ -71,6 +135,12 @@ def public_summary(kind, event):
         result["goal"] = data["goal"]
     if data.get("name") in TOOLS:
         result["name"] = data["name"]
+        if data["name"] == "retrieve_bundle_candidates":
+            from agentmall.catalog.categories import CATEGORY_LABELS
+
+            category = data.get("validated_arguments", {}).get("category")
+            if isinstance(category, str) and category in CATEGORY_LABELS:
+                result["category"] = category
     for key in ("subtask_id", "tool_call_id", "interrupt_id"):
         if value := identifier(data.get(key)):
             result[key] = value
@@ -87,6 +157,132 @@ def public_summary(kind, event):
         value = data.get(key)
         if isinstance(value, str) and re.fullmatch(r"[A-Za-z_]{1,64}", value) and identifier(value):
             result[key] = value
+    if kind in {
+        "task_tools_visible",
+        "return_assessment_completed",
+        "return_evidence_revalidated",
+        "read_goal_completed",
+    }:
+        if type(data.get("read_only")) is bool:
+            result["read_only"] = data["read_only"]
+        if isinstance(data.get("tool_names"), list):
+            result["tool_names"] = sorted(
+                {name for name in data["tool_names"] if isinstance(name, str) and name in TOOLS}
+            )
+    if kind == "read_goal_completed":
+        if data.get("completion_basis") in {"ASSESSMENT_RECEIPTS", "PRODUCT_RECEIPTS"}:
+            result["completion_basis"] = data["completion_basis"]
+        if type(data.get("model_round_skipped")) is bool:
+            result["model_round_skipped"] = data["model_round_skipped"]
+    if kind == "handoff":
+        if type(data.get("read_only")) is bool:
+            result["read_only"] = data["read_only"]
+        from pydantic import ValidationError
+
+        try:
+            result["constraints"] = safe_constraints(data["constraints"])
+        except (KeyError, TypeError, ValueError, ValidationError):
+            pass
+        if isinstance(data.get("depends_on"), list):
+            result["depends_on"] = [v for x in data["depends_on"][:4] if (v := identifier(x))]
+        if data.get("constraint_source") in {"CURRENT_REQUEST", "THREAD_CONTEXT"}:
+            result["constraint_source"] = data["constraint_source"]
+        else:
+            result["constraint_source"] = "PROPOSED_NOT_AUTHORIZED"
+        if type(data.get("context_version")) is int and data["context_version"] >= 0:
+            result["context_version"] = data["context_version"]
+    if kind in {
+        "model_start",
+        "model_end",
+        "specialist_started",
+        "specialist_goal_incomplete",
+        "specialist_result",
+    }:
+        budget = data.get("budget")
+        if isinstance(budget, dict):
+            result["budget"] = {
+                k: budget[k]
+                for k in ("models", "tools", "delegations", "steps", "output_tokens")
+                if type(budget.get(k)) is int and budget[k] >= 0
+            }
+    if kind in {
+        "tool_batch_rejected",
+        "orchestration_repair",
+        "orchestration_repair_exhausted",
+        "delegation_rejected",
+        "tool",
+    }:
+        from agentmall.agents.model_control import BATCH_DIAGNOSTICS, FAILURE_CLASSES
+        from agentmall.agents.specialist_tools import ALL_SCHEMAS
+
+        if (
+            isinstance(data.get("diagnostic_code"), str)
+            and data["diagnostic_code"] in BATCH_DIAGNOSTICS
+        ):
+            result["diagnostic_code"] = data["diagnostic_code"]
+        if isinstance(data.get("failure_class"), str) and data["failure_class"] in FAILURE_CLASSES:
+            result["failure_class"] = data["failure_class"]
+        if isinstance(data.get("phase"), str) and data["phase"] in {
+            "MODEL_OUTPUT_VALIDATION",
+            "TOOL_EXECUTION",
+            "DELEGATION_VALIDATION",
+        }:
+            result["phase"] = data["phase"]
+        if isinstance(data.get("tool_names"), list):
+            result["tool_names"] = sorted(
+                {n for n in data["tool_names"] if isinstance(n, str) and n in TOOLS}
+            )[:20]
+        known_fields = {f for schema in ALL_SCHEMAS.values() for f in schema.model_fields} | {
+            "actor_id",
+            "user_id",
+            "role",
+            "store_id",
+            "approved",
+            "confirmation_id",
+            "price_cents",
+            "total_cents",
+            "on_hand",
+            "reserved",
+        }
+        if isinstance(data.get("violation_fields"), list):
+            result["violation_fields"] = sorted(
+                {f for f in data["violation_fields"] if isinstance(f, str) and f in known_fields}
+            )[:10]
+        for key in (
+            "repairable",
+            "repair_consumed",
+            "tools_executed",
+            "redispatch_requested",
+            "delegation_executed",
+        ):
+            if type(data.get(key)) is bool:
+                result[key] = data[key]
+        if isinstance(data.get("budget"), dict):
+            result["budget"] = {
+                k: v
+                for k, v in data["budget"].items()
+                if k in {"models", "tools", "delegations", "steps", "output_tokens"}
+                and type(v) is int
+                and v >= 0
+            }
+    if kind in {
+        "bundle_computed",
+        "bundle_revision_requested",
+        "bundle_constraints_updated",
+        "bundle_retrieval_reused",
+        "bundle_retrieval_refreshed",
+        "bundle_replanned",
+        "bundle_revision_rejected",
+    }:
+        from agentmall.catalog.categories import CATEGORY_LABELS
+
+        if isinstance(data.get("category"), str) and data["category"] in CATEGORY_LABELS:
+            result["category"] = data["category"]
+        if data.get("reason") == "CURRENT_SKU_INVALID":
+            result["reason"] = "CURRENT_SKU_INVALID"
+        for key in ("item_count", "total_cents", "budget_cents"):
+            if type(data.get(key)) is int and 0 <= data[key] <= 100_000_000:
+                result[key] = data[key]
     if kind == "orchestration_rejected" and isinstance(data.get("constraint_fields"), list):
         result["constraint_fields"] = sorted(
             {

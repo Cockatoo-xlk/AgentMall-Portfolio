@@ -1,0 +1,244 @@
+{
+  "status": "LOCAL_GATE_CHECKS_PASS_REMOTE_CI_NOT_RUN",
+  "receipts": [
+    {
+      "name": "actionlint-project-install",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/install-actionlint.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.607,
+      "log": ".t13/t14-r1-a/actionlint-project-install.log",
+      "log_sha256": "ac44aea7c54eea493f1c936b10e6f78912bf8bbf5dccbdb8f0920f472c7b8a48"
+    },
+    {
+      "name": "candidate-node-dependencies",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "ci",
+        "--cache",
+        "<LOCAL_CANDIDATE>/.t13/t14-r1-a/npm-cache"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 39.555,
+      "log": ".t13/t14-r1-a/candidate-node-dependencies.log",
+      "log_sha256": "f255c5dc4e4f909b192edbc14ebab97d0b9f92a90e7d0b296ee27cacee02356e"
+    },
+    {
+      "name": "candidate-offline-static",
+      "command": [
+        "sh",
+        "-c",
+        "backend/.venv/bin/ruff check backend evals scripts && backend/.venv/bin/ruff format --check backend evals scripts && npm --prefix frontend run typecheck && npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build && npm --prefix frontend run test:e2e -- --list && docker compose -p agentmall-t14-r1-a -f compose.ci.yaml config --quiet && docker compose -p agentmall-t14-r1-a -f compose.ci.yaml -f compose.cart-local.yaml config --quiet && git diff --check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 10.123,
+      "log": ".t13/t14-r1-a/candidate-offline-static.log",
+      "log_sha256": "0d407b3dad0508d4a78d542e7159671849a3759a55e4917310bd0dee5c55bec9"
+    },
+    {
+      "name": "candidate-python-dependencies",
+      "command": [
+        "env",
+        "UV_CACHE_DIR=<LOCAL_CANDIDATE>/.t13/t14-r1-a/uv-cache",
+        "UV_PYTHON_DOWNLOADS=never",
+        "UV_LINK_MODE=copy",
+        "uv",
+        "--no-config",
+        "sync",
+        "--project",
+        "backend",
+        "--locked",
+        "--no-extra",
+        "embedding",
+        "--python",
+        "3.12.10"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 154.405,
+      "log": ".t13/t14-r1-a/candidate-python-dependencies.log",
+      "log_sha256": "7cc0b576ff9740dbc27595fb19bb2958edfed52750cd1473099ea40654466798"
+    },
+    {
+      "name": "ci-default-config-contract",
+      "command": [
+        "node",
+        ".t13/t14-r1-a/ci-contract.mjs"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.167,
+      "log": ".t13/t14-r1-a/ci-default-config-contract.log",
+      "log_sha256": "eb3ff2b3406a89e454f91cc56637767bd3cbf74d1c6fbd53a97fcdaefa77b22e"
+    },
+    {
+      "name": "ci-readiness-validation",
+      "command": [
+        "backend/.venv/bin/python",
+        ".t13/t14-r1-a/ci-readiness.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.607,
+      "log": ".t13/t14-r1-a/ci-readiness-validation.log",
+      "log_sha256": "80346ec26bc918accd850ffb5bb41d738eaf7a9d1ed0342f4321de216d8e21c2"
+    },
+    {
+      "name": "committed-history-classified",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/history-audit.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 12.698,
+      "log": ".t13/t14-r1-a/committed-history-classified.log",
+      "log_sha256": "ccbfbc11ac4c45264a0594ee2f15b312935df2f24814473724f6316dd3efe6b2"
+    },
+    {
+      "name": "committed-history-scan",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/history-audit.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 11.95,
+      "log": ".t13/t14-r1-a/committed-history-scan.log",
+      "log_sha256": "534ed4b833da6488117148cfa74b8466410d337a9ef1cec0d2556e5e73498658"
+    },
+    {
+      "name": "final-doc-and-payload-check",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/final-doc-check.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.183,
+      "log": ".t13/t14-r1-a/final-doc-and-payload-check.log",
+      "log_sha256": "c5edf659efcb304ee7333298d74dfcd8800c0b1bebf1971efcc37f527a95b316"
+    },
+    {
+      "name": "historical-source-proof-complete",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/verify-p1-evidence.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.077,
+      "log": ".t13/t14-r1-a/historical-source-proof-complete.log",
+      "log_sha256": "ddeff39f4bd2a2566f07f020de41d20c1b37669f50c2a006569a7671a1ad0156"
+    },
+    {
+      "name": "p0-p1-receipt-reconciliation",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/verify-p1-evidence.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.897,
+      "log": ".t13/t14-r1-a/p0-p1-receipt-reconciliation.log",
+      "log_sha256": "fb2cd7740e9f46251caaa56ca85a3d7c9db6d3862e7a6c567ab37b6c098741ab"
+    },
+    {
+      "name": "p1-runtime-and-historical-p0-proof",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/verify-p1-evidence.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.859,
+      "log": ".t13/t14-r1-a/p1-runtime-and-historical-p0-proof.log",
+      "log_sha256": "fb2cd7740e9f46251caaa56ca85a3d7c9db6d3862e7a6c567ab37b6c098741ab"
+    },
+    {
+      "name": "protected-assets-check",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/protect.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.672,
+      "log": ".t13/t14-r1-a/protected-assets-check.log",
+      "log_sha256": "d056021da97e09302cd2711f3e561affa596302abf71ab0a2b2099330e00d11a"
+    },
+    {
+      "name": "protected-source-history-with-metadata-disclosure",
+      "command": [
+        "python3",
+        ".t13/t14-r1-a/protect.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.62,
+      "log": ".t13/t14-r1-a/protected-source-history-with-metadata-disclosure.log",
+      "log_sha256": "fc927ddb1c6779b20110e69f0e2db4dd95316b953b64b169892ea70684a1bdf7"
+    },
+    {
+      "name": "remote-main-before-commit",
+      "command": [
+        "env",
+        "GIT_TERMINAL_PROMPT=0",
+        "git",
+        "ls-remote",
+        "--exit-code",
+        "origin",
+        "refs/heads/main"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.208,
+      "log": ".t13/t14-r1-a/remote-main-before-commit.log",
+      "log_sha256": "44fad4ac20b978c9b5105a3531e70a3eb1f35524543dd05558d1d4c45b9c4f11"
+    },
+    {
+      "name": "workflow-actionlint",
+      "command": [
+        ".t13/t14-r1-a/actionlint",
+        ".github/workflows/ci.yml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.216,
+      "log": ".t13/t14-r1-a/workflow-actionlint.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "new_execution_this_task": {
+    "ruff_check": 0,
+    "ruff_format_check": 0,
+    "typecheck": 0,
+    "lint": 0,
+    "vitest_passed": 65,
+    "build": 0,
+    "playwright_collection_only": 74,
+    "full_playwright_execution": "NOT_RERUN; P1 hash-verified74 reused",
+    "full_backend_execution": "NOT_RERUN; P1 hash-verified670/14 reused",
+    "actionlint": 0,
+    "yaml_and_default_config_contract": 0,
+    "compose_config_only": 0,
+    "databases_or_containers_started": 0,
+    "paid_llm_requests": 0
+  },
+  "reused_p1_execution": {
+    "pytest": "670 passed /14 skipped",
+    "vitest": "65 passed",
+    "playwright": "74 passed /0 skip /0 retries",
+    "environments": "Local Linux ARM64 backend; Mac ARM64 frontend/browser + owned real PG/Checkpoint container",
+    "single_container_ci_exit": 143,
+    "single_container_status": "OOM_RESOURCE_BLOCKED_NOT_PASSED",
+    "original_p0_runner_end_cause": "UNKNOWN",
+    "original_21_resource_sample_log": "Incomplete original sample log disclosed in P1, not falsely restored"
+  },
+  "failed_checks_preserved": {
+    "history_initial_pattern_scan": "One email-like synthetic negative DSN, exact blob/line/source reviewed and classified; no secret removed from history",
+    "source_checker": "Initial whole source inventory included explicitly edited README; original P1 bytes still match, candidate doc exception recorded separately",
+    "protected_checker": "Older P1 raw-ref digest differs because later internal-ref metadata exists; full exact old textual diff unavailable, disclosed; source/history object closure/index match; no deletion/rewrite"
+  },
+  "mac_result_not_remote_amd64": true,
+  "workflow_modifications": false,
+  "assertion_skip_retry_safety_modifications": false,
+  "historical_manifests_or_evaluations_modified": false,
+  "remote_write_operations": [],
+  "approval_state": "LOCAL_PREPARATION_ONLY; no R1-B authorization created",
+  "supplemental_harness_corrections": [
+    "Initial baseline summary formatting treated a text metadata value as a dict; baseline file was already written and verified.",
+    "Temporary artifact classifier prefix-matched .env.example; corrected to reject actual env files and installed directories, leaving only explicit examples allowed."
+  ]
+}

@@ -15,7 +15,7 @@ from sqlalchemy.exc import DBAPIError
 from agentmall.actions.service import database_now, get_proposal, payload_hash
 from agentmall.agents.budgets import Limits, RunStopped
 from agentmall.agents.context import Constraints, MultiRequest, user_constraints
-from agentmall.agents.durable_budget import DurableBudget
+from agentmall.agents.durable_budget import DurableBudget, model_event_key
 from agentmall.agents.durable_graph import build_durable_graph
 from agentmall.agents.graph import render
 from agentmall.agents.locking import claim_execution, thread_lock
@@ -49,13 +49,16 @@ def sanitized(message):
     return re.sub(r"\bsk-[A-Za-z0-9_-]+", "[REDACTED]", message)
 
 
-def prompt_version():
+def prompt_version(versioned=False):
+    from agentmall.agents.context import THREAD_CONTEXT_PROMPT
+
     return fingerprint(
         {
             "supervisor": SYSTEM_PROMPT,
             "specialists": PROMPTS,
             "single": SINGLE_PROMPT,
             "shell": "t09-v1",
+            **({"thread_context": THREAD_CONTEXT_PROMPT} if versioned else {}),
         }
     )
 
@@ -71,6 +74,12 @@ def model_identity(app, mode):
         }
         for role, model in models.items()
     }
+    provider = getattr(app.state, "playground", None)
+    if provider is not None:
+        identities["playground"] = provider.identity
+    identity = getattr(app.state, "worker_execution_identity", None)
+    if identity is not None:
+        identities["composition"] = identity
     return "sha256:" + fingerprint(identities)
 
 
@@ -91,13 +100,16 @@ async def owned_thread(session, actor, thread_id):
 def view(run):
     # Public structured requirements only; never return persisted user prose.
     request = MultiRequest(thread_id=run.thread_id, **run.request_payload)
-    constraints = user_constraints(request).model_dump(mode="json")
+    constraints = run.context_snapshot.get("constraints") or user_constraints(request).model_dump(
+        mode="json"
+    )
     for entry in sorted(run.node_journal.values(), key=lambda e: e["seq"]):
         value = entry["output"].get("runtime_state", {}).get("constraints")
         if value is not None:
             constraints = Constraints.model_validate(value).model_dump(mode="json")
     return {
         "constraints": constraints,
+        "context_snapshot": run.context_snapshot,
         "id": str(run.id),
         "thread_id": str(run.thread_id),
         "request_id": str(run.request_id),
@@ -113,6 +125,13 @@ def view(run):
         "budget": run.budget.get("used", {}),
         "epoch": run.epoch,
     }
+
+
+async def public_run(session, run):
+    from agentmall.agents.jobs import job_view, latest_job
+
+    job = await latest_job(session, run.id)
+    return {**view(run), **({"job": job_view(job)} if job else {})}
 
 
 async def create_thread(app, actor, mode):
@@ -131,6 +150,8 @@ async def create_thread(app, actor, mode):
 
 
 async def get_thread(app, actor, thread_id):
+    from agentmall.agents.memory import context_view
+
     async with app.state.sessions.begin() as session:
         thread = await owned_thread(session, actor, thread_id)
         runs = await session.scalars(
@@ -143,25 +164,41 @@ async def get_thread(app, actor, thread_id):
             "id": str(thread.id),
             "mode": thread.mode,
             "status": thread.status,
-            "runs": [view(r) for r in runs],
+            "runs": [await public_run(session, r) for r in runs],
+            "context": await context_view(session, actor, thread_id),
         }
 
 
 async def events(app, actor, run_id, after_seq, limit):
+    page, _ = await event_snapshot(app, actor, run_id, after_seq, limit)
+    return page
+
+
+async def event_snapshot(app, actor, run_id, after_seq, limit):
     async with app.state.sessions.begin() as session:
-        run = await session.get(AgentRun, run_id)
+        run = (
+            await session.execute(
+                select(AgentRun.thread_id, AgentRun.status, AgentRun.event_seq).where(
+                    AgentRun.id == run_id
+                )
+            )
+        ).one_or_none()
         if run is None:
             raise not_found()
         await owned_thread(session, actor, run.thread_id)
         rows = list(
             await session.scalars(
                 select(RunEvent)
-                .where(RunEvent.run_id == run_id, RunEvent.seq > after_seq)
+                .where(
+                    RunEvent.run_id == run_id,
+                    RunEvent.seq > after_seq,
+                    RunEvent.seq <= run.event_seq,
+                )
                 .order_by(RunEvent.seq)
                 .limit(limit)
             )
         )
-        return {
+        page = {
             "items": [
                 {
                     "id": str(e.id),
@@ -176,6 +213,7 @@ async def events(app, actor, run_id, after_seq, limit):
             ],
             "next_seq": rows[-1].seq if rows else after_seq,
         }
+        return page, run.status
 
 
 def add_event(session, run, kind, payload=None, agent=None, action_id=None):
@@ -211,9 +249,9 @@ class NodeStore:
                 if event["kind"] in {
                     "model_start",
                     "model_end",
-                } and f"{event['kind']}:{event.get('attempt')}" in run.budget.get(
-                    "model_events", []
-                ):
+                    "tool_batch_rejected",
+                    "delegation_rejected",
+                } and model_event_key(event) in run.budget.get("model_events", []):
                     continue
                 summary = public_summary(event["kind"], event)
                 add_event(
@@ -223,11 +261,29 @@ class NodeStore:
 
 
 async def activate(app, actor, run_id, thread, connection, resume_payload=None):
+    # Ephemeral transport scope only; graph state, budgets, epoch and checkpoints stay unchanged.
+    if getattr(app.state, "playground", None) is None:
+        return await _activate(app, actor, run_id, thread, connection, resume_payload)
+    from agentmall.playground.context import CallScope, call_scope
+
+    with call_scope(CallScope(run_id, thread.id, actor.user_id, actor.store_id)):
+        return await _activate(app, actor, run_id, thread, connection, resume_payload)
+
+
+async def _activate(app, actor, run_id, thread, connection, resume_payload=None):
     sessions = app.state.sessions
     async with sessions.begin() as session:
         run = await session.scalar(select(AgentRun).where(AgentRun.id == run_id).with_for_update())
         fence = await claim_execution(session, run, connection, sessions)
         original = deepcopy(run.request_payload)
+        accepted_context = deepcopy(run.context_snapshot)
+        bindings = [
+            e["payload"]["context_binding"]
+            for e in run.resume_journal.values()
+            if e["payload"].get("context_binding")
+        ]
+        if bindings:
+            accepted_context = deepcopy(max(bindings, key=lambda b: b["version"]))
         external_request_id = run.request_id
         add_event(session, run, "run_activated", {"epoch": run.epoch})
     budget = DurableBudget(fence)
@@ -255,6 +311,7 @@ async def activate(app, actor, run_id, thread, connection, resume_payload=None):
         {},
         guard=fence.check,
         single=thread.mode == "single",
+        thread_snapshot=accepted_context,
     )
     config = checkpoint_config(thread.id, run_id)
     waiting = None
@@ -331,12 +388,20 @@ async def activate(app, actor, run_id, thread, connection, resume_payload=None):
     async with asyncio.timeout(5):
         await recover_receipts(runtime)
     result = (
-        render(runtime, "finish")
+        render(
+            runtime, "clarify" if waiting and waiting.get("type") == "clarification" else "finish"
+        )
         .model_copy(update={"request_id": external_request_id})
         .model_dump(mode="json")
     )
+    unresolved = not runtime.single and bool(result["unfinished"])
+    if unresolved and not waiting and result["status"] == "done":
+        result["status"] = "partial"
     async with sessions.begin() as session:
         run = await fence.check(session, exclusive=True)
+        from agentmall.agents.memory import publish_candidates
+
+        await publish_candidates(session, run, runtime)
         run.result = result
         run.pending_confirmation = waiting
         run.last_error = error
@@ -344,7 +409,7 @@ async def activate(app, actor, run_id, thread, connection, resume_payload=None):
             "WAITING_INPUT"
             if waiting
             else "PARTIAL"
-            if error or result["error_codes"]
+            if error or result["error_codes"] or unresolved
             else "COMPLETED"
         )
         if not waiting:
@@ -377,9 +442,9 @@ async def refresh_expired(app, actor, thread, connection, run_id=None):
         pending = run.pending_confirmation or {}
         if pending.get("type") != "confirmation":
             return
-        if run.prompt_version != prompt_version() or run.model_id != model_identity(
-            app, thread.mode
-        ):
+        if run.prompt_version != prompt_version(
+            bool(run.context_snapshot)
+        ) or run.model_id != model_identity(app, thread.mode):
             return
         proposal = await get_proposal(session, actor, UUID(pending["proposal_id"]))
         if proposal.status != "EXPIRED" or proposal.result is not None:
@@ -393,12 +458,57 @@ async def refresh_expired(app, actor, thread, connection, run_id=None):
     await activate(app, actor, target, thread, connection, value)
 
 
-async def start_run(app, actor, thread_id, payload):
-    digest = payload_hash(payload.model_dump(mode="json"))
+async def thread_busy(session, thread_id):
+    busy = await session.scalar(
+        select(AgentRun.id).where(
+            AgentRun.thread_id == thread_id,
+            or_(
+                AgentRun.status.in_(["RUNNING", "WAITING_INPUT"]),
+                and_(AgentRun.status == "PARTIAL", AgentRun.last_error.in_(RECOVERABLE_ERRORS)),
+            ),
+        )
+    )
+    if busy:
+        raise DomainError(409, "THREAD_BUSY", "请先恢复此会话已有运行")
+
+
+async def start_run(app, actor, thread_id, payload, *, deferred=False):
+    from agentmall.agents.memory import accept_context
+
+    request_body = payload.model_dump(mode="json")
+    # Preserve historical hashes including constraints:null; omit only new absent fields.
+    for key in (
+        "expected_context_version",
+        "candidate_set_id",
+        "bundle_id",
+        "bundle_quantities",
+        "bundle_revision",
+    ):
+        if request_body[key] is None:
+            del request_body[key]
+    digest = payload_hash(request_body)
     async with app.state.sessions.begin() as session:
         thread = await owned_thread(session, actor, thread_id)
+        if deferred:
+            from agentmall.agents.jobs import latest_job
+
+            previous = await session.scalar(
+                select(AgentRun).where(
+                    AgentRun.thread_id == thread_id, AgentRun.request_id == payload.request_id
+                )
+            )
+            if previous is not None and await latest_job(session, previous.id) is not None:
+                if previous.input_digest != digest:
+                    raise DomainError(409, "IDEMPOTENCY_CONFLICT", "相同请求ID对应不同输入")
+                if previous.prompt_version != prompt_version(
+                    bool(previous.context_snapshot)
+                ) or previous.model_id != model_identity(app, thread.mode):
+                    raise DomainError(409, "RUN_VERSION_MISMATCH", "运行版本已变化")
+                # Read-only reconciliation never competes with an executing Worker.
+                return await public_run(session, previous), False
     async with thread_lock(app.state.settings, thread_id) as connection:
-        await refresh_expired(app, actor, thread, connection)
+        if not deferred:
+            await refresh_expired(app, actor, thread, connection)
         async with app.state.sessions.begin() as session:
             await owned_thread(session, actor, thread_id)
             run = await session.scalar(
@@ -410,14 +520,14 @@ async def start_run(app, actor, thread_id, payload):
             if run:
                 if run.input_digest != digest:
                     raise DomainError(409, "IDEMPOTENCY_CONFLICT", "相同请求ID对应不同输入")
-                if run.prompt_version != prompt_version():
+                if run.prompt_version != prompt_version(bool(run.context_snapshot)):
                     raise DomainError(409, "RUN_VERSION_MISMATCH", "运行提示版本已变化")
                 if run.model_id != model_identity(app, thread.mode):
                     raise DomainError(409, "RUN_VERSION_MISMATCH", "运行模型已变化")
                 if run.status in {"WAITING_INPUT", "COMPLETED", "FAILED"} or (
                     run.status == "PARTIAL" and run.last_error not in RECOVERABLE_ERRORS
                 ):
-                    return view(run), False
+                    return await public_run(session, run), False
             else:
                 busy = await session.scalar(
                     select(AgentRun.id).where(
@@ -433,17 +543,24 @@ async def start_run(app, actor, thread_id, payload):
                 )
                 if busy:
                     raise DomainError(409, "THREAD_BUSY", "请先恢复此会话已有运行")
-                body = payload.model_dump(mode="json")
+                run_id = uuid4()
+                accepted = await accept_context(session, actor, thread_id, run_id, payload)
+                body = {
+                    k: v
+                    for k, v in request_body.items()
+                    if k not in {"expected_context_version", "candidate_set_id", "bundle_revision"}
+                }
                 body["message"] = sanitized(body["message"])
                 run = AgentRun(
-                    id=uuid4(),
+                    id=run_id,
                     thread_id=thread_id,
                     request_id=payload.request_id,
                     status="RUNNING",
                     input_digest=digest,
-                    prompt_version=prompt_version(),
+                    prompt_version=prompt_version(bool(accepted)),
                     model_id=model_identity(app, thread.mode),
                     request_payload=body,
+                    context_snapshot=accepted,
                     budget={},
                     node_journal={},
                     resume_journal={},
@@ -454,18 +571,57 @@ async def start_run(app, actor, thread_id, payload):
                 await session.flush()
                 add_event(session, run, "run_created")
             run_id = run.id
+            from agentmall.agents.jobs import enqueue, latest_job
+
+            existing_job = await latest_job(session, run.id)
+            if deferred:
+                if existing_job is None:
+                    await enqueue(session, run, "START", "start")
+                return await public_run(session, run), created
+            if existing_job is not None:
+                return await public_run(session, run), created
         return await activate(app, actor, run_id, thread, connection), created
 
 
-async def resume_thread(app, actor, thread_id, payload):
+async def accepted_resume(session, run, payload, body):
+    from agentmall.agents.jobs import intent_job
+
+    existing = await intent_job(session, run.id, "resume:" + payload.interrupt_id)
+    if existing is None:
+        return False
+    original = run.resume_journal.get(str(existing.resume_request_id))
+    if original is None:
+        raise DomainError(409, "RESUME_INTENT_MISSING", "需核对原恢复意图")
+    comparable = {
+        k: v for k, v in original["payload"].items() if k not in {"request_id", "context_binding"}
+    }
+    if comparable != {k: v for k, v in body.items() if k != "request_id"}:
+        raise DomainError(409, "IDEMPOTENCY_CONFLICT", "此中断已有不同恢复意图")
+    return True
+
+
+async def resume_thread(app, actor, thread_id, payload, *, deferred=False):
     body = payload.model_dump(mode="json", exclude_none=True)
     digest = payload_hash(body)
     if "clarification" in body:
         body["clarification"] = sanitized(body["clarification"])
     async with app.state.sessions.begin() as session:
         thread = await owned_thread(session, actor, thread_id)
+        if deferred:
+            previous = await session.scalar(
+                select(AgentRun).where(
+                    AgentRun.id == payload.run_id, AgentRun.thread_id == thread_id
+                )
+            )
+            if previous is not None and await accepted_resume(session, previous, payload, body):
+                if previous.prompt_version != prompt_version(
+                    bool(previous.context_snapshot)
+                ) or previous.model_id != model_identity(app, thread.mode):
+                    raise DomainError(409, "RUN_VERSION_MISMATCH", "运行版本已变化")
+                return await public_run(session, previous)
     async with thread_lock(app.state.settings, thread_id) as connection:
-        await refresh_expired(app, actor, thread, connection, payload.run_id)
+        if not deferred:
+            await refresh_expired(app, actor, thread, connection, payload.run_id)
         async with app.state.sessions.begin() as session:
             run = await session.scalar(
                 select(AgentRun)
@@ -474,16 +630,21 @@ async def resume_thread(app, actor, thread_id, payload):
             )
             if run is None:
                 raise not_found()
-            if run.prompt_version != prompt_version() or run.model_id != model_identity(
-                app, thread.mode
-            ):
+            if run.prompt_version != prompt_version(
+                bool(run.context_snapshot)
+            ) or run.model_id != model_identity(app, thread.mode):
                 raise DomainError(409, "RUN_VERSION_MISMATCH", "运行提示或模型版本已变化")
+            from agentmall.agents.jobs import enqueue, latest_job
+
+            async_mode = deferred or await latest_job(session, run.id) is not None
+            if async_mode and await accepted_resume(session, run, payload, body):
+                return await public_run(session, run)
             prior = run.resume_journal.get(str(payload.request_id))
             if prior:
                 if prior["digest"] != digest:
                     raise DomainError(409, "IDEMPOTENCY_CONFLICT", "恢复请求内容不同")
                 if prior["completed"]:
-                    return view(run)
+                    return await public_run(session, run)
             else:
                 pending = run.pending_confirmation
                 if not pending or pending["interrupt_id"] != payload.interrupt_id:
@@ -500,6 +661,12 @@ async def resume_thread(app, actor, thread_id, payload):
                     await validate_confirmation(
                         session, actor, payload.proposal_id, payload.confirmation_id
                     )
+                if body.get("clarification") and run.context_snapshot:
+                    from agentmall.agents.memory import accept_clarification
+
+                    body["context_binding"] = await accept_clarification(
+                        session, actor, run, body["clarification"]
+                    )
                 run.resume_journal = {
                     **run.resume_journal,
                     str(payload.request_id): {
@@ -509,6 +676,11 @@ async def resume_thread(app, actor, thread_id, payload):
                     },
                 }
                 add_event(session, run, "resume_received", {"interrupt_id": payload.interrupt_id})
+            if async_mode:
+                await enqueue(
+                    session, run, "RESUME", "resume:" + payload.interrupt_id, payload.request_id
+                )
+                return await public_run(session, run)
         return await activate(app, actor, payload.run_id, thread, connection, body)
 
 
@@ -532,7 +704,7 @@ async def trace_page(app, actor, run_id, after_seq, limit):
         }
 
 
-async def recover_run(app, actor, thread_id, run_id, request_id):
+async def recover_run(app, actor, thread_id, run_id, request_id, *, deferred=False):
     """Re-enter the original durable execution using only authenticated navigation IDs.
 
     No new Run, input, approval, budget, or domain command is constructed here.
@@ -549,17 +721,65 @@ async def recover_run(app, actor, thread_id, run_id, request_id):
                 raise not_found()
             if run.request_id != request_id:
                 raise DomainError(409, "IDEMPOTENCY_CONFLICT", "恢复必须引用原请求")
-            if run.prompt_version != prompt_version() or run.model_id != model_identity(
-                app, thread.mode
-            ):
+            if run.prompt_version != prompt_version(
+                bool(run.context_snapshot)
+            ) or run.model_id != model_identity(app, thread.mode):
                 raise DomainError(409, "RUN_VERSION_MISMATCH", "运行提示或模型版本已变化")
-            if run.status != "RUNNING" and run.last_error not in RECOVERABLE_ERRORS:
-                return view(run)
+            from agentmall.agents.jobs import enqueue, latest_job
+
+            existing = await latest_job(session, run.id)
+            async_mode = deferred or existing is not None
+            if async_mode and existing is not None and existing.status in {"QUEUED", "EXECUTING"}:
+                return await public_run(session, run)
             pending_id = (run.pending_confirmation or {}).get("interrupt_id")
             accepted = [
                 entry["payload"]
                 for entry in run.resume_journal.values()
                 if not entry["completed"] and entry["payload"].get("interrupt_id") == pending_id
             ]
+            if async_mode and len(accepted) > 1:
+                raise DomainError(409, "AMBIGUOUS_RESUME", "需核对已接受的原恢复请求")
             resume_payload = accepted[0] if len(accepted) == 1 else None
+            if async_mode:
+                if run.status == "WAITING_INPUT" and resume_payload is None:
+                    pending = run.pending_confirmation or {}
+                    if pending.get("type") == "confirmation":
+                        proposal = await get_proposal(session, actor, UUID(pending["proposal_id"]))
+                        if proposal.status == "EXPIRED" and proposal.result is None:
+                            # Server-owned expiry reconciliation, never a user approval.
+                            identity = str(uuid5(run.id, "expiry:" + pending["interrupt_id"]))
+                            resume_payload = {
+                                "request_id": identity,
+                                "interrupt_id": pending["interrupt_id"],
+                                "proposal_id": pending["proposal_id"],
+                                "expired": True,
+                            }
+                            run.resume_journal = {
+                                **run.resume_journal,
+                                identity: {
+                                    "digest": payload_hash(resume_payload),
+                                    "payload": resume_payload,
+                                    "completed": False,
+                                },
+                            }
+                    if resume_payload is None:
+                        return await public_run(session, run)
+                elif (
+                    run.status not in {"RUNNING", "WAITING_INPUT"}
+                    and run.last_error not in RECOVERABLE_ERRORS
+                ):
+                    return await public_run(session, run)
+                # Revalidate current identity above; a historical BLOCKED error does not
+                # forbid explicit recovery once the original environment is restored.
+                # Include the prior job ID: a pre-activation failure need not advance epoch.
+                await enqueue(
+                    session,
+                    run,
+                    "RESUME" if resume_payload else "RECOVER",
+                    f"recover:{run.epoch}:{existing.id if existing else 'initial'}",
+                    UUID(resume_payload["request_id"]) if resume_payload else None,
+                )
+                return await public_run(session, run)
+            if run.status != "RUNNING" and run.last_error not in RECOVERABLE_ERRORS:
+                return view(run)
         return await activate(app, actor, run_id, thread, connection, resume_payload)

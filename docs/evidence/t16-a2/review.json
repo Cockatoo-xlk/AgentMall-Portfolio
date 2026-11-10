@@ -1,0 +1,22 @@
+{
+  "independent_reviews": 1,
+  "method": "Read-only source and synthetic in-memory mocks; reviewer did not run PG or network",
+  "findings": [
+    {
+      "id": "REVIEW-INTENT-MODIFIER",
+      "priority": "P1",
+      "reproducer": "不要再买第二款，一件，送演示宿舍。",
+      "fix": "Consume negation modifiers before/after explicit prefixes; unresolved negative scope must clarify.",
+      "evidence": "review-red and uncertain-scope-red followed by fresh complete regression"
+    },
+    {
+      "id": "REVIEW-UUID-ALTERNATIVES",
+      "priority": "P2",
+      "reproducer": "我要买<synthetic UUID A>或<synthetic UUID B>，一件，送演示宿舍。",
+      "fix": "Normalize and compare explicit target identities; UUID alternatives/multiple purchase targets clarify before context or Run mutation.",
+      "evidence": "Real PG test_uuid_alternatives_do_not_mutate_context_or_business"
+    }
+  ],
+  "second_review": "NOT_RUN",
+  "final_fix_validation": "See verification.json; no final reviewer approval claimed."
+}

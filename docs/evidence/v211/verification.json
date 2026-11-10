@@ -1,0 +1,483 @@
+{
+  "status": "AGENTMALL_V211_MERCHANT_COPILOT_READY",
+  "verified_at": "2026-11-08T15:02:15.645290+00:00",
+  "git_base_sha": "9424b7d6d0b0ccebb52f219282a93e03038c6120",
+  "binding": "Regression executed modified worktree; containing local delivery commit preserves exact code SHA entries. Base SHA is not the modified-code commit.",
+  "executed_source_tree_sha256": "d797ebca350c3299d0496e835a75a0b6691b088c3a15bef479830d28a794878a",
+  "changed_execution_source_files": {
+    "backend/src/agentmall/main.py": "7280f41ab2cadd0696d4f68b4025753864a41e5f93167470b545c453d360a21e",
+    "backend/src/agentmall/merchant_copilot/__init__.py": "af10d51e6165c4c2900272f80ff6aed92b51c23ec5d668bce443ba707142b24e",
+    "backend/src/agentmall/merchant_copilot/contracts.py": "b6c8b01c5b4b85ea30b2c89f110844d98249c6b427c0a7dee79820495cc5f233",
+    "backend/src/agentmall/merchant_copilot/evidence.py": "54414fe64702b95b6c5c4d5ea223fd64ed97e866b93bd7471d7cb0d8601acfb8",
+    "backend/src/agentmall/merchant_copilot/mcp_client.py": "6b3882613cdda1449cfff1e0645c229caac5ebaf7c96c9123d4fc336f5cbee19",
+    "backend/src/agentmall/merchant_copilot/model.py": "bc6920af8f6881005c2da8d30864d0f835b97d55beb37cfe8398b1d138cac71e",
+    "backend/src/agentmall/merchant_copilot/routes.py": "5b5e7b441da9e5c1a91afa890f1b19459cd33df53425448b1747737c7b12ae54",
+    "backend/src/agentmall/merchant_copilot/runtime.py": "8112def92e4a8d6a077bbc0201b08ac1aecdb4846b0b2135f1b7e61eae9afd10",
+    "backend/src/agentmall/merchant_copilot/tools.py": "07c34134ebfd6f7a47b46eda2718e9fd5298575ffba239faf930c16df69bb029",
+    "backend/tests/test_merchant_copilot.py": "541bfb024690d091e38ff69c93f4f494d384ed7c603c66d29be1e9ae5812e093",
+    "backend/tests/web_e2e_server.py": "4326394ffe77330bd5bbc12f0cf1a29ac8f307e1db958dc4afd8fef4255760e0",
+    "frontend/src/api/client.test.ts": "3d705f93388be6f60b27a9ebfbab908c0775be33b5108336ac79b0e152173e46",
+    "frontend/src/api/client.ts": "805b8c3e0ee8afc9057d4e28c4ceeea7bf1e0e5368f0f5239b464df1a1282636",
+    "frontend/src/api/merchantCopilot.test.tsx": "8cdc11ff1cf111c5eee87a998d1ad94b82d9e7792dcee405c277446706a932f2",
+    "frontend/src/api/merchantCopilot.ts": "5fc4a7af5b9f71daeeb7451c78447cca85faafee8884f8bc2f1fae5c3244bed1",
+    "frontend/src/components/MerchantCopilot.tsx": "e1356a8f40896cd315ca3c524561128bcb54ee30ff2560f1a82c96314eaac157",
+    "frontend/src/components/merchantCopilot.css": "d511cb037dea444cdeab19c63723966b87a0f4b15b990a48f04a054004eb3146",
+    "frontend/src/pages/MerchantWorkbench.tsx": "e3897317fe87d421be3160dc32190a7859126658142dd0f3feafe71868fcbf10",
+    "frontend/tests/merchant-copilot.spec.ts": "368f9bbd5c677e624426fb45f1bd532c4fbe333733fc57876497eac2f7a055bc"
+  },
+  "environment": {
+    "platform": "Linux",
+    "architecture": "aarch64",
+    "docker_context": "desktop-linux (explicit only); default colima unchanged",
+    "database": "PostgreSQL17 / pgvector0.8.7, new dedicated container/volume and temporary test_/cp_ schemas",
+    "model": "SDK MockTransport",
+    "embedding": "Fixture in ordinary regressions; no new real BGE experiment",
+    "resources": "Guest4CPU/5GiB, PG2CPU/1GiB; peak not continuously measured"
+  },
+  "tests": {
+    "pytest_passed": 1083,
+    "pytest_skipped": 14,
+    "new_backend_cases": 27,
+    "vitest_passed": 126,
+    "new_vitest_cases": 8,
+    "playwright_passed": 118,
+    "new_playwright_cases": 3,
+    "playwright_retries": 0,
+    "scope": "one complete cumulative offline backend/Vitest/Playwright run after directed fixes"
+  },
+  "commands": {
+    "baseline": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_merchant_workbench.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T14:02:17.860157+00:00",
+      "seconds": 4.019,
+      "log_sha256": "15bf8f726f08cee197054d5ce292037123072cd91bc7bc9ad68718e8056fd322"
+    },
+    "review-guards-green": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_merchant_copilot.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T14:40:17.248195+00:00",
+      "seconds": 15.751,
+      "log_sha256": "dfb51e0574f701c9688253726441e33b34994ec552a6085ff9fbbf18f175f4d1"
+    },
+    "review-browser-green": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "merchant-copilot.spec.ts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T14:40:33.332688+00:00",
+      "seconds": 12.447,
+      "log_sha256": "1c56aac48617993e5c7ec3f05aeb3c0886d361f536e3b4d247d1adb678c2c851"
+    },
+    "full-pytest": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T14:43:18.106705+00:00",
+      "seconds": 421.892,
+      "log_sha256": "9bb3ca2f5cdc65aea9694e428bbeedf78a3a90f4b4fb76475f6c8996be739be2"
+    },
+    "full-vitest": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T14:43:19.235969+00:00",
+      "seconds": 1.023,
+      "log_sha256": "dec00b3acf2aed39e16cc2a0a9b4a49910a73143e655b3e9ec575c5b3fc283c9"
+    },
+    "full-playwright": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T14:43:20.276849+00:00",
+      "seconds": 233.948,
+      "log_sha256": "44b87fb323067ef92d42dd5ba752ce969de180b9f4adc3139cd72b0c8e44237f"
+    },
+    "static-final": {
+      "command": [
+        "sh",
+        "-c",
+        "backend/.venv/bin/ruff check backend evals scripts && backend/.venv/bin/ruff format --check backend evals scripts && npm --prefix frontend run typecheck && npm --prefix frontend run lint && npm --prefix frontend run build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T14:42:45.679327+00:00",
+      "seconds": 5.884,
+      "log_sha256": "6c6a61b58a34eb629f2ddedd2606f73fef444778b670707f21864f3336198c47"
+    }
+  },
+  "fixture_evaluation": {
+    "scenario_count": 3,
+    "tool_selection_correct": 3,
+    "unsupported_claims": 0,
+    "permission_violations": 0,
+    "grounding_qualification": "Validated IDs/statuses and deterministic cited templates under controlled MockTransport; not natural-language truth or real LLM accuracy",
+    "database_before": {
+      "orders": 2,
+      "payments": 2,
+      "refunds": 0,
+      "cases": 1,
+      "proposals": 5,
+      "confirmations": 5
+    },
+    "database_after": {
+      "orders": 2,
+      "payments": 2,
+      "refunds": 0,
+      "cases": 1,
+      "proposals": 5,
+      "confirmations": 5
+    },
+    "business_snapshot_before": "fdc0da248d032cdcd1b853643b4608732b1a8a277230c87f10c684eb81511738",
+    "business_snapshot_after": "fdc0da248d032cdcd1b853643b4608732b1a8a277230c87f10c684eb81511738",
+    "raw_sha256": "736c28e04b24e47409b6f6e930a9ab1fe81d7879a060ae86f5bcc78ecfc995de",
+    "public_projection_sha256": "7b6c9a0a69524ad19af331f1426f2fc98fe73ffc2f034103f02c07e5c3e79db8"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/v211/review-evidence.png",
+      "sha256": "4cd56a274a3d4af74e2704deccf3c999ab860a203a6b06e22985aee83b5aaf29",
+      "bytes": 375790,
+      "dimensions": [
+        1280,
+        3488
+      ],
+      "visual_review": "PASS: synthetic merchant records, MOCK_TRANSPORT, unexecuted draft; no JWT, DSN, raw Prompt or private paths",
+      "metadata_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    },
+    {
+      "path": "docs/screenshots/v211/inventory-mobile.png",
+      "sha256": "112674c65b298608212d035264a98c1933b72a9fae2cdbb226f9d7957c7c3874",
+      "bytes": 357955,
+      "dimensions": [
+        390,
+        4506
+      ],
+      "visual_review": "PASS: synthetic merchant records, MOCK_TRANSPORT, unexecuted draft; no JWT, DSN, raw Prompt or private paths",
+      "metadata_chunks": [
+        "IDAT",
+        "IEND",
+        "IHDR"
+      ]
+    }
+  ],
+  "safety": {
+    "original_tracked_file_count": 682,
+    "unchanged_protected_file_count": 673,
+    "protected_tree_sha256": "baf8d57492de9eeb798fa1f589e2f50402f8775f635389469ef05994dd5c448a",
+    "allowed_original_changes": [
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "backend/src/agentmall/main.py",
+      "backend/tests/web_e2e_server.py",
+      "docs/MERCHANT_WORKBENCH.md",
+      "docs/RESULTS.md",
+      "frontend/src/api/client.test.ts",
+      "frontend/src/api/client.ts",
+      "frontend/src/pages/MerchantWorkbench.tsx"
+    ],
+    "changed_original_files": [
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "backend/src/agentmall/main.py",
+      "backend/tests/web_e2e_server.py",
+      "docs/MERCHANT_WORKBENCH.md",
+      "docs/RESULTS.md",
+      "frontend/src/api/client.test.ts",
+      "frontend/src/api/client.ts",
+      "frontend/src/pages/MerchantWorkbench.tsx"
+    ],
+    "transactions_agent_core_mcp_and_historical_eval_bytes": "UNCHANGED",
+    "source_files_match_executed_full_regression": true
+  },
+  "cleanup": {
+    "passed": true,
+    "utc": "2026-11-08T14:53:21.802860+00:00",
+    "owner": "agentmall-v211-f73d58c8",
+    "remaining_owned_schemas_before_deletion": 0,
+    "owned_guest_remaining": 0,
+    "owned_pg_volume_and_runner_tag_absent": true,
+    "owned_cache_and_credentials_removed": true,
+    "historical_container_count": 25,
+    "historical_ids_states_unchanged": true,
+    "default_context": "colima",
+    "private_raw_evidence_retained": true,
+    "buildkit_cache_pruned": false,
+    "commands": [
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "inspect",
+          "agentmall-v211-f73d58c8-pg"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:20.224461+00:00",
+        "stdout_sha256": "5542fd8894b629f5f7d85444b0c8fb423b26e10ef8f14b35070ed51b4c42b107",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "volume",
+          "inspect",
+          "agentmall-v211-f73d58c8-data"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:20.296437+00:00",
+        "stdout_sha256": "0711ea384ec348df3e55df7fc0e3f632ab49bfbf14bbb53d3a8c80c5bba2e9dc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "ps",
+          "-aq",
+          "--filter",
+          "label=agentmall.owner=agentmall-v211-f73d58c8"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:20.315720+00:00",
+        "stdout_sha256": "f62e1d8463c1435ca9c99848c4a51b1deea316574c5ef22f08e534f89a32d1d7",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "exec",
+          "agentmall-v211-f73d58c8-pg",
+          "psql",
+          "-p",
+          "55433",
+          "-U",
+          "agentmall",
+          "-d",
+          "agentmall_test",
+          "-At",
+          "-c",
+          "BEGIN READ ONLY; SELECT count(*) FROM pg_namespace WHERE nspname ~ '^(test_|cp_)'; COMMIT;"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:20.340205+00:00",
+        "stdout_sha256": "d994bad80d0fcfacdccc94b5e22903f888b95f6ced0c83a94a81e1481c49f71e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "stop",
+          "--time",
+          "10",
+          "agentmall-v211-f73d58c8-pg"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:20.386471+00:00",
+        "stdout_sha256": "2510db49be40f0773a422b10f2cd2a7b7732f22b5ff2ebeee5283960d7819659",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "rm",
+          "agentmall-v211-f73d58c8-pg"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:21.420434+00:00",
+        "stdout_sha256": "6b3cee90e3b558806ec93ac0df9e66e37ca60947d04c175a7bf528bc84f77f68",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "volume",
+          "rm",
+          "agentmall-v211-f73d58c8-data"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:21.453247+00:00",
+        "stdout_sha256": "2f811ea98406870b8653796ea36756e567e99e217a3e62a3cef17d0132f379e4",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "image",
+          "rm",
+          "agentmall-v211-f73d58c8-runner:local"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:21.656119+00:00",
+        "stdout_sha256": "60b02c702c6391b430d23c9db5f853b2d7588a589d4d0767430683d4baada187",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "ps",
+          "-aq",
+          "--filter",
+          "label=agentmall.owner=agentmall-v211-f73d58c8"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:21.689709+00:00",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "volume",
+          "ls",
+          "-q"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:21.707793+00:00",
+        "stdout_sha256": "1af5d41b57f01351be13e79c62256a7d3e2ea15621f83f9b20448f1534b614aa",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "image",
+          "ls",
+          "-q",
+          "agentmall-v211-f73d58c8-runner:local"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:21.725776+00:00",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "docker",
+          "--context",
+          "desktop-linux",
+          "ps",
+          "-a",
+          "--no-trunc",
+          "--format",
+          "json"
+        ],
+        "exit_code": 0,
+        "utc": "2026-11-08T14:53:21.742310+00:00",
+        "stdout_sha256": "e8a207fb6a8a3cc7a9f76c0af28474568e82b7a6504283470573004120aa44f0",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "review": {
+    "reviews": 1,
+    "important": "Old evidence-check response could supersede new analysis; reproduced RED and fixed by a shared request lock and disabled controls",
+    "metric": "Payload byte count omitted system/tool input; reproduced RED and fixed by bounding/counting complete serialized SDK request",
+    "verification": "review-token-red/review-overlap-red preserved privately, review-guards-green27 and review-browser-green3 then full cumulative suites passed"
+  },
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "hosted_embedding_requests": 0,
+  "push": 0,
+  "dispatch": 0,
+  "known_limitations": [
+    "MockTransport decisions/templates do not establish real LLM capability",
+    "No durable analysis history, background worker or automatic reconnect/retry",
+    "Observed bounded scope, priority by explicit rules, not all-Store guarantee or predicted SLA",
+    "MCP adapter is optional for two existing merchant read tools; REMOTE_AUTH_NOT_IMPLEMENTED",
+    "No new real BGE, model quality experiment, remote CI, production load or900s monitoring"
+  ],
+  "public_audit": {
+    "checked_at": "2026-11-08T15:06:05.366446+00:00",
+    "files": [
+      "README.md",
+      "THIRD_PARTY_NOTICES.md",
+      "backend/src/agentmall/main.py",
+      "backend/src/agentmall/merchant_copilot/__init__.py",
+      "backend/src/agentmall/merchant_copilot/contracts.py",
+      "backend/src/agentmall/merchant_copilot/evidence.py",
+      "backend/src/agentmall/merchant_copilot/mcp_client.py",
+      "backend/src/agentmall/merchant_copilot/model.py",
+      "backend/src/agentmall/merchant_copilot/routes.py",
+      "backend/src/agentmall/merchant_copilot/runtime.py",
+      "backend/src/agentmall/merchant_copilot/tools.py",
+      "backend/tests/test_merchant_copilot.py",
+      "backend/tests/web_e2e_server.py",
+      "docs/MERCHANT_COPILOT.md",
+      "docs/MERCHANT_WORKBENCH.md",
+      "docs/RESULTS.md",
+      "docs/evidence/v211/report.md",
+      "docs/evidence/v211/scenarios.json",
+      "docs/evidence/v211/verification.json",
+      "docs/screenshots/v211/inventory-mobile.png",
+      "docs/screenshots/v211/review-evidence.png",
+      "docs/superpowers/plans/2026-11-08-merchant-copilot.md",
+      "docs/superpowers/specs/2026-11-08-merchant-copilot-design.md",
+      "frontend/src/api/client.test.ts",
+      "frontend/src/api/client.ts",
+      "frontend/src/api/merchantCopilot.test.tsx",
+      "frontend/src/api/merchantCopilot.ts",
+      "frontend/src/components/MerchantCopilot.tsx",
+      "frontend/src/components/merchantCopilot.css",
+      "frontend/src/pages/MerchantWorkbench.tsx",
+      "frontend/tests/merchant-copilot.spec.ts"
+    ],
+    "file_count": 31,
+    "secret_jwt_private_path_dsn_pattern_hits": 0,
+    "local_markdown_link_count": 89,
+    "local_links": "PASS",
+    "screenshots": "Two full-regression browser PNGs visually inspected, no text/EXIF metadata, synthetic merchant data only",
+    "raw_private_model_or_database_files": 0,
+    "source_hashes_match_full_regression": true
+  }
+}

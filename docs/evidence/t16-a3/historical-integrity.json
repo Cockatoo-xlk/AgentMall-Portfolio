@@ -1,0 +1,11 @@
+{
+  "original_head": "b6ab3e5cfa3e789bee5554277c5fd9d2b697cca0",
+  "original_status": "",
+  "r2_protected_files_checked": 96,
+  "changed_r2_files": [],
+  "local_main_sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+  "remote_writes": 0,
+  "old_live_state_read_or_written": false,
+  "frozen_manifests_modified": false,
+  "dependency_locks_modified": false
+}

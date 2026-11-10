@@ -9,10 +9,15 @@ from uuid import UUID, uuid5
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert
 
+from agentmall.catalog.categories import CATEGORY_ALIASES, CATEGORY_LABELS
 from agentmall.catalog.models import Product
 from agentmall.retrieval.embedding import ROOT, identity, validate_vectors
 from agentmall.retrieval.models import KnowledgeChunk, KnowledgeDocument, ProductSearch
 from agentmall.retrieval.tokenize import TOKENIZER_VERSION, document_tokens, tokens
+
+# Product document vocabulary has its own identity. Policy indices retain their
+# existing tokenizer identity; old product indices require an explicit rebuild.
+PRODUCT_INDEX_VERSION = TOKENIZER_VERSION + ":catalog-zh-v3"
 
 
 def digest(value):
@@ -22,7 +27,10 @@ def digest(value):
 
 
 def product_text(product):
-    return f"{product.name}\n{product.category}\n{product.description}\n" + json.dumps(
+    category = product.category
+    if category in CATEGORY_LABELS:
+        category += "\n" + CATEGORY_LABELS[category] + "\n" + " ".join(CATEGORY_ALIASES[category])
+    return f"{product.name}\n{category}\n{product.description}\n" + json.dumps(
         product.attributes, ensure_ascii=False, sort_keys=True
     )
 
@@ -68,6 +76,7 @@ async def index_products(session, store_id, encoder):
                 content_hash=digest(text),
                 **indexed(text, vector, encoder),
             )
+            values["tokenizer_version"] = PRODUCT_INDEX_VERSION
             statement = insert(ProductSearch).values(**values)
             await session.execute(
                 statement.on_conflict_do_update(
@@ -131,3 +140,23 @@ async def index_policies(session, documents, encoder):
                     )
                 )
     return len(texts)
+
+
+async def index_product(session, product, encoder):
+    """Targeted upsert for a locked current product; caller owns the transaction."""
+    text = product_text(product)
+    vector = (await encode(encoder, [text]))[0]
+    values = dict(
+        product_id=product.id,
+        source_version=product.catalog_version,
+        content_hash=digest(text),
+        **indexed(text, vector, encoder),
+    )
+    values["tokenizer_version"] = PRODUCT_INDEX_VERSION
+    statement = insert(ProductSearch).values(**values)
+    await session.execute(
+        statement.on_conflict_do_update(
+            index_elements=["product_id"],
+            set_={k: v for k, v in values.items() if k != "product_id"},
+        )
+    )

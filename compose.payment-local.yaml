@@ -1,0 +1,10 @@
+# Local T14 payment demo only. Use -p agentmall-payment-local with compose.ci.yaml.
+# Separate PGDATA and loopback ports; never resets an existing demo project.
+services:
+  postgres:
+    volumes: !override
+      - ./.t14-p0/demo-postgres-data:/var/lib/postgresql/data
+    ports: !override
+      - "127.0.0.1:55438:55433"
+      - "127.0.0.1:8014:18001"
+      - "127.0.0.1:5184:15174"

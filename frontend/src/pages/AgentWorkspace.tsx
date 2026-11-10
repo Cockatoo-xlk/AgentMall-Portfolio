@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { useAuth } from '../state/Auth'
 import { useMounted } from '../state/useResource'
@@ -11,13 +11,17 @@ import WorkflowConfirmationCard from '../components/WorkflowConfirmationCard'
 import WorkflowResources from '../components/WorkflowResources'
 import PolicyCitation from '../components/PolicyCitation'
 import ClarificationCard from '../components/ClarificationCard'
+import ProviderPanel from '../components/ProviderPanel'
+import ThreadMemory from '../components/ThreadMemory'
+import { contextRunInput, freshRecommendationConstraints, type ContextOperation } from '../api/threadContext'
 export default function AgentWorkspace() {
   const [params, setParams] = useSearchParams()
+  const { user } = useAuth()
   const id = params.get('thread') ?? ''
   const order = params.get('order') ?? ''
   return (
     <Workspace
-      key={id}
+      key={`${user?.store_id}:${user?.user_id}:${id}`}
       id={id}
       order={uuidPattern.test(order) ? order : ''}
       restore={(thread) => setParams(order ? { thread, order } : { thread })}
@@ -36,11 +40,18 @@ function Workspace({
   const { client: api } = useAuth()
   const mounted = useMounted()
   const [thread, setThread] = useState<Thread | null>(null)
+  const [historyId, setHistoryId] = useState('')
+  const [selectedSet, setSelectedSet] = useState('')
+  const [selectedBundle, setSelectedBundle] = useState('')
+  const patchOperation = useRef<{request_id: string; expected_version: number; operations: ContextOperation[]} | null>(null)
+  const [patchUnknown, setPatchUnknown] = useState(false)
   const [mode, setMode] = useState<'single' | 'multi'>('multi')
   const [message, setMessage] = useState(
     order ? `订单${order}有质量问题，申请退货，再帮我推荐一款500元以内的静音键盘。` : '',
   )
   const [busy, setBusy] = useState(false)
+  const [durableAsync, setDurableAsync] = useState(false)
+  const startAsync = useRef(false)
   const [requote, setRequote] = useState(false)
   const [notice, setNotice] = useState('')
   const [revision, setRevision] = useState(0)
@@ -49,9 +60,16 @@ function Workspace({
     request_id: string
     message: string
     constraints?: Record<string, unknown>
+    expected_context_version: number
+    candidate_set_id?: string
+    bundle_id?: string
   } | null>(null)
   const [uncertainStart, setUncertainStart] = useState(false)
-  const run = thread?.runs[0]
+  const [pendingStartId, setPendingStartId] = useState('')
+  const run = pendingStartId
+    ? thread?.runs.find((item) => item.request_id === pendingStartId)
+    : thread?.runs[0]
+  const refreshRun = useCallback(() => setRevision((n) => n + 1), [])
   const apply = (value: Thread) => {
     if (mounted.current) {
       setThread(value)
@@ -63,16 +81,22 @@ function Workspace({
     const controller = new AbortController()
     let timer: ReturnType<typeof setTimeout> | undefined
     let reads = 0
+    let failures = 0
     async function read() {
       try {
         const value = await api.get<Thread>(`/agent/threads/${id}`, controller.signal)
         if (!controller.signal.aborted) {
           setThread(value)
-          if ((busy || value.runs[0]?.status === 'RUNNING') && ++reads < 40)
-            timer = setTimeout(() => void read(), 1500)
+          const discovering = pendingStartId && !value.runs.some((item) => item.request_id === pendingStartId)
+          failures = 0
+          if ((busy || value.runs[0]?.status === 'RUNNING' || ['QUEUED', 'EXECUTING'].includes(value.runs[0]?.job?.status ?? '')) && ++reads < 150)
+            timer = setTimeout(() => void read(), discovering ? 350 : 1500)
         }
       } catch (e) {
-        if (!controller.signal.aborted) setNotice(errorMessage(e))
+        if (controller.signal.aborted) return
+        if (e instanceof ApiError && (e.status === 0 || e.status >= 500) && ++failures < 4)
+          timer = setTimeout(() => void read(), 1500)
+        else setNotice(errorMessage(e))
       }
     }
     void read()
@@ -80,7 +104,7 @@ function Workspace({
       controller.abort()
       clearTimeout(timer)
     }
-  }, [api, id, revision, busy])
+  }, [api, id, revision, busy, pendingStartId])
   async function perform(action: () => Promise<void>) {
     if (gate.current) return
     gate.current = true
@@ -98,15 +122,18 @@ function Workspace({
   }
   async function start(text: string, retry = false, constraints?: Record<string, unknown>) {
     if (!thread || !text.trim()) return
+    if (!retry) startAsync.current = durableAsync
     const op =
       retry && startOperation.current
         ? startOperation.current
         : {
-            request_id: crypto.randomUUID(),
-            message: text,
+            ...contextRunInput(crypto.randomUUID(), text, thread.context?.version ?? 0,
+              selectedSet || (thread.context?.candidate_sets.length === 1 ? thread.context.candidate_sets[0].id : undefined),
+              selectedBundle || undefined),
             ...(constraints ? { constraints } : {}),
           }
     startOperation.current = op
+    setPendingStartId(op.request_id)
     try {
       if (retry) {
         const existing = await api.get<Thread>(`/agent/threads/${id}`)
@@ -116,12 +143,23 @@ function Workspace({
           return
         }
       }
-      await api.post<Run>(`/agent/threads/${id}/runs`, op)
+      await api.post<Run>(`/agent/threads/${id}/runs${startAsync.current ? "/async" : ""}`, op)
+      setSelectedSet('')
+      setSelectedBundle('')
       setRequote(false)
       apply(await api.get<Thread>(`/agent/threads/${id}`))
       setUncertainStart(false)
     } catch (e) {
-      setUncertainStart(true)
+      const known = e instanceof ApiError && !e.ambiguous
+      setUncertainStart(!known)
+      if (known) {
+        apply(await api.get<Thread>(`/agent/threads/${id}`))
+        startOperation.current = null
+        setSelectedSet('')
+      setSelectedBundle('')
+        if (['STALE_CONTEXT', 'STALE_CANDIDATES'].includes(e.code)) setMessage('')
+        throw e
+      }
       try {
         const existing = await api.get<Thread>(`/agent/threads/${id}`)
         if (existing.runs.some((r) => r.request_id === op.request_id)) {
@@ -133,12 +171,31 @@ function Workspace({
         /* Preserve request identity for explicit reconciliation. */
       }
       throw e
+    } finally {
+      setPendingStartId('')
+    }
+  }
+  async function patchMemory(operations?: ContextOperation[]) {
+    if (!thread) return
+    if (operations) patchOperation.current = { request_id: crypto.randomUUID(), expected_version: thread.context?.version ?? 0, operations }
+    if (!patchOperation.current) return
+    try {
+      await api.request(`/agent/threads/${id}/context`, 'PATCH', patchOperation.current)
+      patchOperation.current = null
+      setPatchUnknown(false)
+      setSelectedSet('')
+      setSelectedBundle('')
+      apply(await api.get<Thread>(`/agent/threads/${id}`))
+    } catch (e) {
+      setPatchUnknown(!(e instanceof ApiError) || e.ambiguous)
+      apply(await api.get<Thread>(`/agent/threads/${id}`))
+      throw e
     }
   }
   async function recover() {
     if (!run) return
     try {
-      await api.post(`/agent/threads/${id}/runs/${run.id}/recover`, { request_id: run.request_id })
+      await api.post(`/agent/threads/${id}/runs/${run.id}/recover${run.job ? "/async" : ""}`, { request_id: run.request_id })
     } finally {
       apply(await api.get<Thread>(`/agent/threads/${id}`))
     }
@@ -163,6 +220,7 @@ function Workspace({
         </div>
         <span className="workflow-badge">持久化工作流</span>
       </header>
+      <ProviderPanel runId={run?.id} revision={revision} busy={busy} />
       <RecoveryPanel busy={busy} onRestore={restore} />
       {notice && (
         <div className="notice warning" role="alert">
@@ -205,6 +263,11 @@ function Workspace({
               核对 Thread 状态
             </button>
           </section>
+          {thread?.context && <ThreadMemory context={thread.context} busy={busy || patchUnknown || uncertainStart || !!(run && (recoverable(run) || run.status === 'WAITING_INPUT'))}
+            selected={selectedSet || (thread.context.candidate_sets.length === 1 ? thread.context.candidate_sets[0].id : '')}
+            selectedBundle={selectedBundle} onSelectBundle={setSelectedBundle}
+            onSelect={setSelectedSet} onPatch={ops => void perform(() => patchMemory(ops))} />}
+          {patchUnknown && <p className="notice warning">偏好更新结果尚未确定。<button className="text-button" disabled={busy} onClick={() => void perform(() => patchMemory())}>核对并重试原偏好请求</button></p>}
           <div className="workspace-grid">
             <div className="workflow-main">
               <form
@@ -223,13 +286,17 @@ function Workspace({
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="例如：找一款300元以内的静音键盘，准备购买，送演示宿舍"
                 />
+                <label className="muted">
+                  <input type="checkbox" checked={durableAsync} disabled={busy} onChange={(e) => setDurableAsync(e.target.checked)} />
+                  Durable Async（需单独启动 Worker；默认 Legacy Sync）
+                </label>
                 <button
                   className="button primary"
                   disabled={
                     busy ||
                     !thread ||
                     !message.trim() ||
-                    uncertainStart ||
+                    uncertainStart || patchUnknown ||
                     (run && recoverable(run)) ||
                     (run?.status === 'WAITING_INPUT' && !requote)
                   }
@@ -255,9 +322,14 @@ function Workspace({
                     </span>
                     <h2>{statusLabels[run.status]}</h2>
                     <strong data-testid="run-status">{run.status}</strong>
+                    {run.job && <div className="notice" data-testid="job-state">
+                      <strong>Durable Async · {run.job.status}</strong>
+                      <p>{run.job.status === 'QUEUED' ? '任务已可靠排队；Worker 启动并认领后执行。关闭浏览器不会取消任务。' : run.job.status === 'EXECUTING' ? '独立 Worker 正在执行。' : run.job.status === 'BLOCKED' ? '任务等待人工检查，未自动重试。' : '任务状态以服务端业务结果为准。'}</p>
+                      <small>尝试 {run.job.attempts} · {run.job.last_error ?? '无调度错误'}</small>
+                    </div>}
                     <small>run_id {run.id}</small>
                     <small>模型配置指纹 {run.model_id}</small>
-                    {recoverable(run) && (
+                    {(recoverable(run) || (run.job && run.status === "WAITING_INPUT")) && !["QUEUED", "EXECUTING"].includes(run.job?.status ?? "") && (
                       <div className="notice warning">
                         <p>
                           工作流尚未完成，可从持久状态继续原
@@ -268,7 +340,7 @@ function Workspace({
                           disabled={busy}
                           onClick={() => void perform(recover)}
                         >
-                          恢复原 Run
+                          {run.job && run.status === "WAITING_INPUT" ? "恢复调度 / 结束过期等待" : "恢复原 Run"}
                         </button>
                       </div>
                     )}
@@ -290,7 +362,7 @@ function Workspace({
                       <p>待处理任务：{run.result.unfinished.join(' · ')}</p>
                     ) : null}
                     <p className="muted">
-                      模型请求 {run.budget.models ?? 0} / 12 · 工具 {run.budget.tools ?? 0} / 16 ·
+                      工作流模型预算计次 {run.budget.models ?? 0} / 12 · 工具 {run.budget.tools ?? 0} / 16 ·
                       未知 Token Usage 以 UNKNOWN 展示。
                     </p>
                     {run.status === 'PARTIAL' && (
@@ -302,7 +374,7 @@ function Workspace({
                           onClick={() =>
                             void perform(() => {
                               const next = recommendation(run)
-                              return start(next.message, false, next.constraints)
+                              return start(next.message, false, freshRecommendationConstraints(next.constraints))
                             })
                           }
                         >
@@ -315,24 +387,26 @@ function Workspace({
                       </>
                     )}
                   </section>
-                  {run.pending_confirmation?.proposal_id && (
-                    <WorkflowConfirmationCard
-                      key={run.pending_confirmation.interrupt_id}
-                      run={run}
-                      onThread={apply}
-                      onRequote={() => {
-                        setRequote(true)
-                        setNotice('请在本次任务中重新明确需求，再启动新 Run。新快照仍需重新批准。')
-                      }}
-                    />
-                  )}
-                  {run.pending_confirmation?.type === 'clarification' && (
-                    <ClarificationCard
-                      key={`${run.id}:${run.pending_confirmation.interrupt_id}`}
-                      run={run}
-                      onThread={apply}
-                    />
-                  )}
+                  <div hidden={!['WAITING_INPUT', 'RUNNING'].includes(run.status) || !run.pending_confirmation}>
+                    {run.pending_confirmation?.proposal_id && (
+                      <WorkflowConfirmationCard
+                        key={run.pending_confirmation.interrupt_id}
+                        run={run}
+                        onThread={apply}
+                        onRequote={() => {
+                          setRequote(true)
+                          setNotice(run.job ? '请先点击“恢复调度 / 结束过期等待”，待 Worker 结束旧等待后再启动新 Run；不会批准旧提案。' : '请在本次任务中重新明确需求，再启动新 Run。新快照仍需重新批准。')
+                        }}
+                      />
+                    )}
+                    {run.pending_confirmation?.type === 'clarification' && (
+                      <ClarificationCard
+                        key={`${run.id}:${run.pending_confirmation.interrupt_id}`}
+                        run={run}
+                        onThread={apply}
+                      />
+                    )}
+                  </div>
                   {run.result?.facts
                     .filter((f) => f.kind === 'proposal')
                     .map((f) => (
@@ -353,17 +427,25 @@ function Workspace({
                     />
                   ))}
                   {thread!.runs.slice(1).map((previous) => (
-                    <details className="panel" key={previous.id}>
+                    <details className="panel" key={previous.id} onToggle={e => { if (e.currentTarget.open) setHistoryId(previous.id) }}>
                       <summary>
                         历史 Run · {previous.status} · {previous.id}
                       </summary>
+                      <p className="muted">历史 Run · 商品引用不是当前报价，不能在此批准旧操作。</p>
                       <WorkflowResources refs={previous.result?.entity_refs ?? []} />
+                      {historyId === previous.id && <RunTimeline run={previous} />}
                     </details>
                   ))}
                 </>
               )}
             </div>
-            {run && <RunTimeline key={run.id} run={run} />}
+            {pendingStartId && !run && <p role="status">正在查找本次运行的持久记录…</p>}
+            {run && (
+              <RunTimeline key={run.id} run={run}
+                live={busy || run.status === 'RUNNING' || run.status === 'WAITING_INPUT'}
+                onStatusChange={refreshRun}
+              />
+            )}
           </div>
         </>
       )}

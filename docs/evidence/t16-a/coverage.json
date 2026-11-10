@@ -1,0 +1,19 @@
+{
+  "evidence_mode": "OFFLINE_REAL_POSTGRES_CHECKPOINT_AND_SDK_MOCK_TRANSPORT",
+  "real_provider_requests": 0,
+  "cases": [
+    {"id":"A","behavior":"Three turns in Single and Multi, rank2 quote, independent Confirmation and Resume","tests":["test_three_turn_sdk_paths_and_independent_confirmation","multiturn: three turns, relogin, independent confirmation"]},
+    {"id":"B","behavior":"Budget raise replaces prior limit; old Run snapshot stays immutable","tests":["test_explicit_budget_raise_preserves_other_preferences_without_inheriting_intent","test_budget_replace_clear_and_old_run_snapshot_are_independent"]},
+    {"id":"C","behavior":"CLEAR removes one preference and preserves other nested fields; no model call","tests":["test_clear_is_a_real_removal","test_patch_rejects_authorization_fields_and_preserves_other_nested_preferences","multiturn: explicit preference clearing uses no model request"]},
+    {"id":"D","behavior":"User, store and Thread isolation; no unauthorized context mutations","tests":["test_context_patch_idempotence_and_owner_isolation","test_store_scope_cannot_read_or_mutate_another_thread_context","test_stale_list_and_other_thread_list_never_rebind_an_ordinal"]},
+    {"id":"E","behavior":"Delisting, price/version change and no stock reject historical quote; fresh get_product cannot overwrite the immutable selected baseline","tests":["test_displayed_candidate_cannot_be_used_after_catalog_change","test_model_cannot_replace_selected_product_even_after_reading_another"]},
+    {"id":"F","behavior":"Old list and stale browser version cannot silently target a new second product","tests":["test_stale_list_and_other_thread_list_never_rebind_an_ordinal","multiturn: stale browser cannot reinterpret the old second candidate"]},
+    {"id":"G","behavior":"Inspection/comparison and new recommendation have no inherited purchase intent, quantity or delivery","tests":["test_inspection_and_comparison_do_not_inherit_purchase_permission","test_three_turn_sdk_paths_and_independent_confirmation","retrying recommendations keeps current server preferences instead of restoring an old Run budget"]},
+    {"id":"H","behavior":"Replay applies memory once; concurrent CAS has one winner; insert failure rolls memory and Run back together","tests":["test_replay_does_not_reapply_memory_and_stale_tab_cannot_overwrite","test_context_cas_real_concurrent_patches_one_winner","test_context_and_run_roll_back_together_on_insert_failure"]},
+    {"id":"I","behavior":"Refresh/relogin and SIGKILL after context+Run commit recover the original snapshot; no new Run or budget reset on replay","tests":["test_sigkill_after_atomic_memory_commit_recovers_original_snapshot","multiturn: lost start response reconciles one memory update and one Run"]},
+    {"id":"J","behavior":"Retrieved prompt injection cannot mutate trusted preferences; candidate names are HTML-escaped","tests":["test_retrieved_injection_never_becomes_trusted_preference","shows server ranks without reranking stale candidates and never renders HTML"]},
+    {"id":"K","behavior":"No order before confirmation; at most one PENDING_PAYMENT order after stable Resume; payment0","tests":["test_three_turn_sdk_paths_and_independent_confirmation","multiturn: three turns, relogin, independent confirmation"]},
+    {"id":"L","behavior":"Existing checkout/cart/payment, two clarification interrupts, HITL, crash, budget, tenant and trace regressions retain their assertions","tests":["complete backend suite","complete Playwright suite","complete Vitest suite"]}
+  ],
+  "additional_guards": ["Legacy ordinal requests need a context/list binding", "Same-Run clarification supplements active intent; new Runs do not inherit it", "Explicit revocation succeeds even when the previously selected product becomes stale"]
+}

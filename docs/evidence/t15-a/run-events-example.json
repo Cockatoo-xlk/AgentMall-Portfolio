@@ -1,0 +1,654 @@
+{
+  "evidence_class": "MOCK_TRANSPORT / REAL_PG / REAL_CHECKPOINT",
+  "raw_sha256": "da0b0b6b09b34176772a6da73f1476526731bb99da55fecfe853059350b6a67a",
+  "run_events": [
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 1,
+      "event_type": "run_created",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.528811+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 2,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "epoch": 1
+      },
+      "timestamp": "2026-11-01T07:28:09.535822+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 3,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.567112+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 4,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 1,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-01T07:28:09.581047+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 5,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 1,
+        "duration_ms": 18
+      },
+      "timestamp": "2026-11-01T07:28:09.602332+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 6,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [
+          {
+            "goal": "find_products",
+            "target": "shopping",
+            "subtask_id": "shop"
+          }
+        ],
+        "tool_call_id": "call_7c2248bcb2d541cdb080a53864d786dd"
+      },
+      "timestamp": "2026-11-01T07:28:09.614494+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 7,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "goal": "find_products",
+        "target": "shopping",
+        "subtask_id": "shop"
+      },
+      "timestamp": "2026-11-01T07:28:09.614494+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 8,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.614494+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 9,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": "UNKNOWN",
+        "attempt": 2,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-01T07:28:09.656463+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 10,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 2,
+        "duration_ms": 10
+      },
+      "timestamp": "2026-11-01T07:28:09.668257+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 11,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": "UNKNOWN",
+        "attempt": 3,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-01T07:28:09.683293+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 12,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 3,
+        "duration_ms": 10
+      },
+      "timestamp": "2026-11-01T07:28:09.694305+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 13,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "subtask_id": "shop"
+      },
+      "timestamp": "2026-11-01T07:28:09.700677+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 14,
+      "event_type": "tool",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "ok": true,
+        "name": "retrieve_products",
+        "role": "shopping",
+        "subtask_id": "shop",
+        "duration_ms": 4,
+        "entity_refs": [
+          {
+            "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+            "kind": "product"
+          },
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          }
+        ],
+        "tool_call_id": "call_19d2ea9643cc4be591132b2bf788d688"
+      },
+      "timestamp": "2026-11-01T07:28:09.700677+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 15,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping",
+        "subtask_id": "shop"
+      },
+      "timestamp": "2026-11-01T07:28:09.700677+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 16,
+      "event_type": "model_final",
+      "agent": "shopping",
+      "action_id": null,
+      "payload_summary": {
+        "role": "shopping"
+      },
+      "timestamp": "2026-11-01T07:28:09.700677+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 17,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "done",
+        "target": "shopping",
+        "subtask_id": "shop",
+        "entity_refs": [
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          },
+          {
+            "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+            "kind": "product"
+          }
+        ]
+      },
+      "timestamp": "2026-11-01T07:28:09.700677+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 18,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.700677+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 19,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.708385+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 20,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 4,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-01T07:28:09.718626+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 21,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 4,
+        "duration_ms": 9
+      },
+      "timestamp": "2026-11-01T07:28:09.729315+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 22,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [
+          {
+            "goal": "prepare_checkout",
+            "target": "order",
+            "subtask_id": "buy",
+            "entity_refs": [
+              {
+                "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+                "kind": "product"
+              },
+              {
+                "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+                "kind": "product"
+              }
+            ]
+          }
+        ],
+        "tool_call_id": "call_a0c9b87bee744f35b088ae4b1f1affcd"
+      },
+      "timestamp": "2026-11-01T07:28:09.733257+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 23,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "goal": "prepare_checkout",
+        "target": "order",
+        "subtask_id": "buy",
+        "entity_refs": [
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          },
+          {
+            "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+            "kind": "product"
+          }
+        ]
+      },
+      "timestamp": "2026-11-01T07:28:09.733257+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 24,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.733257+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 25,
+      "event_type": "model_start",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "usage": "UNKNOWN",
+        "attempt": 5,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-01T07:28:09.749181+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 26,
+      "event_type": "model_end",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 5,
+        "duration_ms": 11
+      },
+      "timestamp": "2026-11-01T07:28:09.761337+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 27,
+      "event_type": "model_context",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "role": "order",
+        "subtask_id": "buy"
+      },
+      "timestamp": "2026-11-01T07:28:09.777052+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 28,
+      "event_type": "tool",
+      "agent": "order",
+      "action_id": null,
+      "payload_summary": {
+        "ok": true,
+        "name": "prepare_checkout",
+        "role": "order",
+        "subtask_id": "buy",
+        "duration_ms": 7,
+        "entity_refs": [
+          {
+            "id": "0f2353dc-22ca-4477-8587-6961b45233a9",
+            "kind": "proposal"
+          },
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          }
+        ],
+        "tool_call_id": "call_818364a80359409d98ff5e4dbf39987a"
+      },
+      "timestamp": "2026-11-01T07:28:09.777052+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 29,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "proposal",
+        "target": "order",
+        "subtask_id": "buy",
+        "entity_refs": [
+          {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product"
+          },
+          {
+            "id": "0f2353dc-22ca-4477-8587-6961b45233a9",
+            "kind": "proposal"
+          }
+        ]
+      },
+      "timestamp": "2026-11-01T07:28:09.777052+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 30,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.777052+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 31,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.784163+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 32,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:09.794073+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 33,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "WAITING_INPUT"
+      },
+      "timestamp": "2026-11-01T07:28:09.808189+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 34,
+      "event_type": "resume_received",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "interrupt_id": "8843137d74514dc0ad39fb0f2a093a08"
+      },
+      "timestamp": "2026-11-01T07:28:10.572149+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 35,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "epoch": 2
+      },
+      "timestamp": "2026-11-01T07:28:10.578844+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 36,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:10.603308+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 37,
+      "event_type": "business_receipt",
+      "agent": null,
+      "action_id": "0f2353dc-22ca-4477-8587-6961b45233a9",
+      "payload_summary": {
+        "status": "EXECUTED",
+        "action_id": "0f2353dc-22ca-4477-8587-6961b45233a9",
+        "resource_id": "40621332-0275-4838-aad7-c649457279b6"
+      },
+      "timestamp": "2026-11-01T07:28:10.623302+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 38,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:10.623302+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 39,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": "UNKNOWN",
+        "attempt": 6,
+        "max_output_tokens": 2048
+      },
+      "timestamp": "2026-11-01T07:28:10.637651+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 40,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "payload_summary": {
+        "role": "supervisor",
+        "usage": {
+          "input_tokens": 100,
+          "total_tokens": 130,
+          "output_tokens": 30
+        },
+        "status": "completed",
+        "attempt": 6,
+        "duration_ms": 10
+      },
+      "timestamp": "2026-11-01T07:28:10.649513+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 41,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "tasks": [],
+        "terminal": "finish",
+        "tool_call_id": "call_71aabade4ba24589a0ccd3a98afaa6ec"
+      },
+      "timestamp": "2026-11-01T07:28:10.651015+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 42,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:10.651015+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 43,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:10.664439+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 44,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {},
+      "timestamp": "2026-11-01T07:28:10.676368+00:00"
+    },
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "seq": 45,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "payload_summary": {
+        "status": "COMPLETED"
+      },
+      "timestamp": "2026-11-01T07:28:10.686179+00:00"
+    }
+  ],
+  "checkpoint": [
+    {
+      "run_id": "2893cb52-3ef9-4a20-b8dd-3a1cf29981af",
+      "checkpoint_id": "1f1d5c5c-a6fb-6631-800d-c8226788bb87",
+      "graph": {
+        "round": 3,
+        "next": "done",
+        "handled": [
+          "0f2353dc-22ca-4477-8587-6961b45233a9"
+        ],
+        "pending_action": null
+      },
+      "pending_writes": 0
+    }
+  ],
+  "note": "Whitelisted persistent RunEvent summaries, synthetic data only; no raw wire messages or model reasoning. Usage is MockTransport synthetic Usage, not real inference."
+}

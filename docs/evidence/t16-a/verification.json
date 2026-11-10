@@ -1,0 +1,100 @@
+{
+  "status": "T16_A_MULTITURN_OFFLINE_VERIFIED",
+  "base_sha": "bd0f58368bd40e2b479599fa270b30e43703d2b8",
+  "source_fingerprint": "dd00d9a97aac9641911af7132140355b2896fdaf1599ff555d19ff8589606e13",
+  "counts": {
+    "pytest_passed": 742,
+    "pytest_skipped": 14,
+    "t16_pytest_passed": 29,
+    "vitest_passed": 84,
+    "playwright_passed": 94,
+    "playwright_retries": 0
+  },
+  "new_cases": {
+    "backend": 29,
+    "vitest": 4,
+    "playwright": 7
+  },
+  "environment": {
+    "backend": "new Linux aarch64 Colima profile; PostgreSQL17/pgvector; official PostgreSQL Checkpointer",
+    "frontend": "Mac Node24.21.0/npm11.19.0; Chromium headless; 1 worker",
+    "clock_admitted": true
+  },
+  "commands": [
+    {
+      "name": "backend_full",
+      "command": "PYTHONPATH=backend/src python -m pytest backend/tests --ci-offline-core -q -ra",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-backend.log",
+      "log_sha256": "3a78b8bac4f636a5b404d43b750863ef10ffa999ac228d3d6691a335eab0c4d7"
+    },
+    {
+      "name": "t16_final_source",
+      "command": "PYTHONPATH=backend/src python -m pytest backend/tests/test_thread_preferences.py backend/tests/test_thread_memory.py backend/tests/test_thread_candidates.py backend/tests/test_thread_memory_recovery.py backend/tests/test_multiturn_sdk.py -q -ra",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-t16.log",
+      "log_sha256": "78daa66327044ab2770d3ea92573b92b63549f9c675fbae0328cc85979122df7"
+    },
+    {
+      "name": "ruff",
+      "command": "ruff check backend evals scripts",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-ruff.log",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "name": "format",
+      "command": "ruff format --check backend evals scripts",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-format.log",
+      "log_sha256": "d05c0280a19426e07f212d7f92b01fa368423f6d58445c9cd7c94542fd26843b"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm --prefix frontend run typecheck",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-typecheck.log",
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "name": "frontend_lint",
+      "command": "npm --prefix frontend run lint",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-lint.log",
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "name": "build",
+      "command": "npm --prefix frontend run build",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-build.log",
+      "log_sha256": "004d47c1086503e7bd41ee35523fbc330adcae91239afd928d5108eb0826492e"
+    },
+    {
+      "name": "vitest",
+      "command": "npm --prefix frontend test",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-vitest.log",
+      "log_sha256": "6b99a98af3dc181b7847d8f272c2e2a2cc6357368a74404e5891f69820427741"
+    },
+    {
+      "name": "playwright",
+      "command": "playwright test --config .t16-a/playwright-guarded.config.ts",
+      "exit_code": 0,
+      "private_raw_log": ".t16-a/guarded-playwright.log",
+      "log_sha256": "2aa4f49e232dc78bb2b3558ce82e84731cb76988fc9b7c3ec2b79c012338c32a"
+    }
+  ],
+  "source_binding": {
+    "backend_full_fingerprint": "dd00d9a97aac9641911af7132140355b2896fdaf1599ff555d19ff8589606e13",
+    "note": "Complete backend, targeted PG/SDK, frontend and browser suites ran prospectively under unchanged final source and process-local power assertions, with continuous wall/monotonic clock monitoring."
+  },
+  "skips": [
+    "13 existing real BGE weight dependencies",
+    "1 existing private Live originals comparison"
+  ],
+  "paid_provider_calls": 0,
+  "new_live_verification": "NOT_RUN",
+  "remote_ci": "NOT_RUN",
+  "raw_logs_public": false
+}

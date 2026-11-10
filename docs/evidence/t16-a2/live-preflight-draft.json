@@ -1,0 +1,129 @@
+{
+  "status": "DRAFT_ONLY_NOT_AUTHORIZED",
+  "policy": {
+    "status": "UNAPPROVED_POLICY_DRAFT",
+    "source_sha256": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+    "environment_id": "627b3432-1077-4de9-bb5a-9c1e45129ce1",
+    "session_id": "2087320f-1280-4fcf-a30b-563f706595ec",
+    "policy_sha256": "bdbdba17bd5bf348cff66f0fd679db48da843c4964b8b481709a50bce7202a4b",
+    "policy_file_sha256": "fc01586da1434cbac4d273fc8b5f1bdf8e215a15fbe15091ca2a0e484a8df4fb",
+    "scenario_sha256": "d49ea14a421e1672cdb742ff26ced7eeecf1d6f3e8033da7839e43064a0a3b7d",
+    "catalogue_sha256": "46e2f8ba3c6c57f74d0824a35b920efb41660b40ac0201725a5f4f06b7adc5fc",
+    "database": {
+      "host_port": 55449,
+      "database": "agentmall_test",
+      "business_schema": "test_8a3a99247398417aa1e9dabc10fea7cc",
+      "checkpoint_schema": "cp_733eaf1e6852485aae8daf6ebf481643"
+    },
+    "caps": {
+      "cny": "5",
+      "calls": 24,
+      "seconds": 900,
+      "input_tokens": 2097152,
+      "output_tokens": 36000
+    },
+    "price": {
+      "checked_at": "2026-11-02T11:52:05.041341+00:00",
+      "expires_at": "2026-11-03T11:52:05.041341+00:00",
+      "model": "deepseek-flash",
+      "revision": "DeepSeek-V4.1-Flash-1017",
+      "peak_input_cache_miss_cny_per_million": "2",
+      "peak_output_cny_per_million": "8",
+      "budget_uses_peak": true,
+      "price_source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+      "protocol_source": "https://api-docs.deepseek.com/zh-cn/guides/tool_calls/",
+      "thinking": "disabled",
+      "provider_requests": 0
+    },
+    "eligible_round2": [
+      {
+        "rank": 1,
+        "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+        "name": "静音 K87",
+        "price_cents": 29900,
+        "connection": "双模",
+        "catalog_version": 1
+      },
+      {
+        "rank": 2,
+        "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+        "name": "静音 K98",
+        "price_cents": 39900,
+        "connection": "三模",
+        "catalog_version": 1
+      },
+      {
+        "rank": 3,
+        "id": "e5635304-5562-5b76-80ae-2f577488e404",
+        "name": "办公 K108",
+        "price_cents": 35900,
+        "connection": "双模",
+        "catalog_version": 1
+      }
+    ],
+    "key_read": false,
+    "provider_requests": 0,
+    "approval_exists": false,
+    "live_ledger_exists": false,
+    "scope_limitation": "Core Policy binds source/env/session/model/prices/caps; scenario/actor/single-thread restriction additionally requires controlled operator verification, not a runtime text whitelist."
+  },
+  "model_integrity": {
+    "six_files_checked": true,
+    "revision": "7999e1d3359715c523056ef9478215996d62a620",
+    "dimension": 512,
+    "device": "cpu"
+  },
+  "round1_results": [
+    {
+      "rank": 1,
+      "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+      "name": "静音 K87",
+      "price_cents": 29900,
+      "connection": "双模",
+      "catalog_version": 1
+    },
+    {
+      "rank": 2,
+      "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+      "name": "宿舍静音 K68",
+      "price_cents": 19900,
+      "connection": "有线",
+      "catalog_version": 1
+    }
+  ],
+  "round2_results": [
+    {
+      "rank": 1,
+      "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+      "name": "静音 K87",
+      "price_cents": 29900,
+      "connection": "双模",
+      "catalog_version": 1
+    },
+    {
+      "rank": 2,
+      "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+      "name": "静音 K98",
+      "price_cents": 39900,
+      "connection": "三模",
+      "catalog_version": 1
+    },
+    {
+      "rank": 3,
+      "id": "e5635304-5562-5b76-80ae-2f577488e404",
+      "name": "办公 K108",
+      "price_cents": 35900,
+      "connection": "双模",
+      "catalog_version": 1
+    }
+  ],
+  "real_model_runs": "NOT_RUN",
+  "no_key_read": true,
+  "new_live_ledger_created": false,
+  "remaining_gates": [
+    "New owner approval with exact final commit/source/environment/session/policy/scenario/caps",
+    "Fresh price/source/resources/clock check at actual execution",
+    "Mac host wall-clock rollback is not repaired; no current native-browser Live certification",
+    "Core Policy does not enforce a text/actor whitelist; controlled scenario operator must verify the frozen bundle"
+  ]
+}

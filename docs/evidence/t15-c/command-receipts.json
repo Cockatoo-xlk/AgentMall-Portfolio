@@ -1,0 +1,639 @@
+{
+  "scope": "sanitized commands, raw logs remain ignored/private",
+  "commands": [
+    {
+      "name": "backend-final",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-backend-verified",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && ruff check backend evals scripts && ruff format --check backend evals scripts && python -m agentmall.playground --describe && python -m pytest --ci-offline-core --strict-markers -ra --junitxml=/work/.t13/outputs/pytest-final.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 316.426,
+      "log_sha256": "c2e3e19d2720e9a1882f64f276750927f30fde013f47aa9691a02d684c91b98c"
+    },
+    {
+      "name": "backend-full-cleanup-fixed",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-backend-final",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && ruff check backend evals scripts && ruff format --check backend evals scripts && python -m agentmall.playground --describe && python -m pytest --ci-offline-core --strict-markers -ra --junitxml=/work/.t13/outputs/pytest-full.xml"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 302.721,
+      "log_sha256": "f94886cbf72d793becc365798a45cf932b72cd2d01bd22966409e8d1e7eb0b3b"
+    },
+    {
+      "name": "backend-full",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-backend-full",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && ruff check backend evals scripts && ruff format --check backend evals scripts && python -m agentmall.playground --describe && python -m pytest --ci-offline-core --strict-markers -ra --junitxml=/work/.t13/outputs/pytest-full.xml"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 1.722,
+      "log_sha256": "98959747e881c970b809b3e88a71d09f06c0320c255d529532dddfc88636c89c"
+    },
+    {
+      "name": "backend-header-green",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-header",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && python -m pytest backend/tests/test_proposal_time.py backend/tests/test_aftersales.py::test_request_replay_requires_confirmation_and_keeps_order_delivered backend/tests/test_checkout.py::test_normalization_retries_and_key_conflicts backend/tests/test_checkout_cart_consumption.py::test_cart_source_is_server_verified_hash_bound_and_immutable backend/tests/test_order_concurrency.py::test_concurrent_proposal_creation_same_request_distinct_keys backend/tests/test_order_lifecycle.py::test_proposal_request_identity_version_and_payload_are_stable -q"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.025,
+      "log_sha256": "e747f7efa3efdea304bcdbb2d2416c30b26a937500b6bd8b4d8a8fb7571ccb11"
+    },
+    {
+      "name": "backend-idempotency-green",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-idempotency",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && python -m pytest backend/tests/test_proposal_time.py backend/tests/test_aftersales.py::test_request_replay_requires_confirmation_and_keeps_order_delivered backend/tests/test_checkout.py::test_normalization_retries_and_key_conflicts backend/tests/test_checkout_cart_consumption.py::test_cart_source_is_server_verified_hash_bound_and_immutable backend/tests/test_order_concurrency.py::test_concurrent_proposal_creation_same_request_distinct_keys backend/tests/test_order_lifecycle.py::test_proposal_request_identity_version_and_payload_are_stable -q"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 6.402,
+      "log_sha256": "9e37fc5346ec3e56c7c3342a013f1d9f044b87ed57a544c6a6253fc546a29095"
+    },
+    {
+      "name": "backend-time-green",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-green",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && python -m pytest backend/tests/test_proposal_time.py -q"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.466,
+      "log_sha256": "45186624918ade708ab2af4328c21c98338dd9cc8b9d8737e8256467673cb47d"
+    },
+    {
+      "name": "backend-time-red-corrected",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-red-corrected",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && python -m pytest backend/tests/test_proposal_time.py -q"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 4.369,
+      "log_sha256": "0782a1b041637850b32a1af3294a510793015ddd8577725f24f4c8f396200998"
+    },
+    {
+      "name": "backend-time-red",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-red",
+        "--rm",
+        "runner",
+        "sh",
+        "-c",
+        "python scripts/ci/bootstrap.py --port 55433 && set -a && . ./.env.rag && set +a && python -m pytest backend/tests/test_proposal_time.py -q"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 4.4,
+      "log_sha256": "4788b74eb489ab1bc69381719b27440b3e3a758aa943c2c0e745b93bf0167b3b"
+    },
+    {
+      "name": "browser-expiry-cwd-fixed",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8018",
+        "AGENTMALL_E2E_WEB_PORT=5188",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c/playwright.config.ts",
+        "proposal_expiry.spec.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.242,
+      "log_sha256": "219172bf4e7bacd53643f5eef31c150568ece927fac9734f60982fd18dbe3acb"
+    },
+    {
+      "name": "browser-expiry-run",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8018",
+        "AGENTMALL_E2E_WEB_PORT=5188",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c/playwright.config.ts",
+        "proposal_expiry.spec.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 15.078,
+      "log_sha256": "a83edfb09b83a51ffcbe53e535d5782e831d72befe4e90dbea3d233a5f7da52a"
+    },
+    {
+      "name": "browser-expiry",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8018",
+        "AGENTMALL_E2E_WEB_PORT=5188",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c/playwright.config.ts",
+        "proposal_expiry.spec.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.617,
+      "log_sha256": "0b6d7d6c0f35629e7f7fae5bf917bfa9f8b29ba56897f2812cbd8d1a641c112a"
+    },
+    {
+      "name": "candidate-describe",
+      "command": [
+        "env",
+        "PYTHONPATH=backend/src",
+        "<BASE_WORKTREE>/backend/.venv/bin/python",
+        "-m",
+        "agentmall.playground",
+        "--describe"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.815,
+      "log_sha256": "0ded9d3dd075aed1e4372eef15eeade58086706b22f798dcf8e905848ecbc939"
+    },
+    {
+      "name": "compose-config",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "config",
+        "-q"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.072,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "environment-clock-probe",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "run",
+        "--no-deps",
+        "--name",
+        "agentmall-t15-c-clock-probe",
+        "--rm",
+        "-v",
+        "<WORKTREE>/.t15-c/clock-probe.py:/work/clock-probe.py:ro",
+        "runner",
+        "python",
+        "/work/clock-probe.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 16.263,
+      "log_sha256": "ccc504c40d45ab9379273a0b83d3ef8f9556670c7eecc8d643d1fce4778c7d13"
+    },
+    {
+      "name": "frontend-expiry-red",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test",
+        "--",
+        "src/api/proposalExpiry.test.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 4.485,
+      "log_sha256": "0b820cd807e3dcdbd634a5578d6504a6f13a3913603ea6bc88a32e3658c7d9be"
+    },
+    {
+      "name": "frontend-final-checks",
+      "command": [
+        "sh",
+        "-c",
+        "npm --prefix frontend run typecheck && npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.716,
+      "log_sha256": "0b8a233ba017df73bf348dc045c039a28857c765991f2b6029bb3ca5852efa11"
+    },
+    {
+      "name": "frontend-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.56,
+      "log_sha256": "979fca634000897a44e1d0bdc6f1afa682f6eac9772267916630d08611db0b51"
+    },
+    {
+      "name": "frontend-format",
+      "command": [
+        "frontend/node_modules/.bin/prettier",
+        "--write",
+        "--no-semi",
+        "--single-quote",
+        "--print-width",
+        "96",
+        "frontend/src/api/proposalExpiry.ts",
+        "frontend/src/api/proposalExpiry.test.ts",
+        "frontend/src/api/timelineSummary.ts",
+        "frontend/src/api/timelineSummary.test.ts",
+        "frontend/src/state/useProposalExpiry.ts",
+        "frontend/src/components/WorkflowConfirmationCard.tsx",
+        "frontend/src/components/RunTimeline.tsx",
+        "frontend/tests/proposal_expiry.spec.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.501,
+      "log_sha256": "90473f61bd3fc5c3f787b2590f32c5247648e179dcdb8343a07497d3a4c0d65b"
+    },
+    {
+      "name": "frontend-header-green",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.621,
+      "log_sha256": "e921e186c2aafa610119cb5bbe006d5899bba8a7f56c5c86eb4bad39e3b89465"
+    },
+    {
+      "name": "frontend-lint",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.423,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "name": "frontend-ts-lint-build",
+      "command": [
+        "sh",
+        "-c",
+        "npm --prefix frontend run typecheck && npm --prefix frontend run lint && npm --prefix frontend run build"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.046,
+      "log_sha256": "80ab091c5b55357dd4cd06ce0e5efc37d154f00afc8cdef0267451d3d5e17fb1"
+    },
+    {
+      "name": "frontend-typecheck",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.117,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "name": "frontend-unit-green",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.508,
+      "log_sha256": "adeed1dc68be7c8b97bcc6c77bf65a03c85490be4f06da97104d10fc03ee0851"
+    },
+    {
+      "name": "git-diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.02,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "header-format",
+      "command": [
+        "<BASE_WORKTREE>/backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/actions/routes.py",
+        "backend/tests/test_proposal_time.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.038,
+      "log_sha256": "43affe539ba0ae8b202b306a3294d04f3b7fc062316c1c825399076d966c8f2d"
+    },
+    {
+      "name": "header-frontend-format",
+      "command": [
+        "frontend/node_modules/.bin/prettier",
+        "--write",
+        "--no-semi",
+        "--single-quote",
+        "--print-width",
+        "96",
+        "frontend/src/api/client.ts",
+        "frontend/src/api/serverTime.test.ts",
+        "frontend/tests/proposal_expiry.spec.ts"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.129,
+      "log_sha256": "41b25af6de7e92196cc8c8df9f60b17ab5ba7305715c951381f3640d6dbc53eb"
+    },
+    {
+      "name": "header-metadata-red",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test",
+        "--",
+        "src/api/serverTime.test.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.613,
+      "log_sha256": "a8837969330667bc724d7baae92df174a31b42f7b51b0f9d89680819af52fbd4"
+    },
+    {
+      "name": "host-clock-probe",
+      "command": [
+        "<BASE_WORKTREE>/backend/.venv/bin/python",
+        ".t15-c/host-clock-probe.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 8.101,
+      "log_sha256": "2bce38efdbcd6b984766ebff5d34daf65be9b9f83931b6ec76ecfa5688d82e61"
+    },
+    {
+      "name": "image-build",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "build",
+        "runner"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.855,
+      "log_sha256": "c6e4666e9c0d16867f6e2ce91f040450b75f42fb3c44875564835ccfb5aa09a9"
+    },
+    {
+      "name": "isolated-postgres",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "up",
+        "-d",
+        "--wait",
+        "postgres"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.766,
+      "log_sha256": "a3e9cc2bc2901fe13ad5fd0b862b7a4d4f9abedda0efd3f2519207edb69e0e0d"
+    },
+    {
+      "name": "playwright-full",
+      "command": [
+        "env",
+        "AGENTMALL_E2E_API_PORT=8018",
+        "AGENTMALL_E2E_WEB_PORT=5188",
+        "PLAYWRIGHT_BROWSERS_PATH=<WORKTREE>/frontend/.cache/ms-playwright",
+        "AGENTMALL_EVIDENCE_DIR=.t15-c/e2e/purchase",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=.t15-c/e2e/workflow",
+        "AGENTMALL_PAYMENT_EVIDENCE_DIR=.t15-c/e2e/payment",
+        "AGENTMALL_CART_EVIDENCE_DIR=.t15-c/e2e/cart",
+        "AGENTMALL_PLAYGROUND_EVIDENCE_DIR=.t15-c/e2e/playground",
+        "AGENTMALL_DEMO_READINESS_EVIDENCE_DIR=.t15-c/e2e/readiness",
+        "frontend/node_modules/.bin/playwright",
+        "test",
+        "-c",
+        ".t15-c/playwright.config.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 245.689,
+      "log_sha256": "aaac268b9b91f38826ad6f9646e80cf9685f31ebb3eed2a772871d9e72b15809"
+    },
+    {
+      "name": "python-format",
+      "command": [
+        "<BASE_WORKTREE>/backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/actions/service.py",
+        "backend/src/agentmall/actions/schemas.py",
+        "backend/tests/test_proposal_time.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.043,
+      "log_sha256": "292ab567521d30841d69b41a9cc01ed3f5b34d1b4bdb12e6083b8943098c57a4"
+    },
+    {
+      "name": "static-links",
+      "command": [
+        "python3",
+        "-c",
+        "import json; from pathlib import Path; x=json.loads(Path(\".t15-c/links.json\").read_text()); assert not x[\"broken\"]; print(\"local markdown links: PASS\")"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.039,
+      "log_sha256": "51623b67adcb1a7928556f2a638d4cd71d238d14c30d4b9bd91df2cebdc468f3"
+    },
+    {
+      "name": "timeline-red",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test",
+        "--",
+        "src/api/timelineSummary.test.ts"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.561,
+      "log_sha256": "de804bf88e60280956a3eb3aa5e4478688a3d2068d75d0f25adec3cd197ea7f5"
+    },
+    {
+      "name": "owned-compose-down",
+      "command": [
+        "docker",
+        "compose",
+        "--env-file",
+        "<WORKTREE>/.t15-c/empty.env",
+        "-p",
+        "agentmall-t15-c-tests",
+        "-f",
+        "<WORKTREE>/compose.ci.yaml",
+        "-f",
+        "<WORKTREE>/.t15-c/compose.yaml",
+        "down"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.279,
+      "log_sha256": "d164a28e792db8ad94207d979acf8d78a41b599ca1151fea4d39fa207e844a73"
+    }
+  ]
+}

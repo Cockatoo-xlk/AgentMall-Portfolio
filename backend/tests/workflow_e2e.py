@@ -7,7 +7,7 @@ from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.outputs import ChatGeneration, ChatResult
 from multiagent_helpers import ai, call, choose_purchase, payload, route
 
-from agentmall.agents.specialist_tools import ALLOWLISTS, SCHEMAS
+from agentmall.agents.specialist_tools import ALLOWLISTS, WRITES
 
 
 def models(mode, boundary):
@@ -23,13 +23,16 @@ def models(mode, boundary):
 
         def bind_tools(self, tools, **kwargs):
             names = {t["function"]["name"] if isinstance(t, dict) else t.name for t in tools}
-            assert names == (
-                {"route"}
-                if self.role == "supervisor"
-                else set(SCHEMAS)
-                if self.role == "single"
-                else set(ALLOWLISTS[self.role])
-            )
+            if self.role == "supervisor":
+                variants = [{"route"}]
+            elif self.role == "single":
+                variants = [{name for allowed in ALLOWLISTS.values() for name in allowed}]
+            else:
+                reads = set(ALLOWLISTS[self.role]) - WRITES
+                variants = [reads] + [
+                    reads | {name} for name in ALLOWLISTS[self.role] if name in WRITES
+                ]
+            assert names in variants
             return self.bind(**kwargs)
 
         def _generate(self, *args, **kwargs):
@@ -60,10 +63,20 @@ def models(mode, boundary):
                     response = route("aftersales", "human_support", "human", read_only=False)(
                         messages
                     )
-                elif constraints["return_requested"] and "return" not in completed:
-                    response = route("aftersales", "prepare_return", "return", read_only=False)(
-                        messages
-                    )
+                elif constraints["return_requested"] and "assessment" not in completed:
+                    response = route("aftersales", "assess_return", "assessment")(messages)
+                elif (
+                    constraints["return_requested"]
+                    and "return" not in completed
+                    and any(proof["ready"] for proof in data.get("return_assessments", []))
+                ):
+                    response = route(
+                        "aftersales",
+                        "prepare_return",
+                        "return",
+                        depends=["assessment"],
+                        read_only=False,
+                    )(messages)
                 elif not constraints["support_requested"] and "shop" not in completed:
                     response = route("shopping", "find_products", "shop")(messages)
                 elif constraints["purchase_requested"] and "buy" not in completed:
@@ -81,7 +94,15 @@ def models(mode, boundary):
                 if not tools:
                     response = choose_purchase(messages)
             elif self.role == "single":
-                if not tools:
+                decided_checkout = any(
+                    fact.get("kind") == "proposal"
+                    and fact.get("data", {}).get("action_type") == "CHECKOUT"
+                    and fact.get("data", {}).get("status") in {"EXECUTED", "REJECTED"}
+                    for fact in data.get("committed_facts", [])
+                )
+                if decided_checkout:
+                    response = AIMessage(content='{"terminal":"finish"}')
+                elif not tools:
                     response = ai(call("retrieve_products", {"query": "静音键盘"}))
                 elif constraints["purchase_requested"] and "prepare_checkout" not in names:
                     body = json.loads(tools[-1].content)
@@ -100,29 +121,25 @@ def models(mode, boundary):
                             },
                         )
                     )
-                elif data["goal"] == "prepare_return":
-                    if not tools:
-                        response = ai(
-                            call(
-                                "check_eligibility",
-                                {"order_id": order, "reason_code": "QUALITY_ISSUE"},
-                            ),
-                            call(
-                                "retrieve_policies",
-                                {"order_id": order, "query": "质量问题退货期限"},
-                            ),
+                elif data["goal"] == "assess_return" and not tools:
+                    response = ai(
+                        call("get_order", {"order_id": order}),
+                        call(
+                            "check_eligibility", {"order_id": order, "reason_code": "QUALITY_ISSUE"}
+                        ),
+                        call("retrieve_policies", {"order_id": order, "query": "质量问题退货期限"}),
+                    )
+                elif data["goal"] == "prepare_return" and not tools:
+                    response = ai(
+                        call(
+                            "prepare_return",
+                            {
+                                "order_id": order,
+                                "reason_code": "QUALITY_ISSUE",
+                                "description": "Fixture 按键故障",
+                            },
                         )
-                    elif "prepare_return" not in names:
-                        response = ai(
-                            call(
-                                "prepare_return",
-                                {
-                                    "order_id": order,
-                                    "reason_code": "QUALITY_ISSUE",
-                                    "description": "Fixture 按键故障",
-                                },
-                            )
-                        )
+                    )
             # First supervisor call deliberately has unknown usage; retain its reservation.
             if self.role != "supervisor" or data.get("completed"):
                 response.usage_metadata = {

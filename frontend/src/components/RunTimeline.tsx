@@ -1,10 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '../state/Auth'
-import { errorMessage } from '../api/client'
+import { ApiError, errorMessage } from '../api/client'
+import { timelineSummary } from '../api/timelineSummary'
 import { mergeEvents } from '../api/agentWorkflow'
 import type { Run, RunEvent, EventPage } from '../api/agentWorkflow'
 const labels: Record<string, string> = {
+  bundle_computed: '组合预算计算',
+  bundle_revision_requested: '组合修改请求',
+  bundle_constraints_updated: '组合约束更新',
+  bundle_retrieval_reused: '重验并复用原SKU',
+  bundle_retrieval_refreshed: '重新检索品类',
+  bundle_replanned: '组合重规划完成',
+  bundle_revision_rejected: '原SKU不能复用',
+  job_queued: '任务已排队',
+  job_executing: 'Worker 执行',
+  job_blocked: '等待人工检查',
+  job_state: '调度状态',
   run_created: 'Run 启动',
   run_activated: '激活执行',
   route_decision: 'Supervisor 路由',
@@ -18,48 +30,138 @@ const labels: Record<string, string> = {
   run_state: '运行状态',
   node_completed: '节点完成',
 }
-export default function RunTimeline({ run }: { run: Run }) {
+type Connection = 'connecting' | 'live' | 'reconnecting' | 'history'
+const connectionLabels: Record<Connection, string> = {
+  connecting: '连接实时进度…',
+  live: '实时接收',
+  reconnecting: '实时连接中断，正在补读并重连',
+  history: '已持久化记录',
+}
+const statuses = ['RUNNING', 'WAITING_INPUT', 'COMPLETED', 'PARTIAL', 'FAILED']
+
+export default function RunTimeline({ run, live = false, onStatusChange }: {
+  run: Run
+  live?: boolean
+  onStatusChange?: () => void
+}) {
   const { client: api } = useAuth()
   const [events, setEvents] = useState<RunEvent[]>([])
   const [error, setError] = useState('')
-  const [stopped, setStopped] = useState(false)
+  const [connection, setConnection] = useState<Connection>('history')
   const [reload, setReload] = useState(0)
   const cursor = useRef(0)
   useEffect(() => {
     const controller = new AbortController()
+    const { signal } = controller
+    const path = `/agent/runs/${run.id}/events`
     let timer: ReturnType<typeof setTimeout> | undefined
-    let rounds = 0
+    let retry = 1000
+    function append(items: RunEvent[]) {
+      if (signal.aborted) return false
+      const fresh = items.filter((event) => event.seq > cursor.current)
+      if (fresh.length === 0) return false
+      if (fresh.some((event, i) => event.seq !== cursor.current + i + 1))
+        throw new ApiError(0, 'EVENT_GAP')
+      cursor.current = fresh[fresh.length - 1].seq
+      setEvents((old) => mergeEvents(old, fresh))
+      return true
+    }
+    async function readHistory() {
+      let changed = false
+      while (!signal.aborted) {
+        const page = await api.get<EventPage>(`${path}?after_seq=${cursor.current}&limit=50`, signal)
+        append(page.items)
+        changed ||= page.items.some((e) => ['run_state', 'run_activated', 'resume_received'].includes(e.event_type))
+        if (page.items.length < 50) break
+      }
+      return changed
+    }
+    function denied(e: unknown) {
+      return e instanceof ApiError && [401, 403, 404].includes(e.status)
+    }
     async function read() {
+      let terminal = false
       try {
-        const page = await api.get<EventPage>(
-          `/agent/runs/${run.id}/events?after_seq=${cursor.current}&limit=50`,
-          controller.signal,
-        )
-        if (controller.signal.aborted) return
-        setEvents((old) => mergeEvents(old, page.items))
-        cursor.current = Math.max(cursor.current, page.next_seq)
-        setError('')
-        setStopped(false)
-        rounds++
-        if (rounds >= 40) {
-          setStopped(true)
+        if (live) {
+          await api.stream(`${path}/stream?after_seq=${cursor.current}`, (kind, data) => {
+            if (signal.aborted) return
+            if (kind === 'run_event') {
+              const event = JSON.parse(data) as RunEvent
+              if (append([event]) && event.event_type === 'run_state') onStatusChange?.()
+            }
+            if (kind === 'run_status') {
+              const { status } = JSON.parse(data)
+              if (!statuses.includes(status)) throw new ApiError(0, 'INVALID_STREAM')
+              terminal = !['RUNNING', 'WAITING_INPUT'].includes(status)
+              if (status !== run.status) onStatusChange?.()
+            }
+            setConnection('live')
+            setError('')
+            retry = 1000
+          }, signal)
+          if (signal.aborted) return
+          if (terminal) {
+            setConnection('history')
+            return
+          }
+        } else {
+          await readHistory()
+          if (!signal.aborted) setError('')
           return
         }
-        if (page.items.length === 50 || run.status === 'RUNNING')
-          timer = setTimeout(() => void read(), page.items.length === 50 ? 50 : 1500)
       } catch (e) {
-        if (!controller.signal.aborted) {
+        if (signal.aborted) return
+        // A proxy may serve the legacy API while the SSE route is unavailable.
+        if (!live || (e instanceof ApiError && [401, 403].includes(e.status))) {
           setError(errorMessage(e))
-          setStopped(true)
+          setConnection('history')
+          return
         }
       }
+      setConnection('reconnecting')
+      try {
+        const changed = await readHistory()
+        if (signal.aborted) return
+        setError('')
+        if (changed) onStatusChange?.()
+      } catch (e) {
+        if (signal.aborted) return
+        setError(errorMessage(e))
+        if (denied(e)) {
+          setConnection('history')
+          return
+        }
+      }
+      if (!signal.aborted) {
+        timer = setTimeout(() => void read(), retry)
+        retry = Math.min(5000, retry * 2)
+      }
     }
-    void read()
+    async function initialize() {
+      // An explicit refresh must still exercise the legacy GET contract, even
+      // while SSE is available. Preserve its error until the user reconciles.
+      if (reload > 0) {
+        try {
+          await readHistory()
+          if (signal.aborted) return
+          setError('')
+        } catch (e) {
+          if (!signal.aborted) {
+            setError(errorMessage(e))
+            setConnection('history')
+          }
+          return
+        }
+      }
+      await read()
+    }
+    setConnection(live ? 'connecting' : 'history')
+    void initialize()
     return () => {
       controller.abort()
       clearTimeout(timer)
     }
-  }, [api, run.id, run.status, run.pending_confirmation?.interrupt_id, reload])
+  }, [api, run.id, run.status, live, onStatusChange, reload])
   async function download() {
     try {
       const pages: unknown[] = []
@@ -103,7 +205,9 @@ export default function RunTimeline({ run }: { run: Run }) {
         </button>
       </div>
       {error && <p role="alert">事件读取中断，已展示记录保留。{error}</p>}
-      {stopped && <p>轮询已暂停，可手动继续读取。</p>}
+      <p className="muted" role="status" data-testid="timeline-connection">
+        {connectionLabels[connection]}
+      </p>
       <ol className="timeline-list">
         {events.map((event) => (
           <li key={`${run.id}:${event.seq}`} data-testid="run-event" data-seq={event.seq}>
@@ -112,13 +216,17 @@ export default function RunTimeline({ run }: { run: Run }) {
               <span>
                 #{event.seq} ·{' '}
                 {event.agent ??
-                  String(event.payload_summary.target ?? event.payload_summary.role ?? 'workflow')}
+                  String(
+                    event.payload_summary.target ?? event.payload_summary.role ?? 'workflow',
+                  )}
               </span>
             </div>
             <strong>
               {event.event_type === 'tool' &&
               event.payload_summary.ok &&
-              ['prepare_checkout', 'prepare_return'].includes(String(event.payload_summary.name))
+              ['prepare_checkout', 'prepare_return'].includes(
+                String(event.payload_summary.name),
+              )
                 ? '提案创建'
                 : event.event_type === 'tool' &&
                     String(event.payload_summary.name).startsWith('retrieve_')
@@ -129,8 +237,14 @@ export default function RunTimeline({ run }: { run: Run }) {
                     : (labels[event.event_type] ?? event.event_type)}
             </strong>
             <small>{event.event_type}</small>
+            {timelineSummary(event) && (
+              <p data-testid="event-summary">{timelineSummary(event)}</p>
+            )}
             {Object.keys(event.payload_summary).length > 0 && (
-              <pre>{JSON.stringify(event.payload_summary, null, 2)}</pre>
+              <details>
+                <summary>结构化记录</summary>
+                <pre>{JSON.stringify(event.payload_summary, null, 2)}</pre>
+              </details>
             )}
             {event.action_id && <small>action_id {event.action_id}</small>}
             {run.result?.entity_refs
@@ -148,7 +262,8 @@ export default function RunTimeline({ run }: { run: Run }) {
                       : `/after-sales?${ref.kind}=${ref.id}`
                   }
                 >
-                  核对{ref.kind === 'order' ? '订单' : ref.kind === 'case' ? '售后' : '工单'}回执
+                  核对{ref.kind === 'order' ? '订单' : ref.kind === 'case' ? '售后' : '工单'}
+                  回执
                 </Link>
               ))}
           </li>

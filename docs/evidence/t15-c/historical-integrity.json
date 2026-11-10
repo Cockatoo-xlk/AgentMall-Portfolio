@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "protected_files": 8401,
+  "changes": 0,
+  "old_container_records_verified": 17,
+  "old_container_changes": 0,
+  "owned_test_project_removed": true,
+  "old_b1_ledger_and_approval": "hashes unchanged, never used to authorize T15-C",
+  "old_manifests": "unchanged",
+  "source_worktrees": "original Public main/T14/T15-A tracked files unchanged; new branch only",
+  "key_read": false,
+  "new_paid_requests": 0,
+  "old_worktrees_final_clean": [
+    {
+      "workspace": "AgentMall",
+      "head": "PRIVATE_NOT_PUBLISHED",
+      "tracked_status": ""
+    },
+    {
+      "workspace": "AgentMall-Public-R6-A",
+      "head": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+      "tracked_status": ""
+    },
+    {
+      "workspace": "AgentMall-T14-P0-Mock-Payment",
+      "head": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+      "tracked_status": ""
+    },
+    {
+      "workspace": "AgentMall-T14-P1-Cart-Lifecycle",
+      "head": "d81de4adc125c9ce019434fb338a52fe5282070c",
+      "tracked_status": ""
+    },
+    {
+      "workspace": "AgentMall-T14-R1-A-Public-Candidate",
+      "head": "c06c5841af36a631b69462c035d6410f732af0db",
+      "tracked_status": ""
+    },
+    {
+      "workspace": "AgentMall-T15-A-Live-Playground",
+      "head": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+      "tracked_status": ""
+    }
+  ]
+}

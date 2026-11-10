@@ -1,0 +1,135 @@
+{
+  "first_complete_ci": {
+    "name": "full-offline-ci",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "agentmall-t14-p0",
+      "-f",
+      "compose.ci.yaml",
+      "-f",
+      ".t14-p0/compose-owned.yaml",
+      "run",
+      "--rm",
+      "runner"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 397.678,
+    "log": ".t14-p0/full-offline-ci.log",
+    "log_sha256": "d4f141005bfcf8b2f2114060f1cc3fe40a3017727d676232d373ffd92e22c1d9"
+  },
+  "retained_first_outputs": ".t14-p0/ci-attempt-1/",
+  "retained_first_browser_results": ".t14-p0/ci-attempt-1-playwright/",
+  "first_result": {
+    "backend_passed": 644,
+    "backend_skipped": 14,
+    "vitest_passed": 55,
+    "playwright_passed": 57,
+    "playwright_failed": 1,
+    "collected": 58,
+    "remaining_cases_not_completed": 0,
+    "two_review_recovery_tests_added_after_this_run": true
+  },
+  "browser_crash": {
+    "classification": "BROWSER_TARGET_CRASH",
+    "original_test_unchanged": true,
+    "first_full_ci_exit": 1,
+    "other_failure": "Ruff E501 (fixed, AST unchanged)",
+    "docker_oom_events_query_exit": 0,
+    "docker_oom_events": 0,
+    "event_window_unix": [
+      1793458808,
+      1793459211
+    ],
+    "root_cause": "UNKNOWN; no matching Docker OOM event retained; do not claim fixed",
+    "failed_test_db_state": [
+      {
+        "test": "return_replace: start_unfinalized survives refresh and recovers original Run by reference",
+        "status": "passed",
+        "orders": 1,
+        "run_states": [
+          "COMPLETED"
+        ],
+        "checkpoint_rows": 27,
+        "payments": 0,
+        "provider_http_requests": 0
+      },
+      {
+        "test": "return_replace: start_interrupted survives refresh and recovers original Run by reference",
+        "status": "passed",
+        "orders": 1,
+        "run_states": [
+          "COMPLETED"
+        ],
+        "checkpoint_rows": 27,
+        "payments": 0,
+        "provider_http_requests": 0
+      },
+      {
+        "test": "return_replace: refresh requires login and rebuilds known Thread from seq zero",
+        "status": "failed",
+        "orders": 0,
+        "run_states": [
+          "WAITING_INPUT"
+        ],
+        "checkpoint_rows": 22,
+        "payments": 0,
+        "provider_http_requests": 0
+      }
+    ],
+    "next_run_reason": "After confirmed code fixes from independent review and static E501 fix; not a retry-only attempt"
+  },
+  "ruff_fix": {
+    "ast_unchanged": true,
+    "query_literals_unchanged": true,
+    "changed_lines": "SQL literals split across adjacent Python string lines only"
+  },
+  "development_reds": [
+    "Original order UI lacks mock-payment action",
+    "Missing payment protocol module",
+    "Database immutable expires_at trigger rejected invalid test setup; replaced by existing server clock seam, not a domain/migration change",
+    "Early success heading before successful GET order",
+    "Missing stale-version requote",
+    "Old snapshot visible briefly during explicit new quote",
+    "Reference serializer admitted unwanted extra fields",
+    "Parallel proposal/order GET could pair new receipt with older pending order",
+    "Lost pre-commit reject could not retry same reject",
+    "Storage error blocked read-only recovery"
+  ],
+  "demo_attempts": {
+    "first_browser_exit": 1,
+    "first_failure": "Browser scheduled after bounded server lifetime; ERR_CONNECTION_REFUSED",
+    "second_orchestrator": "Readiness gate failed through host default HTTP proxy, browser was not started; server itself exit0",
+    "diagnosis": "Host default urllib proxy raises RemoteDisconnected; direct ProxyHandler({}) to the same loopback URLs returns200. No global proxy settings changed.",
+    "final_controlled_probe": {
+      "ready": true,
+      "observations": [
+        {
+          "url": "http://127.0.0.1:5184",
+          "status": 200,
+          "bytes": 638
+        },
+        {
+          "url": "http://127.0.0.1:8014/openapi.json",
+          "status": 200,
+          "bytes": 68362
+        },
+        {
+          "url": "http://127.0.0.1:8014/__test/health",
+          "status": 200,
+          "bytes": 290
+        },
+        {
+          "internal_probe_exit": 0,
+          "stdout": "{\"http://127.0.0.1:5174\": 200, \"http://127.0.0.1:15174\": 200, \"http://127.0.0.1:18001/openapi.json\": 200}\n",
+          "stderr": ""
+        }
+      ],
+      "browser_exit": 0,
+      "server_exit": 0,
+      "elapsed_seconds": 95.123
+    }
+  },
+  "protection_harness_format_correction": "Initial comparison used unsorted raw rev-list text. Baseline recipe is sorted lines joined without trailing newline; exact baseline digest then matches. Original mismatched-format output retained locally. No protected objects changed."
+}

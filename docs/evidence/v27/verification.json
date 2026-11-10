@@ -1,0 +1,200 @@
+{
+  "status": "AGENTMALL_V27_AI_CATALOG_OPERATIONS_READY",
+  "base_commit": "cb70ebb6687490db7b21794eb8257a1078d6939d",
+  "branch": "codex/v2-ai-catalog-operations",
+  "tested_code_tree_sha256": "f4beeff97d81f387d36dc7df3c6fc5dea17bcae2e89de4aff76dbefa414c3cbc",
+  "final_code_tree_sha256": "bf4d60828c32f2376ced53a030d773255ff1ff4ce10dbd533c50010b27acd4e0",
+  "source_inventory_files": 362,
+  "post_backend_snapshot_changes": {
+    "files": [
+      "frontend/tests/catalog-operations.spec.ts"
+    ],
+    "reason": "browser-only strict combobox role locator corrected; production/backend test sources unchanged"
+  },
+  "environment": {
+    "platform": "Docker Desktop Linux aarch64 on macOS",
+    "database": "new exclusive PostgreSQL17 / pgvector",
+    "embedding": "agentmall/fixture unit-v1, 512 dimensions; no semantic accuracy claim",
+    "parser": "explicit SDK MockTransport; ordinary app MODEL_DISABLED",
+    "external_network": "none",
+    "remote_ci": "NOT_RUN"
+  },
+  "results": {
+    "pytest_passed": 981,
+    "pytest_skipped": 14,
+    "new_pytest_tests": 35,
+    "vitest_passed": 102,
+    "new_vitest_tests": 3,
+    "playwright_full_passed": 111,
+    "playwright_final_targeted_passed": 4,
+    "playwright_new_unique_tests": 4,
+    "counts_note": "targeted4 includes3 scenarios already in full111; do not add to115",
+    "playwright_retries": 0,
+    "all_static_checks_exit_code": 0
+  },
+  "checks": {
+    "backend-offline-final": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:22:57.891066+00:00",
+      "seconds": 345.684,
+      "log_sha256": "a10d4da5a45bb53b44d4b8ef4b1753c4d8c384eaf8a72b658260def7d70712e2"
+    },
+    "vitest-final": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:23:42.694698+00:00",
+      "seconds": 0.87,
+      "log_sha256": "988c53c93397d03cf12acec0ea9aaeca2fdf8fc2d52fa75acf62d257997fabc7"
+    },
+    "browser-regression": {
+      "command": [
+        "env",
+        "AGENTMALL_OPERATIONS_SCREENSHOTS=/rc-output/screenshots",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:17:46.087407+00:00",
+      "seconds": 217.997,
+      "log_sha256": "9c3420459e019d8c83ed3935ba380a7a76bb9cb6d2f70be23405b8ce154eeb42"
+    },
+    "browser-final-2": {
+      "command": [
+        "env",
+        "AGENTMALL_OPERATIONS_SCREENSHOTS=/rc-output/screenshots-final",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "catalog-operations.spec.ts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:31:37.501737+00:00",
+      "seconds": 10.897,
+      "log_sha256": "39f709bb96d8fe136d8b348a64b4bfe60101289453f051606b5b588e3ac67658"
+    },
+    "ruff-final": {
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:23:41.986145+00:00",
+      "seconds": 0.166,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "format-verified": {
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:23:42.364394+00:00",
+      "seconds": 0.118,
+      "log_sha256": "378773692b3f13efd8b27b3a876ce716d70e19f27836db2815403436b552a3ae"
+    },
+    "frontend-last-typecheck": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:34:49.945218+00:00",
+      "seconds": 2.281,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    "frontend-last-lint": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:34:52.448800+00:00",
+      "seconds": 1.232,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    "build-final": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T14:23:45.301586+00:00",
+      "seconds": 2.541,
+      "log_sha256": "32c12450166c68b22f19c12afdb1f0fa2c8d8ec38322a86958ed92b24fd853aa"
+    }
+  },
+  "safety": {
+    "provider_requests": 0,
+    "provider_key_reads": 0,
+    "push": 0,
+    "dispatch": 0,
+    "business_transaction_core_changes": false,
+    "legacy_seed_and_frozen_evaluation_changes": false
+  },
+  "cleanup": {
+    "owned_database_and_volume_absent": true,
+    "owned_test_guests_absent": true,
+    "temporary_credentials_removed": true,
+    "historical_containers_unchanged": 25,
+    "default_context_unchanged": true,
+    "cleanup_record_sha256": "475a0fc8f63cd49f90a3cc52b9ddac877e250bdd68d138d2eee4007a4e5e778a"
+  },
+  "retained_failures": {
+    "first_full_pytest": "14 failed / 969 passed / 2 skipped; wrong full-with-BGE entry, concurrent schema enumeration, changing source snapshot; final serial CI_OFFLINE_CORE separately passed",
+    "stock_red": "old revision incorrectly PUBLISHED after payment; fixed STOCK_CHANGED",
+    "early_browser": "3 reset failures then2 navigation failures; final extra case strict label locator corrected to exact combobox role",
+    "static_and_local_diagnostics": "intermediate Ruff/path-formatting issues and cleanup ownership-label/stderr-case assumptions retained privately; no security or ownership guard removed"
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/v27/01-source-backed-draft.png",
+      "sha256": "bb7ca6ce86acc131f8ec662213a25d8e9a1934843a0d44a9b88381ade52174da",
+      "classification": "SYNTHETIC_TEST_DATA / REVIEWED_PUBLIC_EVIDENCE"
+    },
+    {
+      "path": "docs/screenshots/v27/02-published-indexed.png",
+      "sha256": "f3408a5e7855c01851b2bbceacb7e4597108c64d890ed7618446c8794b753880",
+      "classification": "SYNTHETIC_TEST_DATA / REVIEWED_PUBLIC_EVIDENCE"
+    },
+    {
+      "path": "docs/screenshots/v27/03-buyer-new-product.png",
+      "sha256": "f340bd61777457d7286df68e16c4307b97111abce53f9ef28a9f9b14b86fb8e9",
+      "classification": "SYNTHETIC_TEST_DATA / REVIEWED_PUBLIC_EVIDENCE"
+    }
+  ],
+  "raw_logs": "PRIVATE_LOCAL_EVIDENCE_NOT_COMMITTED",
+  "live_and_new_real_bge": "NOT_RUN"
+}

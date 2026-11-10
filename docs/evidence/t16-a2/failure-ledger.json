@@ -1,0 +1,120 @@
+{
+  "failures": [
+    {
+      "name": "unit-red",
+      "classification": "EXPECTED_TDD_RED_INTENT_AND_CAPABILITIES",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/unit-red.log",
+      "sha256": "19d7c8cb1040012b09090fd2d7234634c163afe62c6fa0f40c28c8b53ea89d3b"
+    },
+    {
+      "name": "intent-expanded-red",
+      "classification": "EXPECTED_TDD_RED_AMBIGUITY",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/intent-expanded-red.log",
+      "sha256": "418a5224bec3bf9758ec7c77178524475c4aadef188273da3e7b907520f7abbf"
+    },
+    {
+      "name": "workflow-red",
+      "classification": "EXPECTED_REAL_PG_RED",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/workflow-red.log",
+      "sha256": "7b1be0ece0c00bf0976b9e0c3496c861a2c48321f2d0330295f8fecb42a59f6e"
+    },
+    {
+      "name": "workflow-green",
+      "classification": "CANONICAL_EMPTY_EXCLUSION_DIGEST_DEFECT",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/workflow-green.log",
+      "sha256": "643f81538fd8a247fe259aea88c8b4ed9b29e7c33429aa200050df2d7cb927cb"
+    },
+    {
+      "name": "exclusions-red",
+      "classification": "EXPECTED_TDD_RED_EMPTY_EXCLUSION",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/exclusions-red.log",
+      "sha256": "bc9c4e874d3b8873b6101dad39716d586980161e0639b307c9ed1106f75d97a8"
+    },
+    {
+      "name": "frontend-red",
+      "classification": "EXPECTED_TDD_RED_EXCLUSION_DISPLAY",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/frontend-red.log",
+      "sha256": "1cb175f629b0594d12ee8ad5f90f32beaec9ce276c0fc3c2f80b8886b6d4f769"
+    },
+    {
+      "name": "intent-scope-red",
+      "classification": "EXPECTED_TDD_RED_NUMERIC_ALIAS_AND_TYPED_DENIAL",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/intent-scope-red.log",
+      "sha256": "0a7beb94ec74e33c6920082b6818193bfe2b4513fb242bba8cd3df7e280dd320"
+    },
+    {
+      "name": "wired-only-red",
+      "classification": "EXPECTED_TDD_RED_CONFLICTING_METADATA",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/wired-only-red.log",
+      "sha256": "b507315cefec3411ee3e5b60717e743e605950b1b2b2e1e530e7672d42a5eb5a"
+    },
+    {
+      "name": "topk-controlled-red",
+      "classification": "EXPECTED_CONTROLLED_MUTATION_FILTER_REMOVED",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/topk-controlled-red.log",
+      "sha256": "941d29d47669ceb68e15b2dc191340b0191dc708bd4010e437a6a874c1e2cce1"
+    },
+    {
+      "name": "review-red",
+      "classification": "EXPECTED_TDD_RED_REVIEW_FINDINGS",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/review-red.log",
+      "sha256": "06b3a4f5cf6d909bdfc9ad6631155de57d3b91d959d15bca30d70c3e044f95ed"
+    },
+    {
+      "name": "uncertain-scope-red",
+      "classification": "EXPECTED_TDD_RED_UNRESOLVED_NEGATIVE_SCOPE",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/uncertain-scope-red.log",
+      "sha256": "a3dc761137fcda671a28773d8b5bdb872b4f338967ab0daeaa53fb7fde9dc8cd"
+    },
+    {
+      "name": "bootstrap",
+      "classification": "HARNESS_CONFIGURATION_MISSING_SYNTHETIC_CI_PASSWORD",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/bootstrap.log",
+      "sha256": "d6700df9da7ad4e32c6a90ead2d92b59e0302aa2fae2ccdeb09292b1a19a505e"
+    },
+    {
+      "name": "backend-first-full",
+      "classification": "REAL_COMPATIBILITY_REGRESSION_EMPTY_OPTIONAL_FIELD",
+      "exit_code": 1,
+      "private_raw_log": ".playground/t16-a2/logs/backend-first-full.log",
+      "sha256": "7e3f7832c7853f8ccf46c9fe4310edf0843c5829693b8399e9cf6699fc1ea4a5"
+    },
+    {
+      "name": "mac_linux_hybrid_clock",
+      "classification": "ENVIRONMENT_CLOCK_GATE_FAILED",
+      "test_results": "802 pytest / 14 skip, 85 Vitest, 96 Playwright passed; hybrid window NOT accepted as stable-clock certification",
+      "host_anomalies": 1,
+      "guest_anomalies": 0,
+      "minimum_host_wall_delta_ns": -60528000,
+      "raw_summary_sha256": "4394e11d62528f0b6ade0ccc565b370c19e6e705bdc0e5ebad1c994788b9f6d0",
+      "explanation": "Host rollback remained unexplained despite owned sleep assertion; move all acceptance processes to the fresh Linux kernel, no threshold/skip/retry/security changes. Preserve original failure."
+    },
+    {
+      "name": "linux-acceptance",
+      "classification": "LINUX_HARNESS_MISSING_PROJECT_SYNTHETIC_CONFIG",
+      "backend_result": "771 passed / 31 failed / 14 skipped",
+      "linux_clock_admitted": true,
+      "source_changed_to_fix": false,
+      "fix": "Copy only the already generated configuration for this owned database into the new Linux container, mode 0600; no database reset or assertion change.",
+      "private_raw_log": ".playground/t16-a2/logs/linux-acceptance.log",
+      "sha256": "b470dc0d87df3635b241c68b437a00eab4d987849179cbe0a2c2e38b2b0d5980"
+    }
+  ],
+  "additional_preserved_pre_review_full_run": {
+    "passed": 788,
+    "skipped": 14,
+    "not_final_after_review_changes": true
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "scope": "Actual T16-A2 changed/new public files; manifest self excluded",
+  "files": [
+    {
+      "path": "backend/src/agentmall/agents/context.py",
+      "bytes": 10714,
+      "sha256": "cf85a36740f29182b20128c6bfb19eb7f7a139e1724069a2b2b1df65b9c69758"
+    },
+    {
+      "path": "backend/src/agentmall/agents/memory.py",
+      "bytes": 17386,
+      "sha256": "10c9c04ba0470a6e3c9a313fb5d79880d025e04e212564aa6cbcb0bd2c9a3b81"
+    },
+    {
+      "path": "backend/src/agentmall/agents/purchase_intent.py",
+      "bytes": 3037,
+      "sha256": "23d7f5675543f17f226e4bc55a35ab163b5a7157a2dbaf5afc7c2689d0a3f206"
+    },
+    {
+      "path": "backend/src/agentmall/agents/run_schemas.py",
+      "bytes": 2738,
+      "sha256": "428893eab6195cfd9157b9257d6b15164fa6cca91072f3bd308c62219535f2ea"
+    },
+    {
+      "path": "backend/src/agentmall/agents/specialist_tools.py",
+      "bytes": 23593,
+      "sha256": "fd3183adcec81cc72870490eabb416f26daae292e55140228ce0a8045b12086a"
+    },
+    {
+      "path": "backend/src/agentmall/catalog/capabilities.py",
+      "bytes": 2051,
+      "sha256": "618f570f513dddf320413ef39d336806785738faeb05c9bfc9949d56676ab889"
+    },
+    {
+      "path": "backend/src/agentmall/retrieval/schemas.py",
+      "bytes": 1417,
+      "sha256": "57c590195796f5ce251874a198ba85a04591430b345356b1b0a67870296b5e2f"
+    },
+    {
+      "path": "backend/src/agentmall/retrieval/search.py",
+      "bytes": 7492,
+      "sha256": "84bda8bc4c8d63f729df0fb4a952a7e3f61a5f67204e221a88c7fe1e916a4f05"
+    },
+    {
+      "path": "backend/src/agentmall/seed.py",
+      "bytes": 3761,
+      "sha256": "aae21f17e893af28a1b03a0f84bd062ada8f0ce748e4e881b03ffbb737467e0c"
+    },
+    {
+      "path": "backend/tests/test_t16_a2_catalog.py",
+      "bytes": 1873,
+      "sha256": "6f7077d2ea11cb03eff598f1e9f87c2266db3bc6cc115bb9fc69fb64ec2c79de"
+    },
+    {
+      "path": "backend/tests/test_t16_a2_intent.py",
+      "bytes": 4905,
+      "sha256": "b1b4e9c5d2b62a59f1e99cee28d583225cc4a9bacd10f7914f1679ed1a879a1e"
+    },
+    {
+      "path": "backend/tests/test_t16_a2_retrieval.py",
+      "bytes": 6139,
+      "sha256": "bf0e6c5751a7654451a3f2732b894eba91355169cc9a1af4856809732a59c545"
+    },
+    {
+      "path": "backend/tests/test_t16_a2_workflow.py",
+      "bytes": 7825,
+      "sha256": "a26a09538071afa38aa037879f9432f36e927749b719a86824f63dd511a210d9"
+    },
+    {
+      "path": "backend/tests/web_e2e_server.py",
+      "bytes": 33449,
+      "sha256": "c73a4a08eb1e91256a94b0cd1aa0030fe4ec94ed0dc7f721ca7741fffd9b3ac1"
+    },
+    {
+      "path": "docs/CATALOG_CONNECTIONS.md",
+      "bytes": 2164,
+      "sha256": "9f707efbcaab872e961943253761fb461f90e86f63159dec493b14c494de1038"
+    },
+    {
+      "path": "docs/evidence/t16-a2/catalogue-preflight.json",
+      "bytes": 11574,
+      "sha256": "e76a4903527b03d7f4e2b96c68f4f1979e08f56c1f7f8aa245443a427057d86c"
+    },
+    {
+      "path": "docs/evidence/t16-a2/database-state.json",
+      "bytes": 83606,
+      "sha256": "fb16bc812579313cc72f29f6507cfd71b2ef0107502084e78866301bef01ebab"
+    },
+    {
+      "path": "docs/evidence/t16-a2/environment-and-cleanup.json",
+      "bytes": 6671,
+      "sha256": "b74e58d229c31ad2f5e7c09593d17072c3c0abdeb7a18e4a5224b92a668afd51"
+    },
+    {
+      "path": "docs/evidence/t16-a2/failure-ledger.json",
+      "bytes": 5131,
+      "sha256": "5360e721524786a84b5c93bf7f8e84386ed6825e88596e4cc68f41833d352603"
+    },
+    {
+      "path": "docs/evidence/t16-a2/historical-integrity.json",
+      "bytes": 954,
+      "sha256": "ebb5ecefb028eb02cb49c03904a60d3eeeaa5139f71af164b41a3e354b7e99b6"
+    },
+    {
+      "path": "docs/evidence/t16-a2/live-preflight-draft.json",
+      "bytes": 4284,
+      "sha256": "c00a91c9af8f9cbb873579af0adecadfeb5860e63ad97e3cf4504c59abd4cf0a"
+    },
+    {
+      "path": "docs/evidence/t16-a2/privacy.json",
+      "bytes": 1271,
+      "sha256": "a7f8a7568833485d233efb00960c048075787962c1bfa94803d80a1551fad03c"
+    },
+    {
+      "path": "docs/evidence/t16-a2/report.md",
+      "bytes": 10595,
+      "sha256": "4a391bc2626be3629479c4f94cc55ac6a1ab1ef959314a9bebae01b18fa515fe"
+    },
+    {
+      "path": "docs/evidence/t16-a2/review.json",
+      "bytes": 1039,
+      "sha256": "0f31adf180d4813b1d2c83dbb74ffc7d6f3c6f1ce68c3b2147eb4488b5d6e559"
+    },
+    {
+      "path": "docs/evidence/t16-a2/run-events.json",
+      "bytes": 32576,
+      "sha256": "dcdf136f978d71414ca37ff1adc31d9192f6d50c477a14116599b95c2978e9ca"
+    },
+    {
+      "path": "docs/evidence/t16-a2/screenshots/completed.png",
+      "bytes": 393805,
+      "sha256": "a1b6122d842aed00c538c8c07df9b9f4249a2ec15e41c7e9794b890699374db0"
+    },
+    {
+      "path": "docs/evidence/t16-a2/screenshots/preferences.png",
+      "bytes": 390240,
+      "sha256": "d5d8bac86bc919b835dafe4a95679c224441787cc1e7051815e086548be4251b"
+    },
+    {
+      "path": "docs/evidence/t16-a2/screenshots/waiting.png",
+      "bytes": 446223,
+      "sha256": "b8d5ed69f27b748047c441402e283f619990e4a2a72ffb3d134bcbb0fb9871df"
+    },
+    {
+      "path": "docs/evidence/t16-a2/verification.json",
+      "bytes": 5718,
+      "sha256": "cb8acc6e4d341c8a9d3e94cd8dceefd1c4e70ca5902e215ec19f18b7d0df1d7b"
+    },
+    {
+      "path": "docs/plans/t16-a2-intent-catalog.md",
+      "bytes": 2131,
+      "sha256": "4f1c4ff2f7e50eab1279f915871cc7022ce749c0d8e1dbcda818f5a75769a21f"
+    },
+    {
+      "path": "frontend/src/api/threadContext.ts",
+      "bytes": 1518,
+      "sha256": "dd9c37cee51ec4e87840d4356c0523b2d9a5de94edca84e0b2bdac7e6cd18c23"
+    },
+    {
+      "path": "frontend/src/components/ThreadMemory.test.tsx",
+      "bytes": 1679,
+      "sha256": "08079b178d2d60a0363ac663ef0ed55841400793975ca8aec6f3150ae795dc6a"
+    },
+    {
+      "path": "frontend/src/components/ThreadMemory.tsx",
+      "bytes": 3441,
+      "sha256": "46867480f03be0b7978462848e70533d7cf0d6b1868ef42bae3ada0f54909f9b"
+    },
+    {
+      "path": "frontend/tests/multiturn.spec.ts",
+      "bytes": 11411,
+      "sha256": "166d042fbd1e5c86a5d96f876c04e0c66cd9ade268cf5a76b0528a6051004a4e"
+    }
+  ],
+  "content_tree_sha256": "e8473df69e26eace29ffc769bc91426bc672069fe779a320e5e14dd3918d1647"
+}

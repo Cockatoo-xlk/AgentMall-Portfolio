@@ -1,0 +1,14 @@
+{
+  "scope": "FROZEN_PRODUCT_77_BEFORE_CI_ONLY_COMMIT",
+  "source_sha": "77b215878edbce50ce107c6e77e31de4d2044ff9",
+  "product_fingerprint": "1e54c1f0d0b76ff0a975fbcc9938008336febbf1a1c8c5564253a23f4a901e27",
+  "original_worktree_clean": true,
+  "original_head": "77b215878edbce50ce107c6e77e31de4d2044ff9",
+  "protected_product_unchanged": true,
+  "source_files_unchanged": 528,
+  "history_rewrite": false,
+  "paid_requests": 0,
+  "real_key_read": false,
+  "original_failure_ledger_sha256": "cd7ddfeb548d40cacef56773af11d07b51a8b3b60e1dfc84ebc694fdfcc30374",
+  "original_clock_summary_sha256": "b724448365535efd97d9422b860080e716fbed65b1a6ba7a60f30e55acab1028"
+}

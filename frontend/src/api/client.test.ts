@@ -119,3 +119,53 @@ it('parses integer cents without accepting floating-point or exponent input', ()
   expect(() => parseBudget('0.001')).toThrow()
   expect(money(19900)).toBe('¥199.00')
 })
+
+describe('event stream', () => {
+  it('delivers a complete frame before EOF and reassembles split UTF-8', async () => {
+    let body!: ReadableStreamDefaultController<Uint8Array>
+    const response = new Response(new ReadableStream<Uint8Array>({
+      start(controller) { body = controller },
+    }), { headers: { 'Content-Type': 'text/event-stream' } })
+    const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response)
+    const received = vi.fn()
+    const done = new ApiClient('memory-token').stream('/agent/runs/r/events/stream?after_seq=5', received, new AbortController().signal)
+    const bytes = new TextEncoder().encode(': heartbeat\n\nid: 6\nevent: run_event\ndata: {"seq":6,"value":"路由"}\n\n')
+    const split = bytes.indexOf(232) + 1
+    body.enqueue(bytes.slice(0, split))
+    body.enqueue(bytes.slice(split))
+    await vi.waitFor(() => expect(received).toHaveBeenCalledWith('run_event', '{"seq":6,"value":"路由"}'))
+    body.close()
+    await done
+    expect(fetch.mock.calls[0][0]).toBe('/api/v1/agent/runs/r/events/stream?after_seq=5')
+    expect(new Headers(fetch.mock.calls[0][1]?.headers).get('Authorization')).toBe('Bearer memory-token')
+  })
+
+  it('ends the authenticated session on 401 or in-stream expiry', async () => {
+    const fetch = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(new Response(null, { status: 401 }))
+      .mockResolvedValueOnce(new Response('event: auth_expired\ndata: {}\n\n', {
+        headers: { 'Content-Type': 'text/event-stream' },
+      }))
+    const expired = vi.fn()
+    const client = new ApiClient('token', expired)
+    for (let i = 0; i < 2; i++) {
+      await expect(client.stream('/agent/stream', vi.fn(), new AbortController().signal)).rejects.toMatchObject({ status: 401 })
+    }
+    expect(expired).toHaveBeenCalledTimes(2)
+    expect(fetch).toHaveBeenCalledTimes(2)
+  })
+})
+
+it('posts a merchant question in the body with memory auth and streams read progress without retries', async () => {
+  const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('event: progress\ndata: {"phase":"tool"}\n\n', { headers: { 'Content-Type': 'text/event-stream' } }))
+  const receive=vi.fn()
+  await new ApiClient('merchant-memory-token').stream('/merchant/copilot/analyze/stream', receive, new AbortController().signal, { question: '待发货订单' })
+  const [url, options] = fetch.mock.calls[0]
+  expect(url).toBe('/api/v1/merchant/copilot/analyze/stream')
+  expect(options?.method).toBe('POST')
+  expect(options?.body).toBe(JSON.stringify({question:'待发货订单'}))
+  expect(new Headers(options?.headers).get('Authorization')).toBe('Bearer merchant-memory-token')
+  expect(String(url)).not.toContain('token')
+  expect(receive).toHaveBeenCalledWith('progress','{"phase":"tool"}')
+  expect(fetch).toHaveBeenCalledOnce()
+})

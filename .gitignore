@@ -51,3 +51,33 @@ frontend/playwright-report/
 
 # T13-R2 private publication audit working files.
 /.t13-r2/
+
+# T14-P0 owned local verification and raw synthetic traces.
+/.t14-p0/
+
+# T14-P1 local test resources and private raw receipts
+/.t14-p1/
+
+# Private Live Playground state, approvals, budgets and local verification
+.playground/
+.t15-a/
+
+# T15-C isolated offline validation and private evidence audits
+/.t15-c/
+.superpowers/
+/test-results/
+
+# T15-C1 private environment/clock diagnostics and test receipts
+/.t15-c1/
+
+# Local release audit originals and tooling
+/.t15-d1/
+
+# Private T16 offline receipts
+.t16-a/
+
+# Default browser test receipts are local raw evidence.
+/evidence/
+
+# Tooling cache created by root-level Vitest invocations.
+/node_modules/

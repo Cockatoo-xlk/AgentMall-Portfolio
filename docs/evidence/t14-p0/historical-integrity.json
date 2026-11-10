@@ -1,0 +1,84 @@
+{
+  "private_files": {
+    "files_checked": 2074,
+    "changed": [],
+    "match": true
+  },
+  "public_files": {
+    "files_checked": 297,
+    "changed": [],
+    "match": true
+  },
+  "private_head": {
+    "actual": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33",
+    "expected": "3c0ef098e7f10c2f1750cc88f2b725dbb8281e33"
+  },
+  "public_main": {
+    "actual": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "expected": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf"
+  },
+  "public_head": {
+    "actual": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "expected": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf"
+  },
+  "private_refs_sha256": {
+    "actual": "161ccf18aee4c67d58e468b473694d9040eb247e722678067dc96a806a0a5e19",
+    "expected": "161ccf18aee4c67d58e468b473694d9040eb247e722678067dc96a806a0a5e19"
+  },
+  "private_objects_sha256": {
+    "actual": "a55c367cc118709693fc23a08c7ec06a7a53fa7bba43fa5f85d26a014a29a23d",
+    "expected": "a55c367cc118709693fc23a08c7ec06a7a53fa7bba43fa5f85d26a014a29a23d"
+  },
+  "private_config": {
+    "actual": "6ca7fe121ddd928e89ceaff177e16319341f3ba4c2f920d91c9469e2d21e56bf",
+    "expected": "6ca7fe121ddd928e89ceaff177e16319341f3ba4c2f920d91c9469e2d21e56bf"
+  },
+  "private_index": {
+    "actual": "a1f267cea6ab8e3d15d92825668fee69e073e92baca12fd2b34fc7f4317387f5",
+    "expected": "a1f267cea6ab8e3d15d92825668fee69e073e92baca12fd2b34fc7f4317387f5"
+  },
+  "historical_groups": {
+    "original_203": {
+      "files_checked": 203,
+      "changed": [],
+      "match": true
+    },
+    "expanded_1479": {
+      "files_checked": 1479,
+      "changed": [],
+      "match": true
+    },
+    "protected_files": {
+      "files_checked": 1595,
+      "changed": [],
+      "match": true
+    }
+  },
+  "r5_tree": {
+    "files": 297,
+    "actual": "8da9a5c18674520dab92195c279a5faf86c7f710fafe7575697ee0309e687508",
+    "expected": "8da9a5c18674520dab92195c279a5faf86c7f710fafe7575697ee0309e687508"
+  },
+  "existing_containers": [
+    {
+      "name": "/agentmall-portfolio-postgres-1",
+      "id": "82e6c6c63c5b10dbfe43eb71e19b88b24c8496e796ec220c45828c950c74a6bf",
+      "running": true,
+      "unchanged": true
+    },
+    {
+      "name": "/agentmall-rag-postgres-1",
+      "id": "e6ebeb01e6879bc3b38bf421b3b91a9550410e2152af5ee32b5f4ab1940e64a3",
+      "running": true,
+      "unchanged": true
+    },
+    {
+      "name": "/agentmall-postgres-1",
+      "id": "7d11054c039ac63901495d0cffbfa86d00cc7e880fe9b50a2aa860bce5b08c2c",
+      "running": true,
+      "unchanged": true
+    }
+  ],
+  "owned_container_count": 0,
+  "pass": true
+}

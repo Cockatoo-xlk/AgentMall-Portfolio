@@ -1,6 +1,7 @@
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Query, Request, Response
 
 from agentmall.actions.routes import Key
 from agentmall.actions.schemas import ProposalDTO
@@ -8,6 +9,8 @@ from agentmall.aftersales import service
 from agentmall.aftersales.schemas import (
     CaseActionRequest,
     CaseDTO,
+    CaseFilters,
+    CasePage,
     EligibilityResult,
     ReasonCode,
     ReceiveRequest,
@@ -96,6 +99,18 @@ async def cancel(request: Request, actor: Actor, case_id: UUID, payload: Execute
             case_id=case_id,
         )
     return result
+
+
+@router.get("/merchant/after-sales", response_model=CasePage)
+async def merchant_cases(request: Request, actor: Actor, filters: Annotated[CaseFilters, Query()]):
+    async with request.app.state.sessions.begin() as session:
+        return await service.list_merchant_cases(session, actor, filters)
+
+
+@router.get("/merchant/after-sales/{case_id}", response_model=CaseDTO)
+async def merchant_case(request: Request, actor: Actor, case_id: UUID):
+    async with request.app.state.sessions.begin() as session:
+        return await service.get_case(session, actor, case_id, merchant=True)
 
 
 @router.post("/merchant/after-sales/{case_id}/review", response_model=CaseDTO)

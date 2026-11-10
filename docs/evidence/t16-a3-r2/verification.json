@@ -1,0 +1,150 @@
+{
+  "status": "LOCAL_CI_HELPER_VERIFICATION_ONLY",
+  "helper_tests": 14,
+  "docker_execution": "NOT_RUN",
+  "remote_ci": "NOT_RUN",
+  "product_full_regression": "NOT_RUN",
+  "real_provider_requests": 0,
+  "real_key_read": false,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/ci",
+        "-p",
+        "test_t16_admission.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.34,
+      "raw_log": "0.log",
+      "sha256": "59e8a01b8a6799ed6739dee951858ab6909c564b18079fff6319644e0f703a83"
+    },
+    {
+      "command": [
+        ".playground/t16-r2-checks/venv/bin/ruff",
+        "check",
+        "--config",
+        "backend/pyproject.toml",
+        "scripts/ci/t16_admission.py",
+        "scripts/ci/t16_clock.py",
+        "scripts/ci/t16_evidence.py",
+        "scripts/ci/t16_models.py",
+        "scripts/ci/test_t16_admission.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.018,
+      "raw_log": "1.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "command": [
+        ".playground/t16-r2-checks/venv/bin/ruff",
+        "format",
+        "--config",
+        "backend/pyproject.toml",
+        "--check",
+        "scripts/ci/t16_admission.py",
+        "scripts/ci/t16_clock.py",
+        "scripts/ci/t16_evidence.py",
+        "scripts/ci/t16_models.py",
+        "scripts/ci/test_t16_admission.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.01,
+      "raw_log": "2.log",
+      "sha256": "f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1"
+    },
+    {
+      "command": [
+        ".playground/t16-r2-checks/actionlint",
+        "-color=false",
+        ".github/workflows/ci.yml",
+        ".github/workflows/t16-a3-admission.yml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.017,
+      "raw_log": "3.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.015,
+      "raw_log": "4.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "original_tool_red_results": [
+    {
+      "case": "initial missing modules",
+      "exit_code": 1,
+      "tests": 9,
+      "errors": 9,
+      "raw_log_sha256": null,
+      "evidence": "Tool output; no fabricated raw-file hash"
+    },
+    {
+      "case": "reject bad count receipts",
+      "exit_code": 1,
+      "tests": 10,
+      "failures": 1,
+      "raw_log_sha256": null
+    },
+    {
+      "case": "export despite exhausted test deadline",
+      "exit_code": 1,
+      "tests": 11,
+      "errors": 1,
+      "raw_log_sha256": null
+    },
+    {
+      "case": "independent review regressions",
+      "exit_code": 1,
+      "tests": 14,
+      "errors": 3,
+      "raw_log_sha256": null
+    },
+    {
+      "case": "overbroad Docker mock intercepted OpenSSL",
+      "exit_code": 1,
+      "tests": 14,
+      "errors": 1,
+      "raw_log_sha256": null
+    },
+    {
+      "case": "intermediate lint/style findings",
+      "exit_code": 1,
+      "raw_log_sha256": null,
+      "resolution": "Formatted and checked with frozen lock Ruff0.17.3 and project config; parent workstation config not used"
+    },
+    {
+      "case": "overbroad local lint invocation with backend config against frozen bootstrap",
+      "exit_code": 1,
+      "raw_log_sha256": "66f6330dda9626092a64227a03bc389bdc26764183ac2953e436fed1e49dcec4",
+      "reason": "Existing frozen scripts/ci/bootstrap.py line28 is 104 chars. New helpers use backend lint config; existing full CI Ruff command remains unchanged. Do not edit frozen bootstrap or weaken CI."
+    },
+    {
+      "case": "BGE Docker exec client termination is not container fencing",
+      "exit_code": 1,
+      "tests": 14,
+      "failures": 1,
+      "raw_log_sha256": null,
+      "resolution": "Cannot mark workload stopped or unpause DB without acknowledged container pause/kill. Covered in the same pause-timeout regression test."
+    }
+  ],
+  "tested_files_sha256": {
+    "scripts/ci/t16_admission.py": "eca20e167779337637d9b649a244ece15e370f00c8c7d9ab6e31f630dc690265",
+    "scripts/ci/t16_clock.py": "854040ced4c9bf2993ae794617cd0029e48eda4478e982b11b68d6d0879457d3",
+    "scripts/ci/t16_evidence.py": "e98d54a84ca9dcefd8fa3666d92b775cca170dbe3368546c71f0cd546593e5c0",
+    "scripts/ci/t16_models.py": "78c44a1691a04bf0222aa7ae02c14770403fc4eab0ae5a53c66b0570fc0f09e8",
+    "scripts/ci/test_t16_admission.py": "eaad2c0aa9f1f08b409508a8112f0f51a4876f36acced67b1c079c20b83a8c98"
+  }
+}

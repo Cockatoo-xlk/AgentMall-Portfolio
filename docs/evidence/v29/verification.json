@@ -1,0 +1,364 @@
+{
+  "status": "AGENTMALL_V29_BUNDLE_REPLANNING_READY",
+  "classification": "REVIEWED_PUBLIC_EVIDENCE / SYNTHETIC_TEST_DATA",
+  "base_commit": "8a8d54bd7b21d7e084c7a8d02f312d64f0203b4b",
+  "branch": "codex/v2-bundle-replanning",
+  "commit_binding": "Containing Git commit; base SHA is not the modified source SHA. Source hash excludes docs to avoid self-reference.",
+  "source_manifest_sha256": "7ce7c668270f38ad24f72b66596a4c1f133d2d813d2095d45eba8cce0e696949",
+  "source_files": 379,
+  "source_hash_format": "UTF-8 sorted path NUL decimal byte size NUL sha256 LF; backend source/tests, frontend source/tests, evals, scripts, Python/Node manifests/locks, Playwright config",
+  "platform": "Local Docker Desktop Linux aarch64; independent PostgreSQL17/pgvector; official Checkpointer",
+  "models": "MockTransport / Fixture; Fixture Embedding",
+  "counts": {
+    "pytest": {
+      "passed": 1038,
+      "skipped": 14,
+      "failed": 0,
+      "new_v29_cases": 22
+    },
+    "vitest": {
+      "passed": 104,
+      "new_v29_cases": 2
+    },
+    "playwright": {
+      "passed": 113,
+      "failed": 0,
+      "retries": 0,
+      "new_v29_cases": 1
+    }
+  },
+  "receipts": [
+    {
+      "label": "review-green",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:09:33.977021+00:00",
+      "seconds": 27.235,
+      "log_sha256": "5a985e7b37af25f3c113c479749d523103a7a0bca2403f27985850debaf32ab0"
+    },
+    {
+      "label": "pytest-full-final",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:18:06.140703+00:00",
+      "seconds": 324.678,
+      "log_sha256": "234d2a5b904f71e253626607914d633c077376365e1769e77e93b3a0effcc68c"
+    },
+    {
+      "label": "vitest-full",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:10:46.447893+00:00",
+      "seconds": 0.878,
+      "log_sha256": "be95f1faffdbbb80e6c38a3c4ba3767161bd19f03f5f6084747cdcf8fb0de8a2"
+    },
+    {
+      "label": "playwright-full",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:11:54.999580+00:00",
+      "seconds": 209.885,
+      "log_sha256": "5d2b286c76f692e1cc5f0921817f080826589c5376f19454053681467e3e95a0"
+    },
+    {
+      "label": "ruff-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:19:44.830979+00:00",
+      "seconds": 0.17,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "label": "format-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:19:45.020634+00:00",
+      "seconds": 0.116,
+      "log_sha256": "e3ef58579eb566e7de49eea46e9563c2e14da7a5f45a42fd33f95010938b335b"
+    },
+    {
+      "label": "typecheck-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:19:45.154384+00:00",
+      "seconds": 1.955,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "label": "eslint-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:19:47.133115+00:00",
+      "seconds": 1.146,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "label": "build-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T17:19:48.305275+00:00",
+      "seconds": 2.166,
+      "log_sha256": "b36d5dbfe49dda7b03967fe9d326bed04e4f20346882d46c4305cf999124bab9"
+    }
+  ],
+  "first_full_backend": {
+    "passed": 1007,
+    "failed": 31,
+    "skipped": 14,
+    "cause": "Private test wrapper omitted the required project .env.rag configuration; no product code changed between complete runs",
+    "receipt": {
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T17:10:45.319146+00:00",
+      "seconds": 334.189,
+      "log_sha256": "292e2534ed3f42b638f2b16996e71084b47bfff0dc22763b634ed8413d63b4a3"
+    }
+  },
+  "retained_failed_receipts": [
+    {
+      "receipt": "browser-target.json",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "bundle-replanning.spec.ts"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T17:04:26.812555+00:00",
+      "seconds": 14.849,
+      "log_sha256": "9de5560c5482505eb35fffb969ea12254131edd820d9b3cc0a2be2c57bd1d3de"
+    },
+    {
+      "receipt": "cheaper-merge-red.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py",
+        "-k",
+        "cheaper_predicate"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T17:03:08.847990+00:00",
+      "seconds": 2.748,
+      "log_sha256": "ce7b8923568e75e35a793b3866a0590cff95c94598d40f05138a1cd773ab26e6"
+    },
+    {
+      "receipt": "pytest-full.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T17:10:45.319146+00:00",
+      "seconds": 334.189,
+      "log_sha256": "292e2534ed3f42b638f2b16996e71084b47bfff0dc22763b634ed8413d63b4a3"
+    },
+    {
+      "receipt": "review-red.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py",
+        "-k",
+        "failed_add_replacement or typed_edit_cannot"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T17:08:34.261602+00:00",
+      "seconds": 5.653,
+      "log_sha256": "03ed96b410c8638106e492a9fc1c01b4442ac9dda5aedb8491ae9671587999ba"
+    },
+    {
+      "receipt": "revision-red.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py",
+        "-x"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T16:47:42.537654+00:00",
+      "seconds": 4.495,
+      "log_sha256": "934ab79b2b0957c663080bf11faa66ef8f6f5c96333d80770489274b74897b35"
+    },
+    {
+      "receipt": "revision-target-1.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T16:50:30.194399+00:00",
+      "seconds": 8.759,
+      "log_sha256": "f49b1c39bf8ce9b5cf622956eb08954714ebb746b6df137242c59f5d9a79999b"
+    },
+    {
+      "receipt": "revision-target-2.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T16:52:14.505425+00:00",
+      "seconds": 18.58,
+      "log_sha256": "c1b791a7a8ecbe0d4268b098ad11054dc662c5d4a9919c52b1b121db6b7fa79d"
+    },
+    {
+      "receipt": "revision-target-3.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T16:58:59.146700+00:00",
+      "seconds": 42.903,
+      "log_sha256": "00c404f8b1c0c8b0032c3dcd322718cace11abf09f60df261381be24890ba0f9"
+    },
+    {
+      "receipt": "revision-target-4.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T17:01:17.935222+00:00",
+      "seconds": 45.09,
+      "log_sha256": "75d6da318d6010e2f52a5d002db3f768eda0b931dc7c50a2227bbaaf95ea91b8"
+    },
+    {
+      "receipt": "revision-target-5.json",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "-q",
+        "backend/tests/test_bundle_replanning.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T17:04:11.674708+00:00",
+      "seconds": 47.633,
+      "log_sha256": "2b2aef00a5f8da187e7398173898d681f9dec3df6a036d13d80aad8f1fd3cc0d"
+    },
+    {
+      "receipt": "ui-red.json",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test",
+        "--",
+        "BundlePanel"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T16:59:22.222473+00:00",
+      "seconds": 0.876,
+      "log_sha256": "20a956111153010b94ddcfc46bdb6cd1083b6103e3a84561b7ea544d0720e1c2"
+    }
+  ],
+  "review": "Independent read-only final review; three issues reproduced and fixed: pending refresh carryover, unparsed typed prose, missing unresolved added category",
+  "existing_protected_files_unchanged": 100,
+  "dependency_lock_versions": "UNCHANGED",
+  "screenshot": {
+    "path": "docs/screenshots/v29/bundle-revision-diff.png",
+    "sha256": "c997477bcd1fd2f36851d37701681831f1dd7caa552967270a98e9f0fc657973",
+    "source": "Actual Chromium screenshot of MockTransport/Fixture session; TEST_OPERATOR checkout; no raw credentials or PNG text metadata"
+  },
+  "cleanup": {
+    "status": "OWNED_RESOURCES_REMOVED_INDEPENDENTLY_VERIFIED",
+    "remaining_test_and_checkpoint_schemas": 0,
+    "guest_containers_absent": true,
+    "postgres_container_absent": true,
+    "volume_absent": true,
+    "new_image_tag_absent": true,
+    "historical_container_ids_and_states_unchanged": 25,
+    "default_context": "colima",
+    "shared_build_cache_pruned": false,
+    "provider_requests": 0,
+    "provider_key_reads": 0,
+    "temporary_synthetic_credential_files_removed": true
+  },
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "push": 0,
+  "dispatch": 0,
+  "remote_ci": "NOT_RUN",
+  "real_llm_effectiveness": "NOT_RUN",
+  "real_bge_quality": "NOT_RUN",
+  "historical_eval_data": "UNCHANGED",
+  "journal_direct_snapshot_expansion": "NOT_RUN; original checkpoint/journal boundaries retained",
+  "private_originals": "PRIVATE_LOCAL_EVIDENCE; Git ignored"
+}

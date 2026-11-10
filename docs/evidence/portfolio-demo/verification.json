@@ -1,0 +1,253 @@
+{
+  "status": "AGENTMALL_PORTFOLIO_DEMO_READY",
+  "verified_utc": "2026-11-05T12:36:23.979348+00:00",
+  "base_commit": "e60ee792d6809dad696f27aac1e40272dd04f141",
+  "product_source_changed": false,
+  "mode": "MOCK_TRANSPORT",
+  "embedding": "FIXTURE_EMBEDDING_NOT_REAL_BGE",
+  "browser": "Codex in-app browser; actual React UI actions and screenshots",
+  "confirmation_operator": "TEST_OPERATOR",
+  "real_human_purchase_authorization_claimed": false,
+  "steps": [
+    {
+      "step": 1,
+      "result": "PASS",
+      "login": "synthetic buyer1",
+      "thread_id": "01058c35-de31-4df6-8c93-78562feb6059",
+      "mode_label": "DeepSeek SDK · MockTransport（离线，未调用真实模型）"
+    },
+    {
+      "step": 2,
+      "result": "PASS",
+      "input": "推荐300元以内的静音键盘，不要购买。",
+      "candidate_count": 2,
+      "context_version": 2,
+      "orders": 0,
+      "proposals": 0,
+      "confirmations": 0,
+      "payments": 0
+    },
+    {
+      "step": 3,
+      "result": "PASS",
+      "input": "我改主意了，要支持无线连接的，预算提高到400元。",
+      "context_version": 4,
+      "budget_cents": 40000,
+      "quiet_retained": true,
+      "connection": "无线",
+      "candidate_set_id": "df232fdd-d70e-578a-b220-3abb7315819a",
+      "candidates": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "name": "静音 K87",
+          "rank": 1,
+          "currency": "CNY",
+          "price_cents": 29900,
+          "catalog_version": 1
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "name": "静音 K98",
+          "rank": 2,
+          "currency": "CNY",
+          "price_cents": 39900,
+          "catalog_version": 1
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "name": "办公 K108",
+          "rank": 3,
+          "currency": "CNY",
+          "price_cents": 35900,
+          "catalog_version": 1
+        }
+      ],
+      "orders": 0
+    },
+    {
+      "step": 4,
+      "result": "PASS",
+      "input": "就买刚才推荐的第二款，一件，送演示宿舍。",
+      "run_status": "WAITING_INPUT",
+      "proposal_id": "591aa376-3c3a-4475-a6d4-57d1dbafb841",
+      "payload_hash": "bf46bc3be0650495acff47ada77f2f122dcddcd085f20795b5d70b02c39dab5b",
+      "orders_before_confirmation": 0,
+      "confirmations_before": 0,
+      "immutable_snapshot_unchanged_after_resume": true
+    },
+    {
+      "step": 5,
+      "result": "PASS",
+      "operator": "TEST_OPERATOR",
+      "order_id": "7459f333-d8f2-40b7-b38d-c2e1ea117e33",
+      "status": "PENDING_PAYMENT",
+      "product_id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+      "name": "静音 K98",
+      "quantity": 1,
+      "total_cents": 39900,
+      "currency": "CNY",
+      "on_hand": 20,
+      "reserved": 1,
+      "other_skus_unchanged": true,
+      "payments": 0,
+      "confirmation_consumed": true,
+      "confirmation_result_matches_order": true,
+      "execute_checkout_receipts": 1,
+      "business_events": 1
+    },
+    {
+      "step": 6,
+      "result": "PASS",
+      "order_page_opened": true,
+      "refresh_required_relogin": true,
+      "same_thread_restored_by_recovery_panel": true,
+      "open_historical_run_observed": true,
+      "order_count_after_refresh": 1,
+      "run_count": 3,
+      "event_counts_in_run_creation_order": [
+        26,
+        26,
+        33
+      ],
+      "event_sequence_contiguous_and_unique": true,
+      "checkpoint_count": 3,
+      "all_checkpoint_next_done": true,
+      "all_pending_writes_zero": true
+    }
+  ],
+  "mock_sdk_requests": 12,
+  "mock_usage": {
+    "input_tokens": 1200,
+    "output_tokens": 360,
+    "total_tokens": 1560
+  },
+  "mock_tokens_are_synthetic": true,
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "payments": 0,
+  "push": 0,
+  "dispatch": 0,
+  "rerun": 0,
+  "necessary_tests": {
+    "pytest_launcher": {
+      "passed": 4,
+      "exit_code": 0,
+      "log_sha256": "a00d95dfbc084b6eb22229f4a5b545b4452162a59797c0faa121535a79212580"
+    },
+    "vitest_related": {
+      "passed": 16,
+      "exit_code": 0,
+      "log_sha256": "3d2f7590ed3490536fef6a79a056aa6a8fdfe2f802593febf1f36645c5e37f08"
+    },
+    "compose_config_exit_code": 0,
+    "full_ci_rerun": false
+  },
+  "historical_ci": {
+    "run_id": 41972687787,
+    "attempt": 1,
+    "platform": "Ubuntu24.04 x86_64",
+    "pytest_passed": 834,
+    "pytest_skipped": 14,
+    "vitest_passed": 85,
+    "playwright_passed": 96,
+    "new_run_triggered": false,
+    "ci_commit": "e60ee792d6809dad696f27aac1e40272dd04f141",
+    "product_commit": "77b215878edbce50ce107c6e77e31de4d2044ff9"
+  },
+  "independent_sql": {
+    "transaction_read_only": "on",
+    "isolation": "repeatable read",
+    "scope": "single dedicated demo database; Order/OrderItem/Proposal binding/Confirmation/inventory/events",
+    "raw_sha256": "185e6352968f707126fc3c6d389c543473be0bbe331c0c886d4d2bb0ba91e528"
+  },
+  "cleanup": {
+    "demo_container_absent": true,
+    "pg_container_absent": true,
+    "volume_absent": true,
+    "network_absent": true,
+    "owned_image_tag_removed": true,
+    "original24_unchanged": true,
+    "private_evidence_retained": true,
+    "schema_cleanup_before_volume_removal": "NOT_COMPLETED",
+    "owned_database_disposed_with_volume": true,
+    "shared_build_cache_not_cleaned": true,
+    "shared_image_layers_physical_reclaim": "UNKNOWN",
+    "base_dependency_image_preserved": true
+  },
+  "known_issues": [
+    {
+      "issue": "Docker Hub Node metadata timeout on standard build",
+      "handling": "preserved failed log; reused trusted local CI dependency image, copied current source and synced locked backend dependencies offline"
+    },
+    {
+      "issue": "Graceful shutdown did not finish owned schema cleanup in30second stop window",
+      "cause": "UNKNOWN",
+      "handling": "after evidence capture, verified ownership and removed dedicated PG/Volume/Guest/network/new image tag; old24unchanged"
+    }
+  ],
+  "limitations": [
+    "Current T16 paid Live multi-turn NOT_RUN",
+    "Fixture vectors do not demonstrate semantic BGE quality",
+    "VIDEO_NOT_RECORDED",
+    "JOURNAL_DIRECT_PROOF_NOT_COVERED",
+    "No production SLA or real payment claim"
+  ],
+  "screenshots": [
+    {
+      "path": "docs/screenshots/portfolio/01-workspace.jpg",
+      "bytes": 84593,
+      "sha256": "39502d1e0f0d5d9f4f46158205109462a9af08a27eeb99a0c8c7bc28b6f684a5",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    },
+    {
+      "path": "docs/screenshots/portfolio/02-first-recommendation.jpg",
+      "bytes": 222740,
+      "sha256": "d49ae4fdf30822006b4d2a65bc144ac93d32347304c2d32d5a1fb8928457986c",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    },
+    {
+      "path": "docs/screenshots/portfolio/03-updated-candidates.jpg",
+      "bytes": 239825,
+      "sha256": "c98f04769935de7ca1564577be33c0607ce4d1e0c14a1c80c4c739fdb6982f47",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    },
+    {
+      "path": "docs/screenshots/portfolio/04-proposal-confirmation.jpg",
+      "bytes": 266745,
+      "sha256": "78c8f697fb5347da9beef6d6c5a714ddf39fa9d47be82a47c70fa5388390ddd8",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    },
+    {
+      "path": "docs/screenshots/portfolio/05-completed-timeline.jpg",
+      "bytes": 242097,
+      "sha256": "2dbdff06fcf349a2346d72f6b3da1bcf38e329a139f188fea83da27dab8c9e6a",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    },
+    {
+      "path": "docs/screenshots/portfolio/06-order-detail.jpg",
+      "bytes": 79669,
+      "sha256": "b4ebbf477d3224648c26803e4138042e81682b321bbf9b2ec1fdcd0d5ce263b3",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    },
+    {
+      "path": "docs/screenshots/portfolio/07-restored-thread.jpg",
+      "bytes": 251723,
+      "sha256": "f74dc26e0d0b91a8fe11bb505633c98b5b872e8c10e8cf819f95c44df42f5721",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    },
+    {
+      "path": "docs/screenshots/portfolio/08-history-timeline.jpg",
+      "bytes": 64557,
+      "sha256": "4c035677f8dd225ffbd5edc443cd70f2c2c510b56cad6646e5832d8309db23fe",
+      "mode": "MOCK_TRANSPORT + FIXTURE_EMBEDDING",
+      "contains": "synthetic catalogue, proposal, order or workflow UI only"
+    }
+  ]
+}

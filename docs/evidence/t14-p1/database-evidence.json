@@ -1,0 +1,2099 @@
+{
+  "classification": "SYNTHETIC_TEST_DATA / REVIEWED_PUBLIC_EVIDENCE",
+  "oracle": "/__test/facts creates an independent psycopg connection; post-commit SQL rows, never SQLAlchemy identity-map-only evidence",
+  "assertions": "frontend/tests/cart_checkout.spec.ts and backend/tests/test_checkout_cart_consumption.py",
+  "cases": [
+    {
+      "title": "cart checkout: lost committed response recovers receipt and cross-user access has no effect",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        2
+      ],
+      "cart_quantities": [],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "843f8016cfd612d21790780ca5e116b0c20cd02c69ab818c6de5ab391f285875"
+    },
+    {
+      "title": "cart checkout: add_b after quote preserves changed cart and old purchase snapshot",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        2
+      ],
+      "cart_quantities": [
+        1,
+        2
+      ],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "18831646b0bf4af238f78d33a772f753ff2deb127ad5de7b305a4826ab777ca0"
+    },
+    {
+      "title": "cart checkout: known proposal receipt refreshes stale badge without repeating execution",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        2
+      ],
+      "cart_quantities": [],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "25076bcaa4fe204a886e9214c03a62c483b81d4cbfeee10e7269d3503734bd9c"
+    },
+    {
+      "title": "cart checkout: failed latest GET preserves unknown state when older empty response arrives",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        3
+      ],
+      "cart_quantities": [
+        1
+      ],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "41f035097d9efc2e07a77328fc422991eb07b7122c2d494f832dab8db54133a4"
+    },
+    {
+      "title": "cart checkout: independent Agent order for same SKU never consumes existing cart",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        1
+      ],
+      "cart_quantities": [
+        1
+      ],
+      "reserved": 1,
+      "checkpoint_rows": 27,
+      "raw_sha256": "9038a20ef297570ff5708e9b989b88f028c89a16ceee81c61827b090cb5224a8"
+    },
+    {
+      "title": "cart checkout: item added after commit before response delivery is retained",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        3
+      ],
+      "cart_quantities": [
+        1
+      ],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "648e84f45a6ed506ce789410061a07e2f7f6817edb85a387e5dd174b96e749c5"
+    },
+    {
+      "title": "cart checkout: stock exhausted by another buyer cannot consume cart",
+      "status": "passed",
+      "orders": 2,
+      "cart_versions": [
+        1
+      ],
+      "cart_quantities": [
+        1
+      ],
+      "reserved": 20,
+      "checkpoint_rows": 0,
+      "raw_sha256": "efb7f7a270cf24c740129edf053e35b1feb8c447a5cec5b58cd34868f3e1ab79"
+    },
+    {
+      "title": "cart checkout: expired purchase proposal retains server cart",
+      "status": "passed",
+      "orders": 0,
+      "cart_versions": [
+        1
+      ],
+      "cart_quantities": [
+        1
+      ],
+      "reserved": 0,
+      "checkpoint_rows": 0,
+      "raw_sha256": "00b41886728956bca4829611c91e9dae9949bb60e928adf5186dd1626218d223"
+    },
+    {
+      "title": "cart checkout: reservation consumes server cart before payment and survives relogin",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        2
+      ],
+      "cart_quantities": [],
+      "reserved": 0,
+      "checkpoint_rows": 0,
+      "raw_sha256": "bd65c55451922f04e0afd832e5628e442c6e7da6e8b1edaf19f2d6ab6f02f2ec"
+    },
+    {
+      "title": "cart checkout: failed cart refresh keeps order success and unknown quantity until GET recovery",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        2
+      ],
+      "cart_quantities": [],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "08a9d488abe4fa6f4f1eeac0e1a6b767e5f53c448aad0ab07f68f2ed09d0f619"
+    },
+    {
+      "title": "cart checkout: remove_readd_a after quote preserves changed cart and old purchase snapshot",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        3
+      ],
+      "cart_quantities": [
+        2
+      ],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "f3e120cbba2bc44d96993684d447a851a075bb1b984378ab63431b42e1721928"
+    },
+    {
+      "title": "cart checkout: modify_a after quote preserves changed cart and old purchase snapshot",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        2
+      ],
+      "cart_quantities": [
+        2
+      ],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "b520d358c7ba64516b23fd1e7f140be859d858886b5eeb8c7f5f6261bd2d229a"
+    },
+    {
+      "title": "cart checkout: rejected purchase proposal retains server cart",
+      "status": "passed",
+      "orders": 0,
+      "cart_versions": [
+        1
+      ],
+      "cart_quantities": [
+        1
+      ],
+      "reserved": 0,
+      "checkpoint_rows": 0,
+      "raw_sha256": "b0e5680e4a92b5244a8fc602de0f83dde179f66e37e2f714165149e3d7ebdf29"
+    },
+    {
+      "title": "cart checkout: injected precommit failure rolls back cart then explicit retry commits once",
+      "status": "passed",
+      "orders": 1,
+      "cart_versions": [
+        2
+      ],
+      "cart_quantities": [],
+      "reserved": 1,
+      "checkpoint_rows": 0,
+      "raw_sha256": "c2cec6d0c4b0b486e2cf73249f6566336a43380c9c7feb3ba0adbbb01a3ad048"
+    }
+  ],
+  "scenarios": {
+    "cart-agent-independent-preserved": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 27,
+      "cart_rows": [
+        {
+          "id": "f4e9820c-7186-4c3c-a7e4-b4519b4069e4",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 1
+        }
+      ],
+      "cart_item_rows": [
+        {
+          "cart_id": "f4e9820c-7186-4c3c-a7e4-b4519b4069e4",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "quantity": 1
+        }
+      ],
+      "order_rows": [
+        {
+          "id": "c625153a-5d4b-41c7-baf9-8ca1bdbd30ae",
+          "proposal_id": "98b42150-b417-4bb3-97fe-b3a887c317d0",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:37.246256+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "e2e52785-01a7-4dbb-a919-130b8762e65d",
+          "origin_request_id": "e955d44f-8e78-41e8-ac6c-bdcb0917af8f",
+          "action_type": "CHECKOUT",
+          "status": "PENDING",
+          "expires_at": "2026-10-31T19:05:35.825657+00:00",
+          "payload_hash": "1357a7a38d4240a006adb2c48ab78ba6cce5e95d745bf7c99e7ebf6a965843b6",
+          "verified_cart_source": {
+            "cart_id": "f4e9820c-7186-4c3c-a7e4-b4519b4069e4",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        {
+          "id": "98b42150-b417-4bb3-97fe-b3a887c317d0",
+          "origin_request_id": "45e282de-d61a-56ad-bb24-967e1b3520b6",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:36.530481+00:00",
+          "payload_hash": "6f769fd78b1d991e3bb76d2691475c99df77ea58469f93acf77ebca13591da78",
+          "verified_cart_source": null
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "1814b4b1-3685-47f7-baeb-55e20f197c54",
+          "proposal_id": "98b42150-b417-4bb3-97fe-b3a887c317d0",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:37.246256+00:00",
+          "result_ref": "c625153a-5d4b-41c7-baf9-8ca1bdbd30ae"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "f2ae988d-4fbc-4d90-8ec9-a90b07844a4b",
+          "action_id": "98b42150-b417-4bb3-97fe-b3a887c317d0",
+          "operation": "execute_checkout",
+          "key": "t09:execute:98b42150-b417-4bb3-97fe-b3a887c317d0",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "c625153a-5d4b-41c7-baf9-8ca1bdbd30ae",
+            "action_id": "98b42150-b417-4bb3-97fe-b3a887c317d0",
+            "created_at": "2026-10-31T19:00:37.246256Z",
+            "resource_id": "c625153a-5d4b-41c7-baf9-8ca1bdbd30ae",
+            "total_cents": 29900,
+            "cart_consumption": "NOT_APPLICABLE"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "4244a42c-656d-4ea1-a997-09cec31859e0",
+          "aggregate_id": "c625153a-5d4b-41c7-baf9-8ca1bdbd30ae",
+          "action_id": "98b42150-b417-4bb3-97fe-b3a887c317d0",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [
+        {
+          "id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "thread_id": "3b10f384-7f7d-4e3a-a138-8a1abaa6bbed",
+          "status": "COMPLETED"
+        }
+      ],
+      "run_event_rows": [
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 1,
+          "event_type": "run_created",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 2,
+          "event_type": "run_activated",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 3,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 4,
+          "event_type": "model_start",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 5,
+          "event_type": "model_end",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 6,
+          "event_type": "route_decision",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 7,
+          "event_type": "handoff",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 8,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 9,
+          "event_type": "model_start",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 10,
+          "event_type": "model_end",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 11,
+          "event_type": "model_start",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 12,
+          "event_type": "model_end",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 13,
+          "event_type": "model_context",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 14,
+          "event_type": "tool",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 15,
+          "event_type": "model_context",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 16,
+          "event_type": "model_final",
+          "agent": "shopping"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 17,
+          "event_type": "specialist_result",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 18,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 19,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 20,
+          "event_type": "model_start",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 21,
+          "event_type": "model_end",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 22,
+          "event_type": "route_decision",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 23,
+          "event_type": "handoff",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 24,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 25,
+          "event_type": "model_start",
+          "agent": "order"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 26,
+          "event_type": "model_end",
+          "agent": "order"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 27,
+          "event_type": "model_context",
+          "agent": "order"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 28,
+          "event_type": "tool",
+          "agent": "order"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 29,
+          "event_type": "specialist_result",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 30,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 31,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 32,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 33,
+          "event_type": "run_state",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 34,
+          "event_type": "resume_received",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 35,
+          "event_type": "run_activated",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 36,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 37,
+          "event_type": "business_receipt",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 38,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 39,
+          "event_type": "model_start",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 40,
+          "event_type": "model_end",
+          "agent": "supervisor"
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 41,
+          "event_type": "route_decision",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 42,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 43,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 44,
+          "event_type": "node_completed",
+          "agent": null
+        },
+        {
+          "run_id": "82b30d25-4068-4c4b-90e8-b3403b8a94b5",
+          "seq": 45,
+          "event_type": "run_state",
+          "agent": null
+        }
+      ],
+      "raw_facts_sha256": "dd7d46c723d7e089a8cb7df8293757610459244b6e65af49b749114a022f7358"
+    },
+    "cart-consumed-before-payment": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "dd1ca2ae-d931-4dd5-8adc-634a02d43e6a",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 2
+        }
+      ],
+      "cart_item_rows": [],
+      "order_rows": [
+        {
+          "id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+          "proposal_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:29.128861+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "origin_request_id": "2dabc0b8-41a2-47e2-80ee-c935cd645184",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:28.992358+00:00",
+          "payload_hash": "b32545bb9f05bba98ad0f1f6d2da3ace61fd91de0e0dc2c086f933171e2c7def",
+          "verified_cart_source": {
+            "cart_id": "dd1ca2ae-d931-4dd5-8adc-634a02d43e6a",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "f9ee7b1b-b7a0-414f-946f-e15a35bd883e",
+          "proposal_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:29.128861+00:00",
+          "result_ref": "f0b376c4-ee65-4215-9245-ea57bddacaef"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "6811f881-55e4-429e-8fec-a932fb1f557b",
+          "action_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "operation": "execute_checkout",
+          "key": "web:order:3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+            "action_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+            "created_at": "2026-10-31T19:00:29.128861Z",
+            "resource_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+            "total_cents": 29900,
+            "cart_consumption": "CONSUMED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "06f2b0af-5663-40dd-9b32-7d89a6300f33",
+          "aggregate_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+          "action_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "2a1e9730341d98d3a38bca964c2bf94159d3f9a46addb4a6acebce468d642c9a"
+    },
+    "cart-empty-after-payment-relogin": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 2,
+      "confirmations": 2,
+      "reserved": 0,
+      "receipts": 2,
+      "events": 2,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "dd1ca2ae-d931-4dd5-8adc-634a02d43e6a",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 2
+        }
+      ],
+      "cart_item_rows": [],
+      "order_rows": [
+        {
+          "id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+          "proposal_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "status": "PAID",
+          "version": 2,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:29.128861+00:00",
+          "paid_at": "2026-10-31T19:00:29.586875+00:00"
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "origin_request_id": "2dabc0b8-41a2-47e2-80ee-c935cd645184",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:28.992358+00:00",
+          "payload_hash": "b32545bb9f05bba98ad0f1f6d2da3ace61fd91de0e0dc2c086f933171e2c7def",
+          "verified_cart_source": {
+            "cart_id": "dd1ca2ae-d931-4dd5-8adc-634a02d43e6a",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        },
+        {
+          "id": "771af8b2-dd6a-4287-b612-d0d2b86a7ce9",
+          "origin_request_id": "0b740520-364c-4357-a7ee-1ee548036f86",
+          "action_type": "MOCK_PAYMENT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:29.473742+00:00",
+          "payload_hash": "0543731198f361b8c169aab73658adf689afa515643d8f2cb8050eeabdef00a7",
+          "verified_cart_source": null
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "f9ee7b1b-b7a0-414f-946f-e15a35bd883e",
+          "proposal_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:29.128861+00:00",
+          "result_ref": "f0b376c4-ee65-4215-9245-ea57bddacaef"
+        },
+        {
+          "id": "4946ed3b-d223-4abd-b19d-0435f975932f",
+          "proposal_id": "771af8b2-dd6a-4287-b612-d0d2b86a7ce9",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:29.586875+00:00",
+          "result_ref": "f0b376c4-ee65-4215-9245-ea57bddacaef"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "6811f881-55e4-429e-8fec-a932fb1f557b",
+          "action_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "operation": "execute_checkout",
+          "key": "web:order:3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+            "action_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+            "created_at": "2026-10-31T19:00:29.128861Z",
+            "resource_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+            "total_cents": 29900,
+            "cart_consumption": "CONSUMED"
+          }
+        },
+        {
+          "id": "3d98c464-b5e5-4d1d-8b9b-229623413eab",
+          "action_id": "771af8b2-dd6a-4287-b612-d0d2b86a7ce9",
+          "operation": "execute_mock_payment",
+          "key": "web:payment:execute:0b740520-364c-4357-a7ee-1ee548036f86",
+          "result": {
+            "status": "SUCCEEDED",
+            "currency": "CNY",
+            "order_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+            "action_id": "771af8b2-dd6a-4287-b612-d0d2b86a7ce9",
+            "created_at": "2026-10-31T19:00:29.586875Z",
+            "payment_id": "a9cc3053-4c07-4847-8980-7a816c530345",
+            "resource_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+            "total_cents": 29900
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "06f2b0af-5663-40dd-9b32-7d89a6300f33",
+          "aggregate_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+          "action_id": "3df03acd-75c7-46bb-9c04-40eab7e58c0a",
+          "event_type": "ORDER_CREATED"
+        },
+        {
+          "id": "f9526dcb-57f6-4589-b8a2-f5220acc3743",
+          "aggregate_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+          "action_id": "771af8b2-dd6a-4287-b612-d0d2b86a7ce9",
+          "event_type": "ORDER_PAID"
+        }
+      ],
+      "payment_rows": [
+        {
+          "id": "a9cc3053-4c07-4847-8980-7a816c530345",
+          "order_id": "f0b376c4-ee65-4215-9245-ea57bddacaef",
+          "action_id": "771af8b2-dd6a-4287-b612-d0d2b86a7ce9",
+          "status": "SUCCEEDED",
+          "amount_cents": 29900,
+          "provider": "mock"
+        }
+      ],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 19,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "3e636b38ee7678b7ffb82e9d049f65fddecc884a476f5d326c8ff9a28b5cad2b"
+    },
+    "cart-lost-response-recovered": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "574cd2fa-0c72-4af5-8da9-e9000849cc1d",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 2
+        }
+      ],
+      "cart_item_rows": [],
+      "order_rows": [
+        {
+          "id": "c850be28-f7f9-44ca-bbf0-6c5ebbf4b8d1",
+          "proposal_id": "cd33e7dc-398c-4d0a-b61b-d02c55a932c8",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:43.401419+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "cd33e7dc-398c-4d0a-b61b-d02c55a932c8",
+          "origin_request_id": "186da3dd-8a31-4886-86f6-a1cb763f66ea",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:43.257721+00:00",
+          "payload_hash": "83dc01210d6bb27500656763060bb38bf35a23f6e3fce506e81ba61ba71dce5e",
+          "verified_cart_source": {
+            "cart_id": "574cd2fa-0c72-4af5-8da9-e9000849cc1d",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "9c425eeb-ab19-4b01-9ba2-1a536aee71e0",
+          "proposal_id": "cd33e7dc-398c-4d0a-b61b-d02c55a932c8",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:43.401419+00:00",
+          "result_ref": "c850be28-f7f9-44ca-bbf0-6c5ebbf4b8d1"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "7db96257-679b-4d55-bd29-08eb2a26ec22",
+          "action_id": "cd33e7dc-398c-4d0a-b61b-d02c55a932c8",
+          "operation": "execute_checkout",
+          "key": "web:order:cd33e7dc-398c-4d0a-b61b-d02c55a932c8",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "c850be28-f7f9-44ca-bbf0-6c5ebbf4b8d1",
+            "action_id": "cd33e7dc-398c-4d0a-b61b-d02c55a932c8",
+            "created_at": "2026-10-31T19:00:43.401419Z",
+            "resource_id": "c850be28-f7f9-44ca-bbf0-6c5ebbf4b8d1",
+            "total_cents": 29900,
+            "cart_consumption": "CONSUMED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "314d07ce-8b60-4f75-80d3-f2913a40e77a",
+          "aggregate_id": "c850be28-f7f9-44ca-bbf0-6c5ebbf4b8d1",
+          "action_id": "cd33e7dc-398c-4d0a-b61b-d02c55a932c8",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "7ed7d9622ff2e3a2a39629b5d4eeb78575c796a2cf82a6e0eeadb7855cef91ab"
+    },
+    "cart-postcommit-new-item": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "3f0d9983-ccd8-4f21-8d4d-10159e674851",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 3
+        }
+      ],
+      "cart_item_rows": [
+        {
+          "cart_id": "3f0d9983-ccd8-4f21-8d4d-10159e674851",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "quantity": 1
+        }
+      ],
+      "order_rows": [
+        {
+          "id": "2074dc43-82f8-427a-ab09-f7c0b8fd5df7",
+          "proposal_id": "d780d562-bdf6-40eb-bacc-17ab17da8f27",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:34.888842+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "d780d562-bdf6-40eb-bacc-17ab17da8f27",
+          "origin_request_id": "4cc4871a-38f8-4fb1-8ab3-e9c872ea5142",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:34.670055+00:00",
+          "payload_hash": "bc751527118444e300c23cc94a676d65ee2efa5aebda8a88ad47f118406a5141",
+          "verified_cart_source": {
+            "cart_id": "3f0d9983-ccd8-4f21-8d4d-10159e674851",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "54a81178-a966-4a33-97e5-f90fa249bdb7",
+          "proposal_id": "d780d562-bdf6-40eb-bacc-17ab17da8f27",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:34.888842+00:00",
+          "result_ref": "2074dc43-82f8-427a-ab09-f7c0b8fd5df7"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "ed11d16d-015c-4c57-891b-49597f42d705",
+          "action_id": "d780d562-bdf6-40eb-bacc-17ab17da8f27",
+          "operation": "execute_checkout",
+          "key": "web:order:d780d562-bdf6-40eb-bacc-17ab17da8f27",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "2074dc43-82f8-427a-ab09-f7c0b8fd5df7",
+            "action_id": "d780d562-bdf6-40eb-bacc-17ab17da8f27",
+            "created_at": "2026-10-31T19:00:34.888842Z",
+            "resource_id": "2074dc43-82f8-427a-ab09-f7c0b8fd5df7",
+            "total_cents": 29900,
+            "cart_consumption": "CONSUMED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "b48a8122-c89e-4dc2-9304-b15270baeb65",
+          "aggregate_id": "2074dc43-82f8-427a-ab09-f7c0b8fd5df7",
+          "action_id": "d780d562-bdf6-40eb-bacc-17ab17da8f27",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "d8e3be088ade5b87d61aa4ce166addd2444f34fcabd151c7e6822c22b7d9da2f"
+    },
+    "cart-preserved-add_b": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "de0b1341-f104-47a2-b91e-fbc74f489b53",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 2
+        }
+      ],
+      "cart_item_rows": [
+        {
+          "cart_id": "de0b1341-f104-47a2-b91e-fbc74f489b53",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "quantity": 1
+        },
+        {
+          "cart_id": "de0b1341-f104-47a2-b91e-fbc74f489b53",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "quantity": 2
+        }
+      ],
+      "order_rows": [
+        {
+          "id": "b882ede6-d045-428f-99df-3fe473c07390",
+          "proposal_id": "04e96197-e39d-4459-ad06-8f6802904be7",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:31.499888+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "04e96197-e39d-4459-ad06-8f6802904be7",
+          "origin_request_id": "00f6c994-519d-4238-9008-d42afafc2d9e",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:31.298106+00:00",
+          "payload_hash": "0d639e993de75bb452184a0ad0712b28a1525d4cdf0fe50fe1a19cba15db2bc4",
+          "verified_cart_source": {
+            "cart_id": "de0b1341-f104-47a2-b91e-fbc74f489b53",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "67256a70-b15e-4646-a597-b61c2649be78",
+          "proposal_id": "04e96197-e39d-4459-ad06-8f6802904be7",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:31.499888+00:00",
+          "result_ref": "b882ede6-d045-428f-99df-3fe473c07390"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "c6a86c36-afb1-4c21-ab57-b62c89fa5db2",
+          "action_id": "04e96197-e39d-4459-ad06-8f6802904be7",
+          "operation": "execute_checkout",
+          "key": "web:order:04e96197-e39d-4459-ad06-8f6802904be7",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "b882ede6-d045-428f-99df-3fe473c07390",
+            "action_id": "04e96197-e39d-4459-ad06-8f6802904be7",
+            "created_at": "2026-10-31T19:00:31.499888Z",
+            "resource_id": "b882ede6-d045-428f-99df-3fe473c07390",
+            "total_cents": 29900,
+            "cart_consumption": "SKIPPED_CART_CHANGED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "b622f3d3-162d-4b5f-93cd-829f4d469a94",
+          "aggregate_id": "b882ede6-d045-428f-99df-3fe473c07390",
+          "action_id": "04e96197-e39d-4459-ad06-8f6802904be7",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "32fcbd510d25d5396cc00397e6d1c4e393f7961cb35a9793079d8da97d92d5fc"
+    },
+    "cart-preserved-modify_a": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "f8cd2957-4224-465f-b481-2638116cf31a",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 2
+        }
+      ],
+      "cart_item_rows": [
+        {
+          "cart_id": "f8cd2957-4224-465f-b481-2638116cf31a",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "quantity": 2
+        }
+      ],
+      "order_rows": [
+        {
+          "id": "5b9f0169-1458-40f3-ab96-ddbc534779ae",
+          "proposal_id": "ea72bdfd-bbc7-4521-a03d-64004751a7f4",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:32.542920+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "ea72bdfd-bbc7-4521-a03d-64004751a7f4",
+          "origin_request_id": "19fb65fe-74a5-431a-9606-43ff71fbf521",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:32.407937+00:00",
+          "payload_hash": "ba9d927fbf89724e4761a3f2f4acb9546fa4882532a7690ea736abb286f4dfbe",
+          "verified_cart_source": {
+            "cart_id": "f8cd2957-4224-465f-b481-2638116cf31a",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "f3afcd68-a8ad-48b8-a13a-2c39237a4a85",
+          "proposal_id": "ea72bdfd-bbc7-4521-a03d-64004751a7f4",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:32.542920+00:00",
+          "result_ref": "5b9f0169-1458-40f3-ab96-ddbc534779ae"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "665e2baf-de42-4caa-8e06-9cbd0bf4c50f",
+          "action_id": "ea72bdfd-bbc7-4521-a03d-64004751a7f4",
+          "operation": "execute_checkout",
+          "key": "web:order:ea72bdfd-bbc7-4521-a03d-64004751a7f4",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "5b9f0169-1458-40f3-ab96-ddbc534779ae",
+            "action_id": "ea72bdfd-bbc7-4521-a03d-64004751a7f4",
+            "created_at": "2026-10-31T19:00:32.542920Z",
+            "resource_id": "5b9f0169-1458-40f3-ab96-ddbc534779ae",
+            "total_cents": 29900,
+            "cart_consumption": "SKIPPED_CART_CHANGED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "0f9ca034-08c2-4d86-ac0c-31b0f95eb3bb",
+          "aggregate_id": "5b9f0169-1458-40f3-ab96-ddbc534779ae",
+          "action_id": "ea72bdfd-bbc7-4521-a03d-64004751a7f4",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "a3e81144513f1699f846521d835a64a12a5d802826dc5f530cd9569acbe9d2ae"
+    },
+    "cart-preserved-remove_readd_a": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "7f52940c-aa8a-47f8-876f-9b52d5a50c3a",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 3
+        }
+      ],
+      "cart_item_rows": [
+        {
+          "cart_id": "7f52940c-aa8a-47f8-876f-9b52d5a50c3a",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "quantity": 2
+        }
+      ],
+      "order_rows": [
+        {
+          "id": "42471f0b-98f3-43e7-9c1d-d72ed268f3ab",
+          "proposal_id": "8ea6b302-e148-4ffc-802c-6e815c4c9d06",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:33.661241+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "8ea6b302-e148-4ffc-802c-6e815c4c9d06",
+          "origin_request_id": "b3c6ecc5-3846-4c57-a137-a718ee1e512b",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:33.509996+00:00",
+          "payload_hash": "0223b1812d4dc47afc2cc90aad9d200e0589218b77c1a5dfffc57d6441b74fba",
+          "verified_cart_source": {
+            "cart_id": "7f52940c-aa8a-47f8-876f-9b52d5a50c3a",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "7440895f-f6fc-4c6d-bdef-c69822595b3b",
+          "proposal_id": "8ea6b302-e148-4ffc-802c-6e815c4c9d06",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:33.661241+00:00",
+          "result_ref": "42471f0b-98f3-43e7-9c1d-d72ed268f3ab"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "1c731332-d5fd-4c69-8fc8-e823374e46b2",
+          "action_id": "8ea6b302-e148-4ffc-802c-6e815c4c9d06",
+          "operation": "execute_checkout",
+          "key": "web:order:8ea6b302-e148-4ffc-802c-6e815c4c9d06",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "42471f0b-98f3-43e7-9c1d-d72ed268f3ab",
+            "action_id": "8ea6b302-e148-4ffc-802c-6e815c4c9d06",
+            "created_at": "2026-10-31T19:00:33.661241Z",
+            "resource_id": "42471f0b-98f3-43e7-9c1d-d72ed268f3ab",
+            "total_cents": 29900,
+            "cart_consumption": "SKIPPED_CART_CHANGED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "af327a30-9a13-4984-8031-ef3c5ee78474",
+          "aggregate_id": "42471f0b-98f3-43e7-9c1d-d72ed268f3ab",
+          "action_id": "8ea6b302-e148-4ffc-802c-6e815c4c9d06",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "1b641e997b3e9811d065b68502a0fa28f79eaf9e539eb670188c1ab779a0299e"
+    },
+    "cart-read-unknown": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 1,
+      "receipts": 1,
+      "events": 1,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "7c148b03-abff-4c1f-9338-d6c20a57b260",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 2
+        }
+      ],
+      "cart_item_rows": [],
+      "order_rows": [
+        {
+          "id": "d7c0dfb3-a626-4953-8c53-d08829b9e948",
+          "proposal_id": "983478af-e720-415a-b7ae-4d33c5ca21f6",
+          "status": "PENDING_PAYMENT",
+          "version": 1,
+          "total_cents": 29900,
+          "currency": "CNY",
+          "expires_at": "2026-10-31T19:15:45.792419+00:00",
+          "paid_at": null
+        }
+      ],
+      "proposal_rows": [
+        {
+          "id": "983478af-e720-415a-b7ae-4d33c5ca21f6",
+          "origin_request_id": "82354fd5-9510-4d4b-8c9d-4b312cbcd727",
+          "action_type": "CHECKOUT",
+          "status": "EXECUTED",
+          "expires_at": "2026-10-31T19:05:45.679834+00:00",
+          "payload_hash": "c6c8ceabf140883db5b92a23fb724c318937bb6ea8c29e7d126329b7fb1cce43",
+          "verified_cart_source": {
+            "cart_id": "7c148b03-abff-4c1f-9338-d6c20a57b260",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "3670c8cd-62d0-4d78-9882-55d71df25c0c",
+          "proposal_id": "983478af-e720-415a-b7ae-4d33c5ca21f6",
+          "decision": "approve",
+          "consumed_at": "2026-10-31T19:00:45.792419+00:00",
+          "result_ref": "d7c0dfb3-a626-4953-8c53-d08829b9e948"
+        }
+      ],
+      "receipt_rows": [
+        {
+          "id": "7482b0d4-d69e-4130-b737-ec7ef6277cab",
+          "action_id": "983478af-e720-415a-b7ae-4d33c5ca21f6",
+          "operation": "execute_checkout",
+          "key": "web:order:983478af-e720-415a-b7ae-4d33c5ca21f6",
+          "result": {
+            "status": "PENDING_PAYMENT",
+            "currency": "CNY",
+            "order_id": "d7c0dfb3-a626-4953-8c53-d08829b9e948",
+            "action_id": "983478af-e720-415a-b7ae-4d33c5ca21f6",
+            "created_at": "2026-10-31T19:00:45.792419Z",
+            "resource_id": "d7c0dfb3-a626-4953-8c53-d08829b9e948",
+            "total_cents": 29900,
+            "cart_consumption": "CONSUMED"
+          }
+        }
+      ],
+      "event_rows": [
+        {
+          "id": "97681101-15ef-430b-a73c-358ad03f4e92",
+          "aggregate_id": "d7c0dfb3-a626-4953-8c53-d08829b9e948",
+          "action_id": "983478af-e720-415a-b7ae-4d33c5ca21f6",
+          "event_type": "ORDER_CREATED"
+        }
+      ],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 1
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "93c012823f9672205478a10c5de7ce3754e94879886742d02189634bbfbdb334"
+    },
+    "cart-rollback-kept": {
+      "schema": "test_8095a4d45bf1473eb397573348f40138",
+      "checkpoint_schema": "cp_e412a8ce189141f196cad05b2430f986",
+      "fixture_mode": "fake-model-real-fastapi-postgresql",
+      "provider_http_requests": 0,
+      "real_model_calls": 0,
+      "blocked_external_attempts": 0,
+      "orders": 0,
+      "proposals": 1,
+      "confirmations": 1,
+      "reserved": 0,
+      "receipts": 0,
+      "events": 0,
+      "checkpoint_rows": 0,
+      "cart_rows": [
+        {
+          "id": "7abbbb87-d5c4-4ab1-8c38-a1bcf480a220",
+          "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "version": 1
+        }
+      ],
+      "cart_item_rows": [
+        {
+          "cart_id": "7abbbb87-d5c4-4ab1-8c38-a1bcf480a220",
+          "store_id": "00000000-0000-0000-0000-000000000001",
+          "product_id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "quantity": 1
+        }
+      ],
+      "order_rows": [],
+      "proposal_rows": [
+        {
+          "id": "2a7f1184-5c9e-4186-83b7-0696651ba16e",
+          "origin_request_id": "ad213669-05cb-4e82-b4c8-7db3dfcd96b0",
+          "action_type": "CHECKOUT",
+          "status": "APPROVED",
+          "expires_at": "2026-10-31T19:05:41.576710+00:00",
+          "payload_hash": "0139c8e2f9f81f7365a4fd8448a7d7a92e7aeb25ad5c756cb420bea23144945e",
+          "verified_cart_source": {
+            "cart_id": "7abbbb87-d5c4-4ab1-8c38-a1bcf480a220",
+            "user_id": "2413c9b8-847f-5212-bece-8527fa4f1642",
+            "version": 1,
+            "store_id": "00000000-0000-0000-0000-000000000001"
+          }
+        }
+      ],
+      "confirmation_rows": [
+        {
+          "id": "5addf21e-058e-410d-8497-ecf95ebf61e9",
+          "proposal_id": "2a7f1184-5c9e-4186-83b7-0696651ba16e",
+          "decision": "approve",
+          "consumed_at": null,
+          "result_ref": null
+        }
+      ],
+      "receipt_rows": [],
+      "event_rows": [],
+      "payment_rows": [],
+      "product_rows": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+          "on_hand": 20,
+          "reserved": 0
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "on_hand": 20,
+          "reserved": 0
+        }
+      ],
+      "run_rows": [],
+      "run_event_rows": [],
+      "raw_facts_sha256": "54718a5deca7ee52df03bdb462d527d480980b286da73d77dfe110f05a4351e7"
+    }
+  },
+  "backend_lock_reproduction": {
+    "red_exit": 1,
+    "red_observed_http": [
+      201,
+      503
+    ],
+    "green_exit": 0,
+    "green_test_count": 25,
+    "actual_observation_lines": [
+      "PG lock wait evidence: [{'pid': 9737, 'blockers': [9736]}, {'pid': 9739, 'blockers': [9737]}]",
+      "PG lock wait evidence: [{'pid': 9744, 'blockers': [9742]}, {'pid': 9742, 'blockers': [9741]}]",
+      ".PG lock wait evidence: [{'pid': 9747, 'blockers': [9746]}]",
+      "PG lock wait evidence: [{'pid': 9751, 'blockers': [9750]}]",
+      ".....PG lock wait evidence: [{'pid': 9789, 'blockers': [9788]}]",
+      ".PG lock wait evidence: [{'pid': 9792, 'blockers': [9791]}]",
+      "PG lock wait evidence: [{'pid': 9794, 'blockers': [9792]}, {'pid': 9792, 'blockers': [9791]}]",
+      "PG lock wait evidence: [{'pid': 9792, 'blockers': [9794]}]"
+    ],
+    "red_observation_lines": [
+      "PG lock wait evidence: [{'pid': 8895, 'blockers': [8894]}]",
+      "FPG lock wait evidence: [{'pid': 8906, 'blockers': [8905]}, {'pid': 8908, 'blockers': [8906]}]",
+      "PG lock wait evidence: [{'pid': 8906, 'blockers': [8908]}]"
+    ]
+  },
+  "transaction_rollback": "Test observes cart version2/empty inside attempted transaction, injects event failure, independent connection observes original version1/items and no order/reservation/consumed confirmation/receipt/event",
+  "legacy_and_source_free": "No source means NOT_APPLICABLE, even cart-like proposal_slot and same SKU",
+  "paid_model_requests": 0
+}

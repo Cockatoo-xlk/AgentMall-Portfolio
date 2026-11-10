@@ -1,0 +1,19 @@
+{
+  "markdown_files_checked": 12,
+  "relative_file_links": 95,
+  "broken_links": [],
+  "new_files_privacy_findings": [],
+  "excluded_private_artifacts": [
+    ".t14-p1/",
+    "backend/.venv/",
+    "frontend/node_modules/",
+    "frontend/.cache/",
+    "frontend/test-results/",
+    ".env.rag",
+    "PGDATA",
+    "raw Trace/Checkpoint/dialogue"
+  ],
+  "classification": "SYNTHETIC_TEST_DATA / REVIEWED_PUBLIC_EVIDENCE",
+  "scope": "Changed deliverables only, not a fresh audit of complete prior reachable Git history",
+  "status": "PASS"
+}

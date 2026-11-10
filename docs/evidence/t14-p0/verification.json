@@ -1,0 +1,203 @@
+{
+  "mode": "CI_OFFLINE_CORE",
+  "platform": "Local Docker Linux ARM64; not remote Ubuntu amd64",
+  "full_command": {
+    "name": "full-offline-ci-final",
+    "command": [
+      "docker",
+      "compose",
+      "-p",
+      "agentmall-t14-p0",
+      "-f",
+      "compose.ci.yaml",
+      "-f",
+      ".t14-p0/compose-owned.yaml",
+      "run",
+      "--name",
+      "agentmall-t14-p0-final-run",
+      "--rm",
+      "runner"
+    ],
+    "exit_code": 0,
+    "started_unix": 1793459993.4544158,
+    "elapsed_seconds": 418.721,
+    "log": ".t14-p0/full-offline-ci-final.log",
+    "log_sha256": "a612e06ed5b036f6744c2e98803fc5e7b58a1dfe6f4de4eb9dbafb496b9babce"
+  },
+  "steps": [
+    {
+      "name": "bootstrap",
+      "command": [
+        "/work/backend/.venv/bin/python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793459994.2105203,
+      "elapsed_seconds": 1.732,
+      "log_sha256": "e7b948b1bdd2cf042835d52dea2cb9a93e8b3650002b84d4d320372c598e2da3",
+      "raw_log_local": ".t14-p0/final-ci/bootstrap.txt"
+    },
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793459995.9492328,
+      "elapsed_seconds": 0.068,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "raw_log_local": ".t14-p0/final-ci/ruff.txt"
+    },
+    {
+      "name": "format",
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793459996.0179832,
+      "elapsed_seconds": 0.035,
+      "log_sha256": "a8974443d12f9736423157c869f658ab1b4fc18c2ff99f12bf2cb579052f9e5b",
+      "raw_log_local": ".t14-p0/final-ci/format.txt"
+    },
+    {
+      "name": "pytest",
+      "command": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793459996.0539336,
+      "elapsed_seconds": 254.23,
+      "log_sha256": "d693b7826ee59d2b54307e63a1993659c6f652682457b1be4e4ca8d9738826a8",
+      "raw_log_local": ".t14-p0/final-ci/pytest.txt"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793460250.284567,
+      "elapsed_seconds": 1.834,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4",
+      "raw_log_local": ".t14-p0/final-ci/typecheck.txt"
+    },
+    {
+      "name": "lint",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793460252.119471,
+      "elapsed_seconds": 1.131,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1",
+      "raw_log_local": ".t14-p0/final-ci/lint.txt"
+    },
+    {
+      "name": "build",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793460254.0721898,
+      "elapsed_seconds": 1.996,
+      "log_sha256": "7b86efc8d816266311923cde1de7fbc7a30b25e5ca3ccd039e7adfb926cff23b",
+      "raw_log_local": ".t14-p0/final-ci/build.txt"
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793460253.2513719,
+      "elapsed_seconds": 0.82,
+      "log_sha256": "156b53a8ef5e87dd6da89aa0b31911708af47fc040d8cb36ad5a53758c3ca05e",
+      "raw_log_local": ".t14-p0/final-ci/vitest.txt"
+    },
+    {
+      "name": "playwright",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793460256.068911,
+      "elapsed_seconds": 155.829,
+      "log_sha256": "3fcb6a17d875fd36f8e8cba7b104265ec11368aca97956d00d1957ddbdbad53c",
+      "raw_log_local": ".t14-p0/final-ci/playwright.txt"
+    }
+  ],
+  "counts": {
+    "backend": {
+      "passed": 644,
+      "skipped": 14,
+      "warnings": 3
+    },
+    "vitest": {
+      "passed": 55
+    },
+    "playwright": {
+      "passed": 60,
+      "failed": 0,
+      "retries": 0,
+      "workers": 1,
+      "new_payment_cases": 17,
+      "prior_cases": 43
+    }
+  },
+  "skips": {
+    "real_BGE_weights_unavailable": 13,
+    "private_live_evidence_not_distributed": 1,
+    "expanded_skip_rules": false
+  },
+  "loaded_runtime_test_lock_files": {
+    "count": 210,
+    "all_match": true
+  },
+  "paid_model_requests": 0,
+  "real_payment_requests": 0,
+  "remote_ci": "NOT_RUN"
+}

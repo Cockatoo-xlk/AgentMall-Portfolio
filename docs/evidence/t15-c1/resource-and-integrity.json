@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "old_containers": 17,
+  "container_changes": 0,
+  "old_T15C_raw_files": 1578,
+  "raw_changes": 0,
+  "older_T14_T15A_B1_protected_files": 8401,
+  "older_changes": 0,
+  "original_context": "colima, unchanged",
+  "owned_vm": "agentmall-t15-c1, stopped",
+  "owned_projects": [
+    "agentmall-t15-c1-original",
+    "agentmall-t15-c1-independent"
+  ],
+  "schemas_app_sessions_locks": "0 before down in both owned databases",
+  "volumes_reset_or_deleted": false,
+  "global_time_or_sync_modified": false,
+  "shared_engine_restarted": false
+}

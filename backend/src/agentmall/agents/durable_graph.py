@@ -49,6 +49,7 @@ def build_durable_graph(base, saver, store):
             {},
             guard=base.guard,
             single=base.single,
+            thread_snapshot=base.thread_snapshot,
         )
         return restore(local, data)
 
@@ -119,8 +120,22 @@ def build_durable_graph(base, saver, store):
         return {"next": "single" if runtime.single else "supervisor"}
 
     async def supervisor(runtime, state):
-        plan = await choose_plan(runtime)
+        plan = await choose_plan(runtime, state.get("user_goal"), durable=True)
         envelopes = await runtime.validate_tasks(plan.tasks) if plan.tasks else []
+        # A validated model finish still reconciles domain receipts and checks HITL.
+        # With nothing pending, avoid two empty administrative graph nodes. No
+        # model/tool/delegation is free, and old checkpoint node names remain valid.
+        if plan.terminal == "finish":
+            final = await choose_confirmation(
+                runtime, {**state, "plan": plan.model_dump(), "next": "finish"}
+            )
+            if final["next"] == "finish":
+                return {
+                    "plan": plan.model_dump(mode="json"),
+                    "dispatch": [],
+                    "pending_action": None,
+                    "next": "done",
+                }
         return {
             "round": state.get("round", 0) + 1,
             "plan": plan.model_dump(mode="json"),
@@ -231,6 +246,9 @@ def build_durable_graph(base, saver, store):
                 if proposal.status != "EXPIRED" or proposal.result is not None:
                     raise DomainError(409, "STALE_INTERRUPT", "仅可自动结束已过期提案的等待")
             runtime.errors.append("STALE_PROPOSAL")
+            # Reconcile the expired DB receipt before the next routing decision.
+            # The checkpoint can still contain the old PENDING projection.
+            await recover_receipts(runtime)
             return {
                 "handled": [*state.get("handled", []), payload["proposal_id"]],
                 "next": "single" if runtime.single else "supervisor",
@@ -238,11 +256,26 @@ def build_durable_graph(base, saver, store):
             }
         if payload.get("clarification"):
             from agentmall.agents.context import user_constraints
+            from agentmall.agents.purchase_intent import purchase_intent
 
-            runtime.input = runtime.input.model_copy(
-                update={"message": (runtime.input.message + " " + payload["clarification"])[:2000]}
-            )
-            runtime.constraints = user_constraints(runtime.input)
+            if runtime.thread_snapshot:
+                from agentmall.agents.context import Constraints
+
+                binding = payload["context_binding"]
+                runtime.input = runtime.input.model_copy(
+                    update={"message": payload["clarification"], "constraints": None}
+                )
+                runtime.constraints = Constraints.model_validate(binding["constraints"])
+            else:
+                runtime.input = runtime.input.model_copy(
+                    update={
+                        "message": (runtime.input.message + " " + payload["clarification"])[:2000]
+                    }
+                )
+                runtime.constraints = user_constraints(runtime.input)
+            intent = purchase_intent(payload["clarification"])
+            if not runtime.constraints.purchase_requested or intent.product_id:
+                runtime.purchase_target_id = intent.product_id
             await runtime.hydrate_explicit_entities()
             return {
                 "next": "single" if runtime.single else "supervisor",
@@ -264,6 +297,8 @@ def build_durable_graph(base, saver, store):
         return {"next": "done"}
 
     def dispatch(state):
+        if state["next"] == "done":
+            return END
         if state["next"] in {"finish", "clarify"}:
             return "choose_confirmation"
         return [
@@ -296,7 +331,7 @@ def build_durable_graph(base, saver, store):
     graph.add_edge(START, "bootstrap")
     graph.add_conditional_edges("bootstrap", lambda s: s["next"], ["single", "supervisor"])
     graph.add_conditional_edges(
-        "supervisor", dispatch, ["shopping", "order", "aftersales", "choose_confirmation"]
+        "supervisor", dispatch, ["shopping", "order", "aftersales", "choose_confirmation", END]
     )
     for role in ("shopping", "order", "aftersales"):
         graph.add_edge(role, "merge")

@@ -1,0 +1,49 @@
+{
+  "independent_reviews": 1,
+  "read_only": true,
+  "initial_findings": {
+    "critical": 0,
+    "important": 3,
+    "minor": 1
+  },
+  "important_findings_fixed": [
+    {
+      "finding": "Evidence files fsynced but parent directory not fsynced before DROP",
+      "fix": "fsync evidence files, sidecar and directory ancestors; propagate synchronization failure before cleanup",
+      "test": "test_review_directory_sync_failure_prevents_drop"
+    },
+    {
+      "finding": "Oracle missed mutated original proposal or mismatched order address/product",
+      "fix": "Bind before-confirmation immutable proposal, recompute payload hash, compare all immutable fields and full item/quote/order/product facts",
+      "test": "test_review_proposal_order_mutations_are_rejected (6 cases)"
+    },
+    {
+      "finding": "Existing --state-dir could load and mutate preserved failed schemas",
+      "fix": "Atomically claim new state directory before database access; existing state rejected before output creation",
+      "test": "test_review_existing_state_is_rejected_before_output_or_database"
+    }
+  ],
+  "minor_regraded_and_fixed": {
+    "finding": "Failure report always claimed schemas retained after cleanup may have completed",
+    "ruling": "Important evidence correctness: false recovery status could cause unsafe handling. Small verification-only phase marker and three pure tests.",
+    "fix": "OWNED/DROPPED/UNKNOWN schema state, conservative UNKNOWN during uncertain DROP outcome",
+    "test": "test_review_failure_report_matches_actual_cleanup_phase (3 cases)"
+  },
+  "red": {
+    "new_failures": 11,
+    "old_passed": 11,
+    "exit_code": 1
+  },
+  "green": {
+    "passed": 22,
+    "exit_code": 0
+  },
+  "independent_re_review": false,
+  "declined_to_judge_resolution": [
+    "CI and clock independently reported by parent, including the actual blocking clock failure",
+    "Database cleanup/retention diagnosed by parent; failure schemas preserved and prospective successful schema deletion evidence retained",
+    "Original/current verifier hashes differ: do not claim a fresh final run; stricter existing-snapshot revalidation has explicit provenance",
+    "Live remains NOT_RUN and out of scope"
+  ],
+  "final_release_verdict": "BLOCKED_ENVIRONMENT_CLOCK; author fixes have targeted tests, no claimed final independent sign-off"
+}

@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test'
+import { API_ORIGIN } from './environment'
 import type { Page, APIRequestContext } from '@playwright/test'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-const CONTROL = 'http://127.0.0.1:8001/__test'
+const CONTROL = API_ORIGIN + '/__test'
 const key = { 'X-E2E-Key': 'agentmall-local-e2e' }
 const PASSWORD = 'AgentMall-demo-2026!' // Synthetic fixture secret only; never part of the web bundle.
 const evidenceDir = path.resolve(process.env.AGENTMALL_EVIDENCE_DIR ?? 'evidence/t04')
@@ -108,12 +109,12 @@ test('purchase: cart add edit delete and stale-version reconciliation', async ({
   await input.fill('2')
   await page.getByRole('button', { name: /更新 .* 数量/ }).click()
   await expect(input).toHaveValue('2')
-  const auth = await request.post('http://127.0.0.1:8001/api/v1/auth/login', {
+  const auth = await request.post(API_ORIGIN + '/api/v1/auth/login', {
     data: { login: 'buyer1', password: PASSWORD },
   })
   const headers = { Authorization: `Bearer ${(await auth.json()).access_token}` }
-  const cart = await (await request.get('http://127.0.0.1:8001/api/v1/cart', { headers })).json()
-  await request.put(`http://127.0.0.1:8001/api/v1/cart/items/${cart.items[0].product_id}`, {
+  const cart = await (await request.get(API_ORIGIN + '/api/v1/cart', { headers })).json()
+  await request.put(`${API_ORIGIN}/api/v1/cart/items/${cart.items[0].product_id}`, {
     headers,
     data: { quantity: 3, expected_version: cart.version },
   })
@@ -123,7 +124,7 @@ test('purchase: cart add edit delete and stale-version reconciliation', async ({
   await stale
   await expect(page.getByText(/购物车版本已变化/)).toBeVisible()
   await expect(input).toHaveValue('3')
-  const after = await (await request.get('http://127.0.0.1:8001/api/v1/cart', { headers })).json()
+  const after = await (await request.get(API_ORIGIN + '/api/v1/cart', { headers })).json()
   expect(after.items[0].quantity).toBe(3)
   await page.getByRole('button', { name: /移除 / }).click()
   await expect(page.getByText('购物车还是空的')).toBeVisible()
@@ -426,15 +427,15 @@ test('purchase: agent done recovers the actual order from an existing request', 
   const f = await control(request, '/facts')
   expect(f.proposals).toBe(1)
   const pid = f.proposal_rows[0].id
-  const auth = await request.post('http://127.0.0.1:8001/api/v1/auth/login', {
+  const auth = await request.post(API_ORIGIN + '/api/v1/auth/login', {
     data: { login: 'buyer1', password: PASSWORD },
   })
   const headers = { Authorization: `Bearer ${(await auth.json()).access_token}` }
   const confirmation = await request.post(
-    `http://127.0.0.1:8001/api/v1/proposals/${pid}/confirmations`,
+    `${API_ORIGIN}/api/v1/proposals/${pid}/confirmations`,
     { headers, data: { decision: 'approve' } },
   )
-  const receipt = await request.post('http://127.0.0.1:8001/api/v1/orders', {
+  const receipt = await request.post(API_ORIGIN + '/api/v1/orders', {
     headers: { ...headers, 'Idempotency-Key': `e2e:done:${pid}` },
     data: { proposal_id: pid, confirmation_id: (await confirmation.json()).confirmation_id },
   })

@@ -1,0 +1,28 @@
+.merchant-copilot {
+  min-width: 0;
+}
+.merchant-copilot .panel,
+.merchant-copilot .resource-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.copilot-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 12px;
+}
+.copilot-metrics .resource-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.copilot-metrics strong {
+  font-size: 1.5rem;
+}
+.copilot-facts {
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 340px;
+  overflow-y: auto;
+}

@@ -1,0 +1,1266 @@
+{
+  "multi": {
+    "second-turn": {
+      "raw_sha256": "a3dcbed383b04e63510a7218f0e2d4134ee8ebc397707a9b6ef7a3e7f6b1d9c2",
+      "thread_contexts": [
+        {
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "version": 4,
+          "preferences": {
+            "category": "keyboard",
+            "product_needs": {
+              "connection": "无线"
+            },
+            "max_price_cents": 40000,
+            "noise_preference": "quiet"
+          },
+          "offered_ids": [
+            "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8"
+          ],
+          "focus": {},
+          "provenance": {
+            "type": "CANDIDATES",
+            "run_id": "d1860fda-3948-41da-940d-e291b0ef8261"
+          },
+          "updated_at": "2026-11-02T04:34:28.028166+00:00"
+        }
+      ],
+      "candidate_sets": [
+        {
+          "id": "0404f192-968c-54ba-bcf5-f96fc31974a4",
+          "created_at": "2026-11-02T04:34:27.170929+00:00",
+          "updated_at": "2026-11-02T04:34:27.170929+00:00",
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "preferences_digest": "1af9f210892494bb85956b5135034f49294c7a8db8bbe691e36962550590d7d8",
+          "items": [
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            },
+            {
+              "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+              "name": "静音 K87",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            }
+          ]
+        },
+        {
+          "id": "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8",
+          "created_at": "2026-11-02T04:34:28.027141+00:00",
+          "updated_at": "2026-11-02T04:34:28.027141+00:00",
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "preferences_digest": "e459eece21a299a8671b3ddcaf776c9027b216d973b46cd5ea7f71a799144e93",
+          "items": [
+            {
+              "id": "1a7626f5-bf01-5fe4-a795-d785eb0d0498",
+              "name": "合成静音无线键盘 3",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 39900,
+              "catalog_version": 1
+            },
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": null,
+              "keyboard_type": null
+            },
+            "max_price_cents": 30000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": null,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        }
+      ],
+      "orders": [],
+      "proposal_count": 0,
+      "confirmation_count": 0,
+      "payment_count": 0,
+      "reserved": 0,
+      "checkpoint_rows": 32,
+      "checkpoints": [
+        {
+          "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "checkpoint_id": "1f1d676a-ff37-68b4-8007-46b9862506f0",
+          "graph": {
+            "round": 2,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "checkpoint_id": "1f1d676b-0760-6fde-8007-3234e4334d7c",
+          "graph": {
+            "round": 2,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        }
+      ],
+      "real_provider_calls": 0
+    },
+    "waiting": {
+      "raw_sha256": "f73961a501dce0be6a19cf6e67f7afea88e3dfd63b9de754359d03d24bab9492",
+      "thread_contexts": [
+        {
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "version": 5,
+          "preferences": {
+            "category": "keyboard",
+            "product_needs": {
+              "connection": "无线"
+            },
+            "max_price_cents": 40000,
+            "noise_preference": "quiet"
+          },
+          "offered_ids": [
+            "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8"
+          ],
+          "focus": {
+            "product_ids": [
+              "412b8526-4ac2-5736-8b0b-51cd34bd3bf8"
+            ],
+            "source_set_id": "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8"
+          },
+          "provenance": {
+            "type": "RUN",
+            "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+            "request_id": "bd1dee44-abf8-43d2-af4f-2d3322a6bcf6"
+          },
+          "updated_at": "2026-11-02T04:34:29.870673+00:00"
+        }
+      ],
+      "candidate_sets": [
+        {
+          "id": "0404f192-968c-54ba-bcf5-f96fc31974a4",
+          "created_at": "2026-11-02T04:34:27.170929+00:00",
+          "updated_at": "2026-11-02T04:34:27.170929+00:00",
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "preferences_digest": "1af9f210892494bb85956b5135034f49294c7a8db8bbe691e36962550590d7d8",
+          "items": [
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            },
+            {
+              "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+              "name": "静音 K87",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            }
+          ]
+        },
+        {
+          "id": "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8",
+          "created_at": "2026-11-02T04:34:28.027141+00:00",
+          "updated_at": "2026-11-02T04:34:28.027141+00:00",
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "preferences_digest": "e459eece21a299a8671b3ddcaf776c9027b216d973b46cd5ea7f71a799144e93",
+          "items": [
+            {
+              "id": "1a7626f5-bf01-5fe4-a795-d785eb0d0498",
+              "name": "合成静音无线键盘 3",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 39900,
+              "catalog_version": 1
+            },
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": null,
+              "keyboard_type": null
+            },
+            "max_price_cents": 30000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": null,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+          "status": "WAITING_INPUT",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": "demo_dorm",
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": true,
+            "exclude_product_ids": []
+          }
+        }
+      ],
+      "orders": [],
+      "proposal_count": 1,
+      "confirmation_count": 0,
+      "payment_count": 0,
+      "reserved": 0,
+      "checkpoint_rows": 47,
+      "checkpoints": [
+        {
+          "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "checkpoint_id": "1f1d676a-ff37-68b4-8007-46b9862506f0",
+          "graph": {
+            "round": 2,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+          "checkpoint_id": "1f1d676b-1b31-6757-8005-765de7d0ba96",
+          "graph": {
+            "round": 1,
+            "next": "wait_confirmation",
+            "handled": [],
+            "pending_action": {
+              "proposal_id": "871c1d27-977a-403d-a4a5-4c3246cdb574",
+              "action_type": "CHECKOUT"
+            }
+          },
+          "pending_writes": 1
+        },
+        {
+          "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "checkpoint_id": "1f1d676b-0760-6fde-8007-3234e4334d7c",
+          "graph": {
+            "round": 2,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        }
+      ],
+      "real_provider_calls": 0
+    },
+    "completed": {
+      "raw_sha256": "a43b72d5fd75099dd8e6b60aa25a8ebde54c6609eb4037b8a964ebd7f84da380",
+      "thread_contexts": [
+        {
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "version": 5,
+          "preferences": {
+            "category": "keyboard",
+            "product_needs": {
+              "connection": "无线"
+            },
+            "max_price_cents": 40000,
+            "noise_preference": "quiet"
+          },
+          "offered_ids": [
+            "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8"
+          ],
+          "focus": {
+            "product_ids": [
+              "412b8526-4ac2-5736-8b0b-51cd34bd3bf8"
+            ],
+            "source_set_id": "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8"
+          },
+          "provenance": {
+            "type": "RUN",
+            "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+            "request_id": "bd1dee44-abf8-43d2-af4f-2d3322a6bcf6"
+          },
+          "updated_at": "2026-11-02T04:34:29.870673+00:00"
+        }
+      ],
+      "candidate_sets": [
+        {
+          "id": "0404f192-968c-54ba-bcf5-f96fc31974a4",
+          "created_at": "2026-11-02T04:34:27.170929+00:00",
+          "updated_at": "2026-11-02T04:34:27.170929+00:00",
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "preferences_digest": "1af9f210892494bb85956b5135034f49294c7a8db8bbe691e36962550590d7d8",
+          "items": [
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            },
+            {
+              "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+              "name": "静音 K87",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            }
+          ]
+        },
+        {
+          "id": "99bc945c-2e41-5e07-a7a0-8ee80cc4e1d8",
+          "created_at": "2026-11-02T04:34:28.027141+00:00",
+          "updated_at": "2026-11-02T04:34:28.027141+00:00",
+          "thread_id": "ecd0a6fb-9a33-485e-8539-bcde3f4640f2",
+          "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "preferences_digest": "e459eece21a299a8671b3ddcaf776c9027b216d973b46cd5ea7f71a799144e93",
+          "items": [
+            {
+              "id": "1a7626f5-bf01-5fe4-a795-d785eb0d0498",
+              "name": "合成静音无线键盘 3",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 39900,
+              "catalog_version": 1
+            },
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": null,
+              "keyboard_type": null
+            },
+            "max_price_cents": 30000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": null,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": "demo_dorm",
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": true,
+            "exclude_product_ids": []
+          }
+        }
+      ],
+      "orders": [
+        {
+          "id": "e1ec0db2-48c9-40af-b4fd-91e16c42b833",
+          "status": "PENDING_PAYMENT"
+        }
+      ],
+      "proposal_count": 1,
+      "confirmation_count": 1,
+      "payment_count": 0,
+      "reserved": 1,
+      "checkpoint_rows": 52,
+      "checkpoints": [
+        {
+          "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+          "checkpoint_id": "1f1d676a-ff37-68b4-8007-46b9862506f0",
+          "graph": {
+            "round": 2,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+          "checkpoint_id": "1f1d676b-0760-6fde-8007-3234e4334d7c",
+          "graph": {
+            "round": 2,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+          "checkpoint_id": "1f1d676b-1e6a-6b24-800a-0703c1101f8c",
+          "graph": {
+            "round": 2,
+            "next": "done",
+            "handled": [
+              "871c1d27-977a-403d-a4a5-4c3246cdb574"
+            ],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        }
+      ],
+      "real_provider_calls": 0
+    },
+    "summary": {
+      "orders_before_confirmation": 0,
+      "orders_after_confirmation": 1,
+      "payments": 0,
+      "candidate_selection": "rank2 -> immutable product ID -> fresh proposal -> independent Confirmation -> Resume",
+      "mode": "MOCK_TRANSPORT, not Live"
+    }
+  },
+  "single": {
+    "second-turn": {
+      "raw_sha256": "d8b11a7b1016641af8d9fdca1d9fe725e9a6ac3687a19b1872547d6fcbfac77d",
+      "thread_contexts": [
+        {
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "version": 4,
+          "preferences": {
+            "category": "keyboard",
+            "product_needs": {
+              "connection": "无线"
+            },
+            "max_price_cents": 40000,
+            "noise_preference": "quiet"
+          },
+          "offered_ids": [
+            "09086d4c-3752-5524-bcae-b81f2b21c464"
+          ],
+          "focus": {},
+          "provenance": {
+            "type": "CANDIDATES",
+            "run_id": "355f8254-5946-46a9-8cde-56102d10ae73"
+          },
+          "updated_at": "2026-11-02T04:34:32.003782+00:00"
+        }
+      ],
+      "candidate_sets": [
+        {
+          "id": "0d738a36-6d72-5644-9177-44da79395b03",
+          "created_at": "2026-11-02T04:34:31.655110+00:00",
+          "updated_at": "2026-11-02T04:34:31.655110+00:00",
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "run_id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "preferences_digest": "1af9f210892494bb85956b5135034f49294c7a8db8bbe691e36962550590d7d8",
+          "items": [
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            },
+            {
+              "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+              "name": "静音 K87",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            }
+          ]
+        },
+        {
+          "id": "09086d4c-3752-5524-bcae-b81f2b21c464",
+          "created_at": "2026-11-02T04:34:32.002682+00:00",
+          "updated_at": "2026-11-02T04:34:32.002682+00:00",
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "run_id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "preferences_digest": "e459eece21a299a8671b3ddcaf776c9027b216d973b46cd5ea7f71a799144e93",
+          "items": [
+            {
+              "id": "1a7626f5-bf01-5fe4-a795-d785eb0d0498",
+              "name": "合成静音无线键盘 3",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 39900,
+              "catalog_version": 1
+            },
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": null,
+              "keyboard_type": null
+            },
+            "max_price_cents": 30000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": null,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        }
+      ],
+      "orders": [],
+      "proposal_count": 0,
+      "confirmation_count": 0,
+      "payment_count": 0,
+      "reserved": 0,
+      "checkpoint_rows": 26,
+      "checkpoints": [
+        {
+          "run_id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "checkpoint_id": "1f1d676b-2d4b-6561-8004-d6ef42bb3584",
+          "graph": {
+            "round": 0,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "checkpoint_id": "1f1d676b-29fd-6090-8004-20e43e51b2e1",
+          "graph": {
+            "round": 0,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        }
+      ],
+      "real_provider_calls": 0
+    },
+    "waiting": {
+      "raw_sha256": "71b47a8b4530fdc5f8bdc7590c9eb7ec6f681b2096961e0c3aead52cffd50415",
+      "thread_contexts": [
+        {
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "version": 5,
+          "preferences": {
+            "category": "keyboard",
+            "product_needs": {
+              "connection": "无线"
+            },
+            "max_price_cents": 40000,
+            "noise_preference": "quiet"
+          },
+          "offered_ids": [
+            "09086d4c-3752-5524-bcae-b81f2b21c464"
+          ],
+          "focus": {
+            "product_ids": [
+              "412b8526-4ac2-5736-8b0b-51cd34bd3bf8"
+            ],
+            "source_set_id": "09086d4c-3752-5524-bcae-b81f2b21c464"
+          },
+          "provenance": {
+            "type": "RUN",
+            "run_id": "a7f04a0c-c5ba-43ca-8de7-ba9a8141b06b",
+            "request_id": "f163568f-a00a-4fba-ba8c-316a7483609e"
+          },
+          "updated_at": "2026-11-02T04:34:33.414386+00:00"
+        }
+      ],
+      "candidate_sets": [
+        {
+          "id": "0d738a36-6d72-5644-9177-44da79395b03",
+          "created_at": "2026-11-02T04:34:31.655110+00:00",
+          "updated_at": "2026-11-02T04:34:31.655110+00:00",
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "run_id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "preferences_digest": "1af9f210892494bb85956b5135034f49294c7a8db8bbe691e36962550590d7d8",
+          "items": [
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            },
+            {
+              "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+              "name": "静音 K87",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            }
+          ]
+        },
+        {
+          "id": "09086d4c-3752-5524-bcae-b81f2b21c464",
+          "created_at": "2026-11-02T04:34:32.002682+00:00",
+          "updated_at": "2026-11-02T04:34:32.002682+00:00",
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "run_id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "preferences_digest": "e459eece21a299a8671b3ddcaf776c9027b216d973b46cd5ea7f71a799144e93",
+          "items": [
+            {
+              "id": "1a7626f5-bf01-5fe4-a795-d785eb0d0498",
+              "name": "合成静音无线键盘 3",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 39900,
+              "catalog_version": 1
+            },
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": null,
+              "keyboard_type": null
+            },
+            "max_price_cents": 30000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": null,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "a7f04a0c-c5ba-43ca-8de7-ba9a8141b06b",
+          "status": "WAITING_INPUT",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": "demo_dorm",
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": true,
+            "exclude_product_ids": []
+          }
+        }
+      ],
+      "orders": [],
+      "proposal_count": 1,
+      "confirmation_count": 0,
+      "payment_count": 0,
+      "reserved": 0,
+      "checkpoint_rows": 39,
+      "checkpoints": [
+        {
+          "run_id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "checkpoint_id": "1f1d676b-2d4b-6561-8004-d6ef42bb3584",
+          "graph": {
+            "round": 0,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "checkpoint_id": "1f1d676b-29fd-6090-8004-20e43e51b2e1",
+          "graph": {
+            "round": 0,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "a7f04a0c-c5ba-43ca-8de7-ba9a8141b06b",
+          "checkpoint_id": "1f1d676b-3c69-64d4-8003-c31892f4b00c",
+          "graph": {
+            "round": 0,
+            "next": "wait_confirmation",
+            "handled": [],
+            "pending_action": {
+              "proposal_id": "2c6ec135-c2f0-412b-8eb1-f71d5a50713c",
+              "action_type": "CHECKOUT"
+            }
+          },
+          "pending_writes": 1
+        }
+      ],
+      "real_provider_calls": 0
+    },
+    "completed": {
+      "raw_sha256": "0cc984b42b717ce92f8b90c443ad7dd07fa18aa85229aa8dcf6185da11692945",
+      "thread_contexts": [
+        {
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "version": 5,
+          "preferences": {
+            "category": "keyboard",
+            "product_needs": {
+              "connection": "无线"
+            },
+            "max_price_cents": 40000,
+            "noise_preference": "quiet"
+          },
+          "offered_ids": [
+            "09086d4c-3752-5524-bcae-b81f2b21c464"
+          ],
+          "focus": {
+            "product_ids": [
+              "412b8526-4ac2-5736-8b0b-51cd34bd3bf8"
+            ],
+            "source_set_id": "09086d4c-3752-5524-bcae-b81f2b21c464"
+          },
+          "provenance": {
+            "type": "RUN",
+            "run_id": "a7f04a0c-c5ba-43ca-8de7-ba9a8141b06b",
+            "request_id": "f163568f-a00a-4fba-ba8c-316a7483609e"
+          },
+          "updated_at": "2026-11-02T04:34:33.414386+00:00"
+        }
+      ],
+      "candidate_sets": [
+        {
+          "id": "0d738a36-6d72-5644-9177-44da79395b03",
+          "created_at": "2026-11-02T04:34:31.655110+00:00",
+          "updated_at": "2026-11-02T04:34:31.655110+00:00",
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "run_id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "preferences_digest": "1af9f210892494bb85956b5135034f49294c7a8db8bbe691e36962550590d7d8",
+          "items": [
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            },
+            {
+              "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+              "name": "静音 K87",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            }
+          ]
+        },
+        {
+          "id": "09086d4c-3752-5524-bcae-b81f2b21c464",
+          "created_at": "2026-11-02T04:34:32.002682+00:00",
+          "updated_at": "2026-11-02T04:34:32.002682+00:00",
+          "thread_id": "c935bd5f-b475-4481-9c13-ff7f5156b2ae",
+          "run_id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "preferences_digest": "e459eece21a299a8671b3ddcaf776c9027b216d973b46cd5ea7f71a799144e93",
+          "items": [
+            {
+              "id": "1a7626f5-bf01-5fe4-a795-d785eb0d0498",
+              "name": "合成静音无线键盘 3",
+              "rank": 1,
+              "currency": "CNY",
+              "price_cents": 39900,
+              "catalog_version": 1
+            },
+            {
+              "id": "412b8526-4ac2-5736-8b0b-51cd34bd3bf8",
+              "name": "合成静音无线键盘 2",
+              "rank": 2,
+              "currency": "CNY",
+              "price_cents": 29900,
+              "catalog_version": 1
+            },
+            {
+              "id": "731b8dc3-959e-505b-b83c-cdac2dad4b67",
+              "name": "合成静音无线键盘 1",
+              "rank": 3,
+              "currency": "CNY",
+              "price_cents": 19900,
+              "catalog_version": 1
+            }
+          ]
+        }
+      ],
+      "runs": [
+        {
+          "id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": null,
+              "keyboard_type": null
+            },
+            "max_price_cents": 30000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": null,
+            "reason_code": null,
+            "address_label": null,
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": false,
+            "exclude_product_ids": []
+          }
+        },
+        {
+          "id": "a7f04a0c-c5ba-43ca-8de7-ba9a8141b06b",
+          "status": "COMPLETED",
+          "constraints": {
+            "category": "keyboard",
+            "quantity": 1,
+            "reason_code": null,
+            "address_label": "demo_dorm",
+            "product_needs": {
+              "usage": null,
+              "layout": null,
+              "connection": "无线",
+              "keyboard_type": null
+            },
+            "max_price_cents": 40000,
+            "exclude_original": false,
+            "noise_preference": "quiet",
+            "return_requested": false,
+            "support_declined": false,
+            "support_requested": false,
+            "purchase_requested": true,
+            "exclude_product_ids": []
+          }
+        }
+      ],
+      "orders": [
+        {
+          "id": "ad57680c-eaf2-4816-97bf-dcf70dd6ba7f",
+          "status": "PENDING_PAYMENT"
+        }
+      ],
+      "proposal_count": 1,
+      "confirmation_count": 1,
+      "payment_count": 0,
+      "reserved": 1,
+      "checkpoint_rows": 48,
+      "checkpoints": [
+        {
+          "run_id": "355f8254-5946-46a9-8cde-56102d10ae73",
+          "checkpoint_id": "1f1d676b-2d4b-6561-8004-d6ef42bb3584",
+          "graph": {
+            "round": 0,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "7e6a943c-1e3e-4e92-a183-166c98d3b334",
+          "checkpoint_id": "1f1d676b-29fd-6090-8004-20e43e51b2e1",
+          "graph": {
+            "round": 0,
+            "next": "done",
+            "handled": [],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        },
+        {
+          "run_id": "a7f04a0c-c5ba-43ca-8de7-ba9a8141b06b",
+          "checkpoint_id": "1f1d676b-4078-6837-8008-abbad6873c11",
+          "graph": {
+            "round": 1,
+            "next": "done",
+            "handled": [
+              "2c6ec135-c2f0-412b-8eb1-f71d5a50713c"
+            ],
+            "pending_action": null
+          },
+          "pending_writes": 0
+        }
+      ],
+      "real_provider_calls": 0
+    },
+    "summary": {
+      "orders_before_confirmation": 0,
+      "orders_after_confirmation": 1,
+      "payments": 0,
+      "candidate_selection": "rank2 -> immutable product ID -> fresh proposal -> independent Confirmation -> Resume",
+      "mode": "MOCK_TRANSPORT, not Live"
+    }
+  }
+}

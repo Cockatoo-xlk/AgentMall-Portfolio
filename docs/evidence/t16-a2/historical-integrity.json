@@ -1,0 +1,19 @@
+{
+  "original_t16_head": "cbc6e19ae7633758e2ce2f0d64d27aea2af7b9f5",
+  "original_t16_worktree_clean": true,
+  "protected_public_files_checked": 152,
+  "protected_b0_report_and_evidence_checked": 74,
+  "changed": [],
+  "old_b0_source_policy_rejection": {
+    "old_policy_sha256": "731dce4f5b9f4e66ae1570c52ed568014fa5238bb199a96f2b6919c5389ec1e7",
+    "old_source": "dd00d9a97aac9641911af7132140355b2896fdaf1599ff555d19ff8589606e13",
+    "current_source": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+    "error": "SOURCE_MISMATCH",
+    "key_read": false,
+    "requests": 0,
+    "old_file_modified": false
+  },
+  "historical_live_ledgers": "NOT_READ_NOT_MODIFIED",
+  "old_private_public_main_t14_t15_worktrees": "No write commands performed; only the new worktree and owned resources were modified.",
+  "source_revision_boundary": "Old Frozen Manifests/Policy hashes remain historical; not resealed or reused for the new source."
+}

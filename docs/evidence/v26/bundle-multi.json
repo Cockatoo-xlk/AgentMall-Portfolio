@@ -1,0 +1,199 @@
+{
+  "mode": "multi",
+  "model": "MOCK_TRANSPORT",
+  "embedding": "FIXTURE",
+  "catalog_skus": 120,
+  "bundle": {
+    "bundle_id": "1c345289-2336-5b03-8341-11076ef6a931",
+    "thread_id": "cd21c045-0b8c-45a5-b48e-d659fe4c1a22",
+    "source_run_id": "b96c19ca-3cb8-4926-9b54-9a5449e24af6",
+    "context_version": 1,
+    "name": "多品类合成组合",
+    "items": [
+      {
+        "id": "fb2e0da9-aa6c-59f2-bfeb-eafc3b8b04e6",
+        "name": "清阅 D27 显示器",
+        "rank": 1,
+        "reasons": [
+          "显示器：来自当前店铺的已验证检索结果",
+          "英寸：27"
+        ],
+        "category": "monitor",
+        "currency": "CNY",
+        "quantity": 1,
+        "attributes": {
+          "panel": "IPS",
+          "ports": "HDMI / DP",
+          "usage": "文档学习",
+          "resolution": "1920×1080",
+          "screen_size": "27英寸",
+          "refresh_rate": "100Hz",
+          "screen_inches": "27"
+        },
+        "price_cents": 89900,
+        "subtotal_cents": 89900,
+        "catalog_version": 1,
+        "quantity_source": "ESTIMATE",
+        "available_snapshot": 18
+      },
+      {
+        "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+        "name": "静音 K87",
+        "rank": 2,
+        "reasons": [
+          "键盘：来自当前店铺的已验证检索结果",
+          "连接方式：双模",
+          "噪声标签：较安静"
+        ],
+        "category": "keyboard",
+        "currency": "CNY",
+        "quantity": 1,
+        "attributes": {
+          "size": "87键",
+          "noise": "较安静",
+          "switch": "静音轴",
+          "connection": "双模",
+          "connection_capabilities": [
+            "wired",
+            "wireless"
+          ]
+        },
+        "price_cents": 29900,
+        "subtotal_cents": 29900,
+        "catalog_version": 1,
+        "quantity_source": "ESTIMATE",
+        "available_snapshot": 20
+      },
+      {
+        "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+        "name": "轻量鼠标 M1",
+        "rank": 3,
+        "reasons": [
+          "鼠标：来自当前店铺的已验证检索结果",
+          "连接方式：有线",
+          "噪声标签：适中"
+        ],
+        "category": "mouse",
+        "currency": "CNY",
+        "quantity": 1,
+        "attributes": {
+          "size": "中号",
+          "noise": "适中",
+          "switch": "无",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "price_cents": 9900,
+        "subtotal_cents": 9900,
+        "catalog_version": 1,
+        "quantity_source": "ESTIMATE",
+        "available_snapshot": 20
+      },
+      {
+        "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+        "name": "有线耳机 H1",
+        "rank": 4,
+        "reasons": [
+          "耳机：来自当前店铺的已验证检索结果",
+          "连接方式：有线",
+          "噪声标签：不适用"
+        ],
+        "category": "headphones",
+        "currency": "CNY",
+        "quantity": 1,
+        "attributes": {
+          "size": "头戴",
+          "noise": "不适用",
+          "switch": "无",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "price_cents": 12900,
+        "subtotal_cents": 12900,
+        "catalog_version": 1,
+        "quantity_source": "ESTIMATE",
+        "available_snapshot": 20
+      }
+    ],
+    "requirements": {
+      "parts": [
+        {
+          "category": "monitor",
+          "prefer_quiet": false,
+          "requirements": {
+            "query": "27英寸显示器",
+            "category": "monitor",
+            "screen_inches": "27"
+          }
+        },
+        {
+          "category": "keyboard",
+          "prefer_quiet": false,
+          "requirements": {
+            "query": "无线键盘",
+            "category": "keyboard",
+            "connection": "无线"
+          }
+        },
+        {
+          "category": "mouse",
+          "prefer_quiet": false,
+          "requirements": {
+            "query": "鼠标",
+            "category": "mouse"
+          }
+        },
+        {
+          "category": "headphones",
+          "prefer_quiet": false,
+          "requirements": {
+            "query": "耳机",
+            "category": "headphones"
+          }
+        }
+      ],
+      "budget_cents": 500000
+    },
+    "budget_cents": 500000,
+    "total_cents": 142600,
+    "remaining_cents": 357400,
+    "expires_at": "2026-11-07T11:00:28.902518+00:00",
+    "valid": true,
+    "invalid_reason": null,
+    "ranking": "quiet preference penalty, then total cents, then ordered Product UUIDs; retrieved pool only",
+    "created_at": "2026-11-07T10:45:29.081007+00:00"
+  },
+  "order": {
+    "id": "38fa0b19-7d93-45a5-9f89-a96989c69b92",
+    "status": "PENDING_PAYMENT",
+    "total_cents": 142600
+  },
+  "orders": 1,
+  "order_items": 4,
+  "payments": 0,
+  "consumed_confirmations": 1,
+  "replay_did_not_duplicate": true,
+  "all_inventory_checked": true,
+  "idempotency_receipts": 1,
+  "events": [
+    {
+      "run_id": "b96c19ca-3cb8-4926-9b54-9a5449e24af6",
+      "n": 30,
+      "first": 1,
+      "last": 30
+    },
+    {
+      "run_id": "aeb5c684-cee4-476c-89e2-a1a07f6b34ff",
+      "n": 29,
+      "first": 1,
+      "last": 29
+    }
+  ],
+  "checkpoint_next": "done",
+  "pending_writes": 0,
+  "provider_requests": 0
+}

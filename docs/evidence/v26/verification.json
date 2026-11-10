@@ -1,0 +1,1028 @@
+{
+  "version": 1,
+  "status": "AGENTMALL_V2_BUNDLE_SHOPPING_READY",
+  "base_commit": "c8e9683502e8672d7c23ff9f9b17b79d019c0220",
+  "branch": "codex/v2-bundle-shopping",
+  "evidence_class": "MOCK_TRANSPORT_WITH_FIXTURE_EMBEDDING",
+  "runtime": "Mac Docker Desktop Linux aarch64; PostgreSQL17/pgvector; official Checkpointer; Chromium",
+  "source_fingerprint_sha256": "a6205df78c6da0996658b650f0c80728f4ca6601cc904f23418cc2f17111e01d",
+  "code_and_test_file_count": 343,
+  "code_and_test_tree_sha256": "a50bb9d1c0877eb14c75c8780de04d0fee938d3a15b67eb32960b217843294bc",
+  "protected_files_unchanged": 103,
+  "legacy_manifest_and_data_unchanged": true,
+  "new_tests": {
+    "pytest": 41,
+    "vitest": 4,
+    "playwright": 2
+  },
+  "regression": {
+    "pytest_full": {
+      "passed": 917,
+      "failed": 25,
+      "skipped": 14,
+      "receipt": "full-pytest-final"
+    },
+    "pytest_after_fixes_targeted": {
+      "passed": 129,
+      "failed": 0,
+      "skipped": 10,
+      "receipt": "pytest-compatibility-fixed",
+      "covers_all_25_original_failures": true
+    },
+    "pytest_current_collected": 960,
+    "pytest_current_executable": 946,
+    "pytest_new_bundle_tests_passed": 41,
+    "vitest_full": {
+      "passed": 99,
+      "receipt": "full-vitest"
+    },
+    "playwright_full": {
+      "passed": 107,
+      "failed": 1,
+      "skipped": 0,
+      "retries": 0,
+      "receipt": "full-playwright"
+    },
+    "playwright_after_fixes_targeted": {
+      "passed": 3,
+      "failed": 0,
+      "retries": 0,
+      "receipt": "browser-release",
+      "mobile_layout_checked": true,
+      "covers_original_single_failure": true
+    },
+    "post_fix_second_full_run": "NOT_RUN",
+    "all_discovered_failures_resolved_by_targeted_checks": true
+  },
+  "static_receipts": {
+    "ruff": "ruff-clean",
+    "format": "format-clean",
+    "typecheck": "frontend-typecheck-release",
+    "eslint": "frontend-eslint-release",
+    "build": "build-final"
+  },
+  "earlier_interrupted_backend": {
+    "status": "INTERRUPTED_FOR_REVIEW_FIXES",
+    "exit_code": "UNKNOWN",
+    "log_sha256": "60125936e18cfc5e4f13f97c6601e0a40758a5a5e2b3efa92c99f54c914642aa"
+  },
+  "cleanup": {
+    "owned_guest_and_pg_absent": true,
+    "owned_volume_absent": true,
+    "historical_container_ids_and_running_states_unchanged": true,
+    "synthetic_credentials_removed": true,
+    "shared_runner_image_retained": true,
+    "receipt_sha256": "c3e04eeb870d08fcfab6bc082a3cec8b05eee811b88a95233e89c1221917d14f"
+  },
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "real_payments": 0,
+  "push": 0,
+  "dispatch": 0,
+  "rerun": 0,
+  "not_verified": [
+    "REAL_DEEPSEEK",
+    "NEW_REAL_BGE_SPECIALIST_RUN",
+    "NEW_REMOTE_CI",
+    "PERFORMANCE",
+    "DIRECT_JOURNAL_FIELD_SNAPSHOTS",
+    "VIDEO"
+  ],
+  "development_command_receipts": [
+    {
+      "label": "bootstrap",
+      "command": [
+        "python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433",
+        "--config",
+        "/rc-output/bootstrap.env"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:00:05.061013+00:00",
+      "seconds": 1.873,
+      "log_sha256": "97c64dc13f1195488006a5aedbc9b56c7ca73febae11ff63875959d53bbc295b"
+    },
+    {
+      "label": "browser-bundle-fixed",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-browser",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "bundle.spec.ts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:22:26.984460+00:00",
+      "seconds": 13.449,
+      "log_sha256": "dd8a2bb9434023f958e536d441aa79a9f1e0c56882b3e11a77ea65f751632a5e"
+    },
+    {
+      "label": "browser-bundle",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-browser",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "bundle.spec.ts"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:20:21.316059+00:00",
+      "seconds": 15.156,
+      "log_sha256": "ae4c8cc86378e00462d79ce52e46ee1ae1f186c4572d2d6f6ffe53379685e739"
+    },
+    {
+      "label": "browser-integration-final",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-browser",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=/rc-output/workflow-recheck",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "bundle.spec.ts",
+        "return_replace.spec.ts",
+        "--grep",
+        "bundle:|durable single mode also"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:42:41.686561+00:00",
+      "seconds": 12.818,
+      "log_sha256": "c1cfa83448099bacafa9563cba057f8cc3b623307efe7b6dd82c2f43175f9ef2"
+    },
+    {
+      "label": "browser-release",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-browser",
+        "AGENTMALL_WORKFLOW_EVIDENCE_DIR=/rc-output/workflow-release",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "bundle.spec.ts",
+        "return_replace.spec.ts",
+        "--grep",
+        "bundle:|durable single mode also"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:49:46.589206+00:00",
+      "seconds": 14.283,
+      "log_sha256": "4891099acbe6eceb41e77f1cdb91fe5a3f3e2f331a5e76870104670d02721dca"
+    },
+    {
+      "label": "build-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:38:58.428763+00:00",
+      "seconds": 2.376,
+      "log_sha256": "97be31db610ec3b8d1bc91bbcd9c1343010f0f744918042d89ed4c78a23c7928"
+    },
+    {
+      "label": "bundle-clarification",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "-k",
+        "clarification",
+        "--ci-offline-core"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:30:36.189527+00:00",
+      "seconds": 4.92,
+      "log_sha256": "1ca0248e43034ea8fbd54ff38d8d641ebb9529bb53920b5894689316f33db25f"
+    },
+    {
+      "label": "bundle-extra",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "-k",
+        "competing or five_categories or updates_clear",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:22:16.856387+00:00",
+      "seconds": 9.8,
+      "log_sha256": "d4869a588020dab9bdc1605933dcc5f6df1bb064c6526deac15875ca327a678e"
+    },
+    {
+      "label": "bundle-final-boundaries",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:35:17.067309+00:00",
+      "seconds": 35.57,
+      "log_sha256": "f7456de2a41091eeebb9630e9970b737b924084403f783d16c50f3f7567d2268"
+    },
+    {
+      "label": "bundle-final-directed",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-oracle",
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:31:38.584006+00:00",
+      "seconds": 27.845,
+      "log_sha256": "1b631babb0f1aff3cd137c4ca58a4955a0390e5f94934bbd308d0bc26acfecf6"
+    },
+    {
+      "label": "bundle-negative-review",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:26:32.069330+00:00",
+      "seconds": 25.713,
+      "log_sha256": "0d8ecb656805973e288b0e4844eb0de2c2b360413e83787e3e0e066013c1389d"
+    },
+    {
+      "label": "bundle-red",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core",
+        "-q",
+        "--tb=short"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:02:44.695261+00:00",
+      "seconds": 3.298,
+      "log_sha256": "6803ffd87bd2a44bf2e88df4f1b4dc543a0bed5fee6591a3dc5096aed85b80e7"
+    },
+    {
+      "label": "bundle-reviewed",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:25:14.615114+00:00",
+      "seconds": 21.963,
+      "log_sha256": "4e9ac45558edc36ceca5c82add2adb292a9abe9575d60412d78240954b52f408"
+    },
+    {
+      "label": "bundle-safety-final",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:20:08.897173+00:00",
+      "seconds": 18.091,
+      "log_sha256": "4eeeb03018117a64ffebc1fd800f0c9a7c68a61db417b5ff5fb1678af897fee6"
+    },
+    {
+      "label": "bundle-safety",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:17:47.401678+00:00",
+      "seconds": 18.962,
+      "log_sha256": "f4f60700fc3d95abb8e426842826859f8ca3680da079fec67cd418d049f232b7"
+    },
+    {
+      "label": "bundle-sdk-diagnosis",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-xq",
+        "backend/tests/test_bundle_shopping.py",
+        "-k",
+        "replay and multi",
+        "--ci-offline-core"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:13:42.438964+00:00",
+      "seconds": 4.991,
+      "log_sha256": "3b6aeca325a4870a12eec30ba6e632368f1bbac4fdccd5415a793b2731fa0a91"
+    },
+    {
+      "label": "bundle-sdk-fixed",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-xq",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:14:22.105666+00:00",
+      "seconds": 5.351,
+      "log_sha256": "94373e7db134473c63dfa4eb295c28f7c3f3b5e60e4fcf814042801fe5092280"
+    },
+    {
+      "label": "bundle-sdk-initial",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:13:13.334692+00:00",
+      "seconds": 6.354,
+      "log_sha256": "d6137299ac624246824025ce0e47bd4bb6af7d103123739070abb4b5204b8714"
+    },
+    {
+      "label": "bundle-sdk-valid-state",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "-xq",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:16:05.596306+00:00",
+      "seconds": 6.309,
+      "log_sha256": "f2ac9fd685c7c127c6c0d7611d1cb0077c485af61b741626087791d8e9540a3f"
+    },
+    {
+      "label": "collect-final",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--collect-only",
+        "-q",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:50:05.111878+00:00",
+      "seconds": 4.144,
+      "log_sha256": "ee703bd888c5e4c52a889d78a228b0ffff98bdb2b93b5f73aa7ff8ee023df135"
+    },
+    {
+      "label": "contracts-green",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core",
+        "-q",
+        "--tb=short"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:04:06.697290+00:00",
+      "seconds": 3.077,
+      "log_sha256": "79b5c869e43267295a55314fa9ec0026a53fd9d74dfcce75491c121623ccbca0"
+    },
+    {
+      "label": "eslint-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:38:56.949932+00:00",
+      "seconds": 1.251,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "label": "fix-imports-only",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "--fix",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:48:25.441916+00:00",
+      "seconds": 0.033,
+      "log_sha256": "aac3a0503d8b95052cc85fb9f1717dc82b74aa55853a5aa9749b41e30275d472"
+    },
+    {
+      "label": "format-boundaries",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents/bundle_memory.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:35:16.799893+00:00",
+      "seconds": 0.017,
+      "log_sha256": "96a977f329ec3c59092d40e041a019b49dcf03ca04055e177aa0ccb8c27234df"
+    },
+    {
+      "label": "format-checkpoint-fix",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents/state.py",
+        "backend/src/agentmall/agents/bundle_tools.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:31:38.363615+00:00",
+      "seconds": 0.016,
+      "log_sha256": "292ab567521d30841d69b41a9cc01ed3f5b34d1b4bdb12e6083b8943098c57a4"
+    },
+    {
+      "label": "format-clarification",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents/bundle_tools.py",
+        "backend/src/agentmall/agents/runtime.py",
+        "backend/src/agentmall/agents/supervisor.py",
+        "backend/tests/bundle_helpers.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:30:35.960538+00:00",
+      "seconds": 0.017,
+      "log_sha256": "a68018e0301d06e8ccd1518cd8a969c43dde8ed9a317509ad15bbc8d7198ea0f"
+    },
+    {
+      "label": "format-clean",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:48:26.109513+00:00",
+      "seconds": 0.117,
+      "log_sha256": "0cbcc26f8c24a0f4958469cc9e107a306ed1d1426ae7f126922fb64b525f6307"
+    },
+    {
+      "label": "format-extra",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:22:16.621991+00:00",
+      "seconds": 0.017,
+      "log_sha256": "413a709001976657cb743636fd34e48fc41d8d302d665460d3f874b3313da127"
+    },
+    {
+      "label": "format-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:32:45.617139+00:00",
+      "seconds": 0.119,
+      "log_sha256": "0cbcc26f8c24a0f4958469cc9e107a306ed1d1426ae7f126922fb64b525f6307"
+    },
+    {
+      "label": "format-initial",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents",
+        "backend/src/agentmall/retrieval/schemas.py",
+        "backend/src/agentmall/retrieval/search.py",
+        "backend/src/agentmall/infra/observability.py",
+        "backend/migrations/versions/0009_bundle_candidates.py",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/tests/bundle_helpers.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:13:13.052961+00:00",
+      "seconds": 0.035,
+      "log_sha256": "9ba6fc4e5fb1a68838d81561d1a632bf98db94343543d589acffb16b7bddea3a"
+    },
+    {
+      "label": "format-integration-fix",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/tests/workflow_e2e.py",
+        "backend/tests/test_live_preflight.py",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/src/agentmall/agents/bundle_contracts.py",
+        "backend/src/agentmall/agents/bundle_tools.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:41:53.180490+00:00",
+      "seconds": 0.02,
+      "log_sha256": "be228cc22ccf7a5e14a1482327c7e542160d0dd5947a71e13b821729bde1746f"
+    },
+    {
+      "label": "format-pre-regression",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src",
+        "backend/tests",
+        "backend/migrations"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:32:44.992901+00:00",
+      "seconds": 0.068,
+      "log_sha256": "74808cecba9041b485cd84ba5f13cc5b9e61e461aeb18feb36107d2dc52d4225"
+    },
+    {
+      "label": "format-registry",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents/specialist_tools.py",
+        "backend/src/agentmall/agents/model_control.py",
+        "backend/src/agentmall/playground/provider.py",
+        "backend/tests/test_live_preflight.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:44:00.233738+00:00",
+      "seconds": 0.019,
+      "log_sha256": "383df188576f1eee9b833e5e2f7d5d2f4b5a2c3a05e57a27613153e344923a48"
+    },
+    {
+      "label": "format-release",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:46:05.233404+00:00",
+      "seconds": 0.116,
+      "log_sha256": "0cbcc26f8c24a0f4958469cc9e107a306ed1d1426ae7f126922fb64b525f6307"
+    },
+    {
+      "label": "format-review-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents/bundle_memory.py",
+        "backend/src/agentmall/agents/bundle_tools.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:26:31.725677+00:00",
+      "seconds": 0.033,
+      "log_sha256": "878d50bf4ab752ab41ae942ac518b87e744d994b21bb15dca142ed7a470b3b3a"
+    },
+    {
+      "label": "format-review-fixes",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents/bundle_contracts.py",
+        "backend/src/agentmall/agents/bundle_memory.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:25:14.385571+00:00",
+      "seconds": 0.016,
+      "log_sha256": "292ab567521d30841d69b41a9cc01ed3f5b34d1b4bdb12e6083b8943098c57a4"
+    },
+    {
+      "label": "format-safety-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src",
+        "backend/tests",
+        "backend/migrations"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:20:08.613536+00:00",
+      "seconds": 0.066,
+      "log_sha256": "11552e9667f40f20435e02705753ab3c326206cef2c48cd1defc049554cd1d06"
+    },
+    {
+      "label": "format-safety",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents/bundle_memory.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:17:47.174130+00:00",
+      "seconds": 0.017,
+      "log_sha256": "96a977f329ec3c59092d40e041a019b49dcf03ca04055e177aa0ccb8c27234df"
+    },
+    {
+      "label": "format-targeted",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/src/agentmall/agents",
+        "backend/src/agentmall/infra/observability.py",
+        "backend/tests/bundle_helpers.py",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/tests/web_e2e_server.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:16:05.331206+00:00",
+      "seconds": 0.033,
+      "log_sha256": "135dc6c724f6e43198d2103e79f9922750369ae0ff971ee4371fd0bbf351f803"
+    },
+    {
+      "label": "format-tool-injection",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "backend/tests/bundle_helpers.py",
+        "backend/tests/test_bundle_shopping.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:45:24.194177+00:00",
+      "seconds": 0.017,
+      "log_sha256": "96a977f329ec3c59092d40e041a019b49dcf03ca04055e177aa0ccb8c27234df"
+    },
+    {
+      "label": "frontend-eslint-release",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:50:03.582148+00:00",
+      "seconds": 1.288,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "label": "frontend-static-pre",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:32:08.906951+00:00",
+      "seconds": 1.2,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "label": "frontend-typecheck-release",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:50:01.178931+00:00",
+      "seconds": 2.178,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "label": "frontend-typecheck",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:18:16.066995+00:00",
+      "seconds": 2.132,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "label": "full-playwright",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-browser",
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:35:18.221973+00:00",
+      "seconds": 215.876,
+      "log_sha256": "4a5722cbfc56ef1f55eaf65266943f5dfa0b194bc1a67d9eb87d2fc0b0c59487"
+    },
+    {
+      "label": "full-pytest-final",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-oracle",
+        "backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:37:01.603240+00:00",
+      "seconds": 336.405,
+      "log_sha256": "129a2ca7340094911087aa4e8e461506324e0c15a2e072e013b17c19ce1b5206"
+    },
+    {
+      "label": "full-vitest",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:35:17.129950+00:00",
+      "seconds": 0.873,
+      "log_sha256": "47eea3407948c26887a5bf049b7c3c93051e50bfe6ac25c41091620dde91feaf"
+    },
+    {
+      "label": "planner-tests",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_bundle_shopping.py",
+        "--ci-offline-core",
+        "-q",
+        "--tb=short"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:05:36.829292+00:00",
+      "seconds": 3.962,
+      "log_sha256": "06397bed05b17e05cecfe99a33dcf6d43fab7116480f9bdbadfd5a46597c01bb"
+    },
+    {
+      "label": "pytest-compatibility-fixed",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-oracle",
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/tests/test_live_preflight.py",
+        "backend/tests/test_retest_admission.py",
+        "backend/tests/test_playground_integration.py",
+        "backend/tests/test_playground_budget.py",
+        "backend/tests/test_playground_entry.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:45:24.461688+00:00",
+      "seconds": 49.412,
+      "log_sha256": "64d2de728e2bae0b20aba9dab71a5e4aca71c10b8e03f225b352ded702af6239"
+    },
+    {
+      "label": "pytest-integration-final",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-oracle",
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/tests/test_live_preflight.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:41:53.435409+00:00",
+      "seconds": 48.002,
+      "log_sha256": "e9f7dfa66205c178d0e0df3caef173b82a804e26782032f09f9e668375231b6b"
+    },
+    {
+      "label": "pytest-registry-regression",
+      "command": [
+        "env",
+        "AGENTMALL_BUNDLE_EVIDENCE_DIR=/rc-output/bundle-oracle",
+        "backend/.venv/bin/pytest",
+        "-q",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/tests/test_live_preflight.py",
+        "backend/tests/test_retest_admission.py",
+        "backend/tests/test_playground_provider.py",
+        "backend/tests/test_playground_entry.py",
+        "--ci-offline-core"
+      ],
+      "exit_code": 4,
+      "started_at": "2026-11-07T10:44:00.488404+00:00",
+      "seconds": 3.198,
+      "log_sha256": "e6c79d727187ee9cf670d9c6d146f53da789fdccbe4f07ac720549b3612569f9"
+    },
+    {
+      "label": "ruff-autofix",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "--fix",
+        "backend/src",
+        "backend/tests",
+        "backend/migrations"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:20:08.282184+00:00",
+      "seconds": 0.117,
+      "log_sha256": "df4100f72f733246e77cb4f767e7ed8fed91ce19a9433764f70642b607a274ca"
+    },
+    {
+      "label": "ruff-boundaries",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:36:28.692449+00:00",
+      "seconds": 0.168,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "label": "ruff-clean",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:48:25.715883+00:00",
+      "seconds": 0.175,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "label": "ruff-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:32:45.273406+00:00",
+      "seconds": 0.115,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "label": "ruff-initial",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "--fix",
+        "backend/src/agentmall/agents/bundle_contracts.py",
+        "backend/src/agentmall/agents/bundle_memory.py",
+        "backend/src/agentmall/agents/bundle_planner.py",
+        "backend/src/agentmall/agents/bundle_tools.py",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/tests/bundle_helpers.py"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:13:12.774105+00:00",
+      "seconds": 0.034,
+      "log_sha256": "6f6357897cfe43b783f30c5979ac2dbef65242b7fcc724c241272d6f2be88b85"
+    },
+    {
+      "label": "ruff-pre-regression",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "--fix",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:32:08.589044+00:00",
+      "seconds": 0.117,
+      "log_sha256": "ca032bd403d3069d374c2abde94de6a5ee9f3a935e896752d15a3076f9b153c4"
+    },
+    {
+      "label": "ruff-release",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:46:04.831296+00:00",
+      "seconds": 0.166,
+      "log_sha256": "7a635c1b10377d6506596db34fc4ca67d372549de1eab11ea71aa92b0b9bdc7e"
+    },
+    {
+      "label": "ruff-targeted",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend/src",
+        "backend/tests",
+        "backend/migrations"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:18:18.413886+00:00",
+      "seconds": 0.116,
+      "log_sha256": "1aa47a6e9a1dec783feb226e209378fe1330477166993d2d62a44d73d071694d"
+    },
+    {
+      "label": "source-fingerprint",
+      "command": [
+        "backend/.venv/bin/python",
+        "-c",
+        "from agentmall.playground.policy import source_fingerprint; print(source_fingerprint())"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:56:08.068550+00:00",
+      "seconds": 0.273,
+      "log_sha256": "a4fca1981c654412faee2e3efd4b41af16b91b685819ecf33aaf83ee43fcd90d"
+    },
+    {
+      "label": "typecheck-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T10:38:54.405110+00:00",
+      "seconds": 2.303,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "label": "ui-bundle-unit",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test",
+        "--",
+        "BundlePanel.test.tsx",
+        "ThreadMemory.test.tsx"
+      ],
+      "exit_code": 1,
+      "started_at": "2026-11-07T10:20:20.237148+00:00",
+      "seconds": 0.869,
+      "log_sha256": "bd418da9627f646458667b55c363efd366347d801cc485eefa6cdc4f8726da4d"
+    }
+  ],
+  "public_business_receipts": {
+    "bundle-single.json": "fb064d949ec6db8f45806e6b1888cd98521b5abdc6cbcf7161bd147e4d3480d9",
+    "bundle-multi.json": "b84b202eb34580eba389a16e95f9ab3ed0f418091baad521552f62220f3a6d03"
+  },
+  "screenshots": {
+    "03-mobile-bundle.png": "920148a5d83088749199f065539e3809bb30a8eef7cbaef82ffd02475a20d166",
+    "01-bundle-panel.png": "8f636e6fa2abb9178c034b08171714c34c32bbc484cf8655cb1618a6bb30f7bc",
+    "02-checkout-panel.png": "30420f654cbd1830c226304de4cf05af72688af135a3b8478e084812464cb7d1"
+  }
+}

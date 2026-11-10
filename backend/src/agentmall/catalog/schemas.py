@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-Category = Literal["keyboard", "mouse", "headphones"]
+from agentmall.catalog.categories import Category  # noqa: F401 - shared public type
 
 
 class ProductFilters(BaseModel):

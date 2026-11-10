@@ -1,46 +1,125 @@
-# AgentMall：事务电商与可恢复 Agent 工作流
+# AgentMall · 可恢复工作流与事务电商
 
-一个面向 Backend / Agent / AI Application 工程岗位的合成电商作品。中文 Web 页面连接真实 FastAPI、PostgreSQL 和 LangGraph；模型检索商品、检查售后事实并准备提案，独立用户确认后由确定性领域服务执行。默认演示使用 Fixture Model，付费模型请求为零。
+## V2.14-R2：普通CI并行化候选（本地）
 
-本项目的公开作品版由经审查的源码快照建立**独立 Git 根**，不携带原私有研发仓库的提交历史、账号密钥、原始 Live 账本或模型权重。项目原创内容采用[MIT](LICENSE)，Copyright (c) 2026 Cockatoo-xlk；权利人已确认必要的源码公开权限。[验证结果](docs/RESULTS.md)区分原 Private RC 和本作品版的本地测试；本作品版的远程 CI 仅以其实际 GitHub Actions 回执为准。源码和文档不代替个人贡献说明，AI 辅助范围需按事实披露。
+V2.14已推送`01f0115f6fa704dec7a272eab57579d21d8f4ae5`，[首次Run42655215470 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42655215470)因GitHub明确的30分钟Job超时取消：pytest1220/14skip、Vitest127、build步骤通过，Playwright仅记录108项通过，**未取得119项成功回执**。
 
-## 可以验证的能力
+R2本地新回归：**pytest1291 passed /14 skipped（原1220+新增71），Vitest127，Playwright119 /0 retries**，静态检查与构建通过；两套独立PG，Linux aarch64。
 
-| 工程问题 | 实现与证据 |
+R2把原完整检查拆为独立Backend / Frontend-E2E及fail-closed Release Gate，保留每测试Job30分钟、Playwright单Worker/零重试和T16隔离。[根因、步骤耗时、集合等价性与本轮结果](docs/evidence/v214-r2/report.md) · [命令/日志SHA](docs/evidence/v214-r2/verification.json)。R2新架构尚未上传或远程验证；**REMOTE_CI_NOT_RUN_FOR_R2 / AMD64_REMOTE_CI_NOT_RUN_FOR_R2**。下文“本轮V2.14”成绩属于原本地阶段，不能冒充R2或已通过的Ubuntu成绩。真实L7 B2仍PARTIAL。
+
+AgentMall 将 **LLM 工具调用、可恢复 Agent 工作流与确定性电商事务**分开：模型可以检索、比较和准备提案；用户独立确认后，服务端才校验身份、版本与库存并提交业务。
+
+**FastAPI · PostgreSQL 17 / SQLAlchemy · LangGraph · pgvector / 本地 BGE · React / TypeScript · MCP · Docker**
+
+这是 AI Agent / Python 后端工程作品集。当前 **V2.14 Feature Freeze / 本地 Release Candidate**，没有生产用户量、真实支付或生产 SLA 声明。
+
+[无Key Quick Start](docs/PORTFOLIO_DEMO.md#启动) · [5分钟演示](docs/DEMO_RECORDING_SCRIPT.md) · [架构](docs/ARCHITECTURE.md) · [能力/证据矩阵](docs/V214_RELEASE_CANDIDATE.md) · [面试讲解](docs/PORTFOLIO_INTERVIEW.md) · [发布清单](docs/RELEASE_CHECKLIST.md)
+
+## 关键工程能力
+
+| 能力 | 实际实现与边界 |
 |---|---|
-| 库存、重复请求和响应丢失 | PostgreSQL 行锁、库存 CHECK、独立确认、action 身份和幂等回执；[领域事务](backend/src/agentmall/orders/service.py)、[真实数据库 Oracle](backend/tests/integration/oracle.py) |
-| 工作流等待、刷新和恢复 | 官方 PostgreSQL Checkpointer、节点 Journal、Epoch Fence、持久预算；[恢复协调](backend/src/agentmall/agents/run_service.py)、[持久图](backend/src/agentmall/agents/durable_graph.py) |
-| 人工授权 | Proposal → 独立 Confirmation → 原 Run Resume；退货和替代购买分别确认，[浏览器回归](frontend/tests/return_replace.spec.ts) |
-| 专业 Agent 与检索 | Single，或 Supervisor + Shopping / Order / AfterSales；白名单、严格参数、服务端 Actor/Store 授权和公开政策版本检索 |
-| 观察与费用 | 持久 RunEvent 和脱敏 Trace，UNKNOWN Usage 保留；两轮真实开发集结果与失败分开报告 |
+| Single / Multi-Agent | LangGraph Supervisor 动态路由至 Shopping / Order / AfterSales；服务端验证任务依赖、当前轮意图、工具批次和实体范围。保留 Single，不假设 Multi 更可靠。 |
+| HITL 与事务 | 不可变 Proposal → 独立 Confirmation → 原 Run Resume；一笔多 SKU 订单、全部库存预留、确认消费和幂等回执同事务提交。购买不授权付款或退款。 |
+| 多轮组合购物 | 13 品类 / 120 个合成 SKU；2–5 类 Bundle、整数分总预算、版本化候选、KEEP/REPLACE 等增量重规划。旧方案不是当前有效报价。 |
+| 持久异步 Worker | Legacy Sync 与显式 Durable Async 并存；PostgreSQL 任务、Thread Advisory Lock、Epoch Fence、Node Journal 与官方 Checkpointer 协调恢复。不是通用 Exactly-Once。 |
+| 实时进度 | fetch SSE 读取已提交 RunEvent，按 seq 补读/去重；JWT 仅在浏览器内存，断线不会重建订单或自动确认。 |
+| 商家运营 | 本店订单/售后、草稿审核与动态上架、显式索引状态；Merchant Copilot 只读分析和说明草稿，不能替商家批准业务。 |
+| 检索与评测 | PostgreSQL 全文检索 + BGE / pgvector + RRF；可选 CPU Cross-Encoder 默认关闭。Evaluation Studio 区分 Fixture、真实检索和历史 Live。 |
+| MCP Gateway | 9 个角色受限工具；stdio / localhost HTTP 复用领域服务。唯一写扩展是待审核商品草稿；**REMOTE_AUTH_NOT_IMPLEMENTED**，没有交易执行工具。 |
 
-[三项工程案例](docs/ENGINEERING_CASES.md) · [实际架构](docs/ARCHITECTURE.md) · [结果及限制](docs/RESULTS.md) · [候选来源与排除边界](SNAPSHOT.md)
+## 系统架构
 
-## 无 API Key 的 Quick Start
-
-准备 Docker 引擎及 Compose，在仓库根目录执行。首次必须使用本目录自己的新 PGDATA，端口冲突先辨认归属，不终止未知服务。镜像安装锁定依赖和浏览器，不读取个人 .env 或下载 BGE 权重。
-
-```sh
-docker compose -p agentmall-portfolio -f compose.ci.yaml up -d --wait postgres
-docker compose -p agentmall-portfolio -f compose.ci.yaml build runner
-docker compose -p agentmall-portfolio -f compose.ci.yaml run --rm runner
-docker compose -p agentmall-portfolio -f compose.ci.yaml run --rm runner python scripts/demo.py --prepare-return --seconds 900
+```mermaid
+flowchart LR
+  UI["用户 / React"] --> API["FastAPI：身份 / Store / 版本"]
+  API -->|"Legacy Sync"| G["LangGraph：Single / Supervisor + Specialists"]
+  API -->|"Durable Async：202"| Q[("PostgreSQL agent_jobs")]
+  W["独立 Worker：锁 + Epoch Fence"] --> Q
+  W --> G
+  G --> V["工具白名单 / 严格 Schema / 预算"]
+  V --> R["Hybrid Retrieval：全文 + BGE + RRF"]
+  V --> D["Domain Services：提案 / 确认 / 事务 / 幂等"]
+  UI -->|"独立批准 / Resume"| API
+  D --> PG[("PostgreSQL / pgvector")]
+  R --> PG
+  G <--> CP[("Checkpoint / Journal / Thread Context")]
+  CP --> PG
+  PG --> E["脱敏 RunEvent / SSE / 评测投影"]
+  E --> UI
+  C["独立 MCP Client"] --> M["MCP Gateway：本地工具鉴权"]
+  M --> D
 ```
 
-打开 [商城](http://127.0.0.1:5174)，合成账号 `buyer1` / `AgentMall-demo-2026!`。看到 Fixture 标识后按[3–5分钟演示](docs/DEMO.md)操作；接口文档在演示运行时的 [OpenAPI](http://127.0.0.1:8001/docs)。宿主数据库暴露为 55434；容器独立网络内部 55433 满足现有测试 Guard，**不连接宿主的历史 55432/55433**。
+MCP 是外部工具接口，不是内部 Agent 工具的必经链路。Checkpoint 保存执行进度；领域事务决定订单、库存与授权是否真实生效。[完整职责和代码入口](docs/ARCHITECTURE.md)。
 
-退出演示并等待清理后，`docker compose -p agentmall-portfolio -f compose.ci.yaml down` 只移除这个项目的容器/网络，保留本目录专属 PGDATA。不要加 `-v`、删除旧数据库、复用他人目录或把测试入口暴露公网。后续复用 PGDATA 不再称为空数据库首次验收。
+## Quick Start：默认无Key演示
 
-## 验证与真实边界
+需要 Docker、支持 `!override` 的 Compose v2 和可用本地端口；构建需下载锁定依赖，不下载模型权重。以下使用 Mac Docker Desktop，Linux 用户将显式 Context 换为自己核对的引擎。
 
-原 Private RC 的 GitHub Ubuntu 24.04 amd64 Run **41170933236 / Attempt 1 / 2026-10-31** 已实测：后端 **642 passed / 14 skipped**，Vitest **38 passed**，Playwright **43 passed**。原本机 Mac **656 passed** 属于另一个环境。它们不等于此独立快照已在新的 Public GitHub 仓库运行；详见[脱敏 CI 摘要](docs/evidence/private-rc-ci.json)及[独立快照验证](docs/RESULTS.md)。
+```sh
+# 仓库根目录；只使用本次新项目。先确认同名项目不存在、8026/5196空闲。
+export COMPOSE_PROJECT_NAME=agentmall-v214-demo
+# --env-file /dev/null 避免 Compose 自动读取本地 .env。
+docker --context desktop-linux compose --env-file /dev/null \
+  -f compose.ci.yaml -f compose.portfolio-local.yaml config --quiet
+docker --context desktop-linux compose --env-file /dev/null \
+  -f compose.ci.yaml -f compose.portfolio-local.yaml build runner
+docker --context desktop-linux compose --env-file /dev/null \
+  -f compose.ci.yaml -f compose.portfolio-local.yaml up -d --wait postgres
+docker --context desktop-linux compose --env-file /dev/null \
+  -f compose.ci.yaml -f compose.portfolio-local.yaml run --rm --no-deps \
+  runner python scripts/demo.py --catalog-profile expanded --seconds 600
+```
 
-CI 的 14 项跳过仅 13 个真实 BGE 权重依赖与 1 个未公开私有 Live 原件比较；核心恢复、8组 SIGKILL、T11 并发、预算/权限/Oracle 不跳过。默认模型为 Fixture 和 MockTransport，不发 DeepSeek 请求。GitHub Actions 的 Action 和镜像固定 SHA；本作品版的远程 CI 状态须按其实际 GitHub Actions 运行记录核对。
+另开终端，按[场景设置](docs/PORTFOLIO_DEMO.md#场景设置)选择 `context-catalog`；打开 `http://127.0.0.1:5196`，合成账号 `buyer1` / `AgentMall-demo-2026!`，进入工作流创建 **Single Thread / Legacy Sync**：
 
-两轮真实同开发集 Pilot：Single **1/5→5/5**，Multi **4/5→4/5**；43 / 53 请求，冻结高峰估算 ¥0.251492 / ¥0.341790，平台实际账单 UNKNOWN。第二轮 Multi B2 仍失败/PARTIAL，外层误判 SIGINT、退出130/-2保留；L6后没有第三次 Live。原40题已参与开发，不是独立 Holdout，不能推导泛化提升或架构总体优劣。
+1. `推荐300元以内的静音键盘，不要购买。`
+2. `我改主意了，要支持无线连接的，预算提高到400元。`
+3. `就买刚才推荐的第二款，一件，送演示宿舍。`
 
-## 尚未验证与许可
+审阅快照后独立批准。自动化点击标记 **TEST_OPERATOR**；此默认路线到 **PENDING_PAYMENT** 为止，付款0。服务端与数据库真实运行，**SDK MockTransport + Fixture Embedding 不是 DeepSeek 实况，也不是真实 BGE**。普通 FastAPI 仍默认 `MODEL_DISABLED`；不要配置 Provider Key。测试控制接口只允许独占 localhost 演示。端口、故障检查和自有资源清理见[操作手册](docs/PORTFOLIO_DEMO.md)。
 
-合成账号、商品、地址、模拟支付/退款，没有真实资金或生产部署。进程内 Journal 收束不保证任意 SIGKILL 下外部模型调用 exactly-once；本地/远程 CI 也不是生产负载、SLA或容灾证明。没有录屏，`VIDEO_NOT_RECORDED`。
+![历史Mock/Fixture合成订单截图，不是当前真实模型成功](docs/screenshots/portfolio/06-order-detail.jpg)
 
-项目原创内容采用[MIT](LICENSE)，[权利人许可决定](docs/LICENSE_DECISION.md)及[COPYRIGHT](COPYRIGHT.md)说明归属。[第三方声明](THIRD_PARTY_NOTICES.md)限定已审核的源码/截图范围；未来二进制、镜像或模型再分发另行核验。公开仓库的 CI 是否通过，必须提供对应 Commit SHA、Run ID 和实际回执，不得以原 Private RC 的成绩代替。
+上图来自 V1 历史三轮 Demo：合成数据、MockTransport / Fixture、TEST_OPERATOR、未付款。它不是 V2.14 新录屏或 L7 成功证据；[来源与哈希](docs/evidence/portfolio-demo/verification.json)。**VIDEO_NOT_RECORDED**。
+
+## Testing：按源码和执行范围归属
+
+V2.14 的本轮实际命令、退出码、环境与日志 SHA 在[最终回执](docs/evidence/v214/verification.json)和[结果索引](docs/RESULTS.md)。本轮重新执行：**pytest 1220 passed / 14 skipped，Vitest 127，Playwright 119 / 0 retries**；Ruff、格式、TypeScript、ESLint与前端构建全部退出0。Linux aarch64，独占PG17/pgvector，SDK MockTransport / Fixture；14项原skip不变。本轮默认Single三轮浏览器Demo、独立SQL和官方Checkpoint另有新原件。
+
+本轮实际构建使用可信本地依赖缓存、当前跟踪源码和锁文件同步；**标准基础镜像冷构建 NOT_RUN**，缓存缺依赖、浏览器定位与采集器字段的中途失败均记录于回执。
+
+普通离线核心入口为 `uv run --project backend pytest --ci-offline-core`，必须先准备专属 PG17 / pgvector 与合成配置；前端为 `npm test` / `npm run test:e2e`。[测试/源码绑定](docs/V214_RELEASE_CANDIDATE.md#本轮离线验证)说明完整运行范围。
+
+最近一次完整累计版本的远程执行是上文 V2.14 Run42655215470，结论 **cancelled**。较早的 [V2.5 Run42348866265 / Attempt1](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42348866265) success仅绑定 `c8e96835…`；[历史 R8](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/41972687787)也不能替代当前R2远程验收。**REMOTE_CI_NOT_RUN_FOR_R2**。
+
+## Real-LLM Evaluation：成功与失败分开
+
+固定开发集五任务 × Single/Multi 的真实 Pilot 在 **`b5d6a685…`** 上为 **9/10（Single 5/5、Multi 4/5）**，56 次已结算请求，真实本地 BGE；高峰 Token 单价估算 ¥0.393226，**实际账单 UNKNOWN**。不是独立 Holdout，也不证明 Multi 生产可靠性。
+
+| 后续 B2 / Multi 定向实验 | 源码 | 真实请求 | 结果 |
+|---|---|---:|---|
+| L1 | `342c3c19…` | 9 | PARTIAL：批次/重复派发 |
+| L3 | `a055117f…` | 5 | PARTIAL：只读写权限/重复派发 |
+| L5 | `d32d25b2…` | 12 | PARTIAL / BUDGET_EXCEEDED |
+| L7 | `280ec908…` | 6 | PARTIAL / CONTEXT_SCOPE_VIOLATION；具体字段未保存 |
+
+L6 离线完整 B2 为 11 次、批处理路径10次模型调用，仍保留两份独立确认；**L7 证明同源码真实 B2 尚未通过**。Oracle 的缺失目标/声明诊断不能直接等同于实际越权数据库写入。[完整来源、数据集哈希和证据分级](docs/V214_RELEASE_CANDIDATE.md#真实模型历史)。本轮不做 L8、不读取 Key、不进行真实请求。
+
+## Limitations
+
+- 没有真实支付/退款、云部署、生产负载、SLA 或灾难恢复保证。Worker 的 at-least-once 尝试不意味着外部模型请求 exactly-once。
+- V2.10 语义实验是 Linux aarch64 / CPU、固定40条合成查询、单标注者；不能据此外推真实用户泛化或真实 LLM 优势。默认 Reranker 关闭。
+- 当前 Multi B2 真实模型仍失败；Bundle、Copilot、MCP 的离线验证不能冒充真实 LLM 成功。模型别名 `deepseek-flash` 也不是不可变服务版本。
+- R8 的 Journal 两字段直接快照、镜像/托管 Runner 最终物理销毁仍有历史证据限制；后续 Worker 测试不回写旧结论。
+- 示例账户/密码和测试控制标签是公开合成配置，禁止当作公网部署认证。MCP 远程 OAuth 未实现。
+
+## Documentation 与许可
+
+[架构](docs/ARCHITECTURE.md) · [默认Demo](docs/PORTFOLIO_DEMO.md) · [面试六问](docs/PORTFOLIO_INTERVIEW.md) · [能力矩阵/发布计划](docs/V214_RELEASE_CANDIDATE.md) · [Release Checklist](docs/RELEASE_CHECKLIST.md) · [完整历史结果](docs/RESULTS.md)
+
+[Bundle](docs/BUNDLE_SHOPPING.md) / [Replanning](docs/BUNDLE_REPLANNING.md) · [商家运营](docs/CATALOG_OPERATIONS.md) / [Copilot](docs/MERCHANT_COPILOT.md) · [MCP](docs/MCP_GATEWAY.md) · [Worker](docs/V212_DURABLE_WORKER.md) · [真实检索](docs/REAL_RETRIEVAL.md) · [Evaluation Studio](docs/EVALUATION_STUDIO.md)
+
+原创内容采用 [MIT](LICENSE)，Copyright (c) 2026 Cockatoo-xlk。[权利人确认](docs/LICENSE_DECISION.md)、[第三方声明](THIRD_PARTY_NOTICES.md)、[版权边界](COPYRIGHT.md)与[公开快照](SNAPSHOT.md)继续有效；不分发模型权重、依赖二进制或镜像。[旧首页归档](docs/history/README-before-v214.md)保留历史工程记录。个人贡献及 AI 辅助范围按实际参与说明，不将代码量或测试数等同于独立贡献。

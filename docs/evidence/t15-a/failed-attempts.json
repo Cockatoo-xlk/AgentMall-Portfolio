@@ -1,0 +1,128 @@
+[
+  {
+    "receipt": "playground-budget-red",
+    "class": "TEST_FIRST_EXPECTED_RED",
+    "note": "17 fail missing new package before implementation",
+    "exit_code": 1,
+    "log_sha256": "e114cb5f8dcb22048289dc7b0bc49acf671baef2ac47e515c54c966005a85cec"
+  },
+  {
+    "receipt": "playground-budget-initial-green",
+    "class": "REPRODUCIBLE_DEFECT_FIXED",
+    "note": "Scope re-entry ordinal could permit same node to send again; fresh activation scope copy fixed it",
+    "exit_code": 1,
+    "log_sha256": "97f0dfb37674252f4b3375ab5294fa3fab33f518207bb54c9067fae6d5b32b19"
+  },
+  {
+    "receipt": "strict-reservation-red",
+    "class": "REPRODUCIBLE_DEFECT_AND_HARNESS_FIXED",
+    "note": "Full reservations were released on invalid responses and corrupt ledger values insufficiently validated. One SOURCE_MISMATCH was source edited while fingerprint-bound tests running; classified harness error, not hidden model retry",
+    "exit_code": 1,
+    "log_sha256": "cda64734f10990141915f16a939a0e76c8ec4889c6262ba76d253beb95b34d57"
+  },
+  {
+    "receipt": "sdk-postgres-integration-red",
+    "class": "TEST_FIRST_EXPECTED_RED",
+    "note": "9 fail before runtime endpoint and durable transport scope wiring",
+    "exit_code": 1,
+    "log_sha256": "fe917713048d1f3826b720c5e69208fd522bedd330380e9aaab9e524f206352e"
+  },
+  {
+    "receipt": "provider-ui-unit-red",
+    "class": "TEST_FIRST_EXPECTED_RED",
+    "note": "new API module absent; old65 units already passed",
+    "exit_code": 1,
+    "log_sha256": "6a4ef1f404e259c6bd5b4ff0fcd5238330009ffc222b5050796f713eef491c14"
+  },
+  {
+    "receipt": "playground-entry-red",
+    "class": "TEST_FIRST_EXPECTED_RED",
+    "note": "CLI absent before implementation",
+    "exit_code": 1,
+    "log_sha256": "07d9cd77f0c2166f3406db26aa691f062fb176f53c0722b5bb2ef3d532f6f1c9"
+  },
+  {
+    "receipt": "review-protocol-red",
+    "class": "REPRODUCIBLE_P1_FIXED",
+    "note": "3 actual protocol errors reproduced; force tool_choice and nested response boundary corrected",
+    "exit_code": 1,
+    "log_sha256": "8525ad86547a338638fbccfaf7189376124d0ab76b041d9954c91d26d34cb9ea"
+  },
+  {
+    "receipt": "entry-budget-unit-final",
+    "class": "TEST_HARNESS_FAILURE_FIXED",
+    "note": "New test Settings omitted required DB/JWT fields",
+    "exit_code": 1,
+    "log_sha256": "2833979aa1a9ae18d4adbb95fa23e25a3cb81169802c70fff63843fa573f8dce"
+  },
+  {
+    "receipt": "review-protocol-green",
+    "class": "TEST_HARNESS_FAILURE_FIXED",
+    "note": "Protocol cases passed but synthetic JWT fixture too short; full run not accepted until fixture fixed",
+    "exit_code": 1,
+    "log_sha256": "e8a83f21c5fadb1d493eadb5251281b718487ba445f6524ec78d350caca91c3c"
+  },
+  {
+    "receipt": "sdk-entry-postgres-green",
+    "class": "TEST_HARNESS_FAILURE_FIXED",
+    "note": "16 cases passed,1 invalid synthetic JWT fixture; preserved original result",
+    "exit_code": 1,
+    "log_sha256": "b95cd94b194169f63ccfe8f9e6d83acb2c91de1643f15bac99bce0e4bf69cf83"
+  },
+  {
+    "receipt": "browser-install",
+    "class": "ENVIRONMENT_DOWNLOAD_FAILURE",
+    "note": "CDN ECONNRESET; installed same Chromium1248 copied read-only with347 file hashes matching, not source/evidence/credential reuse",
+    "exit_code": 1,
+    "log_sha256": "089560d5fad584ca51fee292e02b1393190034a422b1535cb0f4a23eb15fbde5"
+  },
+  {
+    "receipt": "full-backend-offline",
+    "class": "ENVIRONMENT_OOM",
+    "note": "640MiB cgroup OOM event, exit137 during existing four-process budget test; one bounded1152MiB own-container adjustment; no global resource change",
+    "exit_code": 137,
+    "log_sha256": "80ab22e87a4fd3f36fc968ab1b997e5a77ffde2bf1f3902fe9da72039ceca240"
+  },
+  {
+    "receipt": "playwright-full",
+    "class": "STARTUP_HARNESS_FAILURE_FIXED",
+    "note": "0 executed; filtered env overrides not passed to child; dedicated RED/GREEN test added",
+    "exit_code": 1,
+    "log_sha256": "cf16ab1bd55174a3d7a715420ae9a56b620821521f43de13e03023e9a010b4a4"
+  },
+  {
+    "receipt": "child-environment-red",
+    "class": "REPRODUCIBLE_LAUNCHER_DEFECT_FIXED",
+    "note": "Missing explicit child env reproduced then corrected",
+    "exit_code": 1,
+    "log_sha256": "9802964fc18035f861e029f4dcf3550f2fbb31d0f3cceb1eeba0fef0fc147b33"
+  },
+  {
+    "receipt": "playwright-full-fixed-entry",
+    "class": "STARTUP_HARNESS_FAILURE_FIXED",
+    "note": "0 executed; unused own Compose Vite port reserved host5186; removed only own mapping/recreated own PG with data retained",
+    "exit_code": 1,
+    "log_sha256": "a6d2552c5bab93a4320d2834d98ee336cb0585c38c20942f437a552500ffcbf8"
+  },
+  {
+    "receipt": "playwright-full-isolated",
+    "class": "UI_AND_HARNESS_FAILURE_FIXED",
+    "note": "30 passed,4 failed,1 interrupted,48 not run; explicitly stopped OWN browser process after new helper full navigation lost memory-only JWT. Corrected helper to SPA navigation. Neutral banner duplicate caused strict locator failure; old assertions kept",
+    "exit_code": 130,
+    "log_sha256": "7a2d4fda41a4c7ea143c3500c80a2dadcda2f0f78907c7e899493ed65efe5de0"
+  },
+  {
+    "receipt": "sdk-browser-targeted",
+    "class": "EXPECTED_DOMAIN_REJECTION_MISCONFIGURED_TEST",
+    "note": "25 passed,1 failed: purchase input omitted explicit quantity; did not relax service. Corrected valid input and retained separate missing-quantity refusal case. Original failure screenshot/log retained; SQL state not captured for that early failing case, limitation disclosed",
+    "exit_code": 1,
+    "log_sha256": "854f9a02f4bb17baab9cebd7493ee6a8be073d4cdf75092a93b18ec1fb7bb5a2"
+  },
+  {
+    "receipt": "playwright-final-regression",
+    "class": "UI_LABEL_COLLISION_FIXED",
+    "note": "83 passed,1 failed: duplicate MODEL_DISABLED wording. New panel label clarified; original assertion unchanged",
+    "exit_code": 1,
+    "log_sha256": "8e25193cee0b204dfefe1e0713724a841de3f62b70da3546fcb9bfe64d9d67c1"
+  }
+]

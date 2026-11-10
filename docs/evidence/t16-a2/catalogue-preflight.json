@@ -1,0 +1,418 @@
+{
+  "classification": "SYNTHETIC_TEST_DATA_REAL_BGE_PG_PREFLIGHT",
+  "model": {
+    "model": "BAAI/bge-small-zh-v1.5",
+    "revision": "7999e1d3359715c523056ef9478215996d62a620",
+    "dimension": 512,
+    "device": "cpu",
+    "dtype": "torch.float32",
+    "load_and_encode_seconds": 4.458932085000015,
+    "vector_lengths": [
+      512,
+      512
+    ],
+    "norms": [
+      0.9999999831233317,
+      0.9999999832391907
+    ]
+  },
+  "indexed": {
+    "products": 12,
+    "policy_chunks": 10
+  },
+  "vector_dimensions": [
+    512
+  ],
+  "catalogue": {
+    "mode": "SYNTHETIC_SEED_ONLY",
+    "products": [
+      {
+        "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "静音 K87",
+        "category": "keyboard",
+        "price_cents": 29900,
+        "attributes": {
+          "size": "87键",
+          "noise": "较安静",
+          "switch": "静音轴",
+          "connection": "双模",
+          "connection_capabilities": [
+            "wired",
+            "wireless"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "无线耳机 H2",
+        "category": "headphones",
+        "price_cents": 32900,
+        "attributes": {
+          "size": "头戴",
+          "noise": "不适用",
+          "switch": "无",
+          "connection": "无线",
+          "connection_capabilities": [
+            "wireless"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "段落 K87",
+        "category": "keyboard",
+        "price_cents": 25900,
+        "attributes": {
+          "size": "87键",
+          "noise": "明显",
+          "switch": "段落轴",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "无线鼠标 M2",
+        "category": "mouse",
+        "price_cents": 18900,
+        "attributes": {
+          "size": "中号",
+          "noise": "较安静",
+          "switch": "无",
+          "connection": "无线",
+          "connection_capabilities": [
+            "wireless"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "有线耳机 H1",
+        "category": "headphones",
+        "price_cents": 12900,
+        "attributes": {
+          "size": "头戴",
+          "noise": "不适用",
+          "switch": "无",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "静音 K98",
+        "category": "keyboard",
+        "price_cents": 39900,
+        "attributes": {
+          "size": "98键",
+          "noise": "较安静",
+          "switch": "静音轴",
+          "connection": "三模",
+          "connection_capabilities": [
+            "wired",
+            "wireless"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "宿舍静音 K68",
+        "category": "keyboard",
+        "price_cents": 19900,
+        "attributes": {
+          "size": "68键",
+          "noise": "较安静",
+          "switch": "静音轴",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "轻巧 K61",
+        "category": "keyboard",
+        "price_cents": 15900,
+        "attributes": {
+          "size": "61键",
+          "noise": "适中",
+          "switch": "线性轴",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "进阶 K75",
+        "category": "keyboard",
+        "price_cents": 59900,
+        "attributes": {
+          "size": "75键",
+          "noise": "适中",
+          "switch": "线性轴",
+          "connection": "三模",
+          "connection_capabilities": [
+            "wired",
+            "wireless"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "轻量鼠标 M1",
+        "category": "mouse",
+        "price_cents": 9900,
+        "attributes": {
+          "size": "中号",
+          "noise": "适中",
+          "switch": "无",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "静音 K104",
+        "category": "keyboard",
+        "price_cents": 49900,
+        "attributes": {
+          "size": "104键",
+          "noise": "较安静",
+          "switch": "静音轴",
+          "connection": "有线",
+          "connection_capabilities": [
+            "wired"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      },
+      {
+        "id": "e5635304-5562-5b76-80ae-2f577488e404",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "name": "办公 K108",
+        "category": "keyboard",
+        "price_cents": 35900,
+        "attributes": {
+          "size": "108键",
+          "noise": "较安静",
+          "switch": "静音轴",
+          "connection": "双模",
+          "connection_capabilities": [
+            "wired",
+            "wireless"
+          ]
+        },
+        "on_hand": 20,
+        "reserved": 0,
+        "active": true,
+        "catalog_version": 1
+      }
+    ],
+    "hash": "46e2f8ba3c6c57f74d0824a35b920efb41660b40ac0201725a5f4f06b7adc5fc"
+  },
+  "rounds": [
+    {
+      "turn": 1,
+      "input": "推荐300元以内的静音键盘，不要购买。",
+      "constraints": {
+        "max_price_cents": 30000,
+        "category": "keyboard",
+        "noise_preference": "quiet",
+        "exclude_product_ids": [],
+        "exclude_original": false,
+        "quantity": null,
+        "address_label": null,
+        "purchase_requested": false,
+        "return_requested": false,
+        "support_requested": false,
+        "support_declined": false,
+        "reason_code": null,
+        "product_needs": {
+          "layout": null,
+          "connection": null,
+          "keyboard_type": null,
+          "usage": null
+        }
+      },
+      "preferences": {
+        "max_price_cents": 30000,
+        "noise_preference": "quiet",
+        "category": "keyboard"
+      },
+      "query_used_for_direct_probe": "静音键盘",
+      "retrieval_hit_count": 2,
+      "eligible_catalogue_count": 2,
+      "eligible_results": [
+        {
+          "rank": 1,
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "name": "静音 K87",
+          "price_cents": 29900,
+          "connection": "双模",
+          "catalog_version": 1
+        },
+        {
+          "rank": 2,
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "name": "宿舍静音 K68",
+          "price_cents": 19900,
+          "connection": "有线",
+          "catalog_version": 1
+        }
+      ]
+    },
+    {
+      "turn": 2,
+      "input": "改成支持无线连接的，预算提高到400元。",
+      "constraints": {
+        "max_price_cents": 40000,
+        "category": "keyboard",
+        "noise_preference": "quiet",
+        "exclude_product_ids": [],
+        "exclude_original": false,
+        "quantity": null,
+        "address_label": null,
+        "purchase_requested": false,
+        "return_requested": false,
+        "support_requested": false,
+        "support_declined": false,
+        "reason_code": null,
+        "product_needs": {
+          "layout": null,
+          "connection": "无线",
+          "keyboard_type": null,
+          "usage": null
+        }
+      },
+      "preferences": {
+        "max_price_cents": 40000,
+        "noise_preference": "quiet",
+        "category": "keyboard",
+        "product_needs": {
+          "connection": "无线"
+        }
+      },
+      "query_used_for_direct_probe": "静音键盘 无线",
+      "retrieval_hit_count": 3,
+      "eligible_catalogue_count": 3,
+      "eligible_results": [
+        {
+          "rank": 1,
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "name": "静音 K87",
+          "price_cents": 29900,
+          "connection": "双模",
+          "catalog_version": 1
+        },
+        {
+          "rank": 2,
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "name": "静音 K98",
+          "price_cents": 39900,
+          "connection": "三模",
+          "catalog_version": 1
+        },
+        {
+          "rank": 3,
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "name": "办公 K108",
+          "price_cents": 35900,
+          "connection": "双模",
+          "catalog_version": 1
+        }
+      ]
+    },
+    {
+      "turn": 3,
+      "input": "就买最新推荐的第二款，一件，送演示宿舍。",
+      "constraints": {
+        "max_price_cents": 40000,
+        "category": "keyboard",
+        "noise_preference": "quiet",
+        "exclude_product_ids": [],
+        "exclude_original": false,
+        "quantity": 1,
+        "address_label": "demo_dorm",
+        "purchase_requested": true,
+        "return_requested": false,
+        "support_requested": false,
+        "support_declined": false,
+        "reason_code": null,
+        "product_needs": {
+          "layout": null,
+          "connection": "无线",
+          "keyboard_type": null,
+          "usage": null
+        }
+      },
+      "status": "REFERENCE_AVAILABLE_LIVE_RUN_NOT_EXECUTED",
+      "proposal_created": false
+    }
+  ],
+  "memory_peak_bytes": 638287872,
+  "provider_calls": 0,
+  "raw_probe_sha256": "72bacee55bb74357885d26831a54e0f518d82ab1c49f662b868af7cd3a0376a7"
+}

@@ -4,6 +4,7 @@ import pytest
 from conftest import row
 from multiagent_helpers import (
     ai,
+    assessment_reads,
     call,
     choose_purchase,
     final,
@@ -93,9 +94,6 @@ async def test_cross_domain_return_and_replacement_preserve_identity(
     order = await delivered_order(env[0], buyer, product)
     baseline = facts(env)
 
-    def inspect(messages):
-        return ai(call("get_order", {"order_id": order["id"]}))
-
     def prepare_return(messages):
         return ai(
             call(
@@ -110,22 +108,14 @@ async def test_cross_domain_return_and_replacement_preserve_identity(
 
     models = make_models(
         supervisor=[
-            route("order", "inspect_orders", "old"),
+            route("aftersales", "assess_return", "old"),
             route("aftersales", "prepare_return", "return", depends=["old"], read_only=False),
             route("shopping", "find_products", "replacement", depends=["old"]),
             route("order", "prepare_checkout", "new", depends=["replacement"], read_only=False),
             route("finish"),
         ],
-        order=[inspect, final(), choose_purchase],
-        aftersales=[
-            ai(
-                call(
-                    "check_eligibility", {"order_id": order["id"], "reason_code": "QUALITY_ISSUE"}
-                ),
-                call("retrieve_policies", {"order_id": order["id"], "query": "质量问题退货期限"}),
-            ),
-            prepare_return,
-        ],
+        order=[choose_purchase],
+        aftersales=[*assessment_reads(order["id"]), prepare_return],
         shopping=[ai(call("retrieve_products", {"query": "安静机械键盘"})), final()],
     )
     trace = await install(env, models, embedding=embedding)
@@ -162,7 +152,7 @@ async def test_cross_domain_return_and_replacement_preserve_identity(
         c["policy_version"] == "demo-v1" and c["visibility"] == "public"
         for c in result["citations"]
     )
-    assert result["budget"]["used"]["models"] == 12
+    assert result["budget"]["used"]["models"] == 9
     from multiagent_helpers import save_evidence
 
     save_evidence("return-replacement-" + embedding, env, trace, result, baseline_counts=baseline)
@@ -200,11 +190,15 @@ async def test_aftersales_proposal_survives_failed_recommendation(env, buyer, pr
     order = await delivered_order(env[0], buyer, product)
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            ),
             route("shopping", "find_products", "shop"),
             route("finish"),
         ],
         aftersales=[
+            *assessment_reads(order["id"]),
             ai(
                 call(
                     "prepare_return",
@@ -214,7 +208,7 @@ async def test_aftersales_proposal_survives_failed_recommendation(env, buyer, pr
                         "description": "质量问题",
                     },
                 )
-            )
+            ),
         ],
         shopping=[TimeoutError()],
     )
@@ -235,11 +229,12 @@ async def test_ineligible_return_does_not_block_independent_recommendation(env, 
     order = await create_order(env[0], buyer, product)
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
             route("shopping", "find_products", "shop"),
             route("finish"),
         ],
         aftersales=[
+            *assessment_reads(order["id"]),
             ai(
                 call("check_eligibility", {"order_id": order["id"], "reason_code": "QUALITY_ISSUE"})
             ),

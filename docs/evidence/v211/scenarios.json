@@ -1,0 +1,716 @@
+{
+  "evidence_class": "MOCK_TRANSPORT_REAL_POSTGRES",
+  "executed_at": "2026-11-08T14:48:09.896765+00:00",
+  "cases": [
+    {
+      "task_id": "OPS-A-B",
+      "question": "帮我看看目前有哪些订单需要发货，以及还有哪些退货申请等待审核。",
+      "expected_tools": [
+        "list_merchant_after_sales",
+        "list_merchant_orders",
+        "summarize_operations"
+      ],
+      "actual_tools": [
+        "list_merchant_after_sales",
+        "list_merchant_orders",
+        "summarize_operations"
+      ],
+      "tool_selection_correct": true,
+      "result": {
+        "status": "COMPLETED",
+        "clarification": null,
+        "model_mode": "MOCK_TRANSPORT",
+        "summary": {
+          "paid_orders": 1,
+          "requested_cases": 1,
+          "out_of_stock": null,
+          "low_stock": null,
+          "index_pending": null,
+          "by_status": {
+            "order": {
+              "PAID": 1
+            },
+            "case": {
+              "REQUESTED": 1
+            },
+            "product": {},
+            "index_job": {}
+          },
+          "coverage": [
+            {
+              "tool": "list_merchant_orders",
+              "status_filter": "PAID",
+              "scanned": 1,
+              "complete": true,
+              "next_cursor": null,
+              "started_cursor": null
+            },
+            {
+              "tool": "list_merchant_after_sales",
+              "status_filter": "REQUESTED",
+              "scanned": 1,
+              "complete": true,
+              "next_cursor": null,
+              "started_cursor": null
+            }
+          ],
+          "scope": "OBSERVED_RECORDS_ONLY",
+          "low_stock_threshold": 5,
+          "eligible_todo_count": 2,
+          "shown_todo_count": 2,
+          "advice_truncated": false
+        },
+        "evidence": [
+          {
+            "key": "order:945caa73-400c-4730-a3c8-36ef804b4300",
+            "kind": "order",
+            "id": "945caa73-400c-4730-a3c8-36ef804b4300",
+            "status": "PAID",
+            "version": 2,
+            "read_at": "2026-11-08T14:48:09.791293+00:00",
+            "facts": {
+              "total_cents": 29900,
+              "currency": "CNY",
+              "created_at": "2026-11-08T14:48:09.681355+00:00",
+              "paid_at": "2026-11-08T14:48:09.706790+00:00",
+              "shipped_at": null,
+              "delivered_at": null,
+              "policy_version": "demo-v1",
+              "items": [
+                {
+                  "product_id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+                  "name_snapshot": "静音 K87",
+                  "unit_price_cents": 29900,
+                  "quantity": 1
+                }
+              ]
+            },
+            "fingerprint": "f0e4c50a21502e46ccee5b18abd0c629b1fcf15bf2da36d8a2245fffa7b15c1e"
+          },
+          {
+            "key": "case:a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "kind": "case",
+            "id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "status": "REQUESTED",
+            "version": 1,
+            "read_at": "2026-11-08T14:48:09.791293+00:00",
+            "facts": {
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "reason_code": "QUALITY_ISSUE",
+              "policy_version": "demo-v1",
+              "created_at": "2026-11-08T14:48:09.780641+00:00",
+              "reviewed_at": null,
+              "received_at": null,
+              "refunded_at": null,
+              "eligibility_at_request": {
+                "eligible": true,
+                "reason_codes": [],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              },
+              "has_review_note": false
+            },
+            "fingerprint": "fbb5be84a6343f61fdbb4d01197244101608ac7c8451475fb8709672165fa893"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "REVIEW",
+            "content": "售后处于REQUESTED，原因代码QUALITY_ISSUE；尚未审核。",
+            "evidence_key": "case:a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "record_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "status": "REQUESTED",
+            "version": 1,
+            "read_at": "2026-11-08T14:48:09.791293+00:00",
+            "action": "进入售后管理，由商家独立批准或拒绝",
+            "risk": "只读建议；记录可能变化，实际操作需重新核对",
+            "priority_rule": "待审核Case优先，再失败索引、已支付待发货、缺货及低库存；同类按创建时间/ID排序"
+          },
+          {
+            "type": "SHIP",
+            "content": "订单处于PAID，金额29900分；可以核对后发货。",
+            "evidence_key": "order:945caa73-400c-4730-a3c8-36ef804b4300",
+            "record_id": "945caa73-400c-4730-a3c8-36ef804b4300",
+            "status": "PAID",
+            "version": 2,
+            "read_at": "2026-11-08T14:48:09.791293+00:00",
+            "action": "进入订单管理，核对后手动发货",
+            "risk": "只读建议；记录可能变化，实际操作需重新核对",
+            "priority_rule": "待审核Case优先，再失败索引、已支付待发货、缺货及低库存；同类按创建时间/ID排序"
+          }
+        ],
+        "review_draft": null,
+        "metrics": {
+          "model_calls": 2,
+          "tool_calls": 3,
+          "input_token_upper_bound": 3130,
+          "reported_fixture_input_tokens": 200,
+          "reported_fixture_output_tokens": 200,
+          "db_pages": 2,
+          "verified_suggestions": 2,
+          "unsupported_claims": 0,
+          "grounded_claim_rate": 1.0,
+          "business_writes": 0,
+          "permission_violations": 0,
+          "latency_ms": 30.684083001688123
+        },
+        "limitations": [
+          "MOCK_TRANSPORT decisions do not establish real LLM capability",
+          "Observed bounded records only; see coverage before interpreting counts",
+          "Read-only snapshot, not authorization or current-state guarantee",
+          "No durable merchant analysis history; disconnect cancels analysis"
+        ],
+        "events": [
+          {
+            "phase": "plan",
+            "tool_names": [
+              "list_merchant_orders",
+              "list_merchant_after_sales"
+            ],
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "list_merchant_orders",
+            "records": 1,
+            "read_at": "2026-11-08T14:48:09.791293+00:00",
+            "latency_ms": 2.0889159641228616,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "list_merchant_after_sales",
+            "records": 1,
+            "read_at": "2026-11-08T14:48:09.791293+00:00",
+            "latency_ms": 1.4457909855991602,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "summarize_operations",
+            "records": 2,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "recommend",
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "validate",
+            "status": "COMPLETED"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "OPS-C-D",
+      "question": "哪些商品缺货或低库存，哪些索引任务需要处理？",
+      "expected_tools": [
+        "list_catalog_index_jobs",
+        "list_merchant_products",
+        "summarize_operations"
+      ],
+      "actual_tools": [
+        "list_catalog_index_jobs",
+        "list_merchant_products",
+        "summarize_operations"
+      ],
+      "tool_selection_correct": true,
+      "result": {
+        "status": "COMPLETED",
+        "clarification": null,
+        "model_mode": "MOCK_TRANSPORT",
+        "summary": {
+          "paid_orders": null,
+          "requested_cases": null,
+          "out_of_stock": 1,
+          "low_stock": 0,
+          "index_pending": 0,
+          "by_status": {
+            "order": {},
+            "case": {},
+            "product": {
+              "ACTIVE": 12
+            },
+            "index_job": {}
+          },
+          "coverage": [
+            {
+              "tool": "list_merchant_products",
+              "status_filter": "ACTIVE",
+              "scanned": 12,
+              "complete": true,
+              "next_cursor": null,
+              "started_cursor": null
+            },
+            {
+              "tool": "list_catalog_index_jobs",
+              "status_filter": null,
+              "scanned": 0,
+              "complete": true,
+              "next_cursor": null,
+              "started_cursor": null
+            }
+          ],
+          "scope": "OBSERVED_RECORDS_ONLY",
+          "low_stock_threshold": 5,
+          "eligible_todo_count": 1,
+          "shown_todo_count": 1,
+          "advice_truncated": false
+        },
+        "evidence": [
+          {
+            "key": "product:3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "kind": "product",
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "status": "ACTIVE",
+            "version": 1,
+            "read_at": "2026-11-08T14:48:09.824034+00:00",
+            "facts": {
+              "name": "静音 K87",
+              "category": "keyboard",
+              "price_cents": 29900,
+              "on_hand": 0,
+              "reserved": 0,
+              "available": 0,
+              "active": true,
+              "index_status": "INDEXED_CURRENT"
+            },
+            "fingerprint": "610bfb2009a750623d2ee9c322e9e0b3ec140c09cc5bacd8d626a6f046f44325"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "RESTOCK",
+            "content": "商品可用库存0，低库存阈值5；不是自动补货授权。",
+            "evidence_key": "product:3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "record_id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "status": "ACTIVE",
+            "version": 1,
+            "read_at": "2026-11-08T14:48:09.824034+00:00",
+            "action": "核对商品与实际库存，按原商品流程处理",
+            "risk": "只读建议；记录可能变化，实际操作需重新核对",
+            "priority_rule": "待审核Case优先，再失败索引、已支付待发货、缺货及低库存；同类按创建时间/ID排序"
+          }
+        ],
+        "review_draft": null,
+        "metrics": {
+          "model_calls": 2,
+          "tool_calls": 3,
+          "input_token_upper_bound": 2996,
+          "reported_fixture_input_tokens": 200,
+          "reported_fixture_output_tokens": 200,
+          "db_pages": 2,
+          "verified_suggestions": 1,
+          "unsupported_claims": 0,
+          "grounded_claim_rate": 1.0,
+          "business_writes": 0,
+          "permission_violations": 0,
+          "latency_ms": 35.31525004655123
+        },
+        "limitations": [
+          "MOCK_TRANSPORT decisions do not establish real LLM capability",
+          "Observed bounded records only; see coverage before interpreting counts",
+          "Read-only snapshot, not authorization or current-state guarantee",
+          "No durable merchant analysis history; disconnect cancels analysis"
+        ],
+        "events": [
+          {
+            "phase": "plan",
+            "tool_names": [
+              "list_merchant_products",
+              "list_catalog_index_jobs"
+            ],
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "list_merchant_products",
+            "records": 12,
+            "read_at": "2026-11-08T14:48:09.824034+00:00",
+            "latency_ms": 6.898333027493209,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "list_catalog_index_jobs",
+            "records": 0,
+            "read_at": "2026-11-08T14:48:09.824034+00:00",
+            "latency_ms": 0.8964580483734608,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "summarize_operations",
+            "records": 12,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "recommend",
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "validate",
+            "status": "COMPLETED"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "OPS-E-K",
+      "question": "这笔售后申请为什么值得优先处理？帮我草拟一段审核说明。",
+      "expected_tools": [
+        "get_applicable_policy",
+        "get_merchant_after_sales",
+        "summarize_operations"
+      ],
+      "actual_tools": [
+        "get_applicable_policy",
+        "get_merchant_after_sales",
+        "summarize_operations"
+      ],
+      "tool_selection_correct": true,
+      "result": {
+        "status": "COMPLETED",
+        "clarification": null,
+        "model_mode": "MOCK_TRANSPORT",
+        "summary": {
+          "paid_orders": null,
+          "requested_cases": null,
+          "out_of_stock": null,
+          "low_stock": null,
+          "index_pending": null,
+          "by_status": {
+            "order": {},
+            "case": {
+              "REQUESTED": 1
+            },
+            "product": {},
+            "index_job": {}
+          },
+          "coverage": [],
+          "scope": "OBSERVED_RECORDS_ONLY",
+          "low_stock_threshold": 5,
+          "eligible_todo_count": 1,
+          "shown_todo_count": 1,
+          "advice_truncated": false
+        },
+        "evidence": [
+          {
+            "key": "case:a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "kind": "case",
+            "id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "status": "REQUESTED",
+            "version": 1,
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "facts": {
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "reason_code": "QUALITY_ISSUE",
+              "policy_version": "demo-v1",
+              "created_at": "2026-11-08T14:48:09.780641+00:00",
+              "reviewed_at": null,
+              "received_at": null,
+              "refunded_at": null,
+              "eligibility_at_request": {
+                "eligible": true,
+                "reason_codes": [],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              },
+              "has_review_note": false
+            },
+            "fingerprint": "fbb5be84a6343f61fdbb4d01197244101608ac7c8451475fb8709672165fa893"
+          },
+          {
+            "key": "policy:1ab93ab7-82a5-54f2-be0a-35787f66733b",
+            "kind": "policy",
+            "id": "1ab93ab7-82a5-54f2-be0a-35787f66733b",
+            "status": "PUBLIC_EFFECTIVE",
+            "version": "demo-v1",
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "facts": {
+              "policy_version": "demo-v1",
+              "sections": [
+                {
+                  "title": "已退款订单",
+                  "text": "已退款订单不能重复退款，也不能再申请相同退货。退款记录是判断已退款状态的依据。",
+                  "source_uri": "fixture://policies/refunded.json#1"
+                }
+              ],
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "case_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+              "current_new_request_eligibility": {
+                "eligible": false,
+                "reason_codes": [
+                  "ACTIVE_CASE_EXISTS"
+                ],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              }
+            },
+            "fingerprint": "75cddd39a7e827cfca2c640333159ac8a067c0a887f9f0b5f674ab33f8c9e207"
+          },
+          {
+            "key": "policy:41052670-ddab-5179-99ca-5f83b6a3d879",
+            "kind": "policy",
+            "id": "41052670-ddab-5179-99ca-5f83b6a3d879",
+            "status": "PUBLIC_EFFECTIVE",
+            "version": "demo-v1",
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "facts": {
+              "policy_version": "demo-v1",
+              "sections": [
+                {
+                  "title": "普通退货政策",
+                  "text": "普通退货：签收后7日内可以因不再需要申请退货。仅受理本人订单，是否符合资格由售后服务判断。",
+                  "source_uri": "fixture://policies/returns.json#1"
+                }
+              ],
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "case_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+              "current_new_request_eligibility": {
+                "eligible": false,
+                "reason_codes": [
+                  "ACTIVE_CASE_EXISTS"
+                ],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              }
+            },
+            "fingerprint": "65e664bd345da9b5269abcf37bd744c45fec6e53d856054c8036f186097e3655"
+          },
+          {
+            "key": "policy:7fca7cec-93c0-58a8-b472-d1b080c0980e",
+            "kind": "policy",
+            "id": "7fca7cec-93c0-58a8-b472-d1b080c0980e",
+            "status": "PUBLIC_EFFECTIVE",
+            "version": "demo-v1",
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "facts": {
+              "policy_version": "demo-v1",
+              "sections": [
+                {
+                  "title": "非本人订单",
+                  "text": "只能查询和申请本人订单的售后；他人的订单编号不授予访问权限。店铺范围也必须匹配。",
+                  "source_uri": "fixture://policies/ownership.json#1"
+                }
+              ],
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "case_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+              "current_new_request_eligibility": {
+                "eligible": false,
+                "reason_codes": [
+                  "ACTIVE_CASE_EXISTS"
+                ],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              }
+            },
+            "fingerprint": "d939d22796195684a0d756f9d94f2cc15a99d798e50f979884ea81585c7d5c72"
+          },
+          {
+            "key": "policy:93b72ce4-d842-52e0-ba4d-ba33cf08b414",
+            "kind": "policy",
+            "id": "93b72ce4-d842-52e0-ba4d-ba33cf08b414",
+            "status": "PUBLIC_EFFECTIVE",
+            "version": "demo-v1",
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "facts": {
+              "policy_version": "demo-v1",
+              "sections": [
+                {
+                  "title": "人工争议处理",
+                  "text": "不确定的政策版本、争议或需要补充证据时转人工工单。人工客服核对事实；检索文字不能直接批准退款。",
+                  "source_uri": "fixture://policies/dispute.json#1"
+                }
+              ],
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "case_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+              "current_new_request_eligibility": {
+                "eligible": false,
+                "reason_codes": [
+                  "ACTIVE_CASE_EXISTS"
+                ],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              }
+            },
+            "fingerprint": "a2452a7ba96a2f51ff0b40f968b4451762dbb82cd46e747070fe9c00a1466eba"
+          },
+          {
+            "key": "policy:cdcc76cb-bf9b-5201-a152-79f1a856f44e",
+            "kind": "policy",
+            "id": "cdcc76cb-bf9b-5201-a152-79f1a856f44e",
+            "status": "PUBLIC_EFFECTIVE",
+            "version": "demo-v1",
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "facts": {
+              "policy_version": "demo-v1",
+              "sections": [
+                {
+                  "title": "质量问题处理",
+                  "text": "键盘等商品出现质量问题，可以在签收后7日内申请退货。请描述故障，商家审核并收到退货后执行模拟退款。",
+                  "source_uri": "fixture://policies/quality.json#1"
+                }
+              ],
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "case_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+              "current_new_request_eligibility": {
+                "eligible": false,
+                "reason_codes": [
+                  "ACTIVE_CASE_EXISTS"
+                ],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              }
+            },
+            "fingerprint": "6f81d2fca66561f47a916e42be125bf95ae2d935a0545787fe20e2d104f30711"
+          },
+          {
+            "key": "policy:f9f0dd1e-3f52-569e-86f5-ad2faf517319",
+            "kind": "policy",
+            "id": "f9f0dd1e-3f52-569e-86f5-ad2faf517319",
+            "status": "PUBLIC_EFFECTIVE",
+            "version": "demo-v1",
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "facts": {
+              "policy_version": "demo-v1",
+              "sections": [
+                {
+                  "title": "签收日期与售后期限",
+                  "text": "售后期限从订单实际签收时间起计算，共7日，恰好7日仍在期限内。未签收或超过期限不适用此规则。",
+                  "source_uri": "fixture://policies/window.json#1"
+                }
+              ],
+              "order_id": "268f88cf-8471-4a08-807e-a2258e00b408",
+              "case_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+              "current_new_request_eligibility": {
+                "eligible": false,
+                "reason_codes": [
+                  "ACTIVE_CASE_EXISTS"
+                ],
+                "requires_human": false,
+                "policy_version": "demo-v1"
+              }
+            },
+            "fingerprint": "6932aaf2c5e52717826e8b0ce031ccd7dac9e8e9b5c29e857e2df681f9e55b00"
+          }
+        ],
+        "suggestions": [
+          {
+            "type": "REVIEW",
+            "content": "售后处于REQUESTED，原因代码QUALITY_ISSUE；尚未审核。",
+            "evidence_key": "case:a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "record_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "status": "REQUESTED",
+            "version": 1,
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "action": "进入售后管理，由商家独立批准或拒绝",
+            "risk": "只读建议；记录可能变化，实际操作需重新核对",
+            "priority_rule": "待审核Case优先，再失败索引、已支付待发货、缺货及低库存；同类按创建时间/ID排序"
+          }
+        ],
+        "review_draft": {
+          "case_id": "a20dda8b-4a6c-4e89-a41f-3c906545a413",
+          "case_version": 1,
+          "policy_version": "demo-v1",
+          "evidence_keys": [
+            "case:a20dda8b-4a6c-4e89-a41f-3c906545a413",
+            "policy:1ab93ab7-82a5-54f2-be0a-35787f66733b",
+            "policy:41052670-ddab-5179-99ca-5f83b6a3d879",
+            "policy:7fca7cec-93c0-58a8-b472-d1b080c0980e",
+            "policy:93b72ce4-d842-52e0-ba4d-ba33cf08b414",
+            "policy:cdcc76cb-bf9b-5201-a152-79f1a856f44e",
+            "policy:f9f0dd1e-3f52-569e-86f5-ad2faf517319"
+          ],
+          "text": "感谢您反馈商品情况。当前状态REQUESTED，原因代码QUALITY_ISSUE；参考公开政策demo-v1，仍需核验实物与申请材料。此为AI审核说明草稿，未经商家执行；不表示已批准或拒绝。"
+        },
+        "metrics": {
+          "model_calls": 2,
+          "tool_calls": 3,
+          "input_token_upper_bound": 2784,
+          "reported_fixture_input_tokens": 200,
+          "reported_fixture_output_tokens": 200,
+          "db_pages": 0,
+          "verified_suggestions": 1,
+          "unsupported_claims": 0,
+          "grounded_claim_rate": 1.0,
+          "business_writes": 0,
+          "permission_violations": 0,
+          "latency_ms": 33.07987505104393
+        },
+        "limitations": [
+          "MOCK_TRANSPORT decisions do not establish real LLM capability",
+          "Observed bounded records only; see coverage before interpreting counts",
+          "Read-only snapshot, not authorization or current-state guarantee",
+          "No durable merchant analysis history; disconnect cancels analysis"
+        ],
+        "events": [
+          {
+            "phase": "plan",
+            "tool_names": [
+              "get_merchant_after_sales",
+              "get_applicable_policy"
+            ],
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "get_merchant_after_sales",
+            "records": 1,
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "latency_ms": 0.6708750152029097,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "get_applicable_policy",
+            "records": 6,
+            "read_at": "2026-11-08T14:48:09.861284+00:00",
+            "latency_ms": 4.4086670386604965,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "tool",
+            "name": "summarize_operations",
+            "records": 7,
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "recommend",
+            "status": "COMPLETED"
+          },
+          {
+            "phase": "validate",
+            "status": "COMPLETED"
+          }
+        ]
+      }
+    }
+  ],
+  "before": {
+    "orders": 2,
+    "payments": 2,
+    "refunds": 0,
+    "cases": 1,
+    "proposals": 5,
+    "confirmations": 5
+  },
+  "after": {
+    "orders": 2,
+    "payments": 2,
+    "refunds": 0,
+    "cases": 1,
+    "proposals": 5,
+    "confirmations": 5
+  },
+  "business_snapshot_before": "fdc0da248d032cdcd1b853643b4608732b1a8a277230c87f10c684eb81511738",
+  "business_snapshot_after": "fdc0da248d032cdcd1b853643b4608732b1a8a277230c87f10c684eb81511738",
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "qualification": "Controlled model decisions and deterministic cited templates, not real LLM reasoning accuracy",
+  "raw_sha256": "736c28e04b24e47409b6f6e930a9ab1fe81d7879a060ae86f5bcc78ecfc995de",
+  "git_base_sha": "9424b7d6d0b0ccebb52f219282a93e03038c6120",
+  "source_contents_tree_sha256": "d797ebca350c3299d0496e835a75a0b6691b088c3a15bef479830d28a794878a",
+  "binding": "Executed modified worktree; containing delivery commit preserves these source contents. Not real LLM evaluation."
+}

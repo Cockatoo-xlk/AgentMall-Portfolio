@@ -1,0 +1,282 @@
+{
+  "status": "AGENTMALL_V28_MCP_GATEWAY_READY",
+  "classification": "REVIEWED_PUBLIC_EVIDENCE / SYNTHETIC_TEST_DATA",
+  "base_commit": "5f197611d6e4cb93a0a39c3882456f196c84551e",
+  "branch": "codex/v2-mcp-tool-gateway",
+  "commit_binding": "Containing Git commit; source hash excludes documentation to avoid self-reference. Base SHA is not the modified-source SHA.",
+  "source_manifest_sha256": "35a3d56b65dc41ee104bc432098eed1625f29615853f410ae8b3933a5ee1a0a2",
+  "source_hash_format": "UTF-8 sorted path NUL decimal-byte-size NUL file-sha256 LF; backend source/tests, frontend source/tests, evals, scripts, Python/Node manifests/locks and Playwright config",
+  "source_file_count": 376,
+  "platform": "Local Docker Desktop Linux aarch64; PostgreSQL17.11 / pgvector0.8.7; official Checkpointer; isolated test schemas",
+  "mcp_sdk": "2.3.0",
+  "mcp_types": "2.3.0",
+  "tested_protocols": {
+    "stdio": [
+      "2026-07-28",
+      "2025-11-25"
+    ],
+    "http": [
+      "2026-07-28"
+    ]
+  },
+  "tests": {
+    "pytest_directed_passed": 181,
+    "mcp_cases_in_directed_run": 35,
+    "vitest_full_passed": 102,
+    "playwright_selected_passed": 11,
+    "playwright_retries": 0,
+    "full_backend_regression": "NOT_RUN",
+    "full_playwright_regression": "NOT_RUN",
+    "remote_ci": "NOT_RUN",
+    "real_bge_quality": "NOT_RUN"
+  },
+  "receipts": [
+    {
+      "label": "directed-regression",
+      "command": [
+        "backend/.venv/bin/pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q",
+        "backend/tests/test_mcp_gateway.py",
+        "backend/tests/test_catalog.py",
+        "backend/tests/test_expanded_catalog.py",
+        "backend/tests/test_catalog_operations.py",
+        "backend/tests/test_bundle_shopping.py",
+        "backend/tests/test_merchant_workbench.py",
+        "backend/tests/test_run_event_stream.py",
+        "backend/tests/test_checkpoint_resume.py",
+        "backend/tests/test_v2_intent_routing.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:09:35.782108+00:00",
+      "seconds": 78.212,
+      "log_sha256": "eb19a755ff9efe685b6a9b2fc3e7990f3753544088a5708385d865ada52c925a"
+    },
+    {
+      "label": "vitest-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:14:03.572471+00:00",
+      "seconds": 1.071,
+      "log_sha256": "f440d03c165ad7c146912fbfa72fab64ec6701c0860bac0ed3f098e0de05741c"
+    },
+    {
+      "label": "browser-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e",
+        "--",
+        "merchant.spec.ts",
+        "bundle.spec.ts",
+        "catalog-operations.spec.ts",
+        "expanded-catalog.spec.ts",
+        "v2-rc.spec.ts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:17:04.294361+00:00",
+      "seconds": 34.71,
+      "log_sha256": "62f443874eda5207ebfafec09143306604b687f7262c900e1ef3014aecd3ed02"
+    },
+    {
+      "label": "ruff-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:14:02.747988+00:00",
+      "seconds": 0.218,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "label": "format-final",
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:14:03.207674+00:00",
+      "seconds": 0.122,
+      "log_sha256": "869436c8f05e15a33d8f0726ba55b59eaa224bc789f77c56ddd23cb7512c3f89"
+    },
+    {
+      "label": "typecheck-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:14:04.899258+00:00",
+      "seconds": 2.514,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "label": "eslint-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:14:07.668408+00:00",
+      "seconds": 1.345,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "label": "build-final",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:14:09.257055+00:00",
+      "seconds": 2.455,
+      "log_sha256": "8313e65fd43044c1e3ea06707510a914254d873dc44bc1f6d3fd3d46e408bfed"
+    },
+    {
+      "label": "independent-clients-final",
+      "command": [
+        "official MCP Client subprocess rehearsal; private controlled driver"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:14:02.748080+00:00",
+      "seconds": 12.92,
+      "log_sha256": "147da26af6584bebd96405101acf7491b3e7b73287eebf65d7c67590f4809e8a"
+    },
+    {
+      "label": "client-screenshot-final",
+      "command": [
+        "Chromium read-only rendering of reviewed real client receipts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:21:43.700884+00:00",
+      "seconds": 0.319,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "independent_clients": {
+    "processes": 6,
+    "tool_calls": 54,
+    "summary_sha256": "b3d0df0c23c2735238097b0b1f6658c7e7f610fbf4e6cdce88c9371246f761c4",
+    "public_projection_sha256": "6eba4b6cf92408698f1d5e7144abb79d1b34def9e44b8162215b387842addc99",
+    "screenshot_sha256": "65f3a24eee9ec61be2226c4b765e497db83c39851170d7ba2045aea3262fbdc0",
+    "setup_operator": "TEST_OPERATOR; actual original Confirmation flow before MCP reads",
+    "database_before": {
+      "products": 120,
+      "drafts": 0,
+      "index_jobs": 0,
+      "orders": 1,
+      "order_items": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "payments": 0,
+      "reserved": 1
+    },
+    "database_after": {
+      "products": 120,
+      "drafts": 1,
+      "index_jobs": 0,
+      "orders": 1,
+      "order_items": 1,
+      "proposals": 1,
+      "confirmations": 1,
+      "payments": 0,
+      "reserved": 1
+    }
+  },
+  "cleanup": {
+    "status": "OWNED_RESOURCES_REMOVED_INDEPENDENTLY_VERIFIED",
+    "remaining_test_and_checkpoint_schemas": 0,
+    "guest_containers_absent": true,
+    "postgres_container_absent": true,
+    "volume_absent": true,
+    "new_image_tag_absent": true,
+    "historical_container_ids_and_states_unchanged": 25,
+    "default_context": "colima",
+    "shared_build_cache_pruned": false,
+    "provider_requests": 0,
+    "provider_key_reads": 0,
+    "temporary_synthetic_credential_files_removed": true
+  },
+  "protected_existing_files_unchanged": 132,
+  "remote_auth": "REMOTE_AUTH_NOT_IMPLEMENTED",
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "original_private_evidence": "PRIVATE_LOCAL_EVIDENCE; excluded from Git",
+  "known_limits": [
+    "No Inspector UI acceptance",
+    "No remote OAuth or public deployment",
+    "No current real-model or production performance claim"
+  ],
+  "public_scope_review": {
+    "sha256": "d2e747b79c80748bd40a50c7afc87c6c6330e92a20a45fb98b6e39904df34a23",
+    "local_document_links": "PASS",
+    "secret_and_private_path_patterns": 0,
+    "screenshot_visual_and_metadata_review": "PASS",
+    "staged_scope": "23 intended source/test/doc/receipt files only"
+  },
+  "precommit_checks": [
+    {
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:30:15.964828+00:00",
+      "seconds": 0.04,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:30:16.005463+00:00",
+      "seconds": 0.011,
+      "log_sha256": "869436c8f05e15a33d8f0726ba55b59eaa224bc789f77c56ddd23cb7512c3f89"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-07T16:30:16.017010+00:00",
+      "seconds": 0.016,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

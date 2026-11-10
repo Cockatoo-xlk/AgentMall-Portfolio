@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "kind": "SANITIZED_HISTORICAL_LIVE_EVIDENCE",
+  "new_provider_requests": 0,
+  "scope": "Development paired pilot and separate B2 remediation trials; not holdout or current multi-agent success",
+  "experiments": [
+    {
+      "experiment": "livepilot-v212-20261109-real",
+      "source_commit": "b5d6a685dac44a8bf28aaf357af0e4f4b69f7d5f",
+      "dataset_sha256": "a645fe1799ba46dda5a3fb59fd0d3d6778c8eb9dd4523dc3cbfef021b95c8336",
+      "model_request": "deepseek-flash",
+      "observed_models": [
+        "deepseek-flash"
+      ],
+      "request_count": 56,
+      "settled_count": 56,
+      "summary_sha256": "03241d2ca61092e707c150450b240b533bceaff078807ae6759c44b1cdd2f38a",
+      "manifest_sha256": "d1b062cc320421e3f1829cc0393def2904a64cad1b9dc207c05b7b1943566604",
+      "estimate_cny": "0.393226",
+      "actual_bill": "UNKNOWN",
+      "dataset_class": "DEVELOPMENT_NOT_HOLDOUT",
+      "evidence_class": "REAL_LLM_REAL_LOCAL_BGE_HISTORICAL",
+      "episodes": 10,
+      "passed": 9,
+      "architectures": {
+        "single": {
+          "passed": 5,
+          "total": 5
+        },
+        "multi": {
+          "passed": 4,
+          "total": 5
+        }
+      },
+      "failed_tasks": [
+        {
+          "task_id": "eval_dev_B2_01",
+          "architecture": "multi",
+          "status": "PARTIAL",
+          "oracle_codes": [
+            "RESOURCE_DELTA",
+            "RESOURCE_DELTA",
+            "DECLARED_DECISION_MISSING",
+            "DECLARED_DECISION_MISSING",
+            "REQUIRED_SOURCE_MISSING",
+            "OUTPUT_STATE",
+            "RUN_STATE",
+            "UNEXPECTED_ERROR"
+          ]
+        }
+      ]
+    },
+    {
+      "experiment": "v213-l1-20261109",
+      "source_commit": "342c3c199984efb89bc649dcb3b1892aeb82da41",
+      "dataset_sha256": "a645fe1799ba46dda5a3fb59fd0d3d6778c8eb9dd4523dc3cbfef021b95c8336",
+      "model_request": "deepseek-flash",
+      "observed_models": [
+        "deepseek-flash"
+      ],
+      "request_count": 9,
+      "settled_count": 9,
+      "summary_sha256": "770571282e5ff77e6fee3bdd574c54e50e6c723eaf982096fbc7e0f660d33fc6",
+      "manifest_sha256": "7b40af278dc1a4e85268bc131f3071915466f2a42d4877c7fb9e7a5d84a9637f",
+      "estimate_cny": "0.068782",
+      "actual_bill": "UNKNOWN",
+      "dataset_class": "DEVELOPMENT_NOT_HOLDOUT",
+      "evidence_class": "REAL_LLM_REAL_LOCAL_BGE_HISTORICAL",
+      "task_id": "eval_dev_B2_01",
+      "architecture": "multi",
+      "status": "PARTIAL",
+      "passed": false,
+      "diagnostic_codes": [
+        "REPEATED_DELEGATION",
+        "INVALID_TOOL_BATCH"
+      ],
+      "confirmations": 0,
+      "precise_invalid_scope_field": "NOT_APPLICABLE"
+    },
+    {
+      "experiment": "v213-l3-20261109",
+      "source_commit": "a055117fac4f5b27d8c04bc333ef317941509035",
+      "dataset_sha256": "a645fe1799ba46dda5a3fb59fd0d3d6778c8eb9dd4523dc3cbfef021b95c8336",
+      "model_request": "deepseek-flash",
+      "observed_models": [
+        "deepseek-flash"
+      ],
+      "request_count": 5,
+      "settled_count": 5,
+      "summary_sha256": "54cf1f875af9f85d7e09989247d8e50fd28444bb7eddbb911d58104d47aef43e",
+      "manifest_sha256": "55b18d588f4534a9497e0ffb58a662ee96bebb5d740074701fffbb16d1a402f9",
+      "estimate_cny": "0.038022",
+      "actual_bill": "UNKNOWN",
+      "dataset_class": "DEVELOPMENT_NOT_HOLDOUT",
+      "evidence_class": "REAL_LLM_REAL_LOCAL_BGE_HISTORICAL",
+      "task_id": "eval_dev_B2_01",
+      "architecture": "multi",
+      "status": "PARTIAL",
+      "passed": false,
+      "diagnostic_codes": [
+        "REPEATED_DELEGATION",
+        "INVALID_TOOL_BATCH"
+      ],
+      "confirmations": 0,
+      "precise_invalid_scope_field": "NOT_APPLICABLE"
+    },
+    {
+      "experiment": "v213-l5-20261109",
+      "source_commit": "d32d25b25db8d5464fb561b1ef1482598ae31b1c",
+      "dataset_sha256": "a645fe1799ba46dda5a3fb59fd0d3d6778c8eb9dd4523dc3cbfef021b95c8336",
+      "model_request": "deepseek-flash",
+      "observed_models": [
+        "deepseek-flash"
+      ],
+      "request_count": 12,
+      "settled_count": 12,
+      "summary_sha256": "29750f5e765d3002b5ab53d003648def4e0dbc070bfe2afa5c0328325c5154f9",
+      "manifest_sha256": "1ec2064aecf25e138e1e9f015c3b5ffe9f4058d9c0dba528099eb3a5dec1af8e",
+      "estimate_cny": "0.089722",
+      "actual_bill": "UNKNOWN",
+      "dataset_class": "DEVELOPMENT_NOT_HOLDOUT",
+      "evidence_class": "REAL_LLM_REAL_LOCAL_BGE_HISTORICAL",
+      "task_id": "eval_dev_B2_01",
+      "architecture": "multi",
+      "status": "PARTIAL",
+      "passed": false,
+      "diagnostic_codes": [
+        "BUDGET_EXCEEDED"
+      ],
+      "confirmations": 1,
+      "precise_invalid_scope_field": "NOT_APPLICABLE"
+    },
+    {
+      "experiment": "v213-l7-20261109",
+      "source_commit": "280ec90816ed3d70079b7fb89457f7f13a4d2278",
+      "dataset_sha256": "a645fe1799ba46dda5a3fb59fd0d3d6778c8eb9dd4523dc3cbfef021b95c8336",
+      "model_request": "deepseek-flash",
+      "observed_models": [
+        "deepseek-flash"
+      ],
+      "request_count": 6,
+      "settled_count": 6,
+      "summary_sha256": "7012b7030af0d2f3efec1f64be9a395c081bf960b604953986cfcac66d211704",
+      "manifest_sha256": "78fb84b89933c5c8e41e011867d6688d464dabb7c237554037945a87500917d1",
+      "estimate_cny": "0.053718",
+      "actual_bill": "UNKNOWN",
+      "dataset_class": "DEVELOPMENT_NOT_HOLDOUT",
+      "evidence_class": "REAL_LLM_REAL_LOCAL_BGE_HISTORICAL",
+      "task_id": "eval_dev_B2_01",
+      "architecture": "multi",
+      "status": "PARTIAL",
+      "passed": false,
+      "diagnostic_codes": [
+        "CONTEXT_SCOPE_VIOLATION"
+      ],
+      "confirmations": [
+        "RETURN_REQUEST"
+      ],
+      "precise_invalid_scope_field": "NOT_PRESERVED"
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "status": "BLOCKED",
+  "reason": "BLOCKED_ENVIRONMENT_CLOCK",
+  "base_commit": "b6ab3e5cfa3e789bee5554277c5fd9d2b697cca0",
+  "source_fingerprint": "1e54c1f0d0b76ff0a975fbcc9938008336febbf1a1c8c5564253a23f4a901e27",
+  "runtime": {
+    "source_fingerprint": "1e54c1f0d0b76ff0a975fbcc9938008336febbf1a1c8c5564253a23f4a901e27",
+    "python": "3.12.10",
+    "os": "Linux",
+    "kernel": "7.0.12-linuxkit",
+    "machine": "aarch64",
+    "node": "v24.21.0",
+    "npm": "11.19.0",
+    "packages": {
+      "torch": "2.9.1",
+      "transformers": "4.57.6",
+      "psycopg": "3.3.6",
+      "SQLAlchemy": "2.0.55",
+      "langgraph-checkpoint-postgres": "3.2.0"
+    }
+  },
+  "full_ci_receipts_before_review_fixes": [
+    {
+      "name": "bootstrap",
+      "command": [
+        "/work/backend/.venv/bin/python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636281.366505,
+      "elapsed_seconds": 1.645,
+      "log": ".t13/outputs/bootstrap.txt",
+      "log_sha256": "96be8a44761c47ac4d261d94b81f975d794cab2955db6cc2bd061c4c38b86813"
+    },
+    {
+      "name": "ruff",
+      "command": [
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "cwd": "/work",
+      "exit_code": 1,
+      "started_unix": 1793636283.018821,
+      "elapsed_seconds": 0.033,
+      "log": ".t13/outputs/ruff.txt",
+      "log_sha256": "0cdefcc1b0e4fef43c048110066546ddda32730c0a02013190cf33004456fdc4"
+    },
+    {
+      "name": "format",
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636283.0522525,
+      "elapsed_seconds": 0.016,
+      "log": ".t13/outputs/format.txt",
+      "log_sha256": "c1b38a9478b031b6d4bd55b5f933dd2ac57ed867adb55152d400e81451810b51"
+    },
+    {
+      "name": "pytest",
+      "command": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636283.069214,
+      "elapsed_seconds": 216.911,
+      "log": ".t13/outputs/pytest.txt",
+      "log_sha256": "eeffd72d16f57a22a664b6f7c65d95daeb27ed6db0ba74f95ed274407cb47f80"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636499.981518,
+      "elapsed_seconds": 1.474,
+      "log": ".t13/outputs/typecheck.txt",
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    {
+      "name": "lint",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636501.456578,
+      "elapsed_seconds": 0.92,
+      "log": ".t13/outputs/lint.txt",
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    {
+      "name": "vitest",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636502.3769236,
+      "elapsed_seconds": 0.62,
+      "log": ".t13/outputs/vitest.txt",
+      "log_sha256": "b90110e2a10120da23e844fc735e9a28685b487d2501856a79c5551263195840"
+    },
+    {
+      "name": "build",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636502.9974437,
+      "elapsed_seconds": 1.674,
+      "log": ".t13/outputs/build.txt",
+      "log_sha256": "a80d2e8ac22457b5d58f8b1db2f6b522bcf64bf12801116670b1d77412639b40"
+    },
+    {
+      "name": "playwright",
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "cwd": "/work",
+      "exit_code": 0,
+      "started_unix": 1793636504.6726906,
+      "elapsed_seconds": 145.019,
+      "log": ".t13/outputs/playwright.txt",
+      "log_sha256": "0f4803a395df188b2733f25e1530605c7a6aa07fe301fc681dcb8e04bd172a4f"
+    }
+  ],
+  "initial_full_ci_exit_code": 1,
+  "initial_backend": {
+    "passed": 823,
+    "skipped": 14,
+    "exit_code": 0
+  },
+  "frontend": {
+    "vitest_passed": 85,
+    "playwright_passed": 96,
+    "playwright_retries": 0,
+    "playwright_skipped": 0,
+    "playwright_exit_code": 0,
+    "playwright_environment_gate": "BLOCKED: measured wall-clock rollback during browser execution"
+  },
+  "new_test_cases": {
+    "retrieval": 10,
+    "oracle_and_cleanup": 22,
+    "total": 32
+  },
+  "final_targeted_review_unit_tests": {
+    "passed": 22,
+    "exit_code": 0,
+    "log_sha256": "df10657943e522a24a34e660c746310ea0893ffc10bc05711500f342f670fa6f"
+  },
+  "final_static_checks": {
+    "ruff_exit_code": 0,
+    "ruff_log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "format_exit_code": 0,
+    "format_log_sha256": "c1b38a9478b031b6d4bd55b5f933dd2ac57ed867adb55152d400e81451810b51"
+  },
+  "final_post_review_full_backend": "NOT_RUN_ENVIRONMENT_BLOCKED",
+  "final_post_review_full_browser": "NOT_RUN_ENVIRONMENT_BLOCKED",
+  "final_post_review_real_bge_oracle_pipeline": "NOT_RUN_ENVIRONMENT_BLOCKED",
+  "real_provider_requests": 0,
+  "real_key_reads": 0,
+  "skip_retry_guard_changes": false
+}

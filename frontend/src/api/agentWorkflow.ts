@@ -1,4 +1,5 @@
 import { ApiClient } from './client'
+import type { ThreadContext } from './threadContext'
 import type { Confirmation, Proposal } from './types'
 export interface EntityRef {
   kind: 'product' | 'order' | 'proposal' | 'case' | 'ticket'
@@ -23,6 +24,7 @@ export interface Pending {
   action_type?: string
 }
 export interface Run {
+  job?: { id: string; kind: string; status: 'QUEUED' | 'EXECUTING' | 'WAITING_INPUT' | 'COMPLETED' | 'FAILED' | 'BLOCKED'; attempts: number; last_error: string | null }
   constraints: Record<string, unknown>
   id: string
   thread_id: string
@@ -46,6 +48,7 @@ export interface Thread {
   id: string
   mode: 'single' | 'multi'
   status: string
+  context?: ThreadContext
   runs: Run[]
 }
 export interface RunEvent {
@@ -117,7 +120,7 @@ export async function decide(
   thread = await api.get<Thread>(`/agent/threads/${threadId}`)
   if (!currentInterrupt(thread, op)) return { thread, uncertain: false }
   try {
-    await api.post<Run>(`/agent/threads/${threadId}/resume`, {
+    await api.post<Run>(`/agent/threads/${threadId}/resume${thread.runs[0]?.job ? "/async" : ""}`, {
       request_id: op.request_id,
       run_id: op.run_id,
       interrupt_id: op.interrupt_id,

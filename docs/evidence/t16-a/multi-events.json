@@ -1,0 +1,771 @@
+{
+  "classification": "SYNTHETIC_TEST_DATA",
+  "mode": "MOCK_TRANSPORT",
+  "events": [
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 1,
+      "event_type": "run_created",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.879296+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 2,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.884446+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 3,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.906525+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 4,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.917062+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 5,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.965041+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 6,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.968941+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 7,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.968941+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 8,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.968941+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 9,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:26.985544+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 10,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.028937+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 11,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.043545+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 12,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.076412+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 13,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.082403+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 14,
+      "event_type": "tool",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.082403+00:00",
+      "tool_name": "retrieve_products"
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 15,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.082403+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 16,
+      "event_type": "model_final",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.082403+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 17,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.082403+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 18,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.082403+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 19,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.089730+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 20,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.099668+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 21,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.142788+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 22,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.144347+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 23,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.144347+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 24,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.153865+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 25,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.163461+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "1710857d-6d22-48c8-92f8-56ecea3b2ed6",
+      "seq": 26,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.170929+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 1,
+      "event_type": "run_created",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.866100+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 2,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.873724+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 3,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.895286+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 4,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.905412+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 5,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.950504+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 6,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.954939+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 7,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.954939+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 8,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.954939+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 9,
+      "event_type": "model_start",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:29.970818+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 10,
+      "event_type": "model_end",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.014589+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 11,
+      "event_type": "model_start",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.029202+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 12,
+      "event_type": "model_end",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.063084+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 13,
+      "event_type": "model_context",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.079732+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 14,
+      "event_type": "tool",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.079732+00:00",
+      "tool_name": "get_product"
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 15,
+      "event_type": "model_context",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.079732+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 16,
+      "event_type": "tool",
+      "agent": "order",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.079732+00:00",
+      "tool_name": "prepare_checkout"
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 17,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.079732+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 18,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.079732+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 19,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.086973+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 20,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.096514+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 21,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.109715+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 22,
+      "event_type": "resume_received",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.324978+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 23,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.327192+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 24,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.341041+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 25,
+      "event_type": "business_receipt",
+      "agent": null,
+      "action_id": "871c1d27-977a-403d-a4a5-4c3246cdb574",
+      "timestamp": "2026-11-02T04:34:30.356320+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 26,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.356320+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 27,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.368071+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 28,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.412392+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 29,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.413919+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 30,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.413919+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 31,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.424682+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 32,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.434550+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "6bb1ebc2-d375-4185-ba8e-ae1f4e807122",
+      "seq": 33,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:30.443979+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 1,
+      "event_type": "run_created",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.740599+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 2,
+      "event_type": "run_activated",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.745435+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 3,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.765924+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 4,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.775733+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 5,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.812772+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 6,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.816294+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 7,
+      "event_type": "handoff",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.816294+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 8,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.816294+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 9,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.831942+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 10,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.875755+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 11,
+      "event_type": "model_start",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.890348+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 12,
+      "event_type": "model_end",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.934646+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 13,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.941307+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 14,
+      "event_type": "tool",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.941307+00:00",
+      "tool_name": "retrieve_products"
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 15,
+      "event_type": "model_context",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.941307+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 16,
+      "event_type": "model_final",
+      "agent": "shopping",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.941307+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 17,
+      "event_type": "specialist_result",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.941307+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 18,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.941307+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 19,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.950433+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 20,
+      "event_type": "model_start",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.962177+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 21,
+      "event_type": "model_end",
+      "agent": "supervisor",
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.995270+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 22,
+      "event_type": "route_decision",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.997235+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 23,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:27.997235+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 24,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:28.008745+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 25,
+      "event_type": "node_completed",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:28.018754+00:00",
+      "tool_name": null
+    },
+    {
+      "run_id": "d1860fda-3948-41da-940d-e291b0ef8261",
+      "seq": 26,
+      "event_type": "run_state",
+      "agent": null,
+      "action_id": null,
+      "timestamp": "2026-11-02T04:34:28.027141+00:00",
+      "tool_name": null
+    }
+  ]
+}

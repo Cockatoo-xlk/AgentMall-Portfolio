@@ -1,0 +1,23 @@
+{
+  "scope": "All T15 changed/new nonignored files; PNGs pixel/metadata reviewed separately; not whole-history publication approval",
+  "files_checked": 59,
+  "findings": [],
+  "live_key_read": false,
+  "public_test_data": "synthetic-sdk-key, demo password, local Compose DB password, fixture user/order identifiers only",
+  "third_party_dependencies": "existing locked dependencies unchanged; Chrome public test dependency copied by matching hashes, not submitted",
+  "private_runtime_ignored": [
+    ".playground/",
+    ".t15-a/",
+    "frontend/.cache/",
+    "backend/.venv/"
+  ],
+  "paid_requests": 0,
+  "screenshots_reviewed": 5,
+  "local_installation_path_fix": "Two raw install receipts contained workstation paths. Public command spellings normalized, exact raw receipts and hashes retained in ignored .t15-a. No committed T15 history contained them.",
+  "reviewed_public_evidence": [
+    "command metadata/log hashes, not raw logs",
+    "synthetic SQL and SDK summaries",
+    "whitelisted persistent RunEvent",
+    "five synthetic screenshots"
+  ]
+}

@@ -1,4 +1,5 @@
-export type Category = 'keyboard' | 'mouse' | 'headphones'
+export type Category = 'keyboard' | 'mouse' | 'headphones' | 'smartphone' | 'laptop' | 'tablet' | 'monitor'
+  | 'camera' | 'smartwatch' | 'speaker' | 'cycling' | 'fitness' | 'home_appliance'
 export type Address = 'demo_dorm' | 'demo_home'
 export type OrderStatus =
   'PENDING_PAYMENT' | 'PAID' | 'CANCELLED' | 'EXPIRED' | 'SHIPPED' | 'DELIVERED' | 'REFUNDED'
@@ -61,7 +62,9 @@ interface ReceiptBase {
   currency: 'CNY'
   created_at: string
 }
+export type CartConsumption = 'CONSUMED' | 'SKIPPED_CART_CHANGED' | 'NOT_APPLICABLE'
 export interface Receipt extends ReceiptBase {
+  cart_consumption?: CartConsumption | null
   status: 'PENDING_PAYMENT'
 }
 export interface MockPaymentReceipt extends ReceiptBase {
@@ -104,6 +107,7 @@ export type ActionReceipt =
   | ReturnReceipt
   | RefundReceipt
 interface ProposalBase {
+  server_time?: string | null
   proposal_id: string
   payload_hash: string
   schema_version: number
@@ -114,6 +118,7 @@ interface ProposalBase {
 export interface CheckoutProposal extends ProposalBase {
   action_type: 'CHECKOUT'
   canonical_payload: {
+    cart_source?: { cart_id: string; user_id: string; store_id: string; version: number }
     items: SnapshotItem[]
     total_cents: number
     currency: 'CNY'
@@ -148,6 +153,17 @@ export type ReturnReasonCode =
   | 'POLICY_DISPUTE'
   | 'INSUFFICIENT_INFORMATION'
   | 'OTHER'
+export type CaseStatus = 'REQUESTED' | 'APPROVED' | 'RECEIVED' | 'REFUNDED' | 'REJECTED' | 'CANCELLED'
+export interface AfterSalesCase {
+  id: string
+  order_id: string
+  status: CaseStatus
+  version: number
+  reason_code: ReturnReasonCode
+  description: string
+  created_at: string
+  review_reason: string | null
+}
 export interface EligibilityResult {
   eligible: boolean
   reason_codes: string[]

@@ -10,6 +10,7 @@ import json
 import os
 import signal
 import socket
+import tempfile
 from collections.abc import MutableMapping
 from contextlib import AsyncExitStack, ExitStack, asynccontextmanager, contextmanager
 from contextvars import ContextVar
@@ -246,6 +247,9 @@ class Harness:
     settings: object
     schema: str
     boundary: Boundary
+    sdk_program: object = None
+    sdk_directory: object = None
+    catalog_profile: str = "legacy"
     mode: Mode = "proposal"
     workflow_mode: str = "purchase"
     answer_failure_used: bool = False
@@ -260,6 +264,9 @@ class Harness:
             "schema": self.schema,
             "checkpoint_schema": self.settings.checkpoint_schema,
             "fixture_mode": FIXTURE_MODE,
+            "catalog_dataset": "expanded-120-v1"
+            if self.catalog_profile == "expanded"
+            else "legacy-12-v1",
             "mode": self.mode,
             "provider_http_requests": self.boundary.provider_http_requests,
             "real_model_calls": self.boundary.real_model_calls,
@@ -293,8 +300,18 @@ class Harness:
                 .one()
             )
             for key, query in {
+                "thread_context_rows": "SELECT * FROM agent_thread_contexts ORDER BY thread_id",
+                "candidate_set_rows": "SELECT * FROM agent_candidate_sets ORDER BY created_at,id",
+                "context_mutation_rows": (
+                    "SELECT * FROM agent_context_mutations ORDER BY created_at,id"
+                ),
                 "run_rows": "SELECT id, thread_id, request_id, status, pending_confirmation, "
-                "result, last_error, request_payload->'constraints' AS constraints "
+                "result, last_error, COALESCE("
+                "(SELECT value->'output'->'runtime_state'->'constraints' "
+                "FROM jsonb_each(agent_runs.node_journal) WHERE "
+                "value->'output'->'runtime_state' ? 'constraints' "
+                "ORDER BY (value->>'seq')::integer DESC LIMIT 1), "
+                "context_snapshot->'constraints',request_payload->'constraints') AS constraints "
                 "FROM agent_runs ORDER BY created_at",
                 "run_event_rows": "SELECT run_id, seq, event_type, agent, action_id, "
                 "payload_summary, timestamp FROM run_events ORDER BY run_id, seq",
@@ -303,12 +320,18 @@ class Harness:
                 "refund_rows": "SELECT id, case_id, status FROM refunds ORDER BY created_at",
                 "ticket_rows": "SELECT id, order_id, status, resolution, version "
                 "FROM support_tickets ORDER BY created_at",
-                "proposal_rows": "SELECT id, actor_id, origin_request_id, status, expires_at, "
-                "payload_hash, canonical_payload FROM action_proposals ORDER BY created_at,id",
+                "proposal_rows": "SELECT id, actor_id, origin_request_id, action_type, status, "
+                "expires_at, payload_hash, canonical_payload FROM action_proposals "
+                "ORDER BY created_at,id",
+                "cart_rows": "SELECT id,user_id,store_id,version FROM carts ORDER BY id",
+                "cart_item_rows": "SELECT id,cart_id,store_id,product_id,quantity "
+                "FROM cart_items ORDER BY cart_id,product_id",
                 "order_rows": "SELECT * FROM orders ORDER BY created_at,id",
                 "confirmation_rows": "SELECT * FROM confirmations ORDER BY created_at,id",
-                "receipt_rows": "SELECT id, action_id, actor_id, result FROM idempotency_requests "
-                "WHERE action_id IS NOT NULL ORDER BY created_at,id",
+                "payment_rows": "SELECT id, order_id, action_id, status, amount_cents, provider "
+                "FROM payments ORDER BY created_at,id",
+                "receipt_rows": "SELECT id, action_id, actor_id, operation, key, result "
+                "FROM idempotency_requests WHERE action_id IS NOT NULL ORDER BY created_at,id",
                 "event_rows": "SELECT * FROM business_events ORDER BY occurred_at,id",
                 "product_rows": "SELECT id, name, category, price_cents, on_hand, reserved, "
                 "active, attributes FROM products ORDER BY id",
@@ -317,14 +340,52 @@ class Harness:
             state["checkpoint_rows"] = connection.scalar(
                 text(f'SELECT count(*) FROM "{self.settings.checkpoint_schema}".checkpoints')
             )
-        return {**self.status(), **state, "agent_traces": self.agent_traces}
+        sdk = None
+        if self.sdk_program is not None:
+            provider = self.app.state.playground
+            from uuid import uuid5
+
+            sdk = provider.ledger.summary(
+                uuid5(self.settings.storefront_id, "buyer1"), self.settings.storefront_id
+            )
+            sdk["wire_requests"] = len(self.sdk_program.requests)
+            sdk["tools"] = [
+                c["function"]["name"]
+                for record in self.sdk_program.requests
+                for c in record["body"].get("tools", [])
+            ]
+        return {**self.status(), **state, "agent_traces": self.agent_traces, "sdk": sdk}
+
+    async def close_sdk(self):
+        provider = getattr(self.app.state, "playground", None)
+        if provider is not None:
+            await provider.close()
+            self.app.state.playground = None
+        if self.sdk_directory is not None:
+            self.sdk_directory.cleanup()
+        self.sdk_program, self.sdk_directory = None, None
 
     async def reset(self):
         from sqlalchemy import text
 
         from agentmall.seed import seed
 
+        await self.close_sdk()
+        close_worker = getattr(self.app.state, "worker_close", None)
+        if close_worker:
+            await close_worker()
+            self.app.state.worker_close = None
+        if hasattr(self.app.state, "worker_execution_identity"):
+            del self.app.state.worker_execution_identity
         tables = (
+            "catalog_commands",
+            "catalog_index_jobs",
+            "product_drafts",
+            "catalog_imports",
+            "agent_context_mutations",
+            "agent_candidate_sets",
+            "agent_thread_contexts",
+            "agent_jobs",
             "run_events",
             "agent_runs",
             "agent_threads",
@@ -359,6 +420,10 @@ class Harness:
                     )
                 )
             )
+        from agentmall.payments.service import MockPaymentAdapter
+
+        self.app.state.mock_payment_adapter = MockPaymentAdapter()
+        self.checkout_failure = False
         self.mode, self.offset = "proposal", timedelta(0)
         self.workflow_mode = "purchase"
         self.answer_failure_used = False
@@ -366,7 +431,12 @@ class Harness:
         self.agent_traces.clear()
         self.boundary.fake_model_calls = 0
         async with self.app.state.sessions.begin() as session:
-            await seed(session, self.settings)
+            await seed(
+                session,
+                self.settings,
+                profile=os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy"),
+            )
+            self.catalog_profile = os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy")
         from retrieval_helpers import index
 
         await index((None, self.db, self.app, self.settings))
@@ -375,7 +445,7 @@ class Harness:
 def mount_controls(harness):
     from fastapi import APIRouter, Depends, HTTPException, Request
     from fastapi.responses import JSONResponse
-    from pydantic import BaseModel, ConfigDict
+    from pydantic import BaseModel, ConfigDict, Field
     from sqlalchemy import text
     from starlette.datastructures import State
 
@@ -385,6 +455,10 @@ def mount_controls(harness):
                 mode = harness.request_mode.get(harness.mode)
                 return None if mode in {"blocked", "done"} else fake_model(mode, harness.boundary)
             if name in {"multi_models", "durable_single_model"}:
+                if self._state.get("playground") is not None or self._state.get(
+                    "worker_execution_identity"
+                ):
+                    return self._state[name]
                 from workflow_e2e import models
 
                 value = models(harness.workflow_mode, harness.boundary)
@@ -428,6 +502,19 @@ def mount_controls(harness):
         model_config = ConfigDict(extra="forbid")
         product_id: UUID
 
+    class CheckoutFailureRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        enabled: bool
+
+    class PaymentModeRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        result: Literal["SUCCEEDED", "DECLINED"]
+
+    class OrderConditionRequest(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        order_id: UUID
+        condition: Literal["near_expiry", "expire", "stale_version"]
+
     router = APIRouter(prefix="/__test", dependencies=[Depends(authorize)])
 
     @router.get("/health")
@@ -458,6 +545,174 @@ def mount_controls(harness):
     async def workflow_mode(payload: WorkflowMode):
         harness.workflow_mode = payload.mode
         return {"mode": payload.mode}
+
+    class SDKMode(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+        program: Literal[
+            "context",
+            "context-catalog",
+            "bundle",
+            "purchase",
+            "recommend",
+            "orders",
+            "return_replace",
+            "timeout",
+            "missing_usage",
+            "malicious",
+        ]
+        order_id: UUID | None = None
+        delay_ms: int = Field(0, ge=0, le=1500)
+
+    @router.post("/sdk-mode")
+    async def sdk_mode(payload: SDKMode):
+        from pathlib import Path
+
+        from playground_helpers import install_sdk
+
+        await harness.close_sdk()
+        harness.sdk_directory = tempfile.TemporaryDirectory(prefix="agentmall-sdk-mock-")
+        if payload.program == "bundle":
+            from bundle_helpers import install_bundle_sdk
+
+            _, harness.sdk_program = await install_bundle_sdk(
+                (None, harness.db, harness.app, harness.settings), Path(harness.sdk_directory.name)
+            )
+            return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
+        if payload.program in {"context", "context-catalog"}:
+            from multiturn_helpers import install_context_sdk, wireless_products
+
+            env = (None, harness.db, harness.app, harness.settings)
+            if payload.program == "context":
+                await wireless_products(env)
+            _, harness.sdk_program = await install_context_sdk(
+                env, Path(harness.sdk_directory.name)
+            )
+            return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
+        _, harness.sdk_program = await install_sdk(
+            (None, harness.db, harness.app, harness.settings),
+            Path(harness.sdk_directory.name),
+            payload.program,
+            str(payload.order_id) if payload.order_id else None,
+            delay_ms=payload.delay_ms,
+        )
+        return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
+
+    @router.post("/checkout-failure")
+    async def checkout_failure(payload: CheckoutFailureRequest):
+        harness.checkout_failure = payload.enabled
+        return {"enabled": payload.enabled}
+
+    @router.post("/payment-mode")
+    async def payment_mode(payload: PaymentModeRequest):
+        from agentmall.payments.service import MockPaymentAdapter
+
+        harness.app.state.mock_payment_adapter = MockPaymentAdapter(payload.result)
+        return {"result": payload.result}
+
+    @router.post("/order-condition")
+    async def order_condition(payload: OrderConditionRequest):
+        # The immutable order expiry is never changed. Server time is anchored in
+        # PostgreSQL and advanced locally for this one isolated test process.
+        with harness.db.begin() as connection:
+            if payload.condition == "stale_version":
+                changed = (
+                    connection.execute(
+                        text(
+                            "UPDATE orders SET version=version+1 WHERE id=:id "
+                            "AND status='PENDING_PAYMENT' RETURNING id,version,expires_at"
+                        ),
+                        {"id": payload.order_id},
+                    )
+                    .mappings()
+                    .one_or_none()
+                )
+            else:
+                changed = (
+                    connection.execute(
+                        text(
+                            "SELECT id,version,expires_at,clock_timestamp() AS db_now "
+                            "FROM orders WHERE id=:id AND status='PENDING_PAYMENT'"
+                        ),
+                        {"id": payload.order_id},
+                    )
+                    .mappings()
+                    .one_or_none()
+                )
+            if changed is None:
+                raise HTTPException(404, "Unknown pending synthetic order")
+            if payload.condition != "stale_version":
+                extra = timedelta(seconds=-60 if payload.condition == "near_expiry" else 1)
+                harness.offset = max(
+                    harness.offset, changed["expires_at"] - changed["db_now"] + extra
+                )
+        return {
+            "condition": payload.condition,
+            "order_id": payload.order_id,
+            "version": changed["version"],
+            "expires_at": changed["expires_at"],
+            "server_clock_offset_seconds": harness.offset.total_seconds(),
+        }
+
+    @router.post("/expanded-catalog")
+    async def expanded_catalog():
+        # Local test-control boundary only; never a public product mutation API.
+        from agentmall.seed import seed
+
+        harness.catalog_profile = "expanded"
+        async with harness.app.state.sessions.begin() as session:
+            await seed(session, harness.settings, profile="expanded")
+        from retrieval_helpers import index
+
+        count = await index((None, harness.db, harness.app, harness.settings))
+        return {"dataset": "expanded-120-v1", "model": "FIXTURE", "indexed": count is not None}
+
+    @router.post("/worker-mode")
+    async def worker_mode():
+        from retrieval_helpers import index
+        from worker_process_helpers import configure
+
+        await harness.close_sdk()
+        await index((None, harness.db, harness.app, harness.settings))
+        await configure(harness.app)
+        return {"model": "MockTransport", "embedding": "Fixture", "execution": "independent-worker"}
+
+    @router.post("/worker-tick")
+    async def worker_tick():
+        import sys
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory(prefix="agentmall-worker-e2e-") as directory:
+            config = Path(directory) / "config.json"
+            config.write_text(
+                json.dumps(
+                    {"schema": harness.schema, "checkpoint": harness.settings.checkpoint_schema}
+                )
+            )
+            config.chmod(0o600)
+            child = await asyncio.create_subprocess_exec(
+                sys.executable,
+                "-m",
+                "agentmall.agents.worker",
+                "--factory",
+                "worker_process_helpers:create_app",
+                "--once",
+                env={
+                    **os.environ,
+                    "PYTHONPATH": str(Path(__file__).parent),
+                    "AGENTMALL_WORKER_TEST_CONFIG": str(config),
+                },
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.DEVNULL,
+            )
+            try:
+                code = await asyncio.wait_for(child.wait(), 30)
+            finally:
+                if child.returncode is None:
+                    child.kill()
+                    await child.wait()
+            if code:
+                raise RuntimeError("Offline Worker failed")
+            return {"exit_code": code, "independent_process": True}
 
     @router.post("/reset")
     async def reset():
@@ -565,8 +820,27 @@ async def isolated_app():
             with db.begin() as connection:
                 migrate(connection)
             app = create_app(settings)
+            from agentmall.catalog_operations.parser import MockCatalogParser
+
+            app.state.catalog_parser = MockCatalogParser()
+            # Test transport delays only the mock decision, never invents business tool data.
+            import httpx
+
+            from agentmall.merchant_copilot.model import MockMerchantModel
+
+            merchant_fixture = MockMerchantModel()
+
+            async def merchant_response(request):
+                if b"select_verified_advice" in request.content:
+                    await asyncio.sleep(0.5)
+                return merchant_fixture.respond(request)
+
+            app.state.merchant_copilot_model = MockMerchantModel(
+                httpx.MockTransport(merchant_response)
+            )
             cleanup.push_async_callback(app.state.engine.dispose)
             harness = Harness(app, db, settings, schema, boundary)
+            cleanup.push_async_callback(harness.close_sdk)
             mount_controls(harness)
             from agentmall.agents import run_service
 
@@ -607,8 +881,24 @@ async def isolated_app():
             # Process-local test seam; immutable proposal rows and DB triggers remain intact.
             cleanup.enter_context(patch.object(actions, "database_now", test_clock))
             cleanup.enter_context(patch.object(orders, "database_now", test_clock))
+            order_event = orders.write_order_event
+
+            async def test_order_event(*args, **kwargs):
+                await order_event(*args, **kwargs)
+                if getattr(harness, "checkout_failure", False):
+                    raise RuntimeError("Fixture checkout precommit rollback")
+
+            cleanup.enter_context(patch.object(orders, "write_order_event", test_order_event))
+            from agentmall.payments import service as payments
+
+            cleanup.enter_context(patch.object(payments, "database_now", test_clock))
             async with app.state.sessions.begin() as session:
-                await seed(session, settings)
+                await seed(
+                    session,
+                    settings,
+                    profile=os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy"),
+                )
+                harness.catalog_profile = os.environ.get("AGENTMALL_DEMO_CATALOG_PROFILE", "legacy")
             from retrieval_helpers import index
 
             await index((None, db, app, settings))

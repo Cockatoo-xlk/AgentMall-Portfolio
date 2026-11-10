@@ -87,3 +87,8 @@ async def authenticate(session, settings: Settings, token: str) -> ActorContext:
 def require_buyer(actor: ActorContext):
     if actor.role != "buyer" or actor.user_id is None:
         raise DomainError(403, "FORBIDDEN", "此接口仅供买家使用")
+
+
+def require_merchant(actor: ActorContext):
+    if actor.role != "merchant" or actor.user_id is None:
+        raise DomainError(403, "FORBIDDEN", "此接口仅供所属店铺商家使用")

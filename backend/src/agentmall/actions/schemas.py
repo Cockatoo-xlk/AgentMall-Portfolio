@@ -11,6 +11,7 @@ from agentmall.aftersales.schemas import (
     ReturnPayload,
     ReturnReceipt,
 )
+from agentmall.cart.schemas import CartConsumption
 
 PositiveQuantity = Annotated[int, Field(strict=True, ge=1, le=10)]
 IdempotencyKey = Annotated[str, Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_.:-]+$")]
@@ -58,6 +59,8 @@ class ConfirmationDTO(BaseModel):
 
 
 class ActionReceipt(BaseModel):
+    # Missing on historical receipts; never infer historical cart consumption.
+    cart_consumption: CartConsumption | None = None
     action_id: UUID
     resource_id: UUID
     order_id: UUID

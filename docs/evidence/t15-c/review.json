@@ -1,0 +1,30 @@
+{
+  "review": "one independent read-only review",
+  "status": "NO_CRITICAL_OR_IMPORTANT",
+  "critical": [],
+  "important": [],
+  "minor_deferred": [
+    {
+      "file": "frontend/src/state/useProposalExpiry.ts",
+      "line": 19,
+      "finding": "Some OS sleep modes pause performance.now; a resumed page can retain a stale positive display estimate until manual refresh",
+      "disposition": "Deferred; countdown explicitly estimated, operator should refresh after sleep; server rechecks before confirmation, no authority bypass",
+      "cost_if_wrong": "User may see stale estimate and an expired-proposal rejection, not an expired authorized transaction"
+    }
+  ],
+  "checked": [
+    "GET header does not alter immutable/idempotent JSON",
+    "deadline reads only, no auto action/requote",
+    "missing clock UNKNOWN",
+    "stable confirmation recovery",
+    "persisted-event/verified runtime identity",
+    "public historical B1 scope and no raw private export",
+    "CI is offline status summary only"
+  ],
+  "not_independently_executed": [
+    "private B1 authenticity/hash comparisons",
+    "full suites and cleanup",
+    "Live/remote CI/publication/production"
+  ],
+  "files_modified_by_reviewer": false
+}

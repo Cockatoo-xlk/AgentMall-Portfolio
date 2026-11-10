@@ -3087,3 +3087,78 @@ main:focus {
     display: none;
   }
 }
+
+/* T16: explicit preference edits remain usable at narrow widths. */
+.thread-preference-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+.thread-preference-controls label {
+  display: grid;
+  gap: 0.4rem;
+  max-width: 14rem;
+}
+.thread-preference-controls .text-button {
+  padding: 0.6rem;
+}
+
+.merchant-page > .inline-actions {
+  margin-bottom: 1rem;
+}
+.merchant-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1rem;
+}
+.merchant-grid .panel,
+.merchant-row {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.merchant-grid .stack > .badge {
+  align-self: flex-start;
+}
+.merchant-row {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+}
+.merchant-row p {
+  margin: 0.4rem 0;
+}
+.merchant-row button[aria-pressed="true"] {
+  font-weight: 700;
+  outline: 1px solid currentColor;
+}
+@media (max-width: 760px) {
+  .merchant-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* V2.5: thirteen categories remain navigable without a horizontal button wall. */
+.catalog-toolbar { flex-direction: column; align-items: stretch; }
+.category-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(116px, 1fr)); gap: 8px; width: 100%; }
+.category-tab { justify-content: center; padding: 11px 10px; }
+.catalog-count { align-self: flex-end; margin-top: 8px; }
+@media (max-width: 600px) {
+  .category-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .category-tab { font-size: 12px; gap: 5px; padding: 10px 4px; }
+}
+
+.bundle-offer { border: 1px solid var(--border, #d7e3df); border-radius: 16px; padding: clamp(12px, 2vw, 24px); }
+.bundle-specs { display: grid; gap: 4px; font-size: .85rem; }
+.bundle-specs div { display: flex; justify-content: space-between; gap: 12px; }
+.bundle-specs dt { color: #687c76; }
+.bundle-specs dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.bundle-total { font-weight: 700; font-size: 1.1rem; }
+
+/* Merchant catalog: bounded readable source/evidence on mobile. */
+.catalog-operations { display: grid; gap: 1rem; margin-top: 1rem; }
+.catalog-operation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); gap: 1rem; }
+.catalog-operations pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 18rem; overflow: auto; }
+.catalog-operations article, .catalog-operations .panel { overflow-wrap: anywhere; }
+.catalog-operations fieldset { min-width: 0; border: 1px solid var(--line, #ddd); border-radius: 12px; padding: 1rem; }

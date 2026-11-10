@@ -1,0 +1,114 @@
+[
+  {
+    "id": "native_worktree",
+    "detail": "Tool sourceRoot rejected: outside registered workspace roots",
+    "classification": "TOOL_LIMITATION",
+    "private_log": null,
+    "sha256": null,
+    "original_receipt": "Tool receipt only; no fabricated raw-log hash"
+  },
+  {
+    "id": "dependency_image",
+    "detail": "Docker Hub auth connection timeout",
+    "classification": "ENVIRONMENT_NETWORK",
+    "private_log": "logs/build-deps.log",
+    "sha256": "59501ffd1b15e871c712de92a67afb799f1fb2b915a0cdcd91b2d1162b56984f",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "registry_mirror",
+    "detail": "TLS-preserving Google cache lookup timed out; not used",
+    "classification": "ENVIRONMENT_NETWORK",
+    "private_log": "logs/node-mirror.err",
+    "sha256": "f4a5a450008f93843276b5a952a7279ce6d777495b821b7347f9dc588e130dff",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "browser_dependencies",
+    "detail": "Debian HTTP libxkbcommon package returned502; private image uses same official repository via HTTPS",
+    "classification": "ENVIRONMENT_NETWORK",
+    "private_log": "logs/build-deps-official-node.log",
+    "sha256": "798e73259d8ea2f371b18d7513beb30868bd5abe0be504965e05d3d10a482a8b",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "red_settings",
+    "detail": "First RED attempt omitted base database_url/jwt_secret:3 failed,1 passed,6 setup errors",
+    "classification": "TEST_HARNESS_CONFIG",
+    "private_log": "logs/retrieval-red.log",
+    "sha256": "f1a4048f5c8c512fa549589c171791bfbf83242a220ef503cd98e6d6ff5014bc",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "retrieval_red",
+    "detail": "Configured baseline:8 failed,2 passed",
+    "classification": "EXPECTED_RED",
+    "private_log": "logs/retrieval-red-configured.log",
+    "sha256": "83a75210fdaddb347dfef442403453806f65ad0e9fb0d4810c23d763f7fbe497",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "oracle_red",
+    "detail": "Missing new oracle implementation:11 failed",
+    "classification": "EXPECTED_RED",
+    "private_log": "logs/oracle-red.log",
+    "sha256": "5a6eae45e0348cf8f38da935a3eb47a1b7cb7aadf9ffd5751a42c5df419b38cf",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "formatter_initial",
+    "detail": "Initial formatter pass exposed style issues; raw output retained",
+    "classification": "EXPECTED_DEVELOPMENT_CHECK",
+    "private_log": "logs/format-initial.log",
+    "sha256": "70c44c8058f43c68a48f267e1a0236d253b7f78af960e0ccb14800c6bd4988c0",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "targeted_ruff",
+    "detail": "Three remaining line-width findings",
+    "classification": "EXPECTED_DEVELOPMENT_CHECK",
+    "private_log": "logs/ruff-targeted.log",
+    "sha256": "cb820820ece415c261307cc61f99a08fff724773ddcd787862cdd005ddf599ad",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "ci_service_path",
+    "detail": "A private compose-preparation command used the wrong relative cwd; corrected without touching old services",
+    "classification": "TEST_HARNESS_PATH",
+    "private_log": null,
+    "sha256": null,
+    "original_receipt": "Tool receipt only; no fabricated raw-log hash"
+  },
+  {
+    "id": "verifier_first",
+    "detail": "Historical Run query used a nonexistent endpoint; stopped before confirmation and retained its owned schemas/ledger",
+    "classification": "TEST_HARNESS_API_PATH",
+    "private_log": "logs/real-verifier.log",
+    "sha256": "c92137a4230816b33164a7466e8be5627a5b99611e723ad4ace4f81c416281be",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "first_ci_ruff",
+    "detail": "CI Ruff1 from a102-character string; all test commands exited0 but whole CI exited1",
+    "classification": "LINT_FAILURE",
+    "private_log": "outputs/ruff.txt",
+    "sha256": "0cdefcc1b0e4fef43c048110066546ddda32730c0a02013190cf33004456fdc4",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "review_red",
+    "detail": "11 new Oracle safety failures; original11 still passed",
+    "classification": "EXPECTED_RED",
+    "private_log": "logs/review-red.log",
+    "sha256": "f0fb4ef4c2e0774ecda4b0242c5a98464491c5de9d7243b3b200df3f3c980b21",
+    "original_receipt": "Retained private file"
+  },
+  {
+    "id": "clock",
+    "detail": "Guest wall delta -1843431ns exceeds frozen -1000000ns threshold; happened during browser suite; no final reruns after detection",
+    "classification": "BLOCKING_ENVIRONMENT_CLOCK",
+    "private_log": "clock/runtime-blocker.json",
+    "sha256": "7b0eb3e4f1c1f1cf735db9321c797734c59c8f55125153665e34236fb55bed94",
+    "original_receipt": "Retained private file"
+  }
+]

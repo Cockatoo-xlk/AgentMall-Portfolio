@@ -3,7 +3,17 @@
 import pytest
 from aftersales_helpers import delivered_order
 from conftest import row
-from multiagent_helpers import ai, call, final, install, make_models, payload, route, send
+from multiagent_helpers import (
+    ai,
+    assessment_reads,
+    call,
+    final,
+    install,
+    make_models,
+    payload,
+    route,
+    send,
+)
 
 
 @pytest.mark.parametrize(
@@ -19,12 +29,27 @@ async def test_aftersales_write_cannot_switch_to_another_owned_order(
     first = await delivered_order(env[0], buyer, product)
     second = await delivered_order(env[0], buyer, product)
     args = {**arguments, "order_id": second["id"]}
+    goal = "prepare_return" if tool == "prepare_return" else "human_support"
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            *(
+                [route("aftersales", "assess_return", "assessment")]
+                if tool == "prepare_return"
+                else []
+            ),
+            route(
+                "aftersales",
+                goal,
+                "return",
+                depends=["assessment"] if tool == "prepare_return" else [],
+                read_only=False,
+            ),
             route("finish"),
         ],
-        aftersales=[ai(call(tool, args))],
+        aftersales=[
+            *(assessment_reads(first["id"]) if tool == "prepare_return" else []),
+            ai(call(tool, args)),
+        ],
     )
     await install(env, models)
     result = await send(env, buyer, message=f"订单 {first['id']} 质量问题想退掉并联系人工")
@@ -131,11 +156,15 @@ async def test_multiple_owned_orders_require_selection_for_return(env, buyer, pr
     models = make_models(
         supervisor=[
             route("order", "inspect_orders", "old"),
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            ),
             route("finish"),
         ],
         order=[ai(call("list_orders")), final()],
         aftersales=[
+            *assessment_reads(first["id"]),
             ai(
                 call(
                     "prepare_return",
@@ -145,7 +174,7 @@ async def test_multiple_owned_orders_require_selection_for_return(env, buyer, pr
                         "description": "故障",
                     },
                 )
-            )
+            ),
         ],
     )
     await install(env, models)

@@ -1,0 +1,110 @@
+[
+  {
+    "sha": "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+    "parents": "",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "Initial AgentMall public portfolio snapshot"
+  },
+  {
+    "sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "parents": "73872b6761dcd2e52344dd562bbdd8618fb4e83d",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "docs: align public portfolio copy with independent Git root"
+  },
+  {
+    "sha": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+    "parents": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "feat: complete mock payment flow in order details"
+  },
+  {
+    "sha": "d81de4adc125c9ce019434fb338a52fe5282070c",
+    "parents": "d8a18b0b56b0bdebe9a1ea1400849f82cecdbbef",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "fix: consume verified cart snapshots during checkout"
+  },
+  {
+    "sha": "c06c5841af36a631b69462c035d6410f732af0db",
+    "parents": "d81de4adc125c9ce019434fb338a52fe5282070c",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "docs: prepare P0 and P1 public release candidate"
+  },
+  {
+    "sha": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+    "parents": "c06c5841af36a631b69462c035d6410f732af0db",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "feat: add metered local DeepSeek agent playground"
+  },
+  {
+    "sha": "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+    "parents": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "feat: prepare real agent demo with release readiness gate"
+  },
+  {
+    "sha": "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+    "parents": "1fb92b5bb0ecf23bfac71ecfb124eb8cab0a2a5f",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "chore: verify release gate in isolated stable clock environment"
+  },
+  {
+    "sha": "bd0f58368bd40e2b479599fa270b30e43703d2b8",
+    "parents": "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "docs: prepare final AgentMall public release candidate"
+  },
+  {
+    "sha": "cbc6e19ae7633758e2ce2f0d64d27aea2af7b9f5",
+    "parents": "bd0f58368bd40e2b479599fa270b30e43703d2b8",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "feat: add thread-scoped multi-turn agent context"
+  },
+  {
+    "sha": "b6ab3e5cfa3e789bee5554277c5fd9d2b697cca0",
+    "parents": "cbc6e19ae7633758e2ce2f0d64d27aea2af7b9f5",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "fix: validate multi-turn intent and catalogue capabilities"
+  },
+  {
+    "sha": "77b215878edbce50ce107c6e77e31de4d2044ff9",
+    "parents": "b6ab3e5cfa3e789bee5554277c5fd9d2b697cca0",
+    "author": "Cockatoo-xlk",
+    "author_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "committer": "Cockatoo-xlk",
+    "committer_email": "239146463+Cockatoo-xlk@users.noreply.github.com",
+    "subject": "fix: add Chinese category recall and fail-closed verification"
+  }
+]

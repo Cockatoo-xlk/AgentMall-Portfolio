@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "status": "AGENTMALL_V214_PORTFOLIO_RC_READY",
+  "product_source_commit": "280ec90816ed3d70079b7fb89457f7f13a4d2278",
+  "delivery_binding": "Containing commit; no product code changes. Fresh tests executed frozen product source, not borrowed L6 receipts.",
+  "executable_file_map_sha256": "0b6fbb27fb22ba69e29949a24576ca23c3fbf858ab5db1a0724dbd7802780f81",
+  "executable_files": 458,
+  "environment": {
+    "os": "Linux",
+    "architecture": "aarch64",
+    "postgres": "17.11",
+    "pgvector": "0.8.7",
+    "isolated_project": true,
+    "model": "SDK_MOCKTRANSPORT / FIXTURE",
+    "embedding": "FIXTURE",
+    "real_bge_rerun": false
+  },
+  "tests": {
+    "pytest": {
+      "passed": 1220,
+      "skipped": 14,
+      "failed": 0
+    },
+    "vitest": {
+      "passed": 127
+    },
+    "playwright": {
+      "passed": 119,
+      "retries": 0,
+      "failed": 0
+    }
+  },
+  "checks": {
+    "v214-full-pytest": {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "--ci-offline-core",
+        "--junitxml=/rc-output/v214-full-pytest.xml",
+        "-o",
+        "junit_family=xunit1"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T14:55:42.253608+00:00",
+      "seconds": 560.188,
+      "log_sha256": "43255a45ba81b7108bbdec98d5d1ebf982de641f50a0a2b837ee95798cbc681f"
+    },
+    "v214-static-frontend": {
+      "command": [
+        "sh",
+        "-c",
+        "uv run --project backend ruff check backend scripts evals && uv run --project backend ruff format --check backend scripts evals && cd frontend && npm run typecheck && npm run lint && npm test && npm run build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T15:09:17.360273+00:00",
+      "seconds": 9.915,
+      "log_sha256": "ed5c70f09520f56966309d985b15cb0887ef22a94b34439465ba7b0bb94e15fa"
+    },
+    "v214-full-playwright": {
+      "command": [
+        "sh",
+        "-c",
+        "cd frontend && npm run test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T15:09:17.362562+00:00",
+      "seconds": 217.359,
+      "log_sha256": "3b8899ff0ba483dc63d2c3c1f83c6c1687745f73f499d8b007f536be4f8d1186"
+    },
+    "demo-browser-fixed": {
+      "command": [
+        "node",
+        "/demo-smoke.cjs"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T15:22:34.193607+00:00",
+      "seconds": 2.951,
+      "log_sha256": "cb62c339021b88f833036b968b711b1fdf79593e96e486e40f9b75b133beadea"
+    },
+    "demo-oracle-fixed": {
+      "command": [
+        "python",
+        "/demo-oracle.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T15:27:03.600373+00:00",
+      "seconds": 0.769,
+      "log_sha256": "f19c2937d8a4dccae38ee67db287d718db9c28caed36474feb2ae011a73b2605"
+    },
+    "mermaid-render": {
+      "command": [
+        "node",
+        "/mermaid.cjs"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T15:21:22.387891+00:00",
+      "seconds": 0.428,
+      "log_sha256": "2e269675e037ce45bd6c08b3442fdbdb210ddc24f41c431f2c79834d997b0317"
+    }
+  },
+  "demo": {
+    "status": "PASS",
+    "mode": "SINGLE / SDK_MOCKTRANSPORT / FIXTURE_EMBEDDING",
+    "decisions": "TEST_OPERATOR",
+    "orders": 1,
+    "status_after": "PENDING_PAYMENT",
+    "items": 1,
+    "quantity": 1,
+    "total_cents": 39900,
+    "payments": 0,
+    "confirmations": 1,
+    "candidate_second_matches": true,
+    "reserved_sum": 1,
+    "event_sequences_continuous": true,
+    "official_checkpoints": 3,
+    "pending_writes": 0,
+    "sql_sha256": "726c3cdb667e64a4984ec32ab1f20a96a4fddfb0cb5e26f17e0b80c56b3a2296",
+    "provider_requests": 0,
+    "real_model_calls": 0,
+    "journal_direct_full_snapshot": "NOT_COVERED"
+  },
+  "history_audit": {
+    "commits": 36,
+    "blobs": 1125,
+    "image_blobs": 45,
+    "text_secret_findings": 0,
+    "prohibited_paths": 0,
+    "raw_private_evidence_copied": false,
+    "limitations": "Heuristic scans, metadata/OCR and selected visual review; not a proof of no possible secrets",
+    "commit_metadata_checked": 36,
+    "commit_metadata_findings": 0,
+    "all_authors_public_noreply": true,
+    "image_binary_secret_patterns": 0,
+    "image_gps_iptc_fields": 0
+  },
+  "real_llm": "Historical paired pilot9/10 at b5d6a685; current product L7 B2 multi PARTIAL/CONTEXT_SCOPE_VIOLATION",
+  "new_provider_requests": 0,
+  "provider_key_reads": 0,
+  "hosted_embedding_requests": 0,
+  "remote_ci": "REMOTE_CI_NOT_RUN_FOR_V214",
+  "push": 0,
+  "dispatch": 0,
+  "deploy": 0,
+  "video": "VIDEO_NOT_RECORDED",
+  "cleanup": {
+    "verified": true,
+    "remaining_demo_schemas_before_removal": [],
+    "owned_containers_volumes_network_removed": true,
+    "owned_image_tag_removed": true,
+    "runtime_cache_removed": true,
+    "historical_containers": 25,
+    "historical_changed": [],
+    "default_context": "colima",
+    "receipt_sha256": "fcbcb4f948fa05616243cf3e356084873699ebfaf41a81fc14b272ee0922a29f"
+  },
+  "build_provenance": {
+    "dependency_base": "agentmall-portfolio-demo-runner:local (existing trusted local dependency cache; not a newly published artifact)",
+    "product_source": "git archive 280ec90816ed3d70079b7fb89457f7f13a4d2278; COPY source/ into new owned image",
+    "locked_install": "uv sync --project backend --locked --no-extra embedding",
+    "source_binding": "458 mapped executable files match archived snapshot, container image and working tree; no extra source files in scanned code directories",
+    "exact_image_source_files": 458,
+    "cold_standard_build": "NOT_RUN",
+    "standard_compose_configuration": "VALIDATED",
+    "demo_entry": "EXECUTED (same compose.ci.yaml + compose.portfolio-local.yaml, private owned image/credential/output/port overrides)",
+    "dependency_locks_changed": false,
+    "successful_build_log_sha256": "e1e9e9d8b58d6a75ce2309ecc3e970834c2c42d5286ebf9d921638b8870955e0"
+  },
+  "failed_attempts": [
+    {
+      "label": "initial_offline_cache_build",
+      "command": [
+        "docker",
+        "--context",
+        "desktop-linux",
+        "build",
+        "--network",
+        "none",
+        "-f",
+        "${PRIVATE_DIR}/Dockerfile",
+        "-t",
+        "${OWNED_IMAGE}",
+        "${PRIVATE_DIR}"
+      ],
+      "command_scope": "Sanitized argv; actual private paths/runtime wrapper retained locally",
+      "exit_code": 1,
+      "classification": "CACHE_MISS: cryptography==50.0.2 wheel unavailable with offline network",
+      "correction": "Removed offline-only cache assumption in private Dockerfile; same lock and no product changes; bounded locked dependency install succeeded",
+      "raw_log_file": "build.log",
+      "log_sha256": "4c4148c11a4e05ee421c23ebf0c7c0f2310de6d83ff27442bd232c10f391c0eb"
+    },
+    {
+      "label": "demo-browser",
+      "command": [
+        "node",
+        "/demo-smoke.cjs"
+      ],
+      "command_scope": "Sanitized argv; actual private paths/runtime wrapper retained locally",
+      "exit_code": 1,
+      "classification": "HARNESS_SELECTOR: exact label omitted nested option text",
+      "correction": "Use existing combobox accessible name /运行模式/ in private harness; original attempt created no Run",
+      "raw_log_file": "demo-browser.log",
+      "log_sha256": "9f5d8eecffa395ca69d8ec0f3ef58c0149230dec2f695c46f147661cce0973f2"
+    },
+    {
+      "label": "demo-oracle",
+      "command": [
+        "python",
+        "/demo-oracle.py"
+      ],
+      "command_scope": "Sanitized argv; actual private paths/runtime wrapper retained locally",
+      "exit_code": 1,
+      "classification": "HARNESS_SCHEMA: CandidateSet item uses id, not product_id",
+      "correction": "Read actual existing CandidateSet schema and use id; repeat READ ONLY collector, no business rerun",
+      "raw_log_file": "demo-oracle.log",
+      "log_sha256": "f555d3705564cb85ef8ff3d824e0b2c9cf36b42b7289cc97c5cf206443b8f30c"
+    }
+  ],
+  "other_diagnostics": [
+    {
+      "command": [
+        "python3",
+        "-c",
+        "from PIL import Image"
+      ],
+      "exit_code": 1,
+      "classification": "OPTIONAL_LOCAL_TOOL_MISSING",
+      "correction": "Used built-in Vision/ImageIO; all45 images processed",
+      "raw_log_sha256": null,
+      "evidence_limit": "Original tool output retained by task; no original redirected file SHA. Not a product/test failure."
+    },
+    {
+      "command": [
+        "github-readonly-fetch",
+        "branches/codex%2Fv2-expanded-catalog"
+      ],
+      "result": "INVALID_ARGUMENT",
+      "correction": "Read branch collection endpoint; no remote writes"
+    }
+  ],
+  "executable_hash_method": "SHA256(UTF8(json.dumps(sorted relative_path -> per-file SHA256 mapping, sort_keys=True, separators=(comma,colon)))); pretty-printed map bytes have a different digest",
+  "remote_snapshot": {
+    "checked_at_utc": "2026-11-09T15:41:44.466Z",
+    "main": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+    "published_branch": "codex/v2-expanded-catalog",
+    "published_sha": "c8e9683502e8672d7c23ff9f9b17b79d019c0220",
+    "target_branch": "codex/v214-portfolio-release-candidate",
+    "target_branch_exists": false,
+    "latest_run": {
+      "id": 42348866265,
+      "sha": "c8e9683502e8672d7c23ff9f9b17b79d019c0220",
+      "conclusion": "success",
+      "attempt": 1,
+      "url": "https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42348866265"
+    },
+    "pr1": {
+      "state": "open",
+      "draft": true,
+      "base_sha": "17f72b8ccd6a86e083fd3206ea839dd28dc22bcf",
+      "head_sha": "bd0f58368bd40e2b479599fa270b30e43703d2b8"
+    },
+    "v214_remote_ci": "NOT_RUN"
+  },
+  "review": {
+    "important_findings": 1,
+    "important_fixed": "Added sanitized failed attempt receipts and exact cached build provenance, private receipt validator RED then GREEN",
+    "production_changes": false,
+    "notes": "Canonical fingerprint procedure and final completed-result wording filled during planned finalization"
+  },
+  "public_audit": {
+    "new_or_modified_files": 12,
+    "secret_patterns": [],
+    "private_originals_protected": 39,
+    "original_hash_mismatches": 0,
+    "model_weights_distributed": false,
+    "license": "Existing owner-confirmed MIT plus unchanged third-party notices; source only; no new legal assurance",
+    "remote_auth": "REMOTE_AUTH_NOT_IMPLEMENTED",
+    "video": "VIDEO_NOT_RECORDED"
+  },
+  "document_checks": {
+    "markdown_files": 10,
+    "local_links": 231,
+    "broken_links": 0,
+    "mermaid_diagrams_rendered": 2,
+    "public_json_parsed": true,
+    "production_files_modified": 0
+  },
+  "candidate_file_map_sha256": "524f719d9d506aa164021e54f1140eb08e3480bb186dd28ed9591747a2acab83",
+  "candidate_file_map_files": 741,
+  "candidate_hash_scope": "All tracked/proposed files except this verification.json to avoid self-reference; same canonical path->SHA JSON method as executable map"
+}

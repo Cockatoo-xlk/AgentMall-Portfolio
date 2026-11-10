@@ -1,0 +1,925 @@
+{
+  "schema_version": 1,
+  "status": "AGENTMALL_V214_R2_CI_CANDIDATE_READY",
+  "baseline_commit": "01f0115f6fa704dec7a272eab57579d21d8f4ae5",
+  "product_baseline_commit": "280ec90816ed3d70079b7fb89457f7f13a4d2278",
+  "branch": "codex/v214-r2-ci-reliability",
+  "delivery_binding": {
+    "kind": "commit_containing_this_receipt",
+    "locator": "git log -1 --format=%H -- docs/evidence/v214-r2/verification.json",
+    "reason": "avoid self-referential commit SHA inside tracked receipt; executable content is bound separately"
+  },
+  "executable_source": {
+    "files": 453,
+    "sha256": "cbd250ee27203ace20be2a129258fcfdc7899cf301d44506dbd853dc72adc8f1",
+    "method": "lexically sorted path + space + file SHA256 + LF for tracked/proposed backend,frontend,evals,scripts,.github and pytest.ini; excludes ignored/generated files and docs",
+    "matches_executed_build": true
+  },
+  "original_remote": {
+    "run_id": 42655215470,
+    "job_id": 129291789307,
+    "attempt": 1,
+    "head_sha": "01f0115f6fa704dec7a272eab57579d21d8f4ae5",
+    "url": "https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/42655215470",
+    "conclusion": "cancelled",
+    "direct_cause": "Check Run annotation: The job has exceeded the maximum execution time of 30m0s",
+    "started_at": "2026-11-09T16:29:02Z",
+    "completed_at": "2026-11-09T16:59:19Z",
+    "pytest_step_seconds": 1345,
+    "pytest_engine_seconds": 1336.87,
+    "pytest_passed": 1220,
+    "pytest_skipped": 14,
+    "vitest_passed": 127,
+    "playwright_pass_lines": 108,
+    "playwright_expected": 119,
+    "playwright_final": "NOT_PASSED_CANCELLED",
+    "observed_assertion_failures": 0,
+    "unexecuted_browser_cases": "NOT_VERIFIED",
+    "remaining_playwright_budget_seconds": 332,
+    "resource_peak": "UNKNOWN",
+    "artifact": {
+      "id": 13694450440,
+      "bytes": 391,
+      "zip_sha256": "1359cdd3c61cbb66978f0c383798032a0bcde0782dd44d835c39ee8f2d7c616f"
+    },
+    "raw_log_sha256": "63ca91801eaf7ef27448af8daf6e13ca6e3b221026015213fe950093d256e1d8",
+    "raw_job_metadata_sha256": "693dc120447c2873ef8d0bfd037f4a2bda3c5664b4eaa244c3d2e09d28c0eb69",
+    "annotation_sha256": "b5720f396dac086998ddc6e68cd3dbefa2b71eb21ac715efd89624124f71e8c4",
+    "step_timings": [
+      {
+        "name": "Set up job",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:03Z",
+        "completed_at": "2026-11-09T16:29:04Z",
+        "seconds": 1.0
+      },
+      {
+        "name": "Initialize containers",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:04Z",
+        "completed_at": "2026-11-09T16:29:14Z",
+        "seconds": 10.0
+      },
+      {
+        "name": "Check out source",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:14Z",
+        "completed_at": "2026-11-09T16:29:16Z",
+        "seconds": 2.0
+      },
+      {
+        "name": "Set up Python",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:16Z",
+        "completed_at": "2026-11-09T16:29:25Z",
+        "seconds": 9.0
+      },
+      {
+        "name": "Set up uv",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:25Z",
+        "completed_at": "2026-11-09T16:29:26Z",
+        "seconds": 1.0
+      },
+      {
+        "name": "Set up Node",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:26Z",
+        "completed_at": "2026-11-09T16:29:30Z",
+        "seconds": 4.0
+      },
+      {
+        "name": "Install locked Python dependencies without BGE extras",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:30Z",
+        "completed_at": "2026-11-09T16:29:34Z",
+        "seconds": 4.0
+      },
+      {
+        "name": "Install locked frontend dependencies",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:29:34Z",
+        "completed_at": "2026-11-09T16:30:21Z",
+        "seconds": 47.0
+      },
+      {
+        "name": "Install Playwright Chromium and Linux dependencies",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:30:21Z",
+        "completed_at": "2026-11-09T16:30:42Z",
+        "seconds": 21.0
+      },
+      {
+        "name": "Initialize fresh owned PostgreSQL and verify migration/seed/checkpoint",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:30:42Z",
+        "completed_at": "2026-11-09T16:30:46Z",
+        "seconds": 4.0
+      },
+      {
+        "name": "Ruff check",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:30:46Z",
+        "completed_at": "2026-11-09T16:30:47Z",
+        "seconds": 1.0
+      },
+      {
+        "name": "Ruff format check",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:30:47Z",
+        "completed_at": "2026-11-09T16:30:47Z",
+        "seconds": 0.0
+      },
+      {
+        "name": "PostgreSQL, checkpoint, invariants, oracle and provider protocol tests",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:30:47Z",
+        "completed_at": "2026-11-09T16:53:12Z",
+        "seconds": 1345.0
+      },
+      {
+        "name": "Frontend typecheck",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:53:12Z",
+        "completed_at": "2026-11-09T16:53:18Z",
+        "seconds": 6.0
+      },
+      {
+        "name": "Frontend lint",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:53:18Z",
+        "completed_at": "2026-11-09T16:53:21Z",
+        "seconds": 3.0
+      },
+      {
+        "name": "Frontend unit tests",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:53:21Z",
+        "completed_at": "2026-11-09T16:53:23Z",
+        "seconds": 2.0
+      },
+      {
+        "name": "Frontend build",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:53:23Z",
+        "completed_at": "2026-11-09T16:53:30Z",
+        "seconds": 7.0
+      },
+      {
+        "name": "Real FastAPI, PostgreSQL and checkpoint with fixture model E2E",
+        "conclusion": "cancelled",
+        "started_at": "2026-11-09T16:53:30Z",
+        "completed_at": "2026-11-09T16:59:15Z",
+        "seconds": 345.0
+      },
+      {
+        "name": "Write bounded public CI summary",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:59:15Z",
+        "completed_at": "2026-11-09T16:59:15Z",
+        "seconds": 0.0
+      },
+      {
+        "name": "Upload only public status summary",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:59:15Z",
+        "completed_at": "2026-11-09T16:59:16Z",
+        "seconds": 1.0
+      },
+      {
+        "name": "Post Set up Node",
+        "conclusion": "skipped",
+        "started_at": "2026-11-09T16:59:16Z",
+        "completed_at": "2026-11-09T16:59:16Z",
+        "seconds": 0.0
+      },
+      {
+        "name": "Post Set up uv",
+        "conclusion": "skipped",
+        "started_at": "2026-11-09T16:59:16Z",
+        "completed_at": "2026-11-09T16:59:16Z",
+        "seconds": 0.0
+      },
+      {
+        "name": "Post Set up Python",
+        "conclusion": "skipped",
+        "started_at": "2026-11-09T16:59:16Z",
+        "completed_at": "2026-11-09T16:59:16Z",
+        "seconds": 0.0
+      },
+      {
+        "name": "Post Check out source",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:59:16Z",
+        "completed_at": "2026-11-09T16:59:17Z",
+        "seconds": 1.0
+      },
+      {
+        "name": "Stop containers",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:59:17Z",
+        "completed_at": "2026-11-09T16:59:17Z",
+        "seconds": 0.0
+      },
+      {
+        "name": "Complete job",
+        "conclusion": "success",
+        "started_at": "2026-11-09T16:59:17Z",
+        "completed_at": "2026-11-09T16:59:17Z",
+        "seconds": 0.0
+      }
+    ]
+  },
+  "ci_design": {
+    "jobs": [
+      "backend-core",
+      "frontend-e2e",
+      "release-gate"
+    ],
+    "parallel_test_jobs": true,
+    "separate_postgresql_per_job": true,
+    "test_job_timeout_minutes": 30,
+    "gate_timeout_minutes": 5,
+    "all_required_outcomes_must_equal": "success",
+    "gate_checks_own_export": true,
+    "public_artifact_max_bytes_per_summary": 4096,
+    "artifact_is_not_final_workflow_status": true,
+    "t16_prefix_byte_identical": true,
+    "t16_sha256": "d05a5a71abea22cfe97d3b275f78a82d33cd65d257c7fd0b2f7a01db43f1f7c3",
+    "dependencies_or_test_policies_changed": false,
+    "future_ubuntu_critical_path_minutes_estimate": [
+      23,
+      24
+    ],
+    "estimate_not_measurement": true
+  },
+  "environment": {
+    "platform": "Linux aarch64 via Mac Docker Desktop; not Ubuntu amd64",
+    "docker_context": "desktop-linux",
+    "default_context_unchanged": "colima",
+    "python": "3.12.10",
+    "node": "24.21.0",
+    "uv": "0.9.18",
+    "postgres": "17.11",
+    "pgvector": "0.8.7",
+    "migration": "0011",
+    "physical_database_isolation": "two new PostgreSQL containers/volumes, each own network namespace; no published ports; network none",
+    "owner": "agentmall-v214r2-8cda1f13",
+    "model": "SDK MockTransport and Fixture only",
+    "embedding": "Fixture; no real BGE in ordinary offline-core",
+    "new_provider_requests": 0,
+    "provider_key_reads": 0
+  },
+  "tests": {
+    "pytest": {
+      "passed": 1291,
+      "skipped": 14,
+      "failed": 0,
+      "new_ci_cases": 71,
+      "original_passed_cases_preserved": 1220,
+      "engine_seconds": 559.55,
+      "warnings": 4,
+      "warning_note": "existing record_property fixtures warn under additional JUnit xunit2 output; no assertion/skip policy change"
+    },
+    "vitest": {
+      "passed": 127
+    },
+    "playwright": {
+      "passed": 119,
+      "skipped": 0,
+      "flaky": 0,
+      "failed": 0,
+      "retries": 0,
+      "workers": 1,
+      "fully_parallel": false,
+      "timeout_ms": 30000,
+      "report_stats": {
+        "startTime": "2026-11-09T17:42:42.136Z",
+        "duration": 200801.27599999998,
+        "expected": 119,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    "gate_target_per_environment": {
+      "host": 71,
+      "backend_runner_with_bootstrap_tests": 77,
+      "frontend_runner_with_bootstrap_tests": 77
+    },
+    "collection_equivalence": {
+      "old_nodes": 1234,
+      "new_nodes": 1305,
+      "missing_old_nodes": [],
+      "added_nodes": 71,
+      "added_module": "backend/tests/test_ci_release_gate.py",
+      "unchanged_original_skip_nodes": 14,
+      "new_test_results": {
+        "passed": 1291,
+        "skipped": 14,
+        "failed": 0
+      },
+      "normalization": "Only 3 uuid4-generated security-test parameter suffixes, source at test_order_lifecycle.py166 and test_refund_idempotency.py403-404; no assertions/source modified",
+      "old_junit_sha256": "d38b19dbcdf719ab96874569748b8bcb2ce1e6b3c803a72a997c89e41337094e",
+      "new_junit_sha256": "68245a4ed5b961f6c5776b36f5359280767975361db926cd8f71f128eb014fcd"
+    }
+  },
+  "checks": {
+    "backend-bootstrap": {
+      "command": [
+        "python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:41:44.597788+00:00",
+      "seconds": 1.779,
+      "log_sha256": "c1d0d1141d322f7999607bcda22e2b77b046b8baa91ba57be2d77d35b46c96fd"
+    },
+    "frontend-bootstrap": {
+      "command": [
+        "python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:41:46.616141+00:00",
+      "seconds": 1.74,
+      "log_sha256": "4aecbb22474e51355715655b537e99ba536a7733d2afdde1adb59eaa91dcbc39"
+    },
+    "backend-target": {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_ci_release_gate.py",
+        "backend/tests/test_release_bootstrap.py",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:10.713326+00:00",
+      "seconds": 2.684,
+      "log_sha256": "34b0d544d2f15f5f93f4a613e5d3513e69c607e55bf5deafbd4229910be3a4ee"
+    },
+    "frontend-target": {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_ci_release_gate.py",
+        "backend/tests/test_release_bootstrap.py",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-q"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:10.713312+00:00",
+      "seconds": 2.771,
+      "log_sha256": "ede1e401c0a1a304f789b1c7f634e10ec930639f5c9a5aa129c7ca9ec75038a6"
+    },
+    "gate-host": {
+      "command": [
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_ci_release_gate.py",
+        "-q"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:48:24.399024+00:00",
+      "seconds": 1.889,
+      "log_sha256": "7507681ffde4df020405c814ab8f86341c882ddda69201aba8eb32c1ae2f5a31"
+    },
+    "backend-ruff": {
+      "command": [
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:34.941911+00:00",
+      "seconds": 0.035,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "backend-format": {
+      "command": [
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:34.997286+00:00",
+      "seconds": 0.035,
+      "log_sha256": "d534f2fbd06a778b07e8eda1c49ca39fbe3c89ed56b8a4fe3785a17fc4e081f4"
+    },
+    "backend-pytest": {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "--junitxml=/rc-output/backend-pytest.xml"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:35.051360+00:00",
+      "seconds": 562.925,
+      "log_sha256": "746bf62f4ef2fa0ff7cac92e20fdd445ea9c7661c90a79adb8ce5e6b0f431530"
+    },
+    "frontend-typecheck": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:34.944267+00:00",
+      "seconds": 2.157,
+      "log_sha256": "8532a79a6fda13ecd0cb2848b433d12793784c969022b2bd44bc5849f4ced5f4"
+    },
+    "frontend-lint": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:37.119625+00:00",
+      "seconds": 1.299,
+      "log_sha256": "a69feffcf9c207a34dcaef2afab22875ea9f160259cab4b9134a67f8889308c1"
+    },
+    "frontend-vitest": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "test"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:38.438179+00:00",
+      "seconds": 0.872,
+      "log_sha256": "0f6bd2eebb5b239af6310edfdd4cfe005e505352cab77334ba8a66f9762800e8"
+    },
+    "frontend-build": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:39.328680+00:00",
+      "seconds": 2.483,
+      "log_sha256": "3cac598f64bb3a7d7d338c22870113f99cca5f5c046217e24b48a4ed1018244e"
+    },
+    "frontend-playwright": {
+      "command": [
+        "npm",
+        "--prefix",
+        "frontend",
+        "run",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:41.833069+00:00",
+      "seconds": 201.165,
+      "log_sha256": "ddaf3897dbec6a1a312b1d904ff84247ab58ee2c9fa04956f0de381eee683623"
+    },
+    "backend-job": {
+      "command": [
+        "docker",
+        "--context",
+        "desktop-linux",
+        "exec",
+        "agentmall-v214r2-8cda1f13-backend-runner",
+        "bash",
+        "/rc-job.sh"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:34.890261+00:00",
+      "seconds": 563.113,
+      "log_sha256": "8491b7a5cd81888776b760642d272ab3edf2f3418eda300d022a1819ba681b43"
+    },
+    "frontend-job": {
+      "command": [
+        "docker",
+        "--context",
+        "desktop-linux",
+        "exec",
+        "agentmall-v214r2-8cda1f13-frontend-runner",
+        "bash",
+        "/rc-job.sh"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:42:34.890261+00:00",
+      "seconds": 208.146,
+      "log_sha256": "817e928a7221cd91bd1899b07bb4959dff17d5cbca264937d38c2871a3e3875a"
+    },
+    "actionlint": {
+      "command": [
+        ".playground/t16-r2-checks/actionlint",
+        ".github/workflows/ci.yml",
+        ".github/workflows/t16-a3-admission.yml"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:48:24.399024+00:00",
+      "seconds": 0.019,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "collection-green": {
+      "command": [
+        "python3",
+        ".playground/v214-r2-20261109T172149Z/compare-collection.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:53:35.439435+00:00",
+      "seconds": 0.048,
+      "log_sha256": "7c2c3afb67ec113a41a993fa96aba769aae30a7b0fc2f080915699597495b34a"
+    },
+    "final-diff-check": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:51:12.829520+00:00",
+      "seconds": 0.024,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final-host-static": {
+      "command": [
+        "backend/.venv/bin/ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:57:01.017419+00:00",
+      "seconds": 0.048,
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "final-host-format": {
+      "command": [
+        "backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-09T17:57:01.088322+00:00",
+      "seconds": 0.024,
+      "log_sha256": "d534f2fbd06a778b07e8eda1c49ca39fbe3c89ed56b8a4fe3785a17fc4e081f4"
+    }
+  },
+  "local_timing": {
+    "backend_pipeline_seconds": 563.113,
+    "frontend_pipeline_seconds": 208.146,
+    "overlapped_test_pipeline_seconds_approx": 563.113,
+    "same_measured_steps_if_serial_seconds_sum": 771.259,
+    "note": "parallel local job-equivalent commands; excludes cached Node/Chromium install and host provisioning; not an amd64 speedup measurement",
+    "build_seconds": 31.78,
+    "bootstrap_backend_seconds": 1.779,
+    "bootstrap_frontend_seconds": 1.74,
+    "slowest_python_tests": [
+      {
+        "node": "backend.tests.test_worker_process::test_bundle_replanning_and_purchase_through_independent_workers",
+        "seconds": 26.413
+      },
+      {
+        "node": "backend.tests.test_worker_process::test_two_workers_lock_and_different_threads_parallel",
+        "seconds": 21.389
+      },
+      {
+        "node": "backend.tests.test_worker_process::test_database_unavailable_worker_exits_bounded_then_original_job_recovers",
+        "seconds": 20.902
+      },
+      {
+        "node": "backend.tests.test_worker_process::test_explicit_recovery_after_version_block_uses_original_intent[True]",
+        "seconds": 14.177
+      },
+      {
+        "node": "backend.tests.test_worker_process::test_order_commit_sigkill_response_loss_and_duplicate_resume[business_committed]",
+        "seconds": 14.147
+      }
+    ]
+  },
+  "build_provenance": {
+    "explicit_public_source_files": 744,
+    "dockerignore": "allowlist source/** and Dockerfile only, no ignored environment or evidence included",
+    "trusted_local_base_image": "agentmall-portfolio-demo-runner:local",
+    "locked_python_sync_executed": true,
+    "node_cache_verified_against_lock": true,
+    "node_installed_packages": 196,
+    "node_optional_platform_packages_absent": 47,
+    "node_cold_install": "NOT_RUN_LOCAL_CACHE",
+    "chromium_cold_install": "NOT_RUN_LOCAL_CACHE",
+    "standard_full_cold_build": "NOT_RUN",
+    "image": {
+      "id": "sha256:68f931bf65dfaf1963194160f5663b9423929512432a4c65ec6f7dac659db23d",
+      "repo_digests": [
+        "agentmall-v214r2-8cda1f13-runner@sha256:68f931bf65dfaf1963194160f5663b9423929512432a4c65ec6f7dac659db23d"
+      ],
+      "architecture": "arm64",
+      "os": "linux",
+      "tag": "agentmall-v214r2-8cda1f13-runner:local"
+    }
+  },
+  "resource_observation": {
+    "agentmall-v214r2-8cda1f13-backend-postgres": {
+      "memory_peak_bytes": 805380096,
+      "cgroup": {
+        "low": 0,
+        "high": 0,
+        "max": 4222,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0,
+        "usage_usec": 75528298,
+        "user_usec": 48435065,
+        "system_usec": 27093233,
+        "nice_usec": 0,
+        "nr_periods": 4478,
+        "nr_throttled": 4,
+        "throttled_usec": 37007,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "oom_killed": false,
+      "memory_limit_bytes": 805306368,
+      "cpu_limit_nano": 1000000000,
+      "network_mode": "none",
+      "host_ports": {}
+    },
+    "agentmall-v214r2-8cda1f13-frontend-postgres": {
+      "memory_peak_bytes": 196493312,
+      "cgroup": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0,
+        "usage_usec": 10377028,
+        "user_usec": 6354692,
+        "system_usec": 4022336,
+        "nice_usec": 0,
+        "nr_periods": 1654,
+        "nr_throttled": 2,
+        "throttled_usec": 9316,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "oom_killed": false,
+      "memory_limit_bytes": 805306368,
+      "cpu_limit_nano": 1000000000,
+      "network_mode": "none",
+      "host_ports": {}
+    },
+    "agentmall-v214r2-8cda1f13-backend-runner": {
+      "memory_peak_bytes": 985493504,
+      "cgroup": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0,
+        "usage_usec": 485925874,
+        "user_usec": 451990254,
+        "system_usec": 33935620,
+        "nice_usec": 0,
+        "nr_periods": 4786,
+        "nr_throttled": 146,
+        "throttled_usec": 130572419,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "oom_killed": false,
+      "memory_limit_bytes": 3221225472,
+      "cpu_limit_nano": 4000000000,
+      "network_mode": "container:3897bc71fb79fa70687f2d60818fed769d0111572f037b65d9c72d165ec4d771",
+      "host_ports": {}
+    },
+    "agentmall-v214r2-8cda1f13-frontend-runner": {
+      "memory_peak_bytes": 1959223296,
+      "cgroup": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0,
+        "sock_throttled": 0,
+        "usage_usec": 251486784,
+        "user_usec": 210523790,
+        "system_usec": 40962994,
+        "nice_usec": 0,
+        "nr_periods": 2083,
+        "nr_throttled": 19,
+        "throttled_usec": 8142103,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "oom_killed": false,
+      "memory_limit_bytes": 2684354560,
+      "cpu_limit_nano": 4000000000,
+      "network_mode": "container:56d3e56533ab075578e9800ac7e3cde18c241e00b875ed5acf6f1e9ba480e51d",
+      "host_ports": {}
+    }
+  },
+  "cleanup": {
+    "owner": "agentmall-v214r2-8cda1f13",
+    "owned_containers_remaining": [],
+    "owned_volumes_remaining": [],
+    "runtime_caches_removed": [
+      {
+        "name": "backend-cache",
+        "bytes": 9254935,
+        "source": "Only directory created by this owner setup"
+      },
+      {
+        "name": "frontend-cache",
+        "bytes": 9254935,
+        "source": "Only directory created by this owner setup"
+      }
+    ],
+    "historical_containers_unchanged": 25,
+    "context_default": "colima",
+    "backend_test_schemas_remaining": [],
+    "frontend_test_schemas_remaining": [],
+    "image_tag_removed": true,
+    "shared_buildkit_cache_pruned": false,
+    "evidence_preserved": true,
+    "cleanup_complete": true
+  },
+  "security": {
+    "new_or_modified_screenshots": 0,
+    "no_raw_logs_or_traces_uploaded": true,
+    "public_summary_closed_fields_only": true,
+    "github_permissions": {
+      "contents": "read"
+    },
+    "checkout_persist_credentials": false,
+    "actions_40hex_pinned": true,
+    "synthetic_fixture_password_only": true,
+    "protected_public_files": 475,
+    "protected_old_live_originals": 39,
+    "old_code_and_test_files_unchanged": 406,
+    "history_scan": {
+      "commits": 37,
+      "unique_blobs": 1137,
+      "binary_blobs": 45,
+      "pattern_hits": [],
+      "forbidden_paths": [],
+      "scope": "HEAD reachable history plus proposed diff; no private environment files read",
+      "limit": "Pattern scan is not proof of absolute absence of secrets; historical binary assets audited at V214, no image changes in R2"
+    },
+    "actionlint": {
+      "binary_sha256": "8db11704dc296f096216db4db65d86cd7f0ebfdf4c38453a1da276b137b88388",
+      "version": "1.7.12",
+      "acquisition": "pre-existing locally reviewed tool; no remote script executed"
+    },
+    "scope_check": {
+      "unchanged_public_files": 475,
+      "changed": [],
+      "t16_and_workflow_prefix_byte_identical": true,
+      "product_code_changes": 0,
+      "lock_changes": 0,
+      "frontend_changes": 0,
+      "playwright_policy": "119; workers1; retries0; fullyParallelfalse; timeout30000",
+      "sha256_t16": "d05a5a71abea22cfe97d3b275f78a82d33cd65d257c7fd0b2f7a01db43f1f7c3"
+    },
+    "limit": "Pattern scan and retained historical image audit do not prove absence of every possible secret",
+    "public_summary_schema_audit": {
+      "synthetic_variants": 6,
+      "max_bytes": 626,
+      "all_closed_and_under_4096": true,
+      "github_upload": "NOT_RUN_FOR_R2"
+    }
+  },
+  "independent_review": {
+    "reviewer": "fresh independent read-only reviewer",
+    "result": "PASS",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "scope": "workflow, gate, tests and docs; final counts/cleanup/commit verified subsequently by executor",
+    "not_judged": [
+      "new Ubuntu amd64 timing",
+      "remote branch protection"
+    ]
+  },
+  "failed_attempts": [
+    {
+      "stage": "first test import",
+      "exit_code": 2,
+      "log": "gate-red.log",
+      "reason": "scripts import absent from uv pytest sys.path",
+      "correction": "explicit source-file import",
+      "log_sha256": "bbe4feca1330f2c5b7ca172ce7fcb688e8c24c499f038ff4c651ecb627f082c4"
+    },
+    {
+      "stage": "missing implementation RED",
+      "exit_code": 2,
+      "log": "gate-red-source.log",
+      "reason": "release_gate.py does not yet exist",
+      "log_sha256": "72e8bf628ba528feb12b4c0ebc691ca78d322c31c96309227882f7d64d6434ce"
+    },
+    {
+      "stage": "DAG RED",
+      "exit_code": 1,
+      "log": "gate-red-topology.log",
+      "reason": "old serial job differs from required parallel DAG",
+      "tests": "62 passed, 1 failed",
+      "log_sha256": "c7d54b5df1b1418640c1fdcc20ba52c275ee06736e842cf2613f4619a2094a41"
+    },
+    {
+      "stage": "DAG RED wrapper",
+      "exit_code": 1,
+      "reason": "zsh read-only variable named status, after raw pytest log was saved",
+      "correction": "avoid reserved variable; exit assertion recorded separately"
+    },
+    {
+      "stage": "draft style check",
+      "exit_code": 1,
+      "ruff_issues": 16,
+      "reason": "unformatted new test source; standard Ruff formatter applied",
+      "raw_log": "console tool output retained in chat, no separate raw file; no invented SHA"
+    },
+    {
+      "stage": "process probe",
+      "exit_code": 0,
+      "reason": "initial scanner matched its own python -c source text",
+      "correction": "exclude probe PID; final process list empty; both receipts retained"
+    },
+    {
+      "stage": "naive JUnit node equality",
+      "exit_code": 1,
+      "log": "collection-red.log",
+      "reason": "3 security-test IDs include source-generated uuid4 suffixes; no tests missing after exact-function/field normalization",
+      "correction": "source unchanged; only these3 IDs normalized in private comparer; collection-green exit0",
+      "log_sha256": "13d3baf17b40f4d73f97a260f1bb2b40b6d258f51240e0578e190345a16ef559"
+    },
+    {
+      "stage": "connector metadata projection",
+      "reason": "job wrapper omitted timestamps and direct plugin fetch was rejected; no complete useful payload",
+      "correction": "read-only GitHub CLI REST query exit0; job-raw.json preserved",
+      "raw_error": "tool response retained; no fabricated local raw SHA"
+    }
+  ],
+  "boundaries": {
+    "push": 0,
+    "dispatch": 0,
+    "rerun": 0,
+    "deploy": 0,
+    "new_live_requests": 0,
+    "provider_key_reads": 0,
+    "remote_ci": "NOT_RUN_FOR_R2",
+    "amd64_remote_ci": "NOT_RUN_FOR_R2",
+    "l7_b2": "PARTIAL / CONTEXT_SCOPE_VIOLATION",
+    "l8": "NOT_RUN",
+    "business_and_model_budgets_changed": false,
+    "historical_failures_preserved": true,
+    "new_remote_job_and_artifact_behavior": "NOT_VERIFIED_BY_LOCAL_STATIC_TESTS"
+  },
+  "private_evidence_location": ".playground/v214-r2-20261109T172149Z/",
+  "raw_artifacts_public": false,
+  "document_checks": {
+    "local_links": {
+      "files": 5,
+      "local_links": 111,
+      "missing": [],
+      "scope": "Local documentation and image paths only; remote page rendering not re-verified"
+    },
+    "anchors": {
+      "anchors_checked": 5,
+      "missing": []
+    }
+  }
+}

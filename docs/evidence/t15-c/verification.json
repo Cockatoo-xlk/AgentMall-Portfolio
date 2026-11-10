@@ -1,0 +1,142 @@
+{
+  "base_commit": "617cdf29a4353673bbfe141d5c87eec1ce665ec3",
+  "current_source_sha256": "7049db6ae8e334f82dc0b8de3083255e1c84a10ab4f3ec5e99b315fdf519a71a",
+  "historical_b1_source_sha256": "ee0f6927f30687892159b39272148e8859fe61f406a0e5aa7c48cb5766766687",
+  "fingerprints_match": false,
+  "new_live_verified": "NOT_RUN",
+  "new_paid_requests": 0,
+  "key_read": false,
+  "source_matches_test_container": true,
+  "backend": {
+    "passed": 713,
+    "skipped": 14,
+    "failed": 0,
+    "collected": 727
+  },
+  "backend_additions": 2,
+  "skip_reasons": [
+    {
+      "test": "backend.tests.test_eval_monitor_policy.test_all_ten_saved_live_rows_remain_unchanged_and_do_not_trigger_false_sigint",
+      "reason": "Raw private Live evidence not present; synthetic regression still required"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_03]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_03]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_multiagent_integration.test_shopping_to_order_proposal_with_actual_graph_and_domain[local]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_multiagent_integration.test_cross_domain_return_and_replacement_preserve_identity[local]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_retrieval_ingest.test_real_embedding_offline_sql_roundtrip",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    }
+  ],
+  "vitest": {
+    "passed": 80,
+    "added": 9
+  },
+  "playwright": {
+    "passed": 81,
+    "failed": 6,
+    "skipped": 0,
+    "flaky": 0,
+    "total": 87,
+    "new_tests_passed": 3,
+    "workers": 1,
+    "retries": 0,
+    "exit_code": 1,
+    "full_regression_verified": false
+  },
+  "ruff_check": {
+    "exit_code": 0
+  },
+  "ruff_format_check": {
+    "exit_code": 0
+  },
+  "typecheck_lint_build": {
+    "exit_code": 0
+  },
+  "remote_ci": "NOT_RUN",
+  "recording": "VIDEO_NOT_RECORDED",
+  "private_source_records": "not distributed",
+  "test_environment": {
+    "backend": "local Linux ARM64 container, Python3.12.10, PG17/pgvector0.8.7, official checkpoint,1152MiB runner/256MiB PG",
+    "frontend": "Mac ARM64 Node24.21.0/npm11.19.0",
+    "browser": "Mac full Chromium headless,1worker,0retries",
+    "single_container_full_ci": "NOT_CLAIMED, staged to respect historical Docker limit"
+  },
+  "status": "BLOCKED_ENVIRONMENT_CLOCK",
+  "implemented": true,
+  "public_release_readiness": "BLOCKED",
+  "environment_clock": {
+    "docker_unrestricted": {
+      "samples": 335391,
+      "backward_samples": 1,
+      "most_negative_ns": -2091132025,
+      "fresh_synthetic_jwt_immature": 1
+    },
+    "docker_process_pinned_cpu0": {
+      "samples": 329861,
+      "backward_samples": 1,
+      "most_negative_ns": -2090692078,
+      "fresh_synthetic_jwt_immature": 1
+    },
+    "mac_host": {
+      "samples": 337779,
+      "backward_samples": 0,
+      "fresh_synthetic_jwt_immature": 0
+    },
+    "scope": "bounded8second probes in each mode, no real token/key/request",
+    "root_cause_confidence": "actual Docker clock rollback and fresh-JWT failure reproduced; individual browser401 cause not instrumented; all6 failures must be rechecked after environment repair",
+    "global_environment_modified": false,
+    "guards_relaxed": false
+  },
+  "review": "one independent read-only review, no Critical/Important; sleep estimate minor documented/deferred",
+  "remaining_gates": [
+    "Repair or replace owned test environment after separate approval without modifying old demos/global policy",
+    "Re-run full browser regression in stable-time environment; no skip/retry expansion",
+    "Owner approval of exact final SHA before any remote write",
+    "Current-source Live requires entirely new authorization/environment/policy"
+  ]
+}

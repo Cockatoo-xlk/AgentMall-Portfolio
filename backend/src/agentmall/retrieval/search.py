@@ -6,12 +6,15 @@ from dataclasses import dataclass
 
 from sqlalchemy import func, or_, select, tuple_
 
+from agentmall.catalog.capabilities import connection_conditions
+from agentmall.catalog.categories import KIND_ATTRIBUTES
 from agentmall.catalog.models import Product
 from agentmall.catalog.service import product_dto
 from agentmall.identity.service import require_buyer
 from agentmall.infra.errors import DomainError
 from agentmall.orders.models import Order
 from agentmall.retrieval.embedding import MODEL, REVISION, identity, validate_vectors
+from agentmall.retrieval.ingest import PRODUCT_INDEX_VERSION, digest, product_text
 from agentmall.retrieval.models import KnowledgeChunk as K
 from agentmall.retrieval.models import KnowledgeDocument as D
 from agentmall.retrieval.models import ProductSearch as P
@@ -46,7 +49,7 @@ async def recall(session, base, index, key, query, mode, encoder, config, *, ver
     base = base.where(
         index.embedding_model == model,
         index.embedding_revision == revision,
-        index.tokenizer_version == TOKENIZER_VERSION,
+        index.tokenizer_version == (PRODUCT_INDEX_VERSION if index is P else TOKENIZER_VERSION),
     )
     rankings, values = [], {}
     if mode in ("lexical", "hybrid"):
@@ -98,6 +101,38 @@ def product_scope(actor, filters):
         conditions.append(Product.price_cents <= filters.max_price_cents)
     if filters.in_stock:
         conditions.append(Product.on_hand > Product.reserved)
+    if filters.usage:
+        conditions.append(
+            Product.attributes["usage"].as_string().icontains(filters.usage, autoescape=True)
+        )
+    if filters.product_kind:
+        category, attribute, term = KIND_ATTRIBUTES[filters.product_kind]
+        conditions.extend(
+            [
+                Product.category == category,
+                Product.attributes[attribute].as_string().icontains(term, autoescape=True),
+            ]
+        )
+    if filters.screen_inches is not None:
+        conditions.append(Product.attributes["screen_inches"].as_string() == filters.screen_inches)
+    if filters.activity == "road_cycling":
+        conditions.append(Product.attributes["usage"].as_string() == "公路车骑行")
+    if filters.noise_preference:
+        conditions.append(Product.attributes["noise"].as_string() == "较安静")
+    if filters.layout:
+        conditions.append(Product.attributes["size"].as_string() == filters.layout)
+    conditions.extend(
+        connection_conditions(Product.attributes, filters.connection, filters.excluded_connections)
+    )
+    if filters.exclude_product_ids:
+        conditions.append(Product.id.not_in(filters.exclude_product_ids))
+    if filters.keyboard_type:
+        switches = (
+            ["薄膜"]
+            if filters.keyboard_type == "membrane"
+            else ["静音轴", "线性轴", "段落轴", "青轴", "茶轴", "红轴"]
+        )
+        conditions.append(Product.attributes["switch"].as_string().in_(switches))
     return conditions
 
 
@@ -137,7 +172,7 @@ async def retrieve_products(session, actor, query, filters, encoder=None, config
             score=score,
         )
         for row, score in candidates
-        if row[0] in products
+        if row[0] in products and row[2] == digest(product_text(products[row[0]]))
     ]
 
 

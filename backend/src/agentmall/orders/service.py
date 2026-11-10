@@ -15,8 +15,9 @@ from agentmall.actions.service import (
     owned_proposal,
     payload_hash,
 )
+from agentmall.cart.service import consume_checkout_cart, lock_checkout_cart
 from agentmall.catalog.models import Product
-from agentmall.identity.service import require_buyer
+from agentmall.identity.service import require_buyer, require_merchant
 from agentmall.infra.audit import write_order_event
 from agentmall.infra.errors import not_found
 from agentmall.orders.models import Order, OrderItem
@@ -68,7 +69,12 @@ async def execute_confirmed_action(
 
 async def _execute_checkout(session, actor, action_id, confirmation_id, idempotency_key):
     # Authorization precedes replay. Neither an opaque confirmation id nor a key is authority.
-    await owned_proposal(session, actor, action_id)
+    initial = await owned_proposal(session, actor, action_id)
+    if payload_hash(initial.canonical_payload) != initial.payload_hash:
+        raise conflict("STALE_PROPOSAL")
+    source, cart = await lock_checkout_cart(
+        session, actor, initial.canonical_payload.get("cart_source")
+    )
     digest = payload_hash(
         {
             "schema_version": 1,
@@ -133,9 +139,10 @@ async def _execute_checkout(session, actor, action_id, confirmation_id, idempote
             .with_for_update()
         )
     }
+    cart_consumption = await consume_checkout_cart(session, actor, source, items, cart)
     now = await database_now(
         session
-    )  # Actual time AFTER lock waits, never transaction-start now().
+    )  # Actual time AFTER product AND cart lock waits, never transaction-start now().
     if now >= proposal.expires_at:
         raise conflict("STALE_PROPOSAL")
     for item in items:
@@ -190,6 +197,7 @@ async def _execute_checkout(session, actor, action_id, confirmation_id, idempote
     confirmation.consumed_at = now
     confirmation.result_ref = order.id
     receipt = ActionReceipt(
+        cart_consumption=cart_consumption,
         action_id=proposal.id,
         resource_id=order.id,
         order_id=order.id,
@@ -209,6 +217,10 @@ async def order_view(session, order):
         .where(OrderItem.order_id == order.id, OrderItem.store_id == order.store_id)
         .order_by(OrderItem.product_id)
     )
+    return order_dto(order, items)
+
+
+def order_dto(order, items):
     return OrderDTO(
         id=order.id,
         user_id=order.user_id,
@@ -243,13 +255,33 @@ async def get_order(session, actor, order_id):
 
 async def list_orders(session, actor, filters):
     require_buyer(actor)
-    query = select(Order).where(Order.user_id == actor.user_id, Order.store_id == actor.store_id)
+    return await _order_page(session, actor.store_id, filters, buyer_id=actor.user_id)
+
+
+async def list_merchant_orders(session, actor, filters):
+    require_merchant(actor)
+    return await _order_page(session, actor.store_id, filters)
+
+
+async def _order_page(session, store_id, filters, *, buyer_id=None):
+    query = select(Order).where(Order.store_id == store_id)
+    if buyer_id is not None:
+        query = query.where(Order.user_id == buyer_id)
     if filters.cursor:
         query = query.where(Order.id > filters.cursor)
     if filters.status:
         query = query.where(Order.status == filters.status)
     orders = list(await session.scalars(query.order_by(Order.id).limit(filters.limit + 1)))
+    page = orders[: filters.limit]
+    items = {order.id: [] for order in page}
+    if page:
+        for item in await session.scalars(
+            select(OrderItem)
+            .where(OrderItem.store_id == store_id, OrderItem.order_id.in_(items))
+            .order_by(OrderItem.product_id)
+        ):
+            items[item.order_id].append(item)
     return OrderPage(
-        items=[await order_view(session, o) for o in orders[: filters.limit]],
+        items=[order_dto(order, items[order.id]) for order in page],
         next_cursor=orders[filters.limit - 1].id if len(orders) > filters.limit else None,
     )

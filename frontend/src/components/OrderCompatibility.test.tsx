@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { MemoryRouter } from 'react-router'
 import { AuthProvider } from '../state/Auth'
+import { CartProvider } from '../state/Cart'
 import { OrderDetail } from '../pages/Orders'
 import ConfirmationCard from './ConfirmationCard'
 import type { Order, OrderStatus, Proposal } from '../api/types'
@@ -19,7 +20,7 @@ beforeEach(() => {
 function render(element: React.ReactNode) {
   return renderToStaticMarkup(
     <MemoryRouter>
-      <AuthProvider>{element}</AuthProvider>
+      <AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>
     </MemoryRouter>,
   )
 }
@@ -67,6 +68,14 @@ const receiptBase = {
 }
 
 describe('order lifecycle display', () => {
+  it('offers a separate mock payment action only for a pending order', () => {
+    for (const status of ['PENDING_PAYMENT', 'PAID', 'CANCELLED', 'EXPIRED', 'SHIPPED', 'DELIVERED', 'REFUNDED'] as OrderStatus[]) {
+      resource.data = { ...order, status }
+      const html = render(<OrderDetail />)
+      expect(html.includes('>模拟付款</button>')).toBe(status === 'PENDING_PAYMENT')
+      expect(html).toContain('不发生真实扣款')
+    }
+  })
   it.each([
     ['PENDING_PAYMENT', '待支付'],
     ['PAID', '已支付'],

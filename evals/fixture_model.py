@@ -14,14 +14,17 @@ from backend.tests.multiagent_helpers import MultiModel, ai, call, final, payloa
 
 class FixtureModel(MultiModel):
     single: bool = False
+    task_scripts: dict = Field(default_factory=dict, exclude=True)
     unknown_usage: bool = False
     call_records: list = Field(default_factory=list, exclude=True)
 
     @property
     def _llm_type(self):
-        return "fixture-t12-program-v1"
+        return "fixture-t12-program-v3-l6"
 
     def bind_tools(self, tools, **kwargs):
+        if not self.single:
+            return super().bind_tools(tools, **kwargs)
         self.bound = [
             t["function"]["name"] if isinstance(t, dict) else t.name for t in tools
         ]
@@ -37,7 +40,16 @@ class FixtureModel(MultiModel):
         return self.bind(**kwargs)
 
     async def _agenerate(self, messages, **kwargs):
+        task_id = (
+            payload(messages).get("subtask_id")
+            if not self.single and self.role != "supervisor"
+            else None
+        )
+        if task_id in self.task_scripts:
+            self.script = self.task_scripts[task_id]
         result = await super()._agenerate(messages, **kwargs)
+        if task_id in self.task_scripts:
+            self.task_scripts[task_id] = self.script
         message = result.generations[0].message
         if self.unknown_usage:
             message.usage_metadata = None
@@ -212,6 +224,7 @@ def fixture_models(program, goal, refs, fault):
 
     scripts = {role: [] for role in ("supervisor", "shopping", "order", "aftersales")}
     single_steps = []
+    task_scripts = {role: {} for role in scripts}
     for index, (role, stages) in enumerate(groups):
         if role == "clarify":
             scripts["supervisor"].append(route("clarify"))
@@ -227,18 +240,32 @@ def fixture_models(program, goal, refs, fault):
             if end == "ticket"
             else "assess_return",
         }[role]
+        dependencies = []
+        specialist_stages = stages
+        if target_goal == "prepare_return":
+            assessment_id = f"stage_{index}_assessment"
+            scripts["supervisor"].append(
+                route("aftersales", "assess_return", assessment_id)
+            )
+            assessment_steps = script(stages[:-1])
+            scripts[role].extend(assessment_steps)
+            task_scripts[role][assessment_id] = assessment_steps
+            dependencies = [assessment_id]
+            specialist_stages = ["return"]
         scripts["supervisor"].append(
             route(
                 role,
                 target_goal,
                 f"stage_{index}",
+                depends=dependencies,
                 read_only=end not in {"checkout", "return", "ticket"},
             )
         )
-        steps = script(stages)
+        steps = script(specialist_stages)
         if stages == ["checkout"]:
             steps = [inspect_candidates, choose_observed]
         scripts[role].extend(steps)
+        task_scripts[role][f"stage_{index}"] = steps
         # Inner single loops keep reading until a write/terminal, no invented supervisor calls.
         single_steps.extend(script(stages, finish=False))
     scripts["supervisor"].append(route("finish"))
@@ -249,7 +276,13 @@ def fixture_models(program, goal, refs, fault):
             return [RuntimeError("Synthetic provider transport failure")]
         if fault == "budget_exhaustion":
             return [
-                ai(call("retrieve_products", {"query": query + f" 条件{i}"}))
+                # Keep the task unfulfilled; completed read goals now correctly stop.
+                ai(
+                    call(
+                        "retrieve_products",
+                        {"query": query + f" 条件{i}", "max_price_cents": 0},
+                    )
+                )
                 for i in range(20)
             ]
         if fault in {"unknown_tool", "forged_refund"}:
@@ -288,6 +321,9 @@ def fixture_models(program, goal, refs, fault):
         scripts["shopping"] = [
             RuntimeError("Synthetic replacement recommendation failure")
         ]
+        task_scripts["shopping"] = {
+            key: scripts["shopping"] for key in task_scripts["shopping"]
+        }
         for index, step in enumerate(single_steps):
             if isinstance(step, AIMessage) and any(
                 c["name"] == "retrieve_products" for c in step.tool_calls
@@ -309,11 +345,14 @@ def fixture_models(program, goal, refs, fault):
         single_steps = inject(single_steps)
         first_role = next(role for role, _ in groups if role != "clarify")
         scripts[first_role] = inject(scripts[first_role])
+        first_task = next(iter(task_scripts[first_role]))
+        task_scripts[first_role][first_task] = scripts[first_role]
         scripts["supervisor"] = [scripts["supervisor"][0], route("finish")]
     models = {
         role: FixtureModel(
             role=role,
             script=steps,
+            task_scripts=task_scripts[role],
             unknown_usage=fault == "unknown_usage" and role != "supervisor",
         )
         for role, steps in scripts.items()

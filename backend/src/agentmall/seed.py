@@ -1,5 +1,6 @@
 """Repeatable synthetic demo seed: insert missing business keys, never overwrite data."""
 
+import argparse
 import asyncio
 from uuid import uuid5
 
@@ -7,6 +8,7 @@ from argon2 import PasswordHasher
 from sqlalchemy.dialects.postgresql import insert
 
 from agentmall.catalog.models import Product
+from agentmall.catalog.profiles import CatalogProfile, expanded_products
 from agentmall.identity.models import User
 from agentmall.infra.config import Settings
 from agentmall.infra.db import database
@@ -28,7 +30,10 @@ PRODUCTS = [
 ]
 
 
-async def seed(session, settings: Settings):
+async def seed(session, settings: Settings, *, profile: CatalogProfile = "legacy"):
+    if profile not in {"legacy", "expanded"}:
+        raise ValueError("Unknown catalogue profile")
+    additions = expanded_products() if profile == "expanded" else ()
     password_hash = await asyncio.to_thread(PasswordHasher().hash, DEMO_PASSWORD)
     for login, role in [("buyer1", "buyer"), ("buyer2", "buyer"), ("merchant", "merchant")]:
         await session.execute(
@@ -58,6 +63,14 @@ async def seed(session, settings: Settings):
                 attributes={
                     "switch": switch,
                     "connection": connection,
+                    # Explicit synthetic capabilities, without Bluetooth/2.4GHz claims.
+                    "connection_capabilities": (
+                        ["wired", "wireless"]
+                        if connection in {"双模", "三模"}
+                        else ["wireless"]
+                        if connection == "无线"
+                        else ["wired"]
+                    ),
                     "size": size,
                     "noise": noise,
                 },
@@ -66,17 +79,34 @@ async def seed(session, settings: Settings):
             .on_conflict_do_nothing(index_elements=["id"])
         )
 
+    for product in additions:
+        values = product.model_dump(exclude={"sku"})
+        await session.execute(
+            insert(Product)
+            .values(
+                id=uuid5(settings.storefront_id, "expanded-120-v1:" + product.sku),
+                store_id=settings.storefront_id,
+                reserved=0,
+                active=True,
+                catalog_version=1,
+                **values,
+            )
+            .on_conflict_do_nothing(index_elements=["id"])
+        )
 
-async def main():
+
+async def main(profile: CatalogProfile = "legacy"):
     settings = Settings()
     engine, sessions = database(settings)
     try:
         async with sessions.begin() as session:
-            await seed(session, settings)
+            await seed(session, settings, profile=profile)
         print("Synthetic seed committed; existing rows preserved.")
     finally:
         await engine.dispose()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--profile", choices=("legacy", "expanded"), default="legacy")
+    asyncio.run(main(parser.parse_args().profile))

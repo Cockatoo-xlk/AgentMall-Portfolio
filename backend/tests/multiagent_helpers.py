@@ -24,9 +24,18 @@ class MultiModel(BaseChatModel):
 
     def bind_tools(self, tools, **kwargs):
         self.bound = [t["function"]["name"] if isinstance(t, dict) else t.name for t in tools]
-        assert set(self.bound) == (
-            {"route"} if self.role == "supervisor" else set(ALLOWLISTS[self.role])
-        )
+        from agentmall.agents.specialist_tools import WRITE_TOOLS_BY_GOAL, WRITES
+
+        if self.role == "supervisor":
+            variants = [{"route"}]
+        else:
+            reads = set(ALLOWLISTS[self.role]) - WRITES
+            variants = [reads] + [
+                reads | {name}
+                for name in WRITE_TOOLS_BY_GOAL.values()
+                if name in ALLOWLISTS[self.role]
+            ]
+        assert set(self.bound) in variants
         return self.bind(**kwargs)
 
     def _generate(self, *args, **kwargs):
@@ -215,3 +224,14 @@ def save_evidence(name, env, trace, result, *, baseline_counts):
     (destination / (name + ".json")).write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2, default=str) + "\n"
     )
+
+
+def assessment_reads(order_id):
+    """Explicit synthetic assessment decisions, not an automatic production plan."""
+    return [
+        ai(
+            call("get_order", {"order_id": str(order_id)}),
+            call("check_eligibility", {"order_id": str(order_id), "reason_code": "QUALITY_ISSUE"}),
+            call("retrieve_policies", {"order_id": str(order_id), "query": "质量问题退货期限"}),
+        ),
+    ]

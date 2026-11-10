@@ -1,0 +1,476 @@
+{
+  "source_fingerprint": "1e54c1f0d0b76ff0a975fbcc9938008336febbf1a1c8c5564253a23f4a901e27",
+  "classification": "REAL_BGE_POSTGRES_PGVECTOR_OFFLINE",
+  "raw_sha256": "e3775abe5f5a4f187156f3bb1990f18b77fd0bce35b66b6f0d6703c7edd897f5",
+  "mode": "REAL_BGE_REAL_PGVECTOR_POSTGRES",
+  "cases": [
+    {
+      "case": "键盘",
+      "filters": {
+        "category": "keyboard",
+        "max_price_cents": 30000,
+        "noise_preference": "quiet"
+      },
+      "hits": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "product": {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "name": "静音 K87",
+            "category": "keyboard",
+            "attributes": {
+              "size": "87键",
+              "noise": "较安静",
+              "switch": "静音轴",
+              "connection": "双模",
+              "connection_capabilities": [
+                "wired",
+                "wireless"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 29900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "source_version": 1,
+          "score": 0.03278688524590164
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "product": {
+            "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+            "name": "宿舍静音 K68",
+            "category": "keyboard",
+            "attributes": {
+              "size": "68键",
+              "noise": "较安静",
+              "switch": "静音轴",
+              "connection": "有线",
+              "connection_capabilities": [
+                "wired"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 19900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "source_version": 1,
+          "score": 0.03225806451612903
+        }
+      ]
+    },
+    {
+      "case": "静音键盘",
+      "filters": {
+        "category": "keyboard",
+        "max_price_cents": 30000,
+        "noise_preference": "quiet"
+      },
+      "hits": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "product": {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "name": "静音 K87",
+            "category": "keyboard",
+            "attributes": {
+              "size": "87键",
+              "noise": "较安静",
+              "switch": "静音轴",
+              "connection": "双模",
+              "connection_capabilities": [
+                "wired",
+                "wireless"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 29900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "source_version": 1,
+          "score": 0.03278688524590164
+        },
+        {
+          "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "product": {
+            "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+            "name": "宿舍静音 K68",
+            "category": "keyboard",
+            "attributes": {
+              "size": "68键",
+              "noise": "较安静",
+              "switch": "静音轴",
+              "connection": "有线",
+              "connection_capabilities": [
+                "wired"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 19900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+          "source_version": 1,
+          "score": 0.03225806451612903
+        }
+      ]
+    },
+    {
+      "case": "无线静音键盘",
+      "filters": {
+        "category": "keyboard",
+        "max_price_cents": 40000,
+        "noise_preference": "quiet",
+        "connection": "无线"
+      },
+      "hits": [
+        {
+          "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "product": {
+            "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+            "name": "静音 K87",
+            "category": "keyboard",
+            "attributes": {
+              "size": "87键",
+              "noise": "较安静",
+              "switch": "静音轴",
+              "connection": "双模",
+              "connection_capabilities": [
+                "wired",
+                "wireless"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 29900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+          "source_version": 1,
+          "score": 0.03278688524590164
+        },
+        {
+          "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "product": {
+            "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+            "name": "静音 K98",
+            "category": "keyboard",
+            "attributes": {
+              "size": "98键",
+              "noise": "较安静",
+              "switch": "静音轴",
+              "connection": "三模",
+              "connection_capabilities": [
+                "wired",
+                "wireless"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 39900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+          "source_version": 1,
+          "score": 0.03225806451612903
+        },
+        {
+          "id": "e5635304-5562-5b76-80ae-2f577488e404",
+          "product": {
+            "id": "e5635304-5562-5b76-80ae-2f577488e404",
+            "name": "办公 K108",
+            "category": "keyboard",
+            "attributes": {
+              "size": "108键",
+              "noise": "较安静",
+              "switch": "静音轴",
+              "connection": "双模",
+              "connection_capabilities": [
+                "wired",
+                "wireless"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 35900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/e5635304-5562-5b76-80ae-2f577488e404",
+          "source_version": 1,
+          "score": 0.031746031746031744
+        }
+      ]
+    },
+    {
+      "case": "鼠标",
+      "filters": {
+        "category": "mouse"
+      },
+      "hits": [
+        {
+          "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "product": {
+            "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+            "name": "无线鼠标 M2",
+            "category": "mouse",
+            "attributes": {
+              "size": "中号",
+              "noise": "较安静",
+              "switch": "无",
+              "connection": "无线",
+              "connection_capabilities": [
+                "wireless"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 18900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+          "source_version": 1,
+          "score": 0.03252247488101534
+        },
+        {
+          "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "product": {
+            "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+            "name": "轻量鼠标 M1",
+            "category": "mouse",
+            "attributes": {
+              "size": "中号",
+              "noise": "适中",
+              "switch": "无",
+              "connection": "有线",
+              "connection_capabilities": [
+                "wired"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 9900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/d22e5808-371b-541a-822b-9bb45dae1ed1",
+          "source_version": 1,
+          "score": 0.03252247488101534
+        }
+      ]
+    },
+    {
+      "case": "耳机",
+      "filters": {
+        "category": "headphones"
+      },
+      "hits": [
+        {
+          "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "product": {
+            "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+            "name": "无线耳机 H2",
+            "category": "headphones",
+            "attributes": {
+              "size": "头戴",
+              "noise": "不适用",
+              "switch": "无",
+              "connection": "无线",
+              "connection_capabilities": [
+                "wireless"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 32900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+          "source_version": 1,
+          "score": 0.03252247488101534
+        },
+        {
+          "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "product": {
+            "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+            "name": "有线耳机 H1",
+            "category": "headphones",
+            "attributes": {
+              "size": "头戴",
+              "noise": "不适用",
+              "switch": "无",
+              "connection": "有线",
+              "connection_capabilities": [
+                "wired"
+              ]
+            },
+            "description": "自建合成演示商品，不对应真实品牌。噪声为定性标签，不代表绝对无声。",
+            "price_cents": 12900,
+            "currency": "CNY",
+            "available": 20,
+            "catalog_version": 1
+          },
+          "source_uri": "/api/v1/products/7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+          "source_version": 1,
+          "score": 0.03252247488101534
+        }
+      ]
+    },
+    {
+      "case": "unrelated",
+      "hits": []
+    },
+    {
+      "case": "over_budget",
+      "hits": [],
+      "mutation_rolled_back": true
+    },
+    {
+      "case": "inactive",
+      "hits": [],
+      "mutation_rolled_back": true
+    },
+    {
+      "case": "no_stock",
+      "hits": [],
+      "mutation_rolled_back": true
+    },
+    {
+      "case": "cross_store",
+      "hits": [],
+      "mutation_rolled_back": true
+    },
+    {
+      "case": "catalog_version",
+      "hits": [],
+      "mutation_rolled_back": true
+    },
+    {
+      "case": "source_changed_without_version",
+      "hits": [],
+      "mutation_rolled_back": true
+    },
+    {
+      "case": "corrupt_content_hash",
+      "hits": [],
+      "mutation_rolled_back": true
+    },
+    {
+      "case": "legacy_index_not_current",
+      "hits": []
+    }
+  ],
+  "rebuilt_documents": [
+    {
+      "id": "ad7c68a9-3a14-5b6a-a1d4-80aec9c71253",
+      "catalog_version": 1,
+      "content_hash": "b2c27734af01ba438c1b8782392e995186f59704e70ca0b862bf314f848541e0",
+      "legacy_hash": "534d7ebb400f4f98d42b81fbf9be0ef2ac3a1ad66db274123ca144e4a38e81e2",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "3fa98676-1914-5c04-bcb5-e557ba7c6ae3",
+      "catalog_version": 1,
+      "content_hash": "e437b6a7aa3e196521339f89a9bdb32c6552ad42cb6baad6bb55eec745880579",
+      "legacy_hash": "754c96dd3eac206df5d0ee904d5c887ca130e9c04e1ffcb6b6857215f39a955b",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "7e9100f1-08a0-56ea-81e4-7f4d204c0fab",
+      "catalog_version": 1,
+      "content_hash": "c660dfc968e1086813c70db972ba5a5f38ac58414cac2a2276eb90bcd0dff7d2",
+      "legacy_hash": "ad2277cb684c1fba5d449c3a64536800840cc3cf2aeff951df60eb87dc484c23",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "ddc35d51-1e70-5a37-b245-830ba95176fe",
+      "catalog_version": 1,
+      "content_hash": "783d155b8ad6b2d07d5a5ba39e4d678e8de480d83224b67fd04e42d63a78e2d8",
+      "legacy_hash": "62ea30083d30042e568102358733e01b4316f8623f0d9191d1e6bda40a2d30df",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "c2ff3441-7563-50a8-8879-cf6403422aa1",
+      "catalog_version": 1,
+      "content_hash": "5463c3ec551b558c08a82710167be2b447500f3cac5a3a00f0d5f48d5658c60f",
+      "legacy_hash": "cb82335de112d003faf9eed21fe01e8ad05aca5ac7feb0030a2e8b2c14396e96",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "b5b145c9-f47b-5b87-b7b1-2158ddc3d516",
+      "catalog_version": 1,
+      "content_hash": "c4eb1f3af38825f14b04badf3fa93d5f1b6c0ab2904635084655f2c6abed7b2b",
+      "legacy_hash": "a7410529bc3ab2a0388b945953f4a84836d71121c1b1784d87e52c9826835889",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "63c5479f-9aaa-5866-bd37-13bce2aef95e",
+      "catalog_version": 1,
+      "content_hash": "113b22b04ffdd80a0d3e779f308bd553ecddf7547fa52227b3b457879b1e7faf",
+      "legacy_hash": "083e14a4436617d88b4c1e55166f83fe7209cbedd83a021abb66685e74c6447c",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "e5635304-5562-5b76-80ae-2f577488e404",
+      "catalog_version": 1,
+      "content_hash": "ce338252531aa0bc830bd1f073f46793d6646d42eca9a7ccda551561433cea84",
+      "legacy_hash": "ddef2c30d4051cdf26bf50031b422431b58877fbbcdbeaee39451953fe1cf027",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "d22e5808-371b-541a-822b-9bb45dae1ed1",
+      "catalog_version": 1,
+      "content_hash": "a8ca1655a7812da0a3a5cc207559b80627f1f3e2b2debb48fdef8961014c224e",
+      "legacy_hash": "180506cf3cfe70d76bd6a50ab1467b8fe2455561e007ccfaf4efec0666a7420d",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "7b3ba0eb-1546-574a-8ed9-53da6f05a44d",
+      "catalog_version": 1,
+      "content_hash": "5b2bb58f7245034efdfb4febca5fcbc3a004a350a65c0dc3611a9797ecb704bd",
+      "legacy_hash": "5b914bb134a8ddacb749ebd8f262b76396a47fc9607c24d413ddde30d1e53241",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "7b7f54bb-a6eb-5498-b4f0-6d12296f5a74",
+      "catalog_version": 1,
+      "content_hash": "874c43c6b6f5785c0a1f029eccf27889e65646d38d84dc2341e57e311aee5415",
+      "legacy_hash": "b07a3945c2529912c7a45f2026767b9450e1298dc00d9fc66904bc097fa8bedb",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    },
+    {
+      "id": "5c1a9b8a-9ce7-537b-a166-d92025e5ec08",
+      "catalog_version": 1,
+      "content_hash": "1a22aacbb8b30e03b778a6202135f58652a5c3ad19e68e15c9539029a77c6b56",
+      "legacy_hash": "40cd4782bc7ba6110d6e16675b56224ac1ab10b59e7ef425f0f1947410888d85",
+      "document_version": "jieba-0.42.1-search-nfkc-v1:catalog-zh-v2"
+    }
+  ],
+  "recall_sql_without_parameters": [
+    "SELECT product_search.product_id, product_search.source_version, product_search.content_hash FROM product_search JOIN products ON products.id = product_search.product_id WHERE products.store_id = %(store_id_1)s::UUID AND products.active IS true AND products.catalog_version = product_search.source_version AND products.category = %(category_1)s::VARCHAR AND products.price_cents <= %(price_cents_1)s::BIGINT AND products.on_hand > products.reserved AND CAST((products.attributes ->> %(attributes_1)s::TEXT) AS VARCHAR) = %(param_1)s::VARCHAR AND (NOT ((products.attributes ? %(attributes_2)s::VARCHAR)) AND CAST((products.attributes ->> %(attributes_3)s::TEXT) AS VARCHAR) = %(param_2)s::VARCHAR OR CAST((products.attributes ->> %(attributes_3)s::TEXT) AS VARCHAR) IN (%(param_3_1)s::VARCHAR, %(param_3_2)s::VARCHAR, %(param_3_3)s::VARCHAR) AND jsonb_typeof(products.attributes[%(attributes_4)s::TEXT]) = %(jsonb_typeof_1)s::VARCHAR AND (products.attributes[%(attributes_4)s::TEXT] <@ %(param_4)s::JSONB) AND (products.attributes[%(attributes_4)s::TEXT] @> %(param_5)s::JSONB)) AND product_search.embedding_model = %(embedding_model_1)s::VARCHAR AND product_search.embedding_revision = %(embedding_revision_1)s::VARCHAR AND product_search.tokenizer_version = %(tokenizer_version_1)s::VARCHAR AND (product_search.search_tsv @@ to_tsquery(%(to_tsquery_1)s::REGCONFIG, %(to_tsquery_2)s::VARCHAR)) ORDER BY ts_rank_cd(product_search.search_tsv, to_tsquery(%(to_tsquery_1)s::REGCONFIG, %(to_tsquery_2)s::VARCHAR)) DESC, product_search.product_id LIMIT %(param_6)s::INTEGER",
+    "SELECT product_search.product_id, product_search.source_version, product_search.content_hash FROM product_search JOIN products ON products.id = product_search.product_id WHERE products.store_id = %(store_id_1)s::UUID AND products.active IS true AND products.catalog_version = product_search.source_version AND products.category = %(category_1)s::VARCHAR AND products.price_cents <= %(price_cents_1)s::BIGINT AND products.on_hand > products.reserved AND CAST((products.attributes ->> %(attributes_1)s::TEXT) AS VARCHAR) = %(param_1)s::VARCHAR AND (NOT ((products.attributes ? %(attributes_2)s::VARCHAR)) AND CAST((products.attributes ->> %(attributes_3)s::TEXT) AS VARCHAR) = %(param_2)s::VARCHAR OR CAST((products.attributes ->> %(attributes_3)s::TEXT) AS VARCHAR) IN (%(param_3_1)s::VARCHAR, %(param_3_2)s::VARCHAR, %(param_3_3)s::VARCHAR) AND jsonb_typeof(products.attributes[%(attributes_4)s::TEXT]) = %(jsonb_typeof_1)s::VARCHAR AND (products.attributes[%(attributes_4)s::TEXT] <@ %(param_4)s::JSONB) AND (products.attributes[%(attributes_4)s::TEXT] @> %(param_5)s::JSONB)) AND product_search.embedding_model = %(embedding_model_1)s::VARCHAR AND product_search.embedding_revision = %(embedding_revision_1)s::VARCHAR AND product_search.tokenizer_version = %(tokenizer_version_1)s::VARCHAR AND (product_search.embedding <=> %(embedding_1)s) <= %(param_6)s ORDER BY product_search.embedding <=> %(embedding_1)s, product_search.product_id LIMIT %(param_7)s::INTEGER"
+  ],
+  "filters_before_limit": true,
+  "min_similarity": 0.45,
+  "dimensions": [
+    512
+  ],
+  "policy_tokenizer_versions": [
+    "jieba-0.42.1-search-nfkc-v1"
+  ]
+}

@@ -17,6 +17,7 @@ from agentmall.agents.evidence import policy_support
 from agentmall.cart import service as cart
 from agentmall.cart.models import Cart
 from agentmall.catalog import service as catalog
+from agentmall.catalog.categories import KIND_ATTRIBUTES, Category
 from agentmall.identity.models import User
 from agentmall.identity.service import actor_for, require_buyer
 from agentmall.infra.errors import DomainError
@@ -58,6 +59,14 @@ class PrepareInput(Strict):
     product_id: UUID
 
 
+class BundleSearchInput(Strict):
+    category: Category
+
+
+class BundlePrepareInput(Strict):
+    bundle_id: UUID
+
+
 class ReturnInput(EligibilityInput):
     description: str = Field(min_length=1, max_length=1000, strict=True)
 
@@ -79,6 +88,13 @@ SCHEMAS = {
     "prepare_return": ReturnInput,
     "create_support_ticket": TicketInput,
 }
+# Legacy evaluation protocol remains immutable. New Thread tools are scoped separately.
+BUNDLE_SCHEMAS = {
+    "retrieve_bundle_candidates": BundleSearchInput,
+    "prepare_bundle_checkout": BundlePrepareInput,
+}
+ALL_SCHEMAS = {**SCHEMAS, **BUNDLE_SCHEMAS}
+
 ALLOWLISTS = {
     "shopping": ("retrieve_products", "get_product"),
     "order": ("list_orders", "get_order", "get_product", "get_cart", "prepare_checkout"),
@@ -90,8 +106,20 @@ ALLOWLISTS = {
         "create_support_ticket",
     ),
 }
-WRITES = frozenset({"prepare_checkout", "prepare_return", "create_support_ticket"})
+WRITE_TOOLS_BY_GOAL = {
+    "prepare_checkout": "prepare_checkout",
+    "prepare_return": "prepare_return",
+    "human_support": "create_support_ticket",
+}
+WRITES = frozenset([*WRITE_TOOLS_BY_GOAL.values(), "prepare_bundle_checkout"])
 DESCRIPTIONS = {
+    "retrieve_bundle_candidates": (
+        "按用户组合中一个品类的可信规格检索；各品类都检索后确定性计算整套预算。不得省略品类。"
+    ),
+    "prepare_bundle_checkout": (
+        "仅为本轮用户明确选中的整套bundle_id准备一份多SKU提案；"
+        "数量和地址来自用户，必须独占调用，等待独立确认。"
+    ),
     "retrieve_products": "真实Hybrid RAG，运行时强制预算/类别/静音偏好/排除原SKU；结果至多3条。",
     "get_product": "读取本店商品事实，必须遵守用户约束。",
     "list_orders": "读取本人订单摘要，没有地址或身份字段。",
@@ -127,8 +155,23 @@ def ref(kind, ident, relation="observed", policy_version=None):
 
 
 def product_allowed(runtime, product):
+    from agentmall.catalog.capabilities import connection_matches
+
     c = runtime.constraints
+    if c.bundle:
+        from agentmall.agents.bundle_planner import matches
+
+        selected = runtime.thread_snapshot.get("selected_bundle")
+        if selected and str(product.id) not in {i["id"] for i in selected["items"]}:
+            return False
+        return product.id not in runtime.exclusions and any(
+            matches(p, product) for p in c.bundle.parts
+        )
     needs = c.product_needs
+    if needs.product_kind:
+        category, attribute, term = KIND_ATTRIBUTES[needs.product_kind]
+        if product.category != category or term not in product.attributes.get(attribute, ""):
+            return False
     return (
         product.id not in runtime.exclusions
         and product.available > 0
@@ -136,7 +179,12 @@ def product_allowed(runtime, product):
         and (c.max_price_cents is None or product.price_cents <= c.max_price_cents)
         and (c.noise_preference is None or product.attributes.get("noise") == "较安静")
         and (needs.layout is None or product.attributes.get("size") == needs.layout)
-        and (needs.connection is None or product.attributes.get("connection") == needs.connection)
+        and (
+            needs.screen_inches is None
+            or product.attributes.get("screen_inches") == needs.screen_inches
+        )
+        and (needs.activity is None or product.attributes.get("usage") == "公路车骑行")
+        and connection_matches(product.attributes, needs.connection, needs.excluded_connections)
         and (
             needs.keyboard_type is None
             or (
@@ -160,17 +208,26 @@ class SpecialistTools:
     def __init__(self, runtime, envelope):
         self.runtime, self.envelope = runtime, envelope
         self.records = []
+        self.repairing = False
         self.observed = set()
+        self.pending_tool_ids = set()
+        self.read_batch_settled = None
+        self.bound_tools = {}
 
     async def execute(self, name, arguments):
         runtime = self.runtime
         if name not in runtime.tool_allowlist(self.envelope.target):
             raise DomainError(403, "TOOL_FORBIDDEN", "专业工具不可用")
-        args = SCHEMAS[name].model_validate(arguments)
+        args = ALL_SCHEMAS[name].model_validate(arguments)
         if name in WRITES and self.envelope.read_only:
             raise DomainError(403, "READ_ONLY_HANDOFF", "只读任务不能写入")
         try:
             if name in WRITES:
+                required = WRITE_TOOLS_BY_GOAL.get(self.envelope.goal)
+                if required == "prepare_checkout" and runtime.constraints.bundle:
+                    required = "prepare_bundle_checkout"
+                if not runtime.single and required != name:
+                    raise DomainError(403, "HANDOFF_WRITE_SCOPE_CHANGED", "写工具必须匹配交接目标")
                 async with runtime.write_lock:
                     return await self._execute(name, args)
             return await self._execute(name, args)
@@ -193,9 +250,18 @@ class SpecialistTools:
 
     async def _execute(self, name, args):
         r = self.runtime
+        if name in {"retrieve_bundle_candidates", "prepare_bundle_checkout"}:
+            from agentmall.agents.bundle_tools import prepare, retrieve
+
+            return await (
+                retrieve(self, args)
+                if name == "retrieve_bundle_candidates"
+                else prepare(self, args)
+            )
         entities = []
         citations = []
         evidence = []
+        candidate_items = None
         async with r.sessions.begin() as session:
             actor = await authenticate(r, session)
             if name == "retrieve_products":
@@ -212,12 +278,47 @@ class SpecialistTools:
                     actor,
                     query,
                     ProductQuery(
-                        query=query, category=r.constraints.category, max_price_cents=maximum
+                        query=query,
+                        category=r.constraints.category,
+                        max_price_cents=maximum,
+                        noise_preference=r.constraints.noise_preference,
+                        layout=r.constraints.product_needs.layout,
+                        screen_inches=r.constraints.product_needs.screen_inches,
+                        activity=r.constraints.product_needs.activity,
+                        product_kind=r.constraints.product_needs.product_kind,
+                        connection=r.constraints.product_needs.connection,
+                        excluded_connections=r.constraints.product_needs.excluded_connections,
+                        keyboard_type=r.constraints.product_needs.keyboard_type,
+                        exclude_product_ids=list(r.exclusions),
                     ),
                     r.encoder,
                 )
                 accepted = [h for h in hits if product_allowed(r, h.product)][:3]
                 data = {"items": [h.model_dump(mode="json") for h in accepted]}
+                if r.thread_snapshot:
+                    candidate_items = [
+                        {
+                            "rank": i + 1,
+                            "id": str(h.product.id),
+                            "name": h.product.name,
+                            "price_cents": h.product.price_cents,
+                            "currency": h.product.currency,
+                            "catalog_version": h.product.catalog_version,
+                        }
+                        for i, h in enumerate(accepted)
+                    ]
+                evidence.append(
+                    (
+                        "retrieval_candidates",
+                        self.envelope.subtask_id,
+                        {
+                            "items": [
+                                {"rank": i + 1, **hit.model_dump(mode="json")}
+                                for i, hit in enumerate(accepted)
+                            ]
+                        },
+                    )
+                )
                 for hit in accepted:
                     entities.append(ref("product", hit.id, "replacement"))
                     evidence.append(("product", hit.id, hit.product.model_dump(mode="json")))
@@ -292,6 +393,18 @@ class SpecialistTools:
                     raise DomainError(
                         409, "PURCHASE_DETAILS_REQUIRED", "需要明确购买意图、数量和演示地址"
                     )
+                if r.purchase_target_id and str(args.product_id) != r.purchase_target_id:
+                    raise DomainError(409, "SELECTION_MISMATCH", "仅可为用户明确选择的商品准备提案")
+                if r.thread_snapshot:
+                    selected = r.thread_snapshot.get("selected", [])
+                    if selected:
+                        if len(selected) != 1 or str(args.product_id) != selected[0]["id"]:
+                            raise DomainError(
+                                409, "SELECTION_MISMATCH", "仅可为用户明确选择的商品准备提案"
+                            )
+                        from agentmall.agents.memory import verify_items
+
+                        await verify_items(session, actor, selected)
                 seen = r.facts.get(("product", str(args.product_id)))
                 if seen is None:
                     raise DomainError(409, "PRODUCT_NOT_OBSERVED", "先读取候选")
@@ -327,6 +440,9 @@ class SpecialistTools:
                 if not r.constraints.return_requested:
                     raise DomainError(409, "RETURN_INTENT_REQUIRED", "需要明确退货意图")
                 order = await orders.get_order(session, actor, args.order_id)
+                from agentmall.agents.return_handoff import revalidate_return
+
+                await revalidate_return(r, self.envelope, session, actor, order)
                 request = ReturnRequest(
                     request_id=r.return_request_id,
                     proposal_slot="t08_return",
@@ -392,8 +508,34 @@ class SpecialistTools:
             self.observed.add((entity.kind, str(entity.id), entity.relation))
         for citation in citations:
             r.citations[citation["id"]] = citation
+        if candidate_items is not None:
+            from uuid import uuid5
+
+            from agentmall.actions.service import payload_hash
+            from agentmall.agents.memory import FIELDS, NEEDS
+
+            constraints = r.constraints.model_dump(mode="json", exclude_none=True)
+            preferences = {k: constraints[k] for k in FIELDS - NEEDS if k in constraints}
+            needs = {k: v for k, v in constraints.get("product_needs", {}).items() if v != []}
+            if needs:
+                preferences["product_needs"] = needs
+            ident = str(
+                uuid5(
+                    r.input.request_id, "candidates:" + payload_hash([preferences, candidate_items])
+                )
+            )
+            r.candidate_lists[ident] = {
+                "items": candidate_items,
+                "preferences_digest": payload_hash(preferences),
+            }
         self.records.append(
-            {"name": name, "data": data, "entities": entities, "citations": citations}
+            {
+                "name": name,
+                "data": data,
+                "entities": entities,
+                "citations": citations,
+                "source_order_id": str(args.order_id) if hasattr(args, "order_id") else None,
+            }
         )
         return {
             "ok": True,
@@ -421,9 +563,26 @@ class SpecialistTools:
         }
 
 
+def task_tool_names(runtime, envelope):
+    """Discovery narrows role authority; it never grants an otherwise forbidden tool."""
+    names = runtime.tool_allowlist(envelope.target)
+    if runtime.single and not envelope.read_only:
+        return names  # Single's existing legal union, independently guarded.
+    write = WRITE_TOOLS_BY_GOAL.get(envelope.goal) if not envelope.read_only else None
+    if write == "prepare_checkout" and runtime.constraints.bundle:
+        write = "prepare_bundle_checkout"
+    return tuple(name for name in names if name not in WRITES or name == write)
+
+
 def build_specialist_tools(context):
+    from agentmall.agents.read_completion import supports_read_completion
+
+    # Declare the SDK's existing END edge at compile time. The guard disarms
+    # these per-Handoff read tools BEFORE execution, and only complete server
+    # receipts re-arm them after the entire validated batch has settled.
+    read_completion = supports_read_completion(context.runtime, context.envelope)
     tools = []
-    for name in context.runtime.tool_allowlist(context.envelope.target):
+    for name in task_tool_names(context.runtime, context.envelope):
 
         def make_call(tool_name):
             async def execute(**kwargs):
@@ -436,11 +595,15 @@ def build_specialist_tools(context):
                 coroutine=make_call(name),
                 name=name,
                 description=DESCRIPTIONS[name],
-                args_schema=SCHEMAS[name],
-                return_direct=name in WRITES
-                and not (context.runtime.single and name == "create_support_ticket"),
+                args_schema=ALL_SCHEMAS[name],
+                return_direct=read_completion
+                or (
+                    name in WRITES
+                    and not (context.runtime.single and name == "create_support_ticket")
+                ),
             )
         )
+    context.bound_tools = {tool.name: tool for tool in tools}
     return tools
 
 

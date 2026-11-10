@@ -10,7 +10,12 @@ from agentmall.actions.schemas import (
     IdempotencyKey,
     ProposalDTO,
 )
-from agentmall.actions.service import confirm_proposal, get_proposal, prepare_checkout
+from agentmall.actions.service import (
+    confirm_proposal,
+    database_now,
+    get_proposal,
+    prepare_checkout,
+)
 from agentmall.identity.routes import Actor
 
 router = APIRouter()
@@ -30,9 +35,11 @@ async def prepare(
 
 
 @router.get("/proposals/{proposal_id}", response_model=ProposalDTO)
-async def proposal(request: Request, actor: Actor, proposal_id: UUID):
+async def proposal(request: Request, response: Response, actor: Actor, proposal_id: UUID):
     async with request.app.state.sessions.begin() as session:
         dto = await get_proposal(session, actor, proposal_id)
+        # Volatile display metadata belongs only to a fresh GET, never idempotent writes.
+        response.headers["X-Server-Time"] = (await database_now(session)).isoformat()
     return dto
 
 

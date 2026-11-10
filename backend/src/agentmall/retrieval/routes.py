@@ -24,6 +24,25 @@ async def products(request: Request, filters: Annotated[ProductQuery, Query()]):
         }
 
 
+@router.get("/retrieval/products/reranked")
+async def reranked(request: Request, filters: Annotated[ProductQuery, Query()]):
+    from sqlalchemy import text
+
+    from agentmall.retrieval.ranking import reranked_products
+
+    async with request.app.state.sessions.begin() as session:
+        await session.execute(text("SET TRANSACTION READ ONLY"))
+        return await reranked_products(
+            session,
+            storefront(request),
+            filters.query,
+            filters,
+            request.app.state.retrieval_encoder,
+            getattr(request.app.state, "retrieval_reranker", None),
+            fallback=getattr(request.app.state, "reranker_fallback", False),
+        )
+
+
 @router.get("/knowledge/search")
 async def policies(request: Request, actor: Actor, filters: Annotated[PolicyQuery, Query()]):
     async with request.app.state.sessions.begin() as session:

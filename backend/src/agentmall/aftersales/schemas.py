@@ -114,6 +114,17 @@ class CaseDTO(StrictDTO):
     updated_at: datetime
 
 
+class CaseFilters(StrictDTO):
+    status: CaseStatus | None = None
+    cursor: UUID | None = None
+    limit: int = Field(default=20, ge=1, le=100)
+
+
+class CasePage(StrictDTO):
+    items: list[CaseDTO]
+    next_cursor: UUID | None
+
+
 class ReviewRequest(StrictDTO):
     expected_version: int = Field(strict=True, ge=1)
     decision: Literal["approve", "reject"]

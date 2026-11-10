@@ -7,6 +7,12 @@ from agentmall.aftersales.models import AfterSalesCase, Refund  # noqa: F401
 from agentmall.agents.models import AgentRun, AgentThread, RunEvent  # noqa: F401
 from agentmall.cart.models import Cart, CartItem  # noqa: F401
 from agentmall.catalog.models import Product  # noqa: F401
+from agentmall.catalog_operations.models import (  # noqa: F401
+    CatalogCommand,
+    CatalogImport,
+    CatalogIndexJob,
+    ProductDraft,
+)
 from agentmall.identity.models import User  # noqa: F401
 from agentmall.infra.audit import BusinessEvent  # noqa: F401
 from agentmall.infra.config import Settings

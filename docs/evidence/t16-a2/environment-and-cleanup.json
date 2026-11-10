@@ -1,0 +1,237 @@
+{
+  "final_platform": {
+    "system": "Linux",
+    "machine": "aarch64",
+    "python": "3.12.10",
+    "versions": {
+      "psycopg": "3.3.6",
+      "sqlalchemy": "2.0.55",
+      "fastapi": "0.162.0",
+      "langgraph-checkpoint-postgres": "3.2.0",
+      "langchain-deepseek": "1.1.1"
+    },
+    "cgroup_memory": {
+      "memory.current": 526749696,
+      "memory.peak": 2148544512,
+      "memory.max": 2684354560
+    },
+    "provider_key_names_present": []
+  },
+  "linux_clock": {
+    "scope": "ALL_TEST_PROCESSES_LINUX_AARCH64",
+    "metadata": {
+      "kind": "ready",
+      "python": "3.12.10",
+      "system": "Linux",
+      "release": "6.8.0-117-generic",
+      "machine": "aarch64",
+      "pid": 63558,
+      "wall_clock": {
+        "implementation": "clock_gettime(CLOCK_REALTIME)",
+        "monotonic": false,
+        "adjustable": true,
+        "resolution": 1e-09
+      },
+      "monotonic_clock": {
+        "implementation": "clock_gettime(CLOCK_MONOTONIC)",
+        "monotonic": true,
+        "adjustable": false,
+        "resolution": 1e-09
+      },
+      "cpu_affinity": [
+        0,
+        1
+      ],
+      "process_env": "provider variables removed by name; no environment dump"
+    },
+    "elapsed_seconds": 584.3854806540003,
+    "samples": 54476,
+    "minimum_wall_delta_ns": 10041542,
+    "minimum_mono_delta_ns": 10041542,
+    "maximum_abs_residual_ns": 1808624,
+    "major_anomalies": [],
+    "raw_sha256": "3918999faee4c834d2b4f56570e3c076896fdc40bcd0e5c1313506b256a2d51e",
+    "clock_process_exit": 0,
+    "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+    "host_clock_previous_gate": "FAILED_PRESERVED_NOT_OVERRIDDEN",
+    "admitted": true
+  },
+  "mac_hybrid_clock": {
+    "admitted": false,
+    "wall_step_ns": -60528000,
+    "cause": "UNKNOWN_NOT_REPAIRED",
+    "original_summary_retained": true
+  },
+  "first_linux_harness_clock": {
+    "admitted": true,
+    "configuration_failure_preserved": true
+  },
+  "resources_before_stop": [
+    {
+      "container": "agentmall-t16-a2-linux-1",
+      "project": "agentmall-t16-a2",
+      "oom_killed": false,
+      "running": true,
+      "restarts": 0
+    },
+    {
+      "container": "agentmall-t16-a2-runner-1",
+      "project": "agentmall-t16-a2",
+      "oom_killed": false,
+      "running": true,
+      "restarts": 0
+    },
+    {
+      "container": "agentmall-t16-a2-postgres-1",
+      "project": "agentmall-t16-a2",
+      "oom_killed": false,
+      "running": true,
+      "restarts": 0
+    },
+    {
+      "container": "agentmall-t16-b0-r1-server-1",
+      "project": "agentmall-t16-b0-r1",
+      "oom_killed": false,
+      "running": true,
+      "restarts": 0
+    },
+    {
+      "container": "agentmall-t16-b0-r1-postgres-1",
+      "project": "agentmall-t16-b0-r1",
+      "oom_killed": false,
+      "running": true,
+      "restarts": 0
+    }
+  ],
+  "stopped": {
+    "test_project_stop_exit": 0,
+    "r1_project_stop_exit": 0,
+    "containers": [
+      {
+        "name": "agentmall-t16-a2-linux-1",
+        "running": false,
+        "exit_code": 137,
+        "oom_killed": false
+      },
+      {
+        "name": "agentmall-t16-a2-runner-1",
+        "running": false,
+        "exit_code": 137,
+        "oom_killed": false
+      },
+      {
+        "name": "agentmall-t16-a2-postgres-1",
+        "running": false,
+        "exit_code": 0,
+        "oom_killed": false
+      },
+      {
+        "name": "agentmall-t16-b0-r1-server-1",
+        "running": false,
+        "exit_code": 143,
+        "oom_killed": false
+      },
+      {
+        "name": "agentmall-t16-b0-r1-postgres-1",
+        "running": false,
+        "exit_code": 0,
+        "oom_killed": false
+      }
+    ],
+    "volumes_preserved": [
+      "agentmall-t16-a2_t16-a2-data",
+      "agentmall-t16-b0-r1_b0-r1-data"
+    ],
+    "test_database_cleanup": {
+      "owned_test_schemas": 0,
+      "advisory_locks": 0,
+      "other_sessions": 0
+    },
+    "r1_data": "Prepared state/schemas retained with zero proposals/orders/confirmations/payments/checkpoints",
+    "scope": "Only the two owned projects in the newly created VM. Shared default engine and historical projects not stopped."
+  },
+  "cleanup": {
+    "vm_profile": "agentmall-t16-a2",
+    "vm_stop_exit_code": 0,
+    "data_volumes_removed": false,
+    "r1_schemas_dropped": false,
+    "owned_power_assertions": [
+      {
+        "file": "power.pid",
+        "already_ended": true
+      },
+      {
+        "file": "power-linux.pid",
+        "released": true
+      }
+    ],
+    "test_resources_stopped": true,
+    "historical_resources_changed": false
+  },
+  "new_r1_environment": {
+    "environment_id": "627b3432-1077-4de9-bb5a-9c1e45129ce1",
+    "source_fingerprint": "60008bee53f74496afdf4ae3df49c7741d20e2a018f1c56bf2d916b64d8177a6",
+    "database": {
+      "name": "agentmall_test",
+      "business_schema": "test_8a3a99247398417aa1e9dabc10fea7cc",
+      "checkpoint_schema": "cp_733eaf1e6852485aae8daf6ebf481643",
+      "server_version": "17.11 (Debian 17.11-1.pgdg12+2)",
+      "database_name": "agentmall_test",
+      "pgvector": "0.8.7",
+      "migration": "0007"
+    },
+    "platform": {
+      "system": "Linux",
+      "machine": "aarch64",
+      "python": "3.12.10"
+    },
+    "provider_requests": 0,
+    "approval_exists": false,
+    "live_ledger_exists": false,
+    "provider_env_names_present": [],
+    "business_counts": {
+      "users": 3,
+      "products": 12,
+      "orders": 0,
+      "payments": 0,
+      "confirmations": 0,
+      "action_proposals": 0,
+      "business_events": 0,
+      "agent_threads": 0,
+      "agent_runs": 0,
+      "run_events": 0,
+      "agent_thread_contexts": 0,
+      "agent_candidate_sets": 0
+    },
+    "checkpoint_counts": {
+      "checkpoints": 0,
+      "checkpoint_blobs": 0,
+      "checkpoint_writes": 0
+    },
+    "advisory_locks": 0,
+    "ownership_comments": [
+      {
+        "schema": "test_8a3a99247398417aa1e9dabc10fea7cc",
+        "marker": "agentmall-live-playground-v1:627b3432-1077-4de9-bb5a-9c1e45129ce1"
+      },
+      {
+        "schema": "cp_733eaf1e6852485aae8daf6ebf481643",
+        "marker": "agentmall-live-playground-v1:627b3432-1077-4de9-bb5a-9c1e45129ce1"
+      }
+    ],
+    "file_modes": {
+      "policy.draft.json": "0o600",
+      "scenario.draft.json": "0o600",
+      "environment.json": "0o600"
+    }
+  },
+  "r1_live_admission": {
+    "expected_rejection": "APPROVAL_REQUIRED",
+    "key_loader_called": false,
+    "approval_created": false,
+    "live_ledger_created": false,
+    "provider_requests": 0,
+    "environment_id": "627b3432-1077-4de9-bb5a-9c1e45129ce1",
+    "policy_binding_sha256": "bdbdba17bd5bf348cff66f0fd679db48da843c4964b8b481709a50bce7202a4b"
+  }
+}

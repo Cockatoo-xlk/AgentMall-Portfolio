@@ -1,0 +1,251 @@
+{
+  "markdown_files_checked": 6,
+  "relative_file_links": [
+    {
+      "source": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/RESULTS.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "backend/src/agentmall/orders/service.py",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "backend/tests/integration/oracle.py",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "backend/src/agentmall/agents/run_service.py",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "backend/src/agentmall/agents/durable_graph.py",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "frontend/tests/return_replace.spec.ts",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/ENGINEERING_CASES.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/ARCHITECTURE.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/RESULTS.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "SNAPSHOT.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/DEMO.md#t14-p0本地购物闭环",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evidence/t14-p0/report.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/DEMO.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/evidence/private-rc-ci.json",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/RESULTS.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/LICENSE_DECISION.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "COPYRIGHT.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "THIRD_PARTY_NOTICES.md",
+      "exists": true
+    },
+    {
+      "source": "THIRD_PARTY_NOTICES.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "THIRD_PARTY_NOTICES.md",
+      "target": "docs/third-party/lucide-react-LICENSE.txt",
+      "exists": true
+    },
+    {
+      "source": "THIRD_PARTY_NOTICES.md",
+      "target": "frontend/src/components/ProductArt.tsx",
+      "exists": true
+    },
+    {
+      "source": "THIRD_PARTY_NOTICES.md",
+      "target": "docs/evidence/dependencies.json",
+      "exists": true
+    },
+    {
+      "source": "THIRD_PARTY_NOTICES.md",
+      "target": "docs/evidence/r5-third-party-scope.json",
+      "exists": true
+    },
+    {
+      "source": "THIRD_PARTY_NOTICES.md",
+      "target": "docs/evidence/t14-p0/screenshots.json",
+      "exists": true
+    },
+    {
+      "source": "docs/DEMO.md",
+      "target": "../README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/DEMO.md",
+      "target": "../frontend/tests/return_replace.spec.ts",
+      "exists": true
+    },
+    {
+      "source": "docs/DEMO.md",
+      "target": "screenshots/shopping-completed.png",
+      "exists": true
+    },
+    {
+      "source": "docs/DEMO.md",
+      "target": "screenshots/return-replacement-completed.png",
+      "exists": true
+    },
+    {
+      "source": "docs/DEMO.md",
+      "target": "screenshots/recovered-mobile.png",
+      "exists": true
+    },
+    {
+      "source": "docs/DEMO.md",
+      "target": "../frontend/tests/payment.spec.ts",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "changed-files.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "verification.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "database-evidence.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "failed-attempts.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "command-receipts.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "review.md",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "screenshots.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "screenshots/payment-confirmation.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "screenshots/payment-succeeded.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "screenshots/payment-outcome-unknown.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "screenshots/payment-mobile-succeeded.png",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "resource-cleanup.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "historical-integrity.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/report.md",
+      "target": "../../DEMO.md#t14-p0本地购物闭环",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/review.md",
+      "target": "command-receipts.json",
+      "exists": true
+    },
+    {
+      "source": "docs/evidence/t14-p0/review.md",
+      "target": "review.json",
+      "exists": true
+    }
+  ],
+  "broken_links": [],
+  "new_files_privacy_findings": [],
+  "excluded_private_artifacts": true,
+  "screenshot_metadata": "screenshots.json",
+  "classification": "Reviewed source and synthetic facts only; raw logs remain local and ignored",
+  "status": "PASS"
+}

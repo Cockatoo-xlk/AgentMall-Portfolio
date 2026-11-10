@@ -4,14 +4,28 @@ from fastapi import APIRouter, Query, Request, Response
 
 from agentmall.agents import run_service
 from agentmall.agents.context import GraphResult, MultiRequest
+from agentmall.agents.event_stream import stream_events
 from agentmall.agents.graph import run_graph
-from agentmall.agents.run_schemas import RecoverRequest, ResumeRequest, RunCreate, ThreadCreate
+from agentmall.agents.run_schemas import (
+    ContextPatch,
+    RecoverRequest,
+    ResumeRequest,
+    RunCreate,
+    ThreadCreate,
+)
 from agentmall.agents.schemas import AgentRequest, AgentResponse
 from agentmall.agents.single_agent import run_single_agent
 from agentmall.identity.routes import Actor
 from agentmall.infra.observability import export_optional
 
 router = APIRouter()
+
+
+@router.get("/agent/runtime")
+async def workflow_runtime(request: Request, actor: Actor, run_id: UUID | None = None):
+    from agentmall.playground.runtime import runtime_status
+
+    return await runtime_status(request.app, actor, run_id)
 
 
 @router.post("/agent/threads", status_code=201)
@@ -50,6 +64,16 @@ async def run_events(
     limit: int = Query(50, ge=1, le=100),
 ):
     return await run_service.events(request.app, actor, run_id, after_seq, limit)
+
+
+@router.get("/agent/runs/{run_id}/events/stream")
+async def run_event_stream(
+    request: Request,
+    actor: Actor,
+    run_id: UUID,
+    after_seq: int = Query(0, ge=0, le=2_147_483_647),
+):
+    return await stream_events(request, actor, run_id, after_seq)
 
 
 @router.post("/agent/messages", response_model=AgentResponse)
@@ -100,3 +124,30 @@ async def recover_run(
     )
     await export_optional(request.app, actor, run_id)
     return result
+
+
+@router.patch("/agent/threads/{thread_id}/context")
+async def patch_context(request: Request, actor: Actor, thread_id: UUID, payload: ContextPatch):
+    from agentmall.agents.memory import patch_context as apply_patch
+
+    return await apply_patch(request.app, actor, thread_id, payload)
+
+
+@router.post("/agent/threads/{thread_id}/runs/async", status_code=202)
+async def enqueue_run(request: Request, actor: Actor, thread_id: UUID, payload: RunCreate):
+    result, _ = await run_service.start_run(request.app, actor, thread_id, payload, deferred=True)
+    return result
+
+
+@router.post("/agent/threads/{thread_id}/resume/async", status_code=202)
+async def enqueue_resume(request: Request, actor: Actor, thread_id: UUID, payload: ResumeRequest):
+    return await run_service.resume_thread(request.app, actor, thread_id, payload, deferred=True)
+
+
+@router.post("/agent/threads/{thread_id}/runs/{run_id}/recover/async", status_code=202)
+async def enqueue_recovery(
+    request: Request, actor: Actor, thread_id: UUID, run_id: UUID, payload: RecoverRequest
+):
+    return await run_service.recover_run(
+        request.app, actor, thread_id, run_id, payload.request_id, deferred=True
+    )

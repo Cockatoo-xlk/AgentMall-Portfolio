@@ -53,6 +53,16 @@ def record(name, value):
 def candidate():
     data = json.loads((ROOT / "evals/config/frozen-live-rca.yaml").read_text())
     data.update(version=2, experiment=deepcopy(EXPERIMENT), live_ledger=EXPERIMENT["ledger"])
+    # This temporary synthetic candidate exercises the current admission guard.
+    # Historical manifests stay immutable and never authorize this test.
+    prompts = {
+        "single": manifest.SINGLE_PROMPT,
+        "supervisor": manifest.SYSTEM_PROMPT,
+        **manifest.PROMPTS,
+    }
+    data["prompt_hashes"] = {
+        name: manifest.digest(prompt.encode()) for name, prompt in prompts.items()
+    }
     data["source_hashes"] = manifest.source_hashes()
     data["source_bundle_hash"] = manifest.digest(canonical(data["source_hashes"]).encode())
     data["provider"]["price_snapshot"]["checked_at_utc"] = datetime.now(UTC).isoformat()

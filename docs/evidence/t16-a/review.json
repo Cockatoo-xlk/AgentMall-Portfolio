@@ -1,0 +1,32 @@
+{
+  "kind": "one read-only design review",
+  "initial_result": "CHANGES_REQUIRED",
+  "second_independent_review": "NOT_RUN",
+  "items": [
+    {
+      "issue": "Bind selected ID and immutable displayed price/version at prepare_checkout",
+      "resolution": "Selected baseline is separate from mutable facts; tool rejects another product or changed baseline",
+      "evidence": "test_model_cannot_replace_selected_product_even_after_reading_another"
+    },
+    {
+      "issue": "Clarification must not concatenate old budgets",
+      "resolution": "Structured same-Run merge; fresh Run starts derive new intent; original Run snapshot immutable",
+      "evidence": "test_budget_replace_clear_and_old_run_snapshot_are_independent; original two-clarification E2E"
+    },
+    {
+      "issue": "New nullable fields must not alter old request hashes or strict MultiRequest payload",
+      "resolution": "Omit only absent new fields from digest; separate immutable context envelope",
+      "evidence": "full original idempotency/checkpoint suite plus legacy ordinal guard"
+    },
+    {
+      "issue": "Replay, CAS and candidate publication ordering",
+      "resolution": "Authenticated replay before CAS; one transaction per memory/Run acceptance; fenced final publication with version/digest match",
+      "evidence": "real concurrent CAS, rollback, SIGKILL and final source subset"
+    },
+    {
+      "issue": "Candidate state recovery and stale invalidation",
+      "resolution": "Additive checkpoint map, trusted Run binding reloaded from DB, immutable list IDs and preference digest filtering",
+      "evidence": "current source 29-case PG/SDK subset and full browser suite"
+    }
+  ]
+}

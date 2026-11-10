@@ -1,0 +1,135 @@
+{
+  "status": "AGENTMALL_V212_DURABLE_WORKER_READY",
+  "base_commit": "1f49cda3f6ae829371d5c900a8f61cb83c202c11",
+  "branch": "codex/v2-reliable-agent-worker",
+  "source_sha256": "500794586f1074ef0819411eebbdb6f4fef193ec70feba4977a79e5ce3e266ca",
+  "source_files": 435,
+  "commit_binding": "Containing local commit; executable source hashes were rechecked after full regression.",
+  "evidence_category": "LOCAL_LINUX_AARCH64_MOCK_TRANSPORT_FIXTURE_EMBEDDING_REAL_POSTGRES_CHECKPOINTER",
+  "pytest": {
+    "passed": 1106,
+    "skipped": 14,
+    "failed": 0
+  },
+  "vitest": {
+    "passed": 127,
+    "failed": 0
+  },
+  "playwright": {
+    "passed": 119,
+    "failed": 0,
+    "retries": 0
+  },
+  "static_checks": {
+    "ruff": 0,
+    "format": 0,
+    "typescript": 0,
+    "eslint": 0,
+    "frontend_build": 0
+  },
+  "final_receipts": {
+    "pytest": {
+      "command": [
+        "env",
+        "AGENTMALL_WORKER_EVIDENCE_DIR=/rc-output/worker-proof-final",
+        "uv",
+        "run",
+        "--project",
+        "backend",
+        "pytest",
+        "backend/tests",
+        "-q",
+        "--ci-offline-core"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T16:15:03.515029+00:00",
+      "seconds": 650.77,
+      "log_sha256": "193ca714bed22aace9d1335c0b5e27c6e63ce90c04c7c5a93fb108f7c80a4025"
+    },
+    "static_vitest_build": {
+      "command": [
+        "sh",
+        "-c",
+        "uv run --project backend ruff check backend scripts evals && uv run --project backend ruff format --check backend scripts evals && cd frontend && npm run typecheck && npm run lint && npm test && npm run build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T16:15:24.861684+00:00",
+      "seconds": 13.829,
+      "log_sha256": "6c2f40c073bbc65a0ab6edabc77e91a750346414a4c76b5d09651cd40d4328f1"
+    },
+    "playwright": {
+      "command": [
+        "sh",
+        "-c",
+        "cd frontend && npm run test:e2e"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-08T16:31:13.308523+00:00",
+      "seconds": 234.15,
+      "log_sha256": "d3764763642adedd8b38e35d9eb616a65bd864cf8c64c3351644caa6707d801c"
+    }
+  },
+  "worker_processes": {
+    "count": 45,
+    "actual_sigkill": 10,
+    "api_processes": 1,
+    "exit_counts": {
+      "-9": 10,
+      "0": 33,
+      "1": 2
+    },
+    "boundaries": {
+      "checkpoint_waiting": 1,
+      "business_committed": 1,
+      "before_claim": 1,
+      "execute_journal_committed": 1,
+      "waiting_committed": 1,
+      "model_inflight": 4,
+      "journal_committed": 1
+    }
+  },
+  "business_assertions": {
+    "orders_after_independent_confirmation": 1,
+    "status": "PENDING_PAYMENT",
+    "payments": 0,
+    "duplicate_confirmation_consumptions": 0,
+    "execute_checkout_completed_receipts": 1,
+    "partial_inventory_reservations": false,
+    "bundle_order_items": 4
+  },
+  "protected_files_unchanged": 41,
+  "provider_requests": 0,
+  "provider_key_reads": 0,
+  "remote_writes": 0,
+  "cleanup": {
+    "passed": true,
+    "utc": "2026-11-08T16:35:25.560632+00:00",
+    "owner": "agentmall-v212-7e84bdd2",
+    "remaining_owned_schemas_before_deletion": 0,
+    "owned_guest_remaining": 0,
+    "owned_pg_volume_and_runner_tag_absent": true,
+    "owned_cache_and_credentials_removed": true,
+    "historical_container_count": 25,
+    "historical_ids_states_unchanged_across_cleanup": true,
+    "default_context": "colima",
+    "private_raw_evidence_retained": true,
+    "buildkit_cache_pruned": false
+  },
+  "screenshot_sha256": "bed34708c8b7b4d417eae3446b67cfa7b45154bdb58a643dec0af026eb86bd46",
+  "limitations": [
+    "At-least-once attempts; model requests may repeat after an unknown response.",
+    "Trusted local deployment only; no SLA or Live model validation.",
+    "Real-weight tests retain the existing offline skip boundary.",
+    "Attempts-exhausted BLOCKED is visible through GET but lacks a dedicated timeline event."
+  ],
+  "first_full_regression": {
+    "passed": 1101,
+    "skipped": 14,
+    "failed": 1,
+    "reason": "Exact migration table-set assertion omitted new agent_jobs table; fixed without weakening equality."
+  },
+  "review_fixes": [
+    "Async expired unaccepted wait reconciliation without approval.",
+    "Explicit recovery of original blocked start/resume intent after restoring identity; unique job recovery key."
+  ]
+}

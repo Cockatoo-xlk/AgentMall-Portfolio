@@ -1,0 +1,108 @@
+{
+  "status": "C1_ORIGINAL_RECEIPTS_VERIFIED_AND_REUSED_NOT_RERUN",
+  "executed_full_tests_in_D1": false,
+  "tested_commit": "671ef7a4559ca19b8bc33c3cb6b9280fd0e3c219",
+  "source_sha256": "7049db6ae8e334f82dc0b8de3083255e1c84a10ab4f3ec5e99b315fdf519a71a",
+  "runtime_and_tests_and_locks_and_workflow_diff_from_tested_commit": "empty",
+  "backend": {
+    "passed": 713,
+    "skipped": 14,
+    "failed": 0,
+    "collected": 727
+  },
+  "vitest": {
+    "passed": 80
+  },
+  "playwright": {
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "retries": 0,
+    "workers": 1
+  },
+  "runtime": "Independent Linux aarch64 VM + Mac full Chromium headless; not Ubuntu amd64 remote CI",
+  "skip_reasons": [
+    {
+      "test": "backend.tests.test_eval_monitor_policy.test_all_ten_saved_live_rows_remain_unchanged_and_do_not_trigger_false_sigint",
+      "reason": "Raw private Live evidence not present; synthetic regression still required"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_A2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[single-eval_dev_B1_03]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_A2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B2_01]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_live_preflight.test_pilot_sdk_pg_checkpoint_and_real_local_embedding[multi-eval_dev_B1_03]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_multiagent_integration.test_shopping_to_order_proposal_with_actual_graph_and_domain[local]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_multiagent_integration.test_cross_domain_return_and_replacement_preserve_identity[local]",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    },
+    {
+      "test": "backend.tests.test_retrieval_ingest.test_real_embedding_offline_sql_roundtrip",
+      "reason": "CI_OFFLINE_CORE: real BGE weights are not installed; use LOCAL_FULL_WITH_BGE"
+    }
+  ],
+  "verified_original_logs": [
+    {
+      "name": "independent-backend-full",
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 300.7088,
+      "log_sha256": "9e05bc965b6377f136459e607cbc0b23e5365554a9cf8c0ae3bb1c88f1cba36f"
+    },
+    {
+      "name": "frontend-final",
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 4.8661,
+      "log_sha256": "0b47cc2b76c3bc5dffd0cfc14b23b804053df50b5790b47378e5b4aaa58f035d"
+    },
+    {
+      "name": "independent-playwright-admission-fixed",
+      "exit_code": 0,
+      "elapsed_monotonic_seconds": 161.3712,
+      "log_sha256": "52f46da842cdd23b4097b81f3d95aad61274323ab1831a7330f54df9a9ff4e1c"
+    }
+  ],
+  "old_failure_records": "Old81/6, corrected old-env5/1 diagnostic, P1OOM143, T15AOOM137, unknown old P0 exit and all setup failures retained unchanged.",
+  "clock": "C1 admitted new VM continuous full-window monitoring no major anomaly; old default VM2.13s rollback remains unexplained and unrepaired; historical5case root causes remain unknown.",
+  "current_source_live": "NOT_RUN",
+  "historical_live": "T15-B1 only617cdf29 single Multi-Agent shopping Smoke,7Provider receipts50events; no new claims",
+  "remote_ci": "NOT_RUN"
+}

@@ -1,7 +1,16 @@
 from uuid import uuid4
 
 import pytest
-from multiagent_helpers import ai, call, choose_purchase, final, install, make_models, route
+from multiagent_helpers import (
+    ai,
+    assessment_reads,
+    call,
+    choose_purchase,
+    final,
+    install,
+    make_models,
+    route,
+)
 from sqlalchemy import text
 
 
@@ -81,18 +90,16 @@ async def two_proposals(env, buyer, product):
     order = await delivered_order(env[0], buyer, product)
     models = make_models(
         supervisor=[
-            route("aftersales", "prepare_return", "return", read_only=False),
+            route("aftersales", "assess_return", "assessment"),
+            route(
+                "aftersales", "prepare_return", "return", depends=["assessment"], read_only=False
+            ),
             route("shopping", "find_products", "replacement"),
             route("order", "prepare_checkout", "new", depends=["replacement"], read_only=False),
             route("finish"),
         ],
         aftersales=[
-            ai(
-                call(
-                    "check_eligibility", {"order_id": order["id"], "reason_code": "QUALITY_ISSUE"}
-                ),
-                call("retrieve_policies", {"order_id": order["id"], "query": "质量问题退货期限"}),
-            ),
+            *assessment_reads(order["id"]),
             ai(
                 call(
                     "prepare_return",

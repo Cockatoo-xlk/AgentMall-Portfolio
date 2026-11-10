@@ -1,0 +1,80 @@
+{
+  "evidence_class": "OFFLINE ONLY",
+  "groups": [
+    {
+      "file": "backend/tests/test_playground_budget.py",
+      "cases": 23,
+      "coverage": [
+        "default-off/new approval before key",
+        "current source/price",
+        "reserve before SDK wire",
+        "no prompt/key persistence",
+        "Usage/HTTP/timeout/tool/length/model failures",
+        "same node replay blocked after restart",
+        "concurrent global caps and actor filtering",
+        "orphan reservation UNKNOWN",
+        "input/output/cost/wall limits",
+        "corrupt ledger",
+        "forced route/nested Usage/reasoning fail closed"
+      ]
+    },
+    {
+      "file": "backend/tests/test_playground_entry.py",
+      "cases": 8,
+      "coverage": [
+        "describe/non-localhost/no approval/no key read",
+        "filtered child environment",
+        "missing config",
+        "Mock cannot claim Live",
+        "unmarked schema refused",
+        "single server lease",
+        "new marked PG environment migration/seed/reopen no reset",
+        "BGE missing stops before key"
+      ]
+    },
+    {
+      "file": "backend/tests/test_playground_integration.py",
+      "cases": 10,
+      "coverage": [
+        "authenticated model-disabled status",
+        "two goals two real tool paths",
+        "SDK HITL/duplicate Start/Resume/refresh/owner status",
+        "return and replacement independent confirmations",
+        "timeout/missing usage/malicious payment no business/retry",
+        "Single SDK",
+        "same words changed model route yields changed tools"
+      ]
+    },
+    {
+      "file": "frontend/src/api/providerRuntime.test.ts",
+      "cases": 6,
+      "coverage": [
+        "server enum only",
+        "unknown identity",
+        "Mock vs Live label",
+        "configured vs observed",
+        "counter validation",
+        "UNKNOWN actual bill separate from upper cost"
+      ]
+    },
+    {
+      "file": "frontend/tests/playground.spec.ts",
+      "cases": 10,
+      "coverage": [
+        "Fixture/disabled from server",
+        "Multi recommend",
+        "Multi owned orders",
+        "Single owned orders",
+        "purchase + lost resume + refresh + separate human mock pay",
+        "timeout",
+        "missing usage",
+        "malicious approval",
+        "mobile return/replacement two confirmations",
+        "missing user quantity cannot be invented"
+      ]
+    }
+  ],
+  "baseline_unchanged_assertions": true,
+  "new_skip_or_retry": false,
+  "real_provider_requests": 0
+}

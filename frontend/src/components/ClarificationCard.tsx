@@ -44,7 +44,7 @@ export default function ClarificationCard({
         return
       }
       try {
-        await client.post(`/agent/threads/${run.thread_id}/resume`, op)
+        await client.post(`/agent/threads/${run.thread_id}/resume${before.runs[0]?.job ? "/async" : ""}`, op)
       } finally {
         onThread(await client.get<Thread>(`/agent/threads/${run.thread_id}`))
       }

@@ -1,0 +1,30 @@
+{
+  "scope": "FROZEN_PRODUCT_77_BEFORE_CI_ONLY_COMMIT",
+  "source_sha": "77b215878edbce50ce107c6e77e31de4d2044ff9",
+  "product_fingerprint": "1e54c1f0d0b76ff0a975fbcc9938008336febbf1a1c8c5564253a23f4a901e27",
+  "reachable_commits": 12,
+  "commits_after_public_baseline": 10,
+  "unique_reachable_blobs": 643,
+  "current_files": 528,
+  "png_versions": 21,
+  "other_binary_files": 0,
+  "scan_findings": [
+    {
+      "path": "backend/tests/test_trace_redaction.py",
+      "lines": [
+        16,
+        123
+      ],
+      "classification": "SYNTHETIC_TEST_DATA",
+      "reason": "Malformed synthetic token strings for redaction tests; not authenticated JWTs"
+    }
+  ],
+  "private_live_paths_tracked": 0,
+  "personal_workstation_paths_found": 0,
+  "png_private_metadata_chunks": 0,
+  "image_review": "21 image versions contact-sheet visual review; fixture screens, synthetic resource UUIDs; no browser chrome or tokens observed",
+  "limitations": [
+    "Pattern scanning cannot prove absence of every possible secret. Context and path review supplement it.",
+    "No new remote CI or retrieval/DB result is claimed."
+  ]
+}

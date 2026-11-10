@@ -5,6 +5,7 @@ import {
   ArrowDown,
   ArrowRight,
   Headphones,
+  Smartphone, Laptop, Tablet, Monitor, Camera, Watch, Volume2, Bike, Dumbbell, Coffee,
   Keyboard,
   Layers2,
   Mouse,
@@ -29,6 +30,16 @@ const categories = [
   { value: 'keyboard', label: '键盘', icon: Keyboard },
   { value: 'mouse', label: '鼠标', icon: Mouse },
   { value: 'headphones', label: '耳机', icon: Headphones },
+  { value: 'smartphone', label: '手机', icon: Smartphone },
+  { value: 'laptop', label: '笔记本电脑', icon: Laptop },
+  { value: 'tablet', label: '平板电脑', icon: Tablet },
+  { value: 'monitor', label: '显示器', icon: Monitor },
+  { value: 'camera', label: '摄影器材', icon: Camera },
+  { value: 'smartwatch', label: '智能手表', icon: Watch },
+  { value: 'speaker', label: '音箱', icon: Volume2 },
+  { value: 'cycling', label: '骑行装备', icon: Bike },
+  { value: 'fitness', label: '健身器材', icon: Dumbbell },
+  { value: 'home_appliance', label: '生活家电', icon: Coffee },
 ] as const
 
 export default function Catalog() {
@@ -136,14 +147,14 @@ export default function Catalog() {
             为日常，认真挑选
           </span>
           <h1 id="hero-heading">
-            为你的桌面，
+            为你的日常，
             <br />
             找到刚刚好<span>。</span>
           </h1>
           <p>
-            从一把顺手的键盘，到一副陪伴专注的耳机。
+            从随身数码到骑行与居家，按预算发现合适的合成好物。
             <br className="desktop-break" />
-            按你的需要，发现属于自己的桌面好物。
+            13 个品类可筛选 · 数码、出行与居家合成好物。
           </p>
           <div className="hero-actions">
             <a className="button primary" href="#catalog">
@@ -166,9 +177,9 @@ export default function Catalog() {
           <div className="hero-orbit orbit-one" />
           <div className="hero-orbit orbit-two" />
           <span className="hero-art-label">
-            DESK ESSENTIALS<span>让桌面，留一点喜欢。</span>
+            EVERYDAY ESSENTIALS<span>让生活，留一点喜欢。</span>
           </span>
-          <ProductArt category="keyboard" variant="hero" />
+          <ProductArt category="laptop" variant="hero" />
           <span className="hero-swatch">
             <i />
             <i />
@@ -182,7 +193,7 @@ export default function Catalog() {
         <div className="section-heading">
           <div>
             <span className="eyebrow">THE EVERYDAY EDIT</span>
-            <h2 id="catalog-heading">发现桌面好物</h2>
+            <h2 id="catalog-heading">发现日常好物</h2>
           </div>
           <p className="muted">选你所需，让日常更顺手。</p>
         </div>
@@ -257,7 +268,7 @@ export default function Catalog() {
         {loading ? (
           <div className="loading" role="status">
             <span className="spinner" />
-            正在寻找桌面好物…
+            正在寻找合适好物…
           </div>
         ) : error ? (
           <div className="empty-state" role="alert">

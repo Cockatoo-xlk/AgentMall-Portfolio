@@ -28,7 +28,10 @@ async def test_same_thread_conflict_different_threads_parallel_and_no_leaked_loc
     await install(env, make_models(supervisor=[delayed, delayed]), indexed=False)
     first = await thread(env, buyer)
     second = await thread(env, buyer)
-    tasks = [asyncio.create_task(start(env, buyer, tid)) for tid in [first, second]]
+    tasks = [
+        asyncio.create_task(start(env, buyer, tid, message="结束本次测试，不要购买"))
+        for tid in [first, second]
+    ]
     try:
         await asyncio.wait_for(entered.wait(), 5)
         conflict = await start(env, buyer, first)

@@ -12,6 +12,7 @@ import signal
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from uuid import uuid4
@@ -120,14 +121,14 @@ async def prepare_return(client):
     return {"delivered_order_id": order["id"], "status": order["status"]}
 
 
-def spawn(command, *, cwd, stream):
+def spawn(command, *, cwd, stream, env=None):
     return subprocess.Popen(
         command,
         cwd=cwd,
         stdout=stream,
         stderr=subprocess.STDOUT,
         start_new_session=True,
-        env=dict(os.environ),
+        env=env if env is not None else dict(os.environ),
     )
 
 
@@ -145,12 +146,15 @@ async def serve(args):
     )
     os.environ.update(dotenv_values(ROOT / ".env.rag"))
     os.environ.update(
-        AGENTMALL_API_TARGET="http://127.0.0.1:8001", VITE_AGENT_MODE="fixture"
+        AGENTMALL_API_TARGET="http://127.0.0.1:8001",
+        VITE_AGENT_MODE="fixture",
+        AGENTMALL_DEMO_CATALOG_PROFILE=args.catalog_profile,
     )
     stop = asyncio.Event()
     for sig in (signal.SIGINT, signal.SIGTERM):
         asyncio.get_running_loop().add_signal_handler(sig, stop.set)
     processes, streams, proxies = [], [], []
+    worker_directory = None
     output = ROOT / ".t13/outputs"
     output.mkdir(parents=True, exist_ok=True)
     try:
@@ -190,6 +194,42 @@ async def serve(args):
             else:
                 raise TimeoutError("Owned demo did not become ready within 60 seconds")
             status = api.json()
+            if args.async_worker:
+                response = await client.post("/__test/worker-mode", headers=KEY)
+                response.raise_for_status()
+                worker_directory = tempfile.TemporaryDirectory(
+                    prefix="agentmall-worker-demo-"
+                )
+                config = Path(worker_directory.name) / "config.json"
+                config.write_text(
+                    json.dumps(
+                        {
+                            "schema": status["schema"],
+                            "checkpoint": status["checkpoint_schema"],
+                        }
+                    )
+                )
+                config.chmod(0o600)
+                stream = (output / f"demo-worker-{time.time_ns()}.txt").open("xb")
+                streams.append(stream)
+                processes.append(
+                    spawn(
+                        [
+                            sys.executable,
+                            "-m",
+                            "agentmall.agents.worker",
+                            "--factory",
+                            "worker_process_helpers:create_app",
+                        ],
+                        cwd=ROOT,
+                        stream=stream,
+                        env={
+                            **os.environ,
+                            "PYTHONPATH": str(ROOT / "backend/tests"),
+                            "AGENTMALL_WORKER_TEST_CONFIG": str(config),
+                        },
+                    )
+                )
             if args.prepare_return:
                 status.update(await prepare_return(client))
 
@@ -250,6 +290,8 @@ async def serve(args):
                     process.wait(timeout=5)
         for stream in streams:
             stream.close()
+        if worker_directory is not None:
+            worker_directory.cleanup()
         print(
             json.dumps({"owned_process_exit_codes": [p.returncode for p in processes]}),
             flush=True,
@@ -259,6 +301,14 @@ async def serve(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepare-return", action="store_true")
+    parser.add_argument(
+        "--async-worker",
+        action="store_true",
+        help="Independent offline MockTransport Worker; no Provider",
+    )
+    parser.add_argument(
+        "--catalog-profile", choices=("legacy", "expanded"), default="expanded"
+    )
     parser.add_argument("--seconds", type=int, default=900, choices=range(1, 3601))
     args = parser.parse_args()
     if not Path("/.dockerenv").exists() or not os.environ.get(

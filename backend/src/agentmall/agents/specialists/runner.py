@@ -5,9 +5,19 @@ from langgraph.errors import GraphRecursionError
 
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import SpecialistResult
-from agentmall.agents.model_control import SpecialistGuard
+from agentmall.agents.model_control import SpecialistGuard, ToolBatchRejected
+from agentmall.agents.read_completion import (
+    read_goal_signature,
+    verified_candidates,
+)
+from agentmall.agents.return_handoff import assessment_receipt
 from agentmall.agents.runtime import fingerprint
-from agentmall.agents.specialist_tools import SpecialistTools, build_specialist_tools
+from agentmall.agents.specialist_tools import (
+    WRITE_TOOLS_BY_GOAL,
+    SpecialistTools,
+    build_specialist_tools,
+    task_tool_names,
+)
 from agentmall.agents.specialists import aftersales, order, shopping
 
 PROMPTS = {
@@ -39,7 +49,7 @@ def incomplete_purchase(runtime, context, terminal):
     if (
         terminal == "clarify"
         or not c.purchase_requested
-        or c.quantity is None
+        or (c.quantity is None and not c.bundle)
         or c.address_label is None
         or any("error_code" in r for r in context.records)
         or runtime.errors
@@ -49,6 +59,8 @@ def incomplete_purchase(runtime, context, terminal):
         )
     ):
         return False
+    if c.bundle:
+        return runtime.checkout_blocker() is None
     return any(
         kind == "product"
         and value.get("available", 0) >= c.quantity
@@ -57,12 +69,56 @@ def incomplete_purchase(runtime, context, terminal):
     )
 
 
+def required_write_tool(runtime, goal):
+    tool = WRITE_TOOLS_BY_GOAL.get(goal)
+    return (
+        "prepare_bundle_checkout"
+        if tool == "prepare_checkout" and runtime.constraints.bundle
+        else tool
+    )
+
+
+def incomplete_write_goal(runtime, context):
+    """Read receipts do not fulfill a requested write goal. Never create the action here."""
+    tool = required_write_tool(runtime, context.envelope.goal)
+    if runtime.single or tool is None:
+        return False
+    if runtime.errors or any("error_code" in record for record in context.records):
+        return False
+    if any(
+        (record["name"] == "check_eligibility" and record.get("data", {}).get("eligible") is False)
+        or record.get("data", {}).get("support") == "unsupported"
+        for record in context.records
+    ):
+        return False  # A deterministic refusal is not a reason to try a write.
+    return not any(record["name"] == tool for record in context.records)
+
+
 async def run_specialist(runtime, envelope):
     role = envelope.target
     context = SpecialistTools(runtime, envelope)
+    runtime.event(
+        "specialist_started",
+        role=role,
+        subtask_id=envelope.subtask_id,
+        goal=envelope.goal,
+        budget=dict(runtime.budget.used),
+    )
     runtime.trace["prompts"][role] = fingerprint(PROMPTS[role])
-    runtime.trace["tool_allowlists"][role] = list(runtime.tool_allowlist(role))
+    runtime.trace["tool_allowlists"][role] = list(task_tool_names(runtime, envelope))
+    runtime.event(
+        "task_tools_visible",
+        role=role,
+        subtask_id=envelope.subtask_id,
+        goal=envelope.goal,
+        read_only=envelope.read_only,
+        tool_names=list(task_tool_names(runtime, envelope)),
+    )
     prompt = SINGLE_PROMPT if runtime.single else PROMPTS[role]
+    if runtime.thread_snapshot:
+        from agentmall.agents.context import THREAD_CONTEXT_PROMPT
+
+        prompt += THREAD_CONTEXT_PROMPT
     runtime.trace["prompts"][role] = fingerprint(prompt)
     agent = create_agent(
         runtime.models[role],
@@ -75,6 +131,13 @@ async def run_specialist(runtime, envelope):
     terminal = None
     for attempt in range(2):
         content = envelope.model_dump(mode="json")
+        if runtime.constraints.bundle:
+            content["bundle_progress"] = {
+                "completed_categories": [
+                    ident for kind, ident in runtime.facts if kind == "bundle_candidates"
+                ],
+                "composition": runtime.facts.get(("bundle_status", "current")),
+            }
         if runtime.single:
             # The outer graph's inspect_orders is only an internal placeholder.
             # It must not override the actual user goal presented to the Single model.
@@ -90,6 +153,18 @@ async def run_specialist(runtime, envelope):
                 prior_results=[r.model_dump(mode="json") for r in runtime.completed.values()],
                 error_codes=list(runtime.errors),
             )
+        if not runtime.single and envelope.goal == "prepare_return":
+            content["verified_assessments"] = [
+                v for (kind, _), v in runtime.facts.items() if kind == "return_assessment"
+            ]
+        if (
+            not runtime.single
+            and envelope.goal == "prepare_checkout"
+            and not runtime.constraints.bundle
+        ):
+            content["verified_candidates"] = verified_candidates(runtime, envelope)
+        if runtime.thread_snapshot:
+            content["thread_context"] = runtime.thread_snapshot
         if feedback:
             content["orchestration_feedback"] = feedback
             # Only results already exposed to THIS specialist, never other roles' facts.
@@ -123,25 +198,63 @@ async def run_specialist(runtime, envelope):
                     and incomplete_purchase(runtime, context, terminal)
                 ):
                     raise RunStopped("INCOMPLETE_PURCHASE")
+            message = output["messages"][-1]
+            if (
+                message.type == "ai"
+                and not message.tool_calls
+                and incomplete_write_goal(runtime, context)
+            ):
+                runtime.event(
+                    "specialist_goal_incomplete",
+                    role=role,
+                    subtask_id=envelope.subtask_id,
+                    goal=envelope.goal,
+                    error_code="INCOMPLETE_WRITE_GOAL",
+                )
+                raise RunStopped("INCOMPLETE_WRITE_GOAL")
             break
         except RunStopped as exc:
             error = exc.code
-            if error in {"UNORDERED_WRITE_BATCH", "INCOMPLETE_PURCHASE"}:
+            repairable = (isinstance(exc, ToolBatchRejected) and exc.repairable) or error in {
+                "INCOMPLETE_PURCHASE",
+                "INCOMPLETE_WRITE_GOAL",
+            }
+            if repairable:
                 allowed = await runtime.budget.claim_repair(error)
                 if not runtime.budget.persists_rejections:
                     runtime.event("orchestration_rejected", role=role, error_code=error)
                 if not attempt and allowed:
                     feedback = {
                         "error_code": error,
+                        "goal": envelope.goal,
+                        "diagnostic_code": getattr(exc, "diagnostic_code", error),
+                        "violation_fields": getattr(exc, "fields", []),
+                        "required_tool": required_write_tool(runtime, envelope.goal),
                         "instruction": (
-                            "非法批次全部未执行；写工具必须独占。"
+                            "本次输出未通过校验，非法批次全部未执行；写工具必须独占。"
+                            "只在原目标和权限内修正工具调用结构，读到事实不等于已完成写目标。"
+                            "依据prior_tool_results中已经核验的结果继续未完成的目标，不必重复相同读取。"
                             "原购买目标尚未处理时选择合法候选准备提案，或明确澄清。"
                             "不得重做已有提案或确认。"
                         ),
                     }
-                    runtime.event("orchestration_repair", role=role, error_code=error)
+                    context.repairing = True
+                    runtime.event(
+                        "orchestration_repair", role=role, error_code=error, repair_consumed=True
+                    )
                     error = None
                     continue
+                runtime.event(
+                    "orchestration_repair_exhausted",
+                    role=role,
+                    subtask_id=envelope.subtask_id,
+                    error_code=error,
+                    failure_class="REPAIR_EXHAUSTED",
+                    repair_consumed=True,
+                    tools_executed=False,
+                    phase="MODEL_OUTPUT_VALIDATION",
+                    budget=dict(runtime.budget.used),
+                )
         except GraphRecursionError:
             error = (
                 "BUDGET_EXCEEDED"
@@ -180,6 +293,25 @@ async def run_specialist(runtime, envelope):
     )
     if unsupported:
         status = "blocked"
+    if (
+        not runtime.single
+        and envelope.goal == "assess_return"
+        and runtime.constraints.return_requested
+        and any(
+            row.get("data", {}).get("eligible") is False
+            for row in context.records
+            if row["name"] == "check_eligibility"
+        )
+    ):
+        status, error = "blocked", "AFTERSALES_INELIGIBLE"
+    if (
+        not runtime.single
+        and envelope.goal == "assess_return"
+        and runtime.constraints.return_requested
+        and status == "done"
+        and not assessment_receipt(context)["reads_complete"]
+    ):
+        status, error = "blocked", "INCOMPLETE_ASSESSMENT"
     result = SpecialistResult(
         subtask_id=envelope.subtask_id,
         target=role,
@@ -198,7 +330,18 @@ async def run_specialist(runtime, envelope):
         citations=citations,
         error_code=error,
     )
+    if status in {"error", "blocked"} and not runtime.single:
+        runtime.signatures.add(runtime.failed_goal_signature(envelope))
+    from agentmall.agents.return_handoff import record_assessment
+
+    record_assessment(runtime, context, result)
+    if status == "done" and getattr(context, "read_goal_completed", False):
+        runtime.signatures.add(read_goal_signature(runtime, envelope))
     runtime.completed[envelope.subtask_id] = result
     runtime.pending.pop(envelope.subtask_id, None)
-    runtime.event("specialist_result", payload=result.model_dump(mode="json"))
+    runtime.event(
+        "specialist_result",
+        payload=result.model_dump(mode="json"),
+        budget=dict(runtime.budget.used),
+    )
     return result

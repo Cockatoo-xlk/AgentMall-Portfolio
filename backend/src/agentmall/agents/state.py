@@ -22,6 +22,7 @@ class RuntimeState(Strict):
     constraints: Constraints
     references: dict[str, EntityRef] = Field(default_factory=dict)
     facts: dict[str, dict] = Field(default_factory=dict)
+    candidate_lists: dict[str, dict] = Field(default_factory=dict)
     citations: dict[str, dict] = Field(default_factory=dict)
     completed: dict[str, SpecialistResult] = Field(default_factory=dict)
     pending: dict[str, HandoffEnvelope] = Field(default_factory=dict)
@@ -31,6 +32,7 @@ class RuntimeState(Strict):
     tool_ids: list[str] = Field(default_factory=list)
     tool_repeats: dict[str, int] = Field(default_factory=dict)
     schema_repairs: int = 0
+    purchase_target_id: str | None = None
     explicit_order_ids: list[UUID] = Field(default_factory=list)
     budget: dict = Field(default_factory=dict)
 
@@ -42,6 +44,7 @@ def snapshot(runtime):
         references={"|".join(k): v for k, v in runtime.references.items()},
         facts={"|".join(k): v for k, v in runtime.facts.items()},
         citations=runtime.citations,
+        candidate_lists=runtime.candidate_lists,
         completed=runtime.completed,
         pending={k: v for k, v in runtime.pending.items() if k not in runtime.completed},
         errors=runtime.errors,
@@ -50,6 +53,7 @@ def snapshot(runtime):
         tool_ids=sorted(runtime.tool_ids),
         tool_repeats=runtime.tool_repeats,
         schema_repairs=runtime.schema_repairs,
+        purchase_target_id=runtime.purchase_target_id,
         explicit_order_ids=sorted(runtime.explicit_order_ids, key=str),
         budget=runtime.budget.snapshot(),
     ).model_dump(mode="json")
@@ -61,7 +65,16 @@ def restore(runtime, data):
     runtime.constraints = state.constraints
     runtime.references = {tuple(k.split("|")): v for k, v in state.references.items()}
     runtime.facts = {tuple(k.split("|")): v for k, v in state.facts.items()}
-    for name in ("citations", "completed", "pending", "errors", "tool_repeats", "schema_repairs"):
+    for name in (
+        "candidate_lists",
+        "citations",
+        "completed",
+        "pending",
+        "errors",
+        "tool_repeats",
+        "schema_repairs",
+        "purchase_target_id",
+    ):
         setattr(runtime, name, getattr(state, name))
     for name in ("seen_tasks", "signatures", "tool_ids", "explicit_order_ids"):
         setattr(runtime, name, set(getattr(state, name)))
@@ -69,7 +82,15 @@ def restore(runtime, data):
     return runtime
 
 
-MAPS = {"references", "facts", "citations", "completed", "pending", "tool_repeats"}
+MAPS = {
+    "candidate_lists",
+    "references",
+    "facts",
+    "citations",
+    "completed",
+    "pending",
+    "tool_repeats",
+}
 SETS = {"errors", "seen_tasks", "signatures", "tool_ids", "explicit_order_ids"}
 
 
@@ -82,12 +103,17 @@ def delta(before, after):
             result[key] = [v for v in value if v not in before.get(key, [])]
         elif before.get(key) != value:
             result[key] = value
+    removed = {key: sorted(set(before.get(key, {})) - set(after.get(key, {}))) for key in MAPS}
+    if any(removed.values()):
+        result["removed_maps"] = {key: values for key, values in removed.items() if values}
     return result
 
 
 def merge_state(left, right):
     result = deepcopy(left)
     for key, value in right.items():
+        if key == "removed_maps":
+            continue
         if key in MAPS:
             result[key] = {**result.get(key, {}), **value}
         elif key in SETS:
@@ -96,6 +122,11 @@ def merge_state(left, right):
             result[key] = max(result.get(key, 0), value)
         else:
             result[key] = deepcopy(value)
+    for key, identifiers in right.get("removed_maps", {}).items():
+        if key not in MAPS:
+            raise ValueError("Unknown runtime map")
+        for identifier in identifiers:
+            result.get(key, {}).pop(identifier, None)
     result["pending"] = {
         k: v for k, v in result.get("pending", {}).items() if k not in result.get("completed", {})
     }
