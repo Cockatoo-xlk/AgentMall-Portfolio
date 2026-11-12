@@ -1,7 +1,8 @@
-"""Original public DEV/TEST contracts, SDK Mock HTTP and new PG/BGE only.
+"""Original DEV/TEST contracts over SDK Mock HTTP and owned PostgreSQL.
 
 This intentionally tests the formal runtime guard, not the frozen private Native
 pre-SDK response contract. No Oracle expected fields enter fixture model inputs.
+CI_OFFLINE_CORE uses FixtureEncoder; LOCAL_FULL_WITH_BGE keeps real local BGE.
 """
 
 import json
@@ -106,11 +107,12 @@ async def sdk_models(task, resources, architecture, stack):
     ],
 )
 async def test_original_task_oracle_and_committed_business_state(
-    task_id, architecture, dataset, record_property
+    task_id, architecture, dataset, record_property, pytestconfig
 ):
     task = next(t for t in load_tasks(ROOT / "evals/data" / dataset) if t.task_id == task_id)
+    embedding = "fixture" if pytestconfig.getoption("--ci-offline-core") else "local"
     async with AsyncExitStack() as stack:
-        resources = await stack.enter_async_context(episode_database(task, embedding="local"))
+        resources = await stack.enter_async_context(episode_database(task, embedding=embedding))
         env, refs = resources["env"], resources["refs"]
         auth = resources["auth"][task.actor]
         initial = read_snapshot(env)
@@ -244,7 +246,12 @@ async def test_original_task_oracle_and_committed_business_state(
         receipt = {
             "task_id": task_id,
             "architecture": architecture,
-            "evidence": "DEVELOPMENT_REGRESSION_SDK_MOCK_REAL_BGE_PG",
+            "evidence": "DEVELOPMENT_REGRESSION_SDK_MOCK_PG",
+            "embedding": {
+                "kind": "FIXTURE" if embedding == "fixture" else "REAL_LOCAL_BGE",
+                "model": resources["encoder"].model_id,
+                "revision": resources["encoder"].revision,
+            },
             "oracle": verdict,
             "run_status": run["status"],
             "budget": run["budget"],
