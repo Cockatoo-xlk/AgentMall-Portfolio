@@ -329,9 +329,14 @@ async def test_saved_checkpoint_answer_failure_then_reference_recovery(
         base_url="http://test",
     ) as client:
         response = await resume((client, *env[1:]), buyer, tid, run, cid)
-    assert response.status_code == 500
+    # R4 converges the saved-checkpoint failure instead of stranding RUNNING.
+    assert response.status_code == 200
+    assert response.json()["status"] == "PARTIAL"
+    assert response.json()["last_error"] == "EXECUTION_INTERRUPTED"
     before = inspect_database(env, evidence["initial"])
-    assert before["counts"]["orders"] == 1 and before["runs"][0]["status"] == "RUNNING"
+    assert before["counts"]["orders"] == 1 and before["runs"][0]["status"] == "PARTIAL"
+    assert scalar(env, "SELECT worker_token FROM agent_runs") is None
+    assert scalar(env, "SELECT lock_pid FROM agent_runs") is None
     evidence["checkpoint_before_recover"] = await cp_state(env, tid, run)
     assert evidence["checkpoint_before_recover"]["next"] == "done"
     monkeypatch.setattr(run_service, "render", original)

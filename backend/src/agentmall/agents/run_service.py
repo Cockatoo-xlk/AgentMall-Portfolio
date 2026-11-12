@@ -286,6 +286,49 @@ async def _activate(app, actor, run_id, thread, connection, resume_payload=None)
             accepted_context = deepcopy(max(bindings, key=lambda b: b["version"]))
         external_request_id = run.request_id
         add_event(session, run, "run_activated", {"epoch": run.epoch})
+    try:
+        return await _execute_activation(
+            app,
+            actor,
+            thread,
+            fence,
+            original,
+            accepted_context,
+            external_request_id,
+            resume_payload,
+        )
+    except Exception as exc:
+        # Initialization and final reconciliation can fail outside the graph's
+        # journal recovery block. Only the current advisory owner may finalize.
+        error = execution_error(exc)
+        async with sessions.begin() as session:
+            current = await fence.check(session, exclusive=True)
+            current.status = "PARTIAL"
+            current.last_error = error
+            current.finished_at = await database_now(session)
+            current.worker_token = None
+            current.lock_pid = None
+            current_thread = await session.get(AgentThread, thread.id)
+            current_thread.status = "ACTIVE"
+            add_event(session, current, "run_state", {"status": "PARTIAL", "error_code": error})
+        if isinstance(exc, DomainError):
+            raise
+        return view(current)
+
+
+def execution_error(exc):
+    if isinstance(exc, (DBAPIError, OperationalError)):
+        return "DATABASE_UNAVAILABLE"
+    if isinstance(exc, (DomainError, RunStopped)):
+        return exc.code
+    return "EXECUTION_TIMEOUT" if isinstance(exc, TimeoutError) else "EXECUTION_INTERRUPTED"
+
+
+async def _execute_activation(
+    app, actor, thread, fence, original, accepted_context, external_request_id, resume_payload
+):
+    sessions = app.state.sessions
+    run_id = fence.run_id
     budget = DurableBudget(fence)
     await budget.reload()
     models = app.state.multi_models
@@ -364,14 +407,7 @@ async def _activate(app, actor, run_id, thread, connection, resume_payload=None)
         # Preserve a failure already observed by this execution, not a later timeout.
         if isinstance(exc, TimeoutError) and node_store.failure is not None:
             exc = node_store.failure
-        if isinstance(exc, (DBAPIError, OperationalError)):
-            error = "DATABASE_UNAVAILABLE"
-        elif isinstance(exc, (DomainError, RunStopped)):
-            error = exc.code
-        else:
-            error = (
-                "EXECUTION_TIMEOUT" if isinstance(exc, TimeoutError) else "EXECUTION_INTERRUPTED"
-            )
+        error = execution_error(exc)
         runtime.errors.append(error)
         # Node journal may be newer than the last checkpoint; reconstruct committed outputs.
         async with sessions.begin() as session:
@@ -551,6 +587,13 @@ async def start_run(app, actor, thread_id, payload, *, deferred=False):
                     if k not in {"expected_context_version", "candidate_set_id", "bundle_revision"}
                 }
                 body["message"] = sanitized(body["message"])
+                # Validate pure input before the Run/job commit, including the
+                # legacy stateless path which accept_context intentionally skips.
+                from agentmall.agents.purchase_intent import purchase_intent
+
+                purchase_intent(body["message"])
+                if not accepted:
+                    user_constraints(MultiRequest(thread_id=thread_id, **body))
                 run = AgentRun(
                     id=run_id,
                     thread_id=thread_id,
