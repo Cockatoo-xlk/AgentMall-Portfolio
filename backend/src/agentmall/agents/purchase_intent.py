@@ -12,10 +12,12 @@ MULTIPLE_IDS = re.compile(
     re.IGNORECASE,
 )
 MODIFIERS = r"(?:(?:再|要|继续|直接|立即|马上)\s*)*"
+# 改买 is a purchase action; the suffix of 修改/更改 is not a standalone 改.
+# Keep 买家电 legal: a blanket exclusion of 买家 would hide an actual purchase.
 ACTION = re.compile(
     r"(?P<negative>先别|不要|不想|不需要|不打算|不准备|不用|暂不|别|取消|撤销|放弃|不)?\s*"
     + MODIFIERS
-    + r"(?P<prefix>准备|帮我|我要|我想|就|改)?"
+    + r"(?P<prefix>准备|帮我|我要|我想|就|(?<![修更])改)?"
     + MODIFIERS
     + r"(?:购买|下单|买)\s*"
     r"(?:(?:最新|刚才)(?:推荐的|那款)?)?"

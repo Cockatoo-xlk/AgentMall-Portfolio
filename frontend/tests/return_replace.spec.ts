@@ -529,7 +529,14 @@ test('return_replace: business receipt survives final answer rendering failure',
   await expect(page.getByText(/业务已执行，工作流回答尚待核实/)).toBeVisible()
   const before = await facts(request)
   expect(before.orders).toBe(1)
-  expect(before.run_rows[0].status).toBe('RUNNING')
+  // Rendering has stopped, not an active executor: the fenced finalizer must
+  // converge while retaining the committed receipt and original Resume identity.
+  expect(before.run_rows[0].status).toBe('PARTIAL')
+  expect(before.run_rows[0].last_error).toBe('EXECUTION_INTERRUPTED')
+  expect(before.confirmations).toBe(1)
+  expect(before.confirmation_rows[0].consumed_at).not.toBeNull()
+  expect(before.receipts).toBe(1)
+  expect(before.checkpoints[0].graph.next).toBe('done')
   await capture(page, request, 'business-done-answer-failed')
   await page.getByRole('button', { name: '核对并重试原恢复' }).click()
   await expect(page.getByTestId('run-status')).toHaveText('COMPLETED')
@@ -594,39 +601,33 @@ test('return_replace: pending start response does not hide durable running state
   page,
   request,
 }) => {
-  await control(request, '/workflow-mode', { mode: 'start_unfinalized' })
-  let release!: () => void
-  let fetched!: () => void
-  const responseGate = new Promise<void>((resolve) => {
-    release = resolve
-  })
-  const committed = new Promise<void>((resolve) => {
-    fetched = resolve
-  })
-  await page.route('**/api/v1/agent/threads/*/runs', async (route) => {
-    const response = await route.fetch()
-    fetched()
-    await responseGate
-    await route.fulfill({ response })
-  })
+  // Keep an actual SDK call in flight. A thrown render error is already a
+  // stopped activation, even if a browser route withholds its HTTP response.
+  await control(request, '/sdk-mode', { program: 'purchase', delay_ms: 1500 })
+  let settled = false
+  const response = page.waitForResponse(
+    (r) => r.request().method() === 'POST' && r.url().endsWith('/runs'),
+  ).then(() => { settled = true })
   const work = workspace(page)
   // Catch the helper's assertion immediately too, to avoid an unhandled rejection in RED.
   const finished = work.then(
     () => null,
     (error) => error,
   )
+  let workspaceError: unknown
   try {
-    await committed
     await expect(page.getByTestId('run-status')).toHaveText('RUNNING')
     await expect(page.getByTestId('run-event').first()).toBeVisible()
     const f = await facts(request)
     expect(f.run_rows[0].status).toBe('RUNNING')
     expect(f.orders).toBe(0)
+    expect(settled).toBe(false)
   } finally {
-    release()
-    await finished
+    workspaceError = await finished
+    await response
   }
-  await expect(page.getByRole('button', { name: '恢复原 Run' })).toBeEnabled()
-  await page.getByRole('button', { name: '恢复原 Run' }).click()
+  if (workspaceError) throw workspaceError
   await expect(page.getByTestId('run-status')).toHaveText('WAITING_INPUT')
+  expect((await facts(request)).run_rows).toHaveLength(1)
+  expect((await facts(request)).orders).toBe(0)
 })
