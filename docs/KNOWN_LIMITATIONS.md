@@ -15,7 +15,7 @@
 | 检索质量 | 历史真实BGE/Reranker实验为本地Linux aarch64/CPU、固定40条合成查询、单标注者；Reranker默认关闭，不能等同当前Agent质量 | [真实检索报告](REAL_RETRIEVAL.md) |
 | MCP认证 | 仅stdio/localhost；**REMOTE_AUTH_NOT_IMPLEMENTED**，未实现可公网使用的完整远程认证；无付款退款执行工具 | [MCP指南](MCP_GATEWAY.md) |
 | Demo | SDK MockTransport / Fixture Embedding / 合成账号 / TEST_OPERATOR；真实后端不等于真实模型。准备依赖后的无Provider演示不保证首次构建全离线 | [6分钟演示](DEMO_GUIDE.md) |
-| 影像素材 | 保留历史截图，V2.16浏览器截图来自本轮合成回归，未录屏；**VIDEO_NOT_RECORDED** | [截图来源](screenshots/portfolio/README.md)、[原哈希](evidence/portfolio-demo/verification.json) |
+| 影像素材 | 保留历史截图，V2.16初次交付未录屏；RC1另有6:55静音原始录屏，非精剪演示片，收尾超时如实保留 | [截图来源](screenshots/portfolio/README.md)、[原哈希](evidence/portfolio-demo/verification.json) |
 | 规模与部署 | 没有生产部署、真实用户规模、QPS、SLA、真实付款或退款证明；公开合成配置不能作为公网认证 | [项目说明](../README.md)、[架构](ARCHITECTURE.md) |
 | 统计与版本 | 历史离线CI、真实本地BGE、Mock、不同Live会话分别绑定原SHA，不能相加或当V2.15结果。模型别名也不是不可变权重身份 | [历史结果](RESULTS.md)、[L8身份](EVALUATION_RESULTS.md#身份与公开投影) |
 | 旧E1错误契约 | **ORACLE_CONTRACT_MISMATCH**仍未解决：Native的TOOL_NOT_DECLARED/SPECIALIST_FAILED与正式SDK的INVALID_TOOL_BATCH属于不同校验路径，未放行未知工具或修改原Oracle | [既有运行时修复](../backend/tests/test_l8_r4_original_oracle.py)、[批次硬拒绝](../backend/src/agentmall/agents/model_control.py) |
@@ -43,4 +43,4 @@
 - 受控入口是固定合成契约测试与薄API辅助类，不是新通用评测器；状态/错误评分不是业务Oracle，也不是独立盲测。
 - SDK MockTransport完整业务链与真实BGE专项分开运行；不能将两者合并描述为本轮真实DeepSeek+BGE端到端评测。
 - 原有13项real_bge标记在轻量核心回归中按策略跳过，本轮另行实际执行；私有历史证据测试缺少原件仍跳过。准确数量见[回执](evidence/v216/verification.json)。
-- **VIDEO_NOT_RECORDED**；真实Provider请求0、真实Key读取0、GitHub写入0。尚无V2.16远程CI或发布结论。
+- V2.16初次交付的**VIDEO_NOT_RECORDED**是历史状态；RC1原始录屏已独立验证，但没有旁白、末段静态停留较长，录制器未正常FINISHED。见[媒体限制](V216_RC1_REVIEW.md#实际录屏与质量限制)。本地验收时真实Provider请求0、真实Key读取0、GitHub写入0；远程CI和发布需另核。

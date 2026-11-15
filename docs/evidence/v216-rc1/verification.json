@@ -1,0 +1,743 @@
+{
+  "task": "AGENTMALL_V216_RC1_PRODUCT_RELEASE_CANDIDATE",
+  "state": "LOCAL_OFFLINE_ACCEPTED_PENDING_GITHUB_AUTH",
+  "generated_at": "2026-11-15T17:46:07.539575+00:00",
+  "reviewed_candidate": {
+    "commit": "ae10b253819e08f468f18e60cf4c46b674b95a5c",
+    "parent": "d18161d1eb40667f4658e745d2f58369767d67f5",
+    "tree": "4aeeca6743293f132811626007b5f9ba58774306",
+    "initial_clean": true,
+    "files_34_sha256": {
+      "README.md": "32556046e9cf17d378af43728b969eaaa2b1d48ca1a583600f4e74fee414a5cf",
+      "backend/src/agentmall/agents/runtime.py": "2896f317d5ab34f7e3c5813849a96d90c67bb860d1bd918087eb40359cffb976",
+      "backend/tests/playground_helpers.py": "889f0c628fe1d5154c0931145b9b7cdb971d93c1f37882ea415664cb237d1a45",
+      "backend/tests/test_v216_agent_runtime.py": "1883d410b4cb4320e4f6ba50632d2d82b76909d2b9e18108cbf7a15a198a12e7",
+      "backend/tests/test_v216_controlled_eval.py": "5df97ac2b07ab923d5539cda98484abce39764cce35d42786c24557a69ee72fe",
+      "backend/tests/web_e2e_server.py": "e4f2969b5e1b037985458f20e71d9aa4a1d52ac8b8fd4e1f64c04748144e42bb",
+      "docs/ARCHITECTURE.md": "53d60997f7ecf72e1c330c85fdd4763ba6ba99a71778549436cbcc5c6ed9add8",
+      "docs/DEMO_GUIDE.md": "d05ca11906c9bf389d2179d582ccc9aa3ea49b5637dcabf672c5c38e3bac3316",
+      "docs/ENGINEERING_CASES.md": "137755ca3926d18f8053cee11a8b06e70a51056dac9b117313b422accdc0365d",
+      "docs/INTERVIEW_TALKING_POINTS.md": "6743cd98098a220119223b279a346609591b73418134fa74fdb23ff8e84a8c12",
+      "docs/KNOWN_LIMITATIONS.md": "8823330e616deb6577f2dbfb50403f1a855bd2564afcdefe7226a51118be4e14",
+      "docs/V216_PRODUCT_DEMO.md": "9832323c31febf10659f9d57e0c9160b48066e0ee97461ce0e78e8906d481d37",
+      "docs/evidence/v216/verification.json": "59cee48b0def74cdd9b2b7762c20e7556dcf8176980e88b364a3a93ee2e1125b",
+      "docs/screenshots/v216/README.md": "248a95595fcfd06507083e1fe76bf851865ce81db12442ae1d799386e1b8d8b3",
+      "docs/screenshots/v216/purchase.png": "f8a57a26ba65a4a329b3fb6328ea3ae54b17d57acaf760c2b94a7678b0f8b4d2",
+      "docs/screenshots/v216/recommendation.png": "7fed00beec408272bdca2e05217dd6a9111b7c3a4db6c97859c66fb97c67d509",
+      "docs/screenshots/v216/return-replacement.png": "55848a2336d9403016427c514bc9196dc8854c4fa4f9d8bfaa7a422d5eac5c27",
+      "evals/CONTROLLED_OFFLINE.md": "ddee14d9b1b83ecc4c870f064c5778a153c1525b337a5c00a94ed75e3213f002",
+      "evals/controlled_offline.py": "87cf2f0f4476e1ff967a3999817325c5795f231239b100be930b057d8e254b30",
+      "frontend/src/api/providerRuntime.test.ts": "000fd821a515d160db5af554999f7a078a05d0dfa74fa8b0f99d640450cd71f3",
+      "frontend/src/api/providerRuntime.ts": "c7b4e7c3efc2c151fae65800cceb1fe46e5116577852c71c2a32b4fce2643de4",
+      "frontend/src/api/timelineSummary.test.ts": "64273b92601e501e92fcd25fa11d9aac85190a21d1bfbd017f69588ac836305a",
+      "frontend/src/api/timelineSummary.ts": "a4cb7bd72cee3b54ae6d548e57818930a9a8f89c119a1c82c7bfc68fbf5a4e47",
+      "frontend/src/components/RecommendationResults.css": "7e9932875b992d1fb710753740c249a2e423e3cd621c69259b792ac5b9376af9",
+      "frontend/src/components/RecommendationResults.test.tsx": "301c092627e21d642e45dc1e40b92191a8c5da6fa656515791b4f02eb8901f04",
+      "frontend/src/components/RecommendationResults.tsx": "d0737880c28f5e379c70cae5930dd8dba57ca2c2ccd400e95afe6118e93a432c",
+      "frontend/src/components/WorkflowConfirmationCard.tsx": "8dee0f0101f81c8e4eb6638dfd28d03b76a20014e05f952191e405f239e607d3",
+      "frontend/src/components/WorkflowProposalDetails.test.tsx": "9dc17482bf04d1c3bd3e8993eb49aa5bcdfa1ac43804b2c00a8f5a5a055a320b",
+      "frontend/src/components/WorkflowProposalDetails.tsx": "4c243dd1ab7b4f92937093339ae0023918ef78bcd02b5493e2a448efedba3ad2",
+      "frontend/src/components/WorkflowResources.test.tsx": "a66babd9bf7cad4b0476f7a775a766e0efa01bce9c61d5a16880d215f54f5828",
+      "frontend/src/components/WorkflowResources.tsx": "33a0366dc0a515aa1372bf99871ebac1edb047ad879d114233abc118b4949815",
+      "frontend/src/pages/AgentWorkspace.tsx": "cfc956e87b4029585bcaa488f00941fc3b406aa0c28a37dfe9a59a5a91822988",
+      "frontend/tests/product-demo.spec.ts": "3c611ec284ecee6f77e8b50ccb36b53f59a1c83ed726f2715677178ded45672d",
+      "frontend/tests/return_replace.spec.ts": "392b27e3e80b05f3d5d38e084f32df2c979e636c5de08d411b3cac9ed47ed0cc"
+    },
+    "original_diff_sha256": "7ad7ae085138193b4f34a0d2798a40589848e6a3c63d341732d0810fcf66786e"
+  },
+  "product_source": {
+    "changes_in_rc1": "NONE",
+    "tested_commit": "ae10b253819e08f468f18e60cf4c46b674b95a5c",
+    "changed_code_files": {
+      "backend/src/agentmall/agents/runtime.py": "2896f317d5ab34f7e3c5813849a96d90c67bb860d1bd918087eb40359cffb976",
+      "backend/tests/playground_helpers.py": "889f0c628fe1d5154c0931145b9b7cdb971d93c1f37882ea415664cb237d1a45",
+      "backend/tests/test_v216_agent_runtime.py": "1883d410b4cb4320e4f6ba50632d2d82b76909d2b9e18108cbf7a15a198a12e7",
+      "backend/tests/test_v216_controlled_eval.py": "5df97ac2b07ab923d5539cda98484abce39764cce35d42786c24557a69ee72fe",
+      "backend/tests/web_e2e_server.py": "e4f2969b5e1b037985458f20e71d9aa4a1d52ac8b8fd4e1f64c04748144e42bb",
+      "evals/controlled_offline.py": "87cf2f0f4476e1ff967a3999817325c5795f231239b100be930b057d8e254b30",
+      "frontend/src/api/providerRuntime.test.ts": "000fd821a515d160db5af554999f7a078a05d0dfa74fa8b0f99d640450cd71f3",
+      "frontend/src/api/providerRuntime.ts": "c7b4e7c3efc2c151fae65800cceb1fe46e5116577852c71c2a32b4fce2643de4",
+      "frontend/src/api/timelineSummary.test.ts": "64273b92601e501e92fcd25fa11d9aac85190a21d1bfbd017f69588ac836305a",
+      "frontend/src/api/timelineSummary.ts": "a4cb7bd72cee3b54ae6d548e57818930a9a8f89c119a1c82c7bfc68fbf5a4e47",
+      "frontend/src/components/RecommendationResults.css": "7e9932875b992d1fb710753740c249a2e423e3cd621c69259b792ac5b9376af9",
+      "frontend/src/components/RecommendationResults.test.tsx": "301c092627e21d642e45dc1e40b92191a8c5da6fa656515791b4f02eb8901f04",
+      "frontend/src/components/RecommendationResults.tsx": "d0737880c28f5e379c70cae5930dd8dba57ca2c2ccd400e95afe6118e93a432c",
+      "frontend/src/components/WorkflowConfirmationCard.tsx": "8dee0f0101f81c8e4eb6638dfd28d03b76a20014e05f952191e405f239e607d3",
+      "frontend/src/components/WorkflowProposalDetails.test.tsx": "9dc17482bf04d1c3bd3e8993eb49aa5bcdfa1ac43804b2c00a8f5a5a055a320b",
+      "frontend/src/components/WorkflowProposalDetails.tsx": "4c243dd1ab7b4f92937093339ae0023918ef78bcd02b5493e2a448efedba3ad2",
+      "frontend/src/components/WorkflowResources.test.tsx": "a66babd9bf7cad4b0476f7a775a766e0efa01bce9c61d5a16880d215f54f5828",
+      "frontend/src/components/WorkflowResources.tsx": "33a0366dc0a515aa1372bf99871ebac1edb047ad879d114233abc118b4949815",
+      "frontend/src/pages/AgentWorkspace.tsx": "cfc956e87b4029585bcaa488f00941fc3b406aa0c28a37dfe9a59a5a91822988",
+      "frontend/tests/product-demo.spec.ts": "3c611ec284ecee6f77e8b50ccb36b53f59a1c83ed726f2715677178ded45672d",
+      "frontend/tests/return_replace.spec.ts": "392b27e3e80b05f3d5d38e084f32df2c979e636c5de08d411b3cac9ed47ed0cc"
+    },
+    "code_inventory_sha256": "a8331a324bbbcc6976b6a6f4f813b2cf5a07da9785cdca7c004d6b3bbb46eb07",
+    "final_candidate_note": "Only RC1 documentation/status receipts added after these runs; product code hashes must still match before commit"
+  },
+  "review": {
+    "all_34_files_reviewed": true,
+    "blocking_findings": 0,
+    "product_fix_required": false,
+    "scope": "source/docs/receipts/media and surrounding permissions/fence/transaction checks; independent AI-assisted static review, not production certification"
+  },
+  "checks": [
+    {
+      "name": "core-backend-full",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/.playground/v216-rc1-20261115T170348Z/receipts/backend-full.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 709.792539167,
+      "completed_at": "2026-11-15T17:20:33.819159+00:00",
+      "log_sha256": "9503fdd25b6daedbcc04165fa415467cdde7985eecc845e8862c058804eb66bf"
+    },
+    {
+      "name": "real-bge",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_live_preflight.py",
+        "backend/tests/test_multiagent_integration.py",
+        "backend/tests/test_retrieval_ingest.py",
+        "-m",
+        "real_bge",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/.playground/v216-rc1-20261115T170348Z/receipts/real-bge.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 23.598427125,
+      "completed_at": "2026-11-15T17:13:48.130645+00:00",
+      "log_sha256": "2e7142422204607cda7e956d4c5c4d0c34f0d0d2bb7cdaf09c875b482b37308a"
+    },
+    {
+      "name": "frontend-full",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "cd frontend && npm run test && npm run typecheck && npm run lint && npm run build"
+      ],
+      "exit_code": 0,
+      "seconds": 8.744760875,
+      "completed_at": "2026-11-15T17:08:53.784847+00:00",
+      "log_sha256": "49b1ad753a0708da14aa94eeaba05ca29baaa721180fc5ac76ce190a621031ef"
+    },
+    {
+      "name": "playwright-full",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "cd frontend && npm run test:e2e"
+      ],
+      "exit_code": 0,
+      "seconds": 279.41727775,
+      "completed_at": "2026-11-15T17:13:25.667944+00:00",
+      "log_sha256": "4eaddc000f01e401308353f0132e99d8ae704a9453ee5dd6d319820a7eb89514"
+    },
+    {
+      "name": "core-static",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "python -m ruff check backend evals scripts && python -m ruff format --check backend evals scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.125905125,
+      "completed_at": "2026-11-15T17:13:25.783452+00:00",
+      "log_sha256": "7b02659b2cae820fc8a21fc1e86a4e2247b56e887f8601cd909a6240faf6077e"
+    },
+    {
+      "name": "video-decode-verification",
+      "argv": [
+        "node",
+        "/work/.playground/v216-rc1-20261115T170348Z/verify_video.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 1.538846875,
+      "completed_at": "2026-11-15T17:38:59.354262+00:00",
+      "log_sha256": "e19f8768befda4c93fe0ea5de29571e423a55f5ae9a25a5edf6c7d39b7d49458"
+    },
+    {
+      "name": "core-environment-boundary",
+      "argv": [
+        "python",
+        "-c",
+        "import os,importlib.util,json; assert importlib.util.find_spec(\"torch\") is None; assert importlib.util.find_spec(\"transformers\") is None; assert \"DEEPSEEK_API_KEY\" not in os.environ; print(json.dumps({\"CI_OFFLINE_CORE\":True,\"torch\":False,\"transformers\":False,\"DEEPSEEK_API_KEY_present\":False}))"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05918833400000001,
+      "completed_at": "2026-11-15T17:51:12.772808+00:00",
+      "log_sha256": "a9fb0f4811a29ccd9d34b47c688b404ec72561f3d1b4659104007d43e200dd05"
+    }
+  ],
+  "backend": {
+    "tests": 1617,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 14,
+    "passed": 1603,
+    "xml_sha256": "394d8a2991b0f67343c48d2eaa1f5cd69148e23abe457343184705e869f6c262",
+    "warnings": 3,
+    "pytest_seconds": 704.16,
+    "skip_reasons": {
+      "real_bge_separately_executed": 13,
+      "private_historical_original_unavailable": 1
+    },
+    "warning_source": "existing jieba regex SyntaxWarnings",
+    "core_packages_without_torch_or_transformers": true,
+    "real_provider_environment_key_present": false
+  },
+  "bge": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 13,
+    "xml_sha256": "b7c52357e6a50c794c0bd7727630a0d903d5153ec05cd3a39921aa884ba1eb13",
+    "deselected": 52,
+    "warnings": 3,
+    "model": {
+      "model_id": "BAAI/bge-small-zh-v1.5",
+      "revision": "7999e1d3359715c523056ef9478215996d62a620",
+      "dimension": 512,
+      "license": "MIT",
+      "source": "https://huggingface.co/BAAI/bge-small-zh-v1.5/tree/7999e1d3359715c523056ef9478215996d62a620",
+      "files": {
+        "config.json": {
+          "sha256": "3853a7979202c348751b753e36f579c41d8da7d36af617d3d907e1fc9b441f2a",
+          "size_bytes": 776
+        },
+        "model.safetensors": {
+          "sha256": "354763b9b1357bc9c44f62c6be2276321081ed2567773608c0d0785b61d5a026",
+          "size_bytes": 95827648
+        },
+        "special_tokens_map.json": {
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "size_bytes": 125
+        },
+        "tokenizer.json": {
+          "sha256": "48cea5d44424912a6fd1ea647bf4fe50b55ab8b1e5879c3275f80e339e8fae26",
+          "size_bytes": 439125
+        },
+        "tokenizer_config.json": {
+          "sha256": "e6f3b96db926a37d4039995fbf5ad17de158dfb8f6343d607e4dbaad18d75f5a",
+          "size_bytes": 367
+        },
+        "vocab.txt": {
+          "sha256": "45bbac6b341c319adc98a532532882e91a9cefc0329aa57bac9ae761c27b291c",
+          "size_bytes": 109540
+        }
+      },
+      "query_prefix": "为这个句子生成表示以用于检索相关文章：",
+      "document_prefix": "",
+      "pooling": "CLS",
+      "normalization": "L2",
+      "max_length": 512,
+      "device": "cpu",
+      "dtype": "float32"
+    },
+    "no_downloads": true,
+    "actual_512_cpu_and_sql_contract": true,
+    "provider": "MOCK"
+  },
+  "frontend": {
+    "vitest_files": 23,
+    "vitest_passed": 146,
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "production_build": "PASS",
+    "playwright": {
+      "startTime": "2026-11-15T17:08:46.624Z",
+      "duration": 278964.046,
+      "expected": 128,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "playwright_retries": 0,
+    "playwright_report_sha256": "7686782a43924bb28adcf04221fc8c10e2512e48a9a7611a5eff4c746214dc88"
+  },
+  "scenarios": [
+    {
+      "name": "V216-A-explicit-no-purchase-constraint-never-creates-approval-or-transaction",
+      "test_status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "reserved_total": 0,
+      "confirmations": [],
+      "checkpoint_rows": 12,
+      "sql_json_sha256": "974436c809cae34028014bb5f4a3b9ad61e97cfd6a6570684020765833ed3a6b",
+      "screenshot_sha256": "5fc1906d95cc24852b12652c042c55c7d85a84347b36192082d3a7dbb2341e56"
+    },
+    {
+      "name": "V216-A-recommendation-comparison-reads-real-retrieved-facts-and-count",
+      "test_status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "reserved_total": 0,
+      "confirmations": [],
+      "checkpoint_rows": 13,
+      "sql_json_sha256": "363c97b85fe9ea858d21be2ac3aa07b31cb9a00e0254b5b8fd840af065de32b2",
+      "screenshot_sha256": "22dfd76176238b4ef17c4b2658c6660989fe0563dceb389e8e2337006f09e471"
+    },
+    {
+      "name": "V216-A-safe-provider-failure-retains-UNKNOWN-instead-of-success-or-zero-usage",
+      "test_status": "passed",
+      "run_status": [
+        "PARTIAL"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "reserved_total": 0,
+      "confirmations": [],
+      "checkpoint_rows": 3,
+      "sql_json_sha256": "b5ff3bc327bf69a2bb57d495658061acd92165c2d8ab98ae75d64c9d830f5249",
+      "screenshot_sha256": "e7880e158e2447a0453e02e5351087fc7db129c033591cd3a7dc27ffe3d2a056"
+    },
+    {
+      "name": "V216-B-changed-catalogue-rejects-stale-approval-without-inventory-write",
+      "test_status": "passed",
+      "run_status": [
+        "PARTIAL"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": false
+        }
+      ],
+      "checkpoint_rows": 23,
+      "sql_json_sha256": "12e560d23e8652bbf7047a263e03ca955371d92b807b1f30c653755c2e38b502",
+      "screenshot_sha256": "fb76711c90a0449c2d27e389d2019d720f0851b6b6a354eb3ded1e9014fedfbc"
+    },
+    {
+      "name": "V216-B-manual-rejection-records-a-decision-with-no-order",
+      "test_status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "reject",
+          "consumed": false
+        }
+      ],
+      "checkpoint_rows": 23,
+      "sql_json_sha256": "e4ffe995fc53c192fa501bb5d17568e3c7a55b2d851aa78f647e269300b64800",
+      "screenshot_sha256": "f0e842e8df510ae2928fd9062334c8c4bc274021c7f2bba86a23a554fcc7b082"
+    },
+    {
+      "name": "V216-B-purchase-approval-response-loss-replay-refresh-and-SQL-agree",
+      "test_status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 1,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "reserved_total": 1,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        }
+      ],
+      "checkpoint_rows": 23,
+      "sql_json_sha256": "dbcd4edcf457d2b32450f4b7d9ad97591e0e08c1c520334b0fa2ed8494251bf8",
+      "screenshot_sha256": "ddaa29f23af81a89512195bddfb9d64db002c663def82eacad6bbc05c841459a"
+    },
+    {
+      "name": "V216-C-later-invalid-wire-response-preserves-committed-return-and-independent-receipt",
+      "test_status": "passed",
+      "run_status": [
+        "PARTIAL"
+      ],
+      "orders_total": 1,
+      "cases_total": 1,
+      "payments_total": 1,
+      "refunds_total": 0,
+      "reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        }
+      ],
+      "checkpoint_rows": 27,
+      "sql_json_sha256": "03e74e0fe9682ad2fbadead54b667eceb490948120a0560ff06a6d701ef08d60",
+      "screenshot_sha256": "e34d1fd33522ad3f95bed526e95c390e0e62958acefec1b3e1461fa32ecfb849"
+    },
+    {
+      "name": "V216-C-rejecting-return-cannot-authorize-replacement-checkout",
+      "test_status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 1,
+      "cases_total": 0,
+      "payments_total": 1,
+      "refunds_total": 0,
+      "reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "reject",
+          "consumed": false
+        },
+        {
+          "decision": "reject",
+          "consumed": false
+        }
+      ],
+      "checkpoint_rows": 42,
+      "sql_json_sha256": "cb849a9b7b0860e316e1fb5cc95300bcc8319315485554a9bae27350dfeee2df",
+      "screenshot_sha256": "fd1815b5c431a8ef51bac2953f4641d0f543fd88a602e3f36751864533bc2ab3"
+    },
+    {
+      "name": "V216-C-two-independent-HITL-approvals-create-one-case-and-one-replacement-order",
+      "test_status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 2,
+      "cases_total": 1,
+      "payments_total": 1,
+      "refunds_total": 0,
+      "reserved_total": 1,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        }
+      ],
+      "checkpoint_rows": 42,
+      "sql_json_sha256": "48792185f7bd7ac2dc8aab95d79b88dad09723cfdbd5d9f55e639048ce76bf3e",
+      "screenshot_sha256": "a90156b55090afc4862b454e31f5915b482db2efc3c49b1cb3380ddcf28fab25"
+    }
+  ],
+  "authorization_negative_tests_actual_passed": [
+    "test_resume_requires_current_identity_and_exact_confirmation[other_user-404]",
+    "test_resume_requires_current_identity_and_exact_confirmation[wrong_confirmation-409]",
+    "test_resume_requires_current_identity_and_exact_confirmation[old_interrupt-409]",
+    "test_resume_requires_current_identity_and_exact_confirmation[expired-409]",
+    "test_resume_requires_current_identity_and_exact_confirmation[disabled-401]",
+    "test_resume_requires_current_identity_and_exact_confirmation[store-404]",
+    "test_resume_requires_current_identity_and_exact_confirmation[mixed-422]",
+    "test_each_return_and_purchase_needs_own_confirmation_and_same_action_other_key"
+  ],
+  "recording": {
+    "state": "ACTUAL_MEDIA_VERIFIED_WITH_RECORDER_ADMIN_TIMEOUT",
+    "source_commit": "ae10b253819e08f468f18e60cf4c46b674b95a5c",
+    "source_tree": "4aeeca6743293f132811626007b5f9ba58774306",
+    "duration": 415,
+    "width": 1440,
+    "height": 1000,
+    "format": "WebM / VP9",
+    "fps": 25,
+    "audio": "NONE_SILENT_SCREEN_RECORDING",
+    "bytes": 45894328,
+    "sha256": "c2becdda2b5b33d467d3ff789a83af79d94ca1aa32d775a0bd3c90c5c70e45e1",
+    "decode_probes": [
+      {
+        "time": 45,
+        "readyState": 4,
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "time": 112,
+        "readyState": 4,
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "time": 127,
+        "readyState": 4,
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "time": 145,
+        "readyState": 4,
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "time": 170,
+        "readyState": 4,
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "time": 245,
+        "readyState": 4,
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "time": 414,
+        "readyState": 4,
+        "width": 1440,
+        "height": 1000
+      }
+    ],
+    "recorder_exit_code": 1,
+    "recorder_stop": "RECORDING_TIMEOUT after all business stages and expected safe-failure demonstration; no FINISHED flag synthesized",
+    "provider_requests": 0,
+    "real_key_reads": 0
+  },
+  "recording_sql": {
+    "classification": "OFFLINE_SYNTHETIC_OPERATOR",
+    "setup_baseline": {
+      "orders": 1,
+      "mock_payments": 1,
+      "setup_confirmations": 2
+    },
+    "actual_business_deltas": {
+      "A": {
+        "orders": 0,
+        "cases": 0
+      },
+      "B": {
+        "orders": 1,
+        "cases": 0,
+        "mock_payments": 0
+      },
+      "C": {
+        "orders": 1,
+        "cases": 1,
+        "mock_payments": 0,
+        "refunds": 0
+      }
+    },
+    "observations": {
+      "A": {
+        "orders": 1,
+        "cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 0,
+        "checkpoint_rows": 13,
+        "run_states": [
+          "COMPLETED"
+        ],
+        "provider_requests": 0,
+        "real_models": 0
+      },
+      "B": {
+        "orders": 2,
+        "cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 1,
+        "checkpoint_rows": 35,
+        "run_states": [
+          "COMPLETED",
+          "COMPLETED"
+        ],
+        "provider_requests": 0,
+        "real_models": 0
+      },
+      "after-return": {
+        "orders": 2,
+        "cases": 1,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 1,
+        "checkpoint_rows": 74,
+        "run_states": [
+          "COMPLETED",
+          "COMPLETED",
+          "WAITING_INPUT"
+        ],
+        "provider_requests": 0,
+        "real_models": 0
+      },
+      "C": {
+        "orders": 3,
+        "cases": 1,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 2,
+        "checkpoint_rows": 77,
+        "run_states": [
+          "COMPLETED",
+          "COMPLETED",
+          "COMPLETED"
+        ],
+        "provider_requests": 0,
+        "real_models": 0
+      },
+      "timeline": {
+        "orders": 3,
+        "cases": 1,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 2,
+        "checkpoint_rows": 77,
+        "run_states": [
+          "COMPLETED",
+          "COMPLETED",
+          "COMPLETED"
+        ],
+        "provider_requests": 0,
+        "real_models": 0
+      }
+    },
+    "independent_confirmations_consumed": 3,
+    "real_funds": 0
+  },
+  "intermediate_recording_results": [
+    {
+      "name": "product-recording",
+      "exit_code": 1,
+      "log_sha256": "fa318e3471f3efb4b256840c55f303b16e62806a140c7214ae5663fcca8c3b73"
+    },
+    {
+      "name": "product-recording-2",
+      "exit_code": 1,
+      "log_sha256": "17f6465450a138a1b6fc3d10f5971827d4ec9e0406035175c9cbd72dfb1a4163"
+    },
+    {
+      "name": "product-recording-3",
+      "exit_code": 1,
+      "log_sha256": "35fc59147b434e5d603f7f74802357d7f604a915e814a2093feb9e3fc5c6164a"
+    },
+    {
+      "name": "product-recording-4",
+      "exit_code": 1,
+      "log_sha256": "f52ed93d906236e79d26ae18640f7a2f69ea347e892b52f6d2b205d0a639e5d3"
+    },
+    {
+      "name": "video-inspection",
+      "exit_code": 234,
+      "log_sha256": "a3df0f4f2e629b1ceda891ad44a73ea30805678dffd0fa782129fd7daee1e543"
+    }
+  ],
+  "recording_limits": "Raw silent 6m55s video is real and independently decoded; recorder exit1 timeout after all required business phases; no normal FINISHED receipt invented; long final static scene, no narration/editing",
+  "remote": {
+    "main_verified": "d18161d1eb40667f4658e745d2f58369767d67f5",
+    "branch": "codex/v216-product-demo-reliability",
+    "branch_at_initial_admission": "ABSENT",
+    "readonly_source": "GitHub connector commit+branch reads; CLI ls-remote failed HTTP2 framing without any push",
+    "push_ci": "NOT_RUN",
+    "pr_ci": "NOT_RUN",
+    "PR": "NOT_CREATED",
+    "github_writes": 0
+  },
+  "history": {
+    "L8": {
+      "PASS": 1,
+      "FAIL": 4,
+      "NOT_SCORED": 3,
+      "NOT_RUN": 7,
+      "scored_denominator": 5
+    },
+    "episode08_ledger": "UNKNOWN",
+    "episode08_actual_cost": "UNKNOWN",
+    "E1": "ORACLE_CONTRACT_MISMATCH",
+    "independent_holdout_count": 0,
+    "old09_15_not_used": true
+  },
+  "boundaries": {
+    "real_provider_requests": 0,
+    "real_key_reads": 0,
+    "actual_cost_cny": 0,
+    "real_payments": 0,
+    "real_refunds": 0,
+    "release": "ON_HOLD",
+    "RELEASE_COMMIT": "UNBOUND",
+    "remote_model_reliability": "NOT_TESTED"
+  },
+  "resource_cleanup": {
+    "state": "RESOURCE_CLEANUP_COMPLETED",
+    "containers_removed_verified": 3,
+    "volumes_removed_verified": 5,
+    "receipt_sha256": "3a0800864116ea4fdc1c191c292d00f9afaff941de5f7ef9befb7e9c4b76a5e4",
+    "historical_container_metadata_unchanged": true,
+    "historical_volume_names_unchanged": true,
+    "original_local_config_restored": true,
+    "temporary_synthetic_credentials_removed": true
+  },
+  "quality_audit": {
+    "relative_links_checked": 175,
+    "errors": [],
+    "privacy_findings": [],
+    "product_tests_oracles_history_dependencies_ci_unchanged": true,
+    "exit_code": 0,
+    "receipt_sha256": "23fa2e27ad5f3d8589e9427529dfd1d95e9ba0764e0ba3a9d1b8a9b6a399869a"
+  },
+  "rc1_documentation_only_delta": [
+    "README.md",
+    "docs/DEMO_GUIDE.md",
+    "docs/ENGINEERING_CASES.md",
+    "docs/INTERVIEW_TALKING_POINTS.md",
+    "docs/KNOWN_LIMITATIONS.md",
+    "docs/V216_RC1_REVIEW.md",
+    "docs/evidence/v216-rc1/verification.json"
+  ]
+}

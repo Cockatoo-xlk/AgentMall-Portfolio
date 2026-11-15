@@ -32,3 +32,10 @@
 用[5–7分钟讲解](DEMO_GUIDE.md)展示三条业务路径，再打开[批次重复派发修复](ENGINEERING_CASES.md#同批次重复-handoff-绕过已存在的防重复检查)：两个不同任务ID为何仍是同一个业务读取、为什么要在整批派发前检查、如何用不同订单的正向控制防止过度拦截。用SQL、确认消费及持久化事件证明结果，不只展示聊天答复。
 
 说明本轮 UI/E2E 是真实后端加 SDK MockTransport / Fixture Embedding；真实 BGE 专项单独验证固定六文件和512维CPU推理。没有新真实模型结果，不能宣称 Multi-Agent 可靠性提升了某个百分比。L8只有5题评分、1通过，另3题未评分、7题未运行，独立Holdout0；本轮不改变这些成绩。
+
+
+## RC1 面试材料使用
+
+[RC1证据](V216_RC1_REVIEW.md)为本轮新跑的Backend1603/14skip、真实BGE13、Vitest146和Playwright128/0重试，不借用V2.15远程CI。可播放本地6:55静音原始录屏，按[时间码](DEMO_GUIDE.md#rc1-实际录屏)补充口头讲解；声明其无旁白、末段静态较长、录制器收尾超时，不能称精剪视频或真实DeepSeek实况。面试优先展示两次不同Proposal/Confirmation、Case与新订单的SQL增量，再解释模型失败与已提交事务为何可以同时存在。
+
+产品代码在RC1未改；真实模型可靠性仍NOT_TESTED。先通过后续经授权的Push/PR各自CI，再由Owner单独决定合并，不把候选或CI成功说成Release。

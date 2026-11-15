@@ -2,7 +2,23 @@
 
 展示目标是“自然语言建议 → 可信提案 → 用户独立确认 → 唯一待支付订单 → 读回原工作流”。**SDK MockTransport / Fixture Embedding / 合成数据 / TEST_OPERATOR**；FastAPI、PostgreSQL、业务事务与官方Checkpoint真实运行。没有真实付款、退款、Provider请求或部署。
 
-V2.16 的三条 SDK MockTransport 浏览器业务链已通过本轮 [9项产品场景](../frontend/tests/product-demo.spec.ts)，分别独立核对 SQL；[当前回执](evidence/v216/verification.json)与 V2.15 基线 CI 分开。以下是可手动复现的讲解脚本，自动化点击属于明确的合成 TEST_OPERATOR 操作，不是实际人类测试研究。V2.14 Release仍 **ON_HOLD**，V2.15已合并但未发布，V2.16仅本地候选；**VIDEO_NOT_RECORDED**。
+V2.16 的三条 SDK MockTransport 浏览器业务链已通过本轮 [9项产品场景](../frontend/tests/product-demo.spec.ts)，分别独立核对 SQL；[当前回执](evidence/v216/verification.json)与 V2.15 基线 CI 分开。以下是可手动复现的讲解脚本，自动化点击属于明确的合成 TEST_OPERATOR 操作，不是实际人类测试研究。V2.14 Release仍 **ON_HOLD**，V2.15已合并但未发布，V2.16仅候选；V2.16初次交付时为**VIDEO_NOT_RECORDED**。RC1另有真实6:55静音原始录屏，详见下方来源和限制，不把录制器失败回执改为成功。
+
+## RC1 实际录屏
+
+本地原件 `agentmall-v216-rc1-offline-demo.webm`，SHA256 `c2becdda2b5b33d467d3ff789a83af79d94ca1aa32d775a0bd3c90c5c70e45e1`；源码 `ae10b253819e08f468f18e60cf4c46b674b95a5c`。原件未提交Git或上传外部服务，来源与新回归见[RC1回执](V216_RC1_REVIEW.md)。
+
+| 原始时间 | 实际画面与讲解提示 |
+|---|---|
+| 0:00–0:30 | 合成账号登录、新Single Thread；说明真实FastAPI/PG与Mock模型的边界 |
+| 0:30–1:47 | 三款候选、400元预算、无线/静音事实快照与独立商品读回 |
+| 1:47–2:02 | 审阅399元、一件、演示宿舍Proposal，明确批准；新订单与刷新重登 |
+| 2:02–2:15 | 新Multi Thread，检查质量退货资格和第一份RETURN_REQUEST |
+| 2:15–2:28 | Case提交后单独审阅CHECKOUT，再次批准；两份确认不可替代 |
+| 2:28–3:51 | 实际Run时间线与已提交业务状态；独立SQL证据在回执中 |
+| 3:51–6:55 | 缺失Usage模拟响应安全停止，保留UNKNOWN；此后静态等待较长 |
+
+这是**未剪辑、无旁白的原始浏览器录屏**，不声称已完成精剪面试视频。末段等待结束指令触发录制器自身415秒时限，原退出码为1；全部业务阶段及SQL事实已在此之前导出，媒体另行检查时长、分辨率和7个时间点解码。不要将录制器NORMAL_FINISHED当作已满足。固定字幕条只注明 `OFFLINE DEMO / SDK MOCK MODEL / REAL BUSINESS API / REAL POSTGRESQL`，没有替换页面业务状态。原始视频时间不代表真实模型延迟。按下方5–7分钟稿可另行现场讲解，长静态尾段可跳过。
 
 ## 演示前准备（不计入6分钟）
 
