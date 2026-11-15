@@ -28,6 +28,12 @@ def recommendation_revoked(text):
     return bool(actions) and all(not affirmative(text, action.start()) for action in actions)
 
 
+def comparison_revoked(text):
+    """Explicitly cancelled comparison, independent of a continuing recommendation."""
+    actions = list(re.finditer(r"比较|对比|对照", text))
+    return bool(actions) and all(not affirmative(text, action.start()) for action in actions)
+
+
 @dataclass(frozen=True)
 class ConnectionChoice:
     connection: str | None = None

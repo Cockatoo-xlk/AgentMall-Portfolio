@@ -7,6 +7,7 @@ from uuid import UUID
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send, interrupt
 
+from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import HandoffEnvelope, SpecialistResult
 from agentmall.agents.durable_budget import node_key
 from agentmall.agents.resume import execute_confirmation
@@ -37,7 +38,11 @@ class DurableState(TypedDict, total=False):
 def apply_legacy_clarification(runtime, message):
     """Supplement one trusted unfinished Run; never parse two turns as one action batch."""
     from agentmall.agents.context import Constraints, scoped_purchase_quantity, user_constraints
-    from agentmall.agents.product_preferences import connection_choice, recommendation_revoked
+    from agentmall.agents.product_preferences import (
+        comparison_revoked,
+        connection_choice,
+        recommendation_revoked,
+    )
     from agentmall.agents.purchase_intent import purchase_intent
     from agentmall.agents.request_intents import return_intent, support_intent
 
@@ -78,7 +83,10 @@ def apply_legacy_clarification(runtime, message):
         update = current.get("recommendation", {})
         if update.get("count") is not None:
             requirement["count"] = update["count"]
-        requirement["compare_connections"] |= update.get("compare_connections", False)
+        requirement["compare_connections"] = not comparison_revoked(message) and (
+            requirement.get("compare_connections", False)
+            or update.get("compare_connections", False)
+        )
         merged["recommendation"] = requirement
     runtime.constraints = Constraints.model_validate(merged)
     # state.user_goal retains the original goal; reconstructed runtimes consume
@@ -174,7 +182,16 @@ def build_durable_graph(base, saver, store):
         return {"next": "single" if runtime.single else "supervisor"}
 
     async def supervisor(runtime, state):
-        plan = await choose_plan(runtime, state.get("user_goal"), durable=True)
+        try:
+            plan = await choose_plan(runtime, state.get("user_goal"), durable=True)
+        except RunStopped as exc:
+            if exc.code != "MODEL_RESPONSE_INVALID":
+                raise
+            # Journal this terminal observation under the existing node fence.
+            # An accepted Resume is then complete even though its result is partial.
+            if exc.code not in runtime.errors:
+                runtime.errors.append(exc.code)
+            return {"dispatch": [], "pending_action": None, "next": "done"}
         envelopes = await runtime.validate_tasks(plan.tasks) if plan.tasks else []
         # A validated model finish still reconciles domain receipts and checks HITL.
         # With nothing pending, avoid two empty administrative graph nodes. No

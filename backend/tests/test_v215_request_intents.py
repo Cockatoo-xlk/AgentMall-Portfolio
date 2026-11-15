@@ -339,3 +339,56 @@ def test_quantity_range_detection_ignores_an_observed_product_uuid():
     from agentmall.agents.request_intents import purchase_quantity
 
     assert purchase_quantity("帮我买一件商品10000000-0000-4000-8000-000000000123，送演示家庭") == 1
+
+
+@pytest.mark.parametrize(
+    "name,action", [("return_intent", "申请退货"), ("support_intent", "联系人工")]
+)
+@pytest.mark.parametrize(
+    "reference",
+    [
+        "昨天的订单",
+        "上次的商品",
+        "已经送达的订单",
+        "昨天的音箱",
+        "上次的保温杯",
+        "之前的其他任意名词",
+        "已经送达的测试器具",
+    ],
+)
+def test_current_revocation_of_a_historical_product_is_not_a_reported_action(
+    name, action, reference
+):
+    from agentmall.agents import request_intents
+
+    assert getattr(request_intents, name)(reference + "不要" + action) is False
+
+
+@pytest.mark.parametrize(
+    "name,action", [("return_intent", "申请退货"), ("support_intent", "联系人工")]
+)
+@pytest.mark.parametrize(
+    "prefix",
+    ["昨天我不要", "昨天的我不要", "昨天客服说订单不要", "说明里写着“昨天的订单不要"],
+)
+def test_reported_negative_actions_are_not_current_revocations(name, action, prefix):
+    from agentmall.agents import request_intents
+
+    assert getattr(request_intents, name)(prefix + action) is None
+
+
+@pytest.mark.parametrize("quantity", ["1.5", "-3", "+3", "1/2", "1e3", "1e-3", ".5"])
+def test_invalid_numeric_expressions_cannot_supply_a_quantity_suffix(quantity):
+    from uuid import uuid4
+
+    from agentmall.agents.context import MultiRequest, user_constraints
+
+    with pytest.raises(DomainError) as exc:
+        user_constraints(
+            MultiRequest(
+                request_id=uuid4(),
+                thread_id=uuid4(),
+                message=f"准备购买{quantity}只合成鼠标，送演示家庭",
+            )
+        )
+    assert exc.value.code == "CONTEXT_CLARIFICATION_REQUIRED"

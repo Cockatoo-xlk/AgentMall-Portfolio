@@ -41,7 +41,12 @@ SUPPORT_ACTION = re.compile(
 )
 NUMBER = r"[0-9零〇一二两三四五六七八九十百]+"
 COUNT = re.compile(
-    r"(?<![第0-9零〇一二两三四五六七八九十百])(" + NUMBER + r")\s*(件|只|个|台|把|副|套|支|份)"
+    r"(?<![第0-9零〇一二两三四五六七八九十百])"
+    r"((?:[+＋\-−－.．]\s*)?"
+    + NUMBER
+    + r"(?:\s*[.．/／eE]\s*(?:[+＋\-−－]\s*)?"
+    + NUMBER
+    + r")*)\s*(件|只|个|台|把|副|套|支|份)"
 )
 RANGE = re.compile(NUMBER + r"\s*(?:到|至|[-~～])\s*" + NUMBER)
 
@@ -57,13 +62,30 @@ def action_scope(message, start):
 
 def action_decision(clause, before, *, scope=""):
     """Classify the local action's scope; an informational topic grants nothing."""
+    denial = NEGATIVE.search(before)
     if REPORTED.search(before):
-        return None
+        # A past product reference can precede a current revocation. Reported
+        # speech and past actions still cannot change this Run's authorization.
+        reference = before[: denial.start()].strip() if denial else ""
+        if not (
+            denial
+            and re.fullmatch(
+                r"(?:(?:我|本人)的?)?(?:昨天|之前|上次|已经|已)"
+                r"[^，。；,;\n]{0,40}"
+                r"(?:的(?!(?:我|我自己|本人|我们|你|你们)$)[^，。；,;\n]{1,40}|订单|商品)",
+                reference,
+            )
+            and not re.search(
+                r"说|告诉|表示|记录|说明|提到|写着|例如|比如|[‘“\"「]|(?<!其)" + THIRD_PARTY,
+                reference,
+            )
+        ):
+            return None
     if INDIRECT.search(before):
         clarification("间接动作的请求主体不明确，请说明本人的当前决定")
     if re.search(r"(?:不要|禁止|不允许|不准).*(?:让|叫|要求)(?:助手|别人|他人|模型)", before):
         clarification("间接动作的否定作用域不明确，请单独说明决定")
-    if NEGATIVE.search(before):
+    if denial:
         return False
     if CONDITION.search(clause) or CONDITION.search(scope):
         clarification("动作条件或作用域尚未明确，请单独说明当前决定")

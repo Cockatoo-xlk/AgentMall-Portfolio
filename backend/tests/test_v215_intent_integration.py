@@ -296,6 +296,32 @@ async def test_same_run_explicit_recommendation_revocation_removes_the_read_requ
     assert "recommendation" not in binding["constraints"]
 
 
+@pytest.mark.parametrize(
+    "field,action", [("return_requested", "申请退货"), ("support_requested", "联系人工")]
+)
+async def test_historical_order_reference_does_not_restore_revoked_run_permission(
+    clarification_state, field, action
+):
+    run = clarification_state(**{field: True})
+    binding = await accept_clarification(None, None, run, "昨天的订单不要" + action)
+    assert binding["constraints"][field] is False
+    if field == "support_requested":
+        assert binding["constraints"]["support_declined"] is True
+
+
+@pytest.mark.parametrize("action", ["比较", "对比", "对照"])
+async def test_cancelling_only_comparison_keeps_the_current_recommendation_count(
+    clarification_state, action
+):
+    run = clarification_state(recommendation={"count": 3, "compare_connections": True})
+    binding = await accept_clarification(None, None, run, f"不要{action}了，只推荐三款无线键盘")
+    assert binding["constraints"]["recommendation"] == {
+        "count": 3,
+        "compare_connections": False,
+    }
+    assert binding["constraints"]["product_needs"]["connection"] == "无线"
+
+
 async def test_a_later_new_run_does_not_inherit_the_previous_runs_recommendation(
     clarification_state,
 ):

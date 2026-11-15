@@ -4,6 +4,9 @@ import os
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from decimal import Decimal
+from json import JSONDecodeError
+
+import httpx
 
 MODEL_ID = "deepseek-flash"
 DOCUMENTED_REVISION = "DeepSeek-V4.1-Flash-1017"
@@ -95,6 +98,20 @@ def deepseek_model(key, *, http_client=None, http_async_client=None):
     from langchain_deepseek import ChatDeepSeek
 
     class CheckedToolWireDeepSeek(ChatDeepSeek):
+        async def _agenerate(self, messages, stop=None, run_manager=None, **kwargs):
+            try:
+                return await super()._agenerate(messages, stop, run_manager, **kwargs)
+            except JSONDecodeError as exc:
+                # OpenAI parses the HTTP body before _create_chat_result. LangChain
+                # attaches this response only after raw_response.parse() fails.
+                # Request/transport errors and HTTP failures retain their own paths.
+                response = getattr(exc, "response", None)
+                if isinstance(response, httpx.Response) and response.is_success:
+                    from agentmall.infra.model_diagnostics import parsing_failed
+
+                    parsing_failed("SDK_RESPONSE_PARSE")
+                raise
+
         def _get_request_payload(self, input_, *, stop=None, **kwargs):
             from agentmall.infra.model_diagnostics import observe_request, parsing_failed
 

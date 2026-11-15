@@ -59,9 +59,10 @@ flowchart LR
 
 | 证据 | 当前可表述状态 |
 |---|---|
-| V2.15 产品修复 / 自动回归 | **已实现 / LOCAL_OFFLINE_VERIFIED**；后端1534 passed / 14 skipped；Vitest132；Playwright119 / 0 retries；[回执](docs/evidence/v215/verification.json) |
+| V2.15 产品修复 / 自动回归 | **已实现 / LOCAL_OFFLINE_VERIFIED**；RC1后端1591 passed / 14 skipped / 3 warnings；Vitest132；Playwright119 / 0 retries；[RC1回执](docs/evidence/v215-rc1/verification.json) |
+| RC1真实BGE专项 | **13 passed / 0 skipped**；固定六文件、CPU512维、Mock Provider；[审核与边界](docs/V215_RC1_REVIEW.md) |
 | V2.15 真实 Provider / 新 L8 Episode | **NOT_RUN**；本轮不调用、不续评 |
-| V2.15 远程 CI / Push / PR / Release / 部署 | **NOT_RUN / NOT_PUBLISHED**；当前仅本地工作 |
+| V2.15 远程 CI / Push / PR / Release / 部署 | 本地回执不含GitHub结论；须按准确SHA另核自动CI与PR。Release/部署 **NOT_PUBLISHED** |
 | 历史 L8，自建前瞻性15题 | 启动8、评分5：PASS1 / FAIL4 / NOT_SCORED3 / NOT_RUN7；已评分成功率 **1/5 = 20%**，95% Wilson **3.62%–62.45%** |
 | 评测性质 / 费用 | `PROSPECTIVE_SELF_AUTHORED`，独立 Holdout **0**；总29次HTTP=28 SETTLED+1 UNKNOWN，完整实费 **UNKNOWN** |
 

@@ -110,9 +110,9 @@ D3D曾运行冻结解析器的26项MockTransport原生回归，证明拒绝、�
 
 新诊断的model_request_id是本地每调用UUID，tools Schema与SDK对象响应只保留规范JSON哈希；response_body_sha256不是原HTTP字节哈希，provider_response_id是body.id而非HTTP header request-id。OBSERVED_VALID只表示用量数字自洽，本地output_budget_state不表示供应商结算。旧single_agent.Guard不在捕获范围；这些未来观测能力不补写08号历史原件。[字段定义](ARCHITECTURE.md#正式run模型诊断的证据边界)。
 
-V2.15结果独立记录：
+以下为初次本地候选f017880的V2.15验证快照；后续[RC1修复与真实BGE专项](V215_RC1_REVIEW.md)另行绑定源码与回执，不能覆盖L8历史：
 
-| V2.15验证 | 当前状态 |
+| 初次V2.15本地验证 | 原快照状态 |
 |---|---|
 | 新合成意图/推荐/状态/诊断/工作流回归 | **LOCAL_OFFLINE_VERIFIED** |
 | 后端完整回归、静态检查 | **1534 passed / 14 skipped / 0 failed / 0 errors / 0 warnings**；Ruff与format通过 |

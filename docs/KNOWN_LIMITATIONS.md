@@ -7,7 +7,7 @@
 | 真实模型可靠性 | L8自建前瞻性15题仅启动8、评分5，PASS1/FAIL4/未评分3/未运行7；独立Holdout0。不能称完整15题通过率、独立盲测或生产成功率 | [完整结果](EVALUATION_RESULTS.md)、[脱敏JSON](evidence/v215/l8-summary.json) |
 | 08号事故 | 原参数、原始响应、实际请求Schema/hash、response hash和Provider request-id缺失；根因INSUFFICIENT_EVIDENCE | [事故分层](EVALUATION_RESULTS.md#08号事故拒绝阶段已知责任未知) |
 | 费用与用量 | 29HTTP中28SETTLED、1UNKNOWN；完整结算用量与实费UNKNOWN。新增Host观察不能结算原账本，CNY2.113536预留保留 | [费用层级](EVALUATION_RESULTS.md#用量预留与费用分层) |
-| 自然语言解析 | 支持有界语义与保守澄清，不能保证任意表达。比较、量词、条件/否定范围已有新实现及合成回归，本轮合成回归通过，见[回执](evidence/v215/verification.json)；不应把歧义解释为授权 | [工程案例](ENGINEERING_CASES.md)、[当前意图](../backend/src/agentmall/agents/context.py) |
+| 自然语言解析 | 支持有界语义与保守澄清，不能保证任意表达。比较、量词、条件/否定范围已有新实现及合成回归，本轮合成回归通过，见[RC1回执](evidence/v215-rc1/verification.json)；不应把歧义解释为授权 | [工程案例](ENGINEERING_CASES.md)、[当前意图](../backend/src/agentmall/agents/context.py) |
 | 推荐完成检查 | 款数/连接比较的短缺检查只用于推荐只读场景；purchase、return、bundle目标沿用各自原完成语义 | [偏好/短缺实现](../backend/src/agentmall/agents/product_preferences.py)、[推荐回归](../backend/tests/test_v215_recommendations.py) |
 | 正式Run诊断 | model_request_id为本地UUID；Schema/响应为规范JSON哈希，非原wire字节；provider_response_id取body.id而非HTTP header request-id。OBSERVED_VALID只表示数字自洽，output_budget_state仅本地预算，均非账单。旧single_agent.Guard不在捕获范围 | [字段边界](ARCHITECTURE.md#正式run模型诊断的证据边界)、[诊断回归](../backend/tests/test_v215_model_diagnostics.py) |
 | 交易与HITL | 只能确认被审阅的具体提案；购买批准不含付款/退款批准。Case REQUESTED不等于退款成功 | [动作服务](../backend/src/agentmall/actions/service.py)、[售后服务](../backend/src/agentmall/aftersales/service.py) |
@@ -19,7 +19,7 @@
 | 规模与部署 | 没有生产部署、真实用户规模、QPS、SLA、真实付款或退款证明；公开合成配置不能作为公网认证 | [项目说明](../README.md)、[架构](ARCHITECTURE.md) |
 | 统计与版本 | 历史离线CI、真实本地BGE、Mock、不同Live会话分别绑定原SHA，不能相加或当V2.15结果。模型别名也不是不可变权重身份 | [历史结果](RESULTS.md)、[L8身份](EVALUATION_RESULTS.md#身份与公开投影) |
 | 旧E1错误契约 | **ORACLE_CONTRACT_MISMATCH**仍未解决：Native的TOOL_NOT_DECLARED/SPECIALIST_FAILED与正式SDK的INVALID_TOOL_BATCH属于不同校验路径，未放行未知工具或修改原Oracle | [既有运行时修复](../backend/tests/test_l8_r4_original_oracle.py)、[批次硬拒绝](../backend/src/agentmall/agents/model_control.py) |
-| 发布身份 | V2.14仍ON_HOLD，V2.15仅本地工程候选，**RELEASE_COMMIT=UNBOUND**；本轮无远程CI、Tag、Release或部署 | [本轮验收](V215_RELIABILITY_ENGINEERING.md) |
+| 发布身份 | V2.14仍ON_HOLD，V2.15仅本地工程候选，**RELEASE_COMMIT=UNBOUND**；本地回归与GitHub CI须分别核验；无Tag、Release或部署 | [本轮验收](V215_RELIABILITY_ENGINEERING.md) |
 
 ## 历史失败仍保留
 

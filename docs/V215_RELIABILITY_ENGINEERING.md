@@ -1,5 +1,7 @@
 # V2.15 可靠性工程验收
 
+本文为初次本地候选 `f017880dec3b644b133a6adbae114c63ea0cf589` 的工程验收快照，原统计和JSON回执保持不变。后续RC1复核、最小修复及真实BGE结果见[RC1审核](V215_RC1_REVIEW.md)。
+
 本轮只改进正式产品与离线回归，不继续修补L8私有执行器、不重跑历史任务。基线为 `71970c88d8827d22cd5626de20317a89d389bafc`，基线tree为 `50921e7431437e0603f6b59487dbbf6cf6e80ec6`。本地分支 `codex/v215-reliability-engineering`；提交身份由最终本地回执记录。V2.14 Release保持ON_HOLD，V2.15未发布。
 
 ## 已确认问题与修复

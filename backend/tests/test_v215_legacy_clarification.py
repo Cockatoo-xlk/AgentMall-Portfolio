@@ -81,6 +81,19 @@ def test_legacy_clarification_can_supply_units_without_repeating_the_purchase_ac
     assert r.constraints.address_label == "demo_home"
 
 
+def test_legacy_clarification_can_cancel_comparison_without_cancelling_recommendations():
+    from agentmall.agents.durable_graph import apply_legacy_clarification
+
+    r = runtime(
+        "比较并推荐三款键盘",
+        recommendation={"count": 3, "compare_connections": True},
+    )
+    apply_legacy_clarification(r, "不要比较了，只推荐三款无线键盘")
+    assert r.constraints.recommendation.count == 3
+    assert r.constraints.recommendation.compare_connections is False
+    assert r.constraints.product_needs.connection == "无线"
+
+
 def test_current_multiple_purchase_actions_are_still_rejected():
     with pytest.raises(DomainError) as exc:
         user_constraints(

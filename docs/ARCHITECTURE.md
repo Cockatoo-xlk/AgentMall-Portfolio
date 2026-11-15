@@ -1,6 +1,6 @@
 # 架构：模型建议、持久执行、领域事务
 
-当前 V2.15 在 `main 71970c88d8827d22cd5626de20317a89d389bafc` / tree `50921e7431437e0603f6b59487dbbf6cf6e80ec6` 上做本地可靠性改进。产品改进已实现，验证汇总 **LOCAL_OFFLINE_VERIFIED**，真实 Provider、新 L8 Episode、远程 CI 均未在本轮运行。V2.14 Release **ON_HOLD**，V2.15 未发布。历史源码与验证身份见[历史结果](RESULTS.md)，L8结果见[评测报告](EVALUATION_RESULTS.md)。
+当前 V2.15 在 `main 71970c88d8827d22cd5626de20317a89d389bafc` / tree `50921e7431437e0603f6b59487dbbf6cf6e80ec6` 上做本地可靠性改进。产品改进已实现，验证汇总 **LOCAL_OFFLINE_VERIFIED**，真实 Provider和新 L8 Episode未在本轮运行；本地与远程CI证据分别核验，后续RC1结果见[RC1审核](V215_RC1_REVIEW.md)。V2.14 Release **ON_HOLD**，V2.15 未发布。历史源码与验证身份见[历史结果](RESULTS.md)，L8结果见[评测报告](EVALUATION_RESULTS.md)。
 
 ## 两条执行路径与一个业务边界
 

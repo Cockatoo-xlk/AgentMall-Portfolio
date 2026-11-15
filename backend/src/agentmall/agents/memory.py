@@ -10,7 +10,11 @@ from sqlalchemy import select
 from agentmall.actions.service import database_now, payload_hash
 from agentmall.agents.context import Constraints, MultiRequest, user_constraints
 from agentmall.agents.models import CandidateSet, ContextMutation, ThreadContext
-from agentmall.agents.product_preferences import connection_choice, recommendation_revoked
+from agentmall.agents.product_preferences import (
+    comparison_revoked,
+    connection_choice,
+    recommendation_revoked,
+)
 from agentmall.agents.purchase_intent import ORDINAL, purchase_intent
 from agentmall.catalog import service as catalog
 from agentmall.catalog.categories import categories_in_text
@@ -453,9 +457,10 @@ async def accept_clarification(session, actor, run, message):
         current = constraints.get("recommendation") or {}
         if current.get("count") is not None:
             requirement["count"] = current["count"]
-        requirement["compare_connections"] = requirement.get(
-            "compare_connections", False
-        ) or current.get("compare_connections", False)
+        requirement["compare_connections"] = not comparison_revoked(message) and (
+            requirement.get("compare_connections", False)
+            or current.get("compare_connections", False)
+        )
         constraints["recommendation"] = requirement
     if intent.requested is None and active["purchase_requested"]:
         quantity = scoped_purchase_quantity(message, supplemental=True)
