@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "status": "V215_LOCAL_OFFLINE_VERIFIED",
+  "recorded_at": "2026-11-15T09:46:22.534794+00:00",
+  "source": {
+    "base_sha": "71970c88d8827d22cd5626de20317a89d389bafc",
+    "files": {
+      "backend/src/agentmall/agents/context.py": "193810097f08f1f5d26094835aa5e6b9f8ec23e96460897334a74f1f1ff7cd8f",
+      "backend/src/agentmall/agents/durable_graph.py": "22c2b6a37dbb2295a7c3a4e6e776fd7d10a7c2e47990ed7224699913e1c6f465",
+      "backend/src/agentmall/agents/goal_receipts.py": "271faf63ec7f99535a95c2428258051d487773f3c38da8da61e742697d2348a2",
+      "backend/src/agentmall/agents/graph.py": "4eba9fe746ab4f067135436791ed5f606b3423d8bf8f7f28bbf49c76b9cdc36e",
+      "backend/src/agentmall/agents/memory.py": "109db8123635660537e6da75e246a656306c5bffcdd16b891aaa4d0736fd34b7",
+      "backend/src/agentmall/agents/model_control.py": "1393986087a57d47a42d56f413dcb0be2e84d2fb3935acd14b366ef1a801553e",
+      "backend/src/agentmall/agents/product_preferences.py": "d5f9ae2cb67266f8aa95f30b0a5fb7a5a9178c0624096c396722f29b52873773",
+      "backend/src/agentmall/agents/purchase_intent.py": "1c489b79479dde420b89ac29cf2b6e357c3481fa5353f79e1f936d1b2496c2e6",
+      "backend/src/agentmall/agents/request_intents.py": "dd4ec64a7f7ae0123dbf3f142af247b70c68b76c743b252d1b7b56ae581bb068",
+      "backend/src/agentmall/agents/specialists/runner.py": "9bcd5584e84fafc11a02c5a96438963e7ca3006f38c29a53a78b65d240744c72",
+      "backend/src/agentmall/agents/supervisor.py": "5c09afb788e99fb35d82091c75f17c4a81469575a63eed5b0284ae899a002e5c",
+      "backend/src/agentmall/infra/llm.py": "cc5a8a57414651e699dc269f275ccefb14503aed7903d7521a259be9c61d5809",
+      "backend/src/agentmall/infra/model_diagnostics.py": "5eb959bf4ce1404d2af434b24e20f57dcf982a1cb73b12d0ac8573c3a14eaa14",
+      "backend/src/agentmall/infra/observability.py": "d2107f38491c59328b07d9290cde4e8340affe95b6f7963c533e9924f48aebcc",
+      "backend/tests/test_baseline_fairness.py": "bb5b66c2aa4a28d2a4ab49692c244d5137dfddb7fd4ba75c45bbd77796406866",
+      "backend/tests/test_v213_l2_sdk.py": "fb5442808549a3d1db41ded45cebcfeec6e3a047bf27bb20a93700534c140fc0",
+      "backend/tests/test_v215_failure_feedback.py": "1825f9ddb3b9ea52073b28769a44df4162fe7300ec39b9d99e238e50a43275a1",
+      "backend/tests/test_v215_goal_receipts.py": "6a8d68ac8d2c72a79e87e7a50cb50a1cb4987efd39a56ec3b2214012152292c8",
+      "backend/tests/test_v215_intent_integration.py": "8d8c1983cca90a6cbab1906575f7e1224908dda872ce022dbe311b6010bfe81c",
+      "backend/tests/test_v215_legacy_clarification.py": "6554e436558e67d581ec19fbc0dec2d5e950b1c01c5011a0c97935103134977b",
+      "backend/tests/test_v215_model_diagnostics.py": "519f39d488ab761e196c61a6551c6589eeb63b88e68e845fb85c6b3e4dd4473a",
+      "backend/tests/test_v215_recommendations.py": "2ff37bceb7b6de4a69af0e10fae3e8652fdb7bb923d13d915e232d9e2e253afc",
+      "backend/tests/test_v215_request_intents.py": "8c17dfd617c763458fde5bdd8d59b05484e1117244bcdca9644429f06f9845ba",
+      "backend/tests/test_v215_workflow.py": "80d31ab6a3083fddcae2d78711ff3747f69c5d72018b1ac116c7c3a86289bdaa",
+      "backend/tests/test_v2_intent_routing.py": "8cce4df7690872ce349781c959d3beef28277590dc9f2b9d0467f3ab83428c0f",
+      "frontend/src/api/runFailure.test.ts": "7e9d2f1f95f1c3113b231c94d61480d478431bfbb99a3173e5c70739eda7691e",
+      "frontend/src/api/runFailure.ts": "632c6683c23933834159ce3964ff1cee5c38b4b3f8876198a27a399b98b3cfe3",
+      "frontend/src/api/timelineSummary.test.ts": "4fc958020dd62f24d0e532ca238e0fcdcb167c49fc5bcbd43a2c0f238623ec0d",
+      "frontend/src/api/timelineSummary.ts": "446853e1026f6e71f74d87f1f7228fff00120ef1b723bd0725abcaa4bade81f1",
+      "frontend/src/components/RunTimeline.tsx": "18856f46f86b0b4a496b66ff28736f8b32f4f534b20204bf7b76e06f51dce085",
+      "frontend/src/pages/AgentWorkspace.tsx": "bcf20fd5bc7f428cf39f876d313848f83b657896d6c82458e52e16e80b7ae9c6"
+    },
+    "code_and_test_bundle_sha256": "1ad9e50a5435fe2a98f795e819276ee05f2b816a4bba840a6c3c24fba6fbe24b"
+  },
+  "environment": {
+    "os": "Linux",
+    "architecture": "aarch64",
+    "python": "3.12.10",
+    "postgres": "17 / pgvector 0.8.7",
+    "models": "SDK MockTransport / deterministic fixtures",
+    "embedding": "FixtureEncoder",
+    "new_real_bge": "NOT_RUN",
+    "network": "owned PostgreSQL namespace, no external route",
+    "provider_environment_inherited": false,
+    "isolation_audit_sha256": "efa97ca6588068156a50b45bc71a65868996ea7d702e3dac1ce75f7a75b33633"
+  },
+  "backend": {
+    "tests": 1548,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 14,
+    "passed": 1534,
+    "warnings": 0,
+    "pytest_seconds": 601.21,
+    "junit_sha256": "d9bd9ec6366d46301a1bc8c876ac43aa6d2b8c105ae968f461380cd22db77ce9"
+  },
+  "frontend": {
+    "vitest_passed": 132,
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "build": "PASS",
+    "playwright_passed": 119,
+    "playwright_failed": 0,
+    "playwright_skipped": 0,
+    "playwright_retries": 0,
+    "playwright_report_sha256": "fa0ba7036934460faae5dd456e2d8d7caf470b5320919fee21eb6373ce5e6df2",
+    "playwright_duration_ms": 215306.81100000002
+  },
+  "gates": {
+    "linux-backend-full-3": {
+      "name": "linux-backend-full-3",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "--junitxml=/work/.playground/v215/receipts/backend-full-3.xml",
+        "-o",
+        "junit_family=xunit1"
+      ],
+      "exit_code": 0,
+      "seconds": 605.083630625,
+      "completed_at": "2026-11-15T08:53:30.959530+00:00",
+      "log_sha256": "f097802c49859d25d7101958ad129c9ad7fb0750a5e465efeaee0bf68b516a02",
+      "runner_id": "cb0aad9afed10016583ded3f0d67045978cdee14afcdc1da4ad6f6f59f1e1b6f"
+    },
+    "linux-frontend-final": {
+      "name": "linux-frontend-final",
+      "argv": [
+        "/usr/local/bin/node",
+        "-e",
+        "const {spawnSync}=require(\"node:child_process\"); process.chdir(\"/work/frontend\"); for (const name of [\"test\",\"typecheck\",\"lint\",\"build\"]) { const r=spawnSync(\"npm\",[\"run\",name],{stdio:\"inherit\"}); if(r.status!==0)process.exit(r.status??1); }"
+      ],
+      "exit_code": 0,
+      "seconds": 7.748134374999999,
+      "completed_at": "2026-11-15T06:47:03.360761+00:00",
+      "log_sha256": "0cfd4f92f0663b3bbfbbee85c514b0e85706fbd9a69fe0628c07faf7055a81f7",
+      "runner_id": "989341a2b53cddd76af71da92f5f406990aa7485a09a46b24b86770b83cffcb6"
+    },
+    "linux-playwright-full-2": {
+      "name": "linux-playwright-full-2",
+      "argv": [
+        "/usr/local/bin/node",
+        "-e",
+        "process.chdir(\"/work/frontend\"); const r=require(\"node:child_process\").spawnSync(\"npm\",[\"run\",\"test:e2e\"],{stdio:\"inherit\"}); process.exit(r.status??1)"
+      ],
+      "exit_code": 0,
+      "seconds": 215.689245667,
+      "completed_at": "2026-11-15T08:40:23.053438+00:00",
+      "log_sha256": "9af5ae292dc52fe754e7a0ce99a9579a41215dbdc5f277562056addcfbd7aa6f",
+      "runner_id": "cb0aad9afed10016583ded3f0d67045978cdee14afcdc1da4ad6f6f59f1e1b6f"
+    },
+    "linux-ruff-final-check": {
+      "name": "linux-ruff-final-check",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09477391600000001,
+      "completed_at": "2026-11-15T08:46:02.220201+00:00",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "runner_id": "cb0aad9afed10016583ded3f0d67045978cdee14afcdc1da4ad6f6f59f1e1b6f"
+    },
+    "linux-format-final-check": {
+      "name": "linux-format-final-check",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.08560424999999999,
+      "completed_at": "2026-11-15T08:46:02.211071+00:00",
+      "log_sha256": "219b0f96ea498ff4fcda645693eb7501939645b7882fbc4f998d6ebe91dbe357",
+      "runner_id": "cb0aad9afed10016583ded3f0d67045978cdee14afcdc1da4ad6f6f59f1e1b6f"
+    }
+  },
+  "new_synthetic_samples": {
+    "classification": "CONTRACT_TEST_ONLY",
+    "files": [
+      "backend/tests/test_v215_failure_feedback.py",
+      "backend/tests/test_v215_goal_receipts.py",
+      "backend/tests/test_v215_intent_integration.py",
+      "backend/tests/test_v215_legacy_clarification.py",
+      "backend/tests/test_v215_model_diagnostics.py",
+      "backend/tests/test_v215_recommendations.py",
+      "backend/tests/test_v215_request_intents.py",
+      "backend/tests/test_v215_workflow.py",
+      "frontend/src/api/runFailure.test.ts"
+    ]
+  },
+  "preserved_history": {
+    "d3d_files": 42,
+    "d3d_seal_sha256": "1fe1947843d055cccd5ddc7b3a10c98aa8e4573e5c89ec4b26eb7670a8a75185",
+    "l8_summary_sha256": "211a4127c79e8c878f55cad9d656d923b956c17c48613837b21b5c1eac6b93be",
+    "planned": 15,
+    "scored": 5,
+    "pass": 1,
+    "fail": 4,
+    "not_scored": 3,
+    "not_run": 7,
+    "independent_holdout_count": 0,
+    "episode_08_rca": "INSUFFICIENT_EVIDENCE",
+    "episode_08_ledger": "UNKNOWN",
+    "episode_08_actual_cost": "UNKNOWN"
+  },
+  "intermediate_full_run": {
+    "name": "linux-backend-full-1",
+    "exit_code": 1,
+    "passed": 1418,
+    "failed": 67,
+    "errors": 29,
+    "skipped": 14,
+    "warnings": 12,
+    "log_sha256": "20dd44c0fbb45d1f5c6f2921713dd21b79c90868bc68b4286c998603d48427bd",
+    "junit_sha256": "2920332fb6536df2f113790d0f6308ece478151fefb18b6ab52b839fdaa1bde6",
+    "causes": [
+      "missing task-owned .env.rag",
+      "owned PG tmpfs plus 768MiB memory limit caused OOM",
+      "legacy intent/quantity compatibility regressions"
+    ],
+    "retained": true
+  },
+  "second_intermediate_full_run": {
+    "name": "linux-backend-full-2",
+    "passed": 1522,
+    "failed": 5,
+    "errors": 0,
+    "skipped": 14,
+    "warnings": 3,
+    "exit_code": 1,
+    "log_sha256": "0f2d75e4895feffad00421d76e2070e96d28482e067ddc112c508e71c4a1e1a3",
+    "junit_sha256": "f2fc5b6eb2095783d9235d5b94e44d1b0326d4b15ee940b8452750835dda2907",
+    "causes": [
+      "owned venv project module missing for clean MCP child",
+      "stateless clarification concatenated two purchase turns",
+      "old unsupported-quantity test fixture updated to a stronger positive HITL contract"
+    ],
+    "retained": true
+  },
+  "first_playwright_run": {
+    "passed": 117,
+    "failed": 2,
+    "skipped": 0,
+    "retries": 0,
+    "exit_code": 1,
+    "log_sha256": "203dcd83712dc9cbba79059f4a4d836c3515a748c2c1684e2ed247db391fb569",
+    "result_json_sha256": "d0ca3374f579fa165fc001f1c6f3a6e894ec25e9360d65edcf7e6ead99334c9b",
+    "causes": [
+      "leading modifiers of a current user command",
+      "standalone one-item clarification with an address"
+    ],
+    "retained": true
+  },
+  "review": {
+    "independent_static_review": true,
+    "findings_resolved": [
+      "negative recommendation count",
+      "single-SKU per-part quantity bypass",
+      "same-run recommendation preservation"
+    ],
+    "additional_verified_fixes": [
+      "legacy syntax/UUID quantity boundaries",
+      "SDK serializer warning content redaction"
+    ],
+    "limits": "Offline regression and AI-assisted static review; no production or real-model certification"
+  },
+  "boundaries": {
+    "real_provider_requests": 0,
+    "real_provider_key_reads": 0,
+    "actual_cost_cny": 0,
+    "l8_episodes_rerun": 0,
+    "unrun_09_15_used_for_debugging": false,
+    "original_oracle_dev_test_locks_unchanged": true,
+    "original_worktree_tracked_clean": true,
+    "push_pr_release_deploy": "NOT_RUN",
+    "remote_ci": "NOT_RUN",
+    "release_commit": "UNBOUND"
+  },
+  "notes": [
+    "The Source entry binds changed source and tests plus the exact base commit; documentation is not a frozen release.",
+    "13 real-BGE tests and 1 unavailable raw private historical-evidence test are skipped by existing rules.",
+    "JUnit xunit1 preserves existing record_property receipts without xunit2 compatibility warnings.",
+    "Historical live observations, local output budgets and supplier invoices remain separate."
+  ]
+}

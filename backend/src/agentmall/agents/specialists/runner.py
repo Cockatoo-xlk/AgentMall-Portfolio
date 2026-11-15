@@ -6,6 +6,7 @@ from langgraph.errors import GraphRecursionError
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import SpecialistResult
 from agentmall.agents.model_control import SpecialistGuard, ToolBatchRejected
+from agentmall.agents.product_preferences import recommendation_shortage
 from agentmall.agents.read_completion import (
     read_goal_signature,
     verified_candidates,
@@ -94,7 +95,7 @@ def incomplete_write_goal(runtime, context):
     return not any(record["name"] == tool for record in context.records)
 
 
-async def run_specialist(runtime, envelope):
+async def run_specialist(runtime, envelope, *, user_goal=None):
     role = envelope.target
     context = SpecialistTools(runtime, envelope)
     runtime.event(
@@ -144,7 +145,7 @@ async def run_specialist(runtime, envelope):
             content.pop("goal")
             content.pop("target")
             content.update(
-                user_goal=runtime.input.message,
+                user_goal=user_goal or runtime.input.message,
                 entity_refs=[e.model_dump(mode="json") for e in runtime.references.values()],
                 committed_facts=[
                     {"kind": kind, "id": ident, "data": value}
@@ -153,6 +154,8 @@ async def run_specialist(runtime, envelope):
                 prior_results=[r.model_dump(mode="json") for r in runtime.completed.values()],
                 error_codes=list(runtime.errors),
             )
+            if user_goal and user_goal != runtime.input.message:
+                content["clarification"] = runtime.input.message
         if not runtime.single and envelope.goal == "prepare_return":
             content["verified_assessments"] = [
                 v for (kind, _), v in runtime.facts.items() if kind == "return_assessment"
@@ -269,6 +272,10 @@ async def run_specialist(runtime, envelope):
         break
     errors = [x["error_code"] for x in context.records if "error_code" in x]
     error = error or (errors[-1] if errors else None)
+    if error == "MODEL_RESPONSE_INVALID" and error not in runtime.errors:
+        # A broken SDK response is not missing user input or a format-repair grant.
+        # Complete this failed branch normally so accepted Resume replay stays read-only.
+        runtime.errors.append(error)
     entities = [runtime.references[key] for key in context.observed]
     proposals = [e.id for e in entities if e.kind == "proposal"]
     citations = [c["id"] for row in context.records for c in row.get("citations", [])]
@@ -291,6 +298,12 @@ async def run_specialist(runtime, envelope):
         if context.records or terminal == "finish" or decided
         else "needs_input"
     )
+    if (
+        status == "done"
+        and (runtime.single or envelope.goal == "find_products")
+        and recommendation_shortage(runtime, entities)
+    ):
+        status = "needs_input"
     if unsupported:
         status = "blocked"
     if (

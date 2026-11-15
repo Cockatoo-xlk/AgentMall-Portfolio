@@ -49,4 +49,15 @@ describe('readable persisted event summaries', () => {
       ),
     ).toContain('10 / 2 tokens')
   })
+  it('separates a received usage observation from unfinished budget reconciliation', () => {
+    const summary = timelineSummary(event('model_end', { status: 'failed', usage: 'UNKNOWN', observed_provider_usage: { input_tokens: 20, output_tokens: 5 }, provider_usage_state: 'OBSERVED_VALID', output_budget_state: 'UNRESOLVED', diagnostic_stage: 'SDK_RESPONSE_PARSE' }))
+    expect(summary).toContain('Usage UNKNOWN')
+    expect(summary).toContain('响应观测 20 / 5')
+    expect(summary).toContain('预算未核对完成')
+    expect(summary).not.toContain('已结算')
+  })
+  it('shows batch refusal without inventing business rollback', () => {
+    expect(timelineSummary(event('tool_batch_rejected', { diagnostic_code: 'TOOL_ARGUMENT_SCHEMA_INVALID', tools_executed: false }))).toBe('工具参数不符合 Schema · 本批工具未执行')
+    expect(timelineSummary(event('tool_batch_rejected', {}))).toContain('执行状态待核对')
+  })
 })

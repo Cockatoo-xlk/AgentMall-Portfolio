@@ -1,0 +1,391 @@
+{
+  "schema_version": 1,
+  "kind": "PUBLIC_SANITIZED_HISTORICAL_L8_SUMMARY_NOT_REEVALUATION",
+  "evaluation": "PROSPECTIVE_SELF_AUTHORED",
+  "closure_status": "L8_D3D_CLOSED_WITH_UNRESOLVED_UNKNOWN",
+  "independent_holdout_count": 0,
+  "source": {
+    "formal_commit": "71970c88d8827d22cd5626de20317a89d389bafc",
+    "tree": "50921e7431437e0603f6b59487dbbf6cf6e80ec6",
+    "historical_host_versions_and_sessions_kept_separate": true
+  },
+  "source_artifacts": [
+    {
+      "name": "REPORT.md",
+      "sha256": "447d89fbdde304af798159204c07edf27212a491022a6e259fd280cd15461924"
+    },
+    {
+      "name": "preserved-results15.json",
+      "sha256": "7524c9af6d17129d84fbad6fab81a92b3d81e60f37896f28ef16f77357ef7d89"
+    },
+    {
+      "name": "preserved-statistics.json",
+      "sha256": "649fdf8c2f51fb0ab2aa67a93fb95569cdd6986dbd77437a46468c1f3af0db24"
+    },
+    {
+      "name": "classification.json",
+      "sha256": "839da351898cc5144c97f7ac61e6a9d3f7705f6e4bf7a481a348156a550ccb01"
+    },
+    {
+      "name": "usage-reconciliation-appendix.json",
+      "sha256": "c9815f3ae8702665ef5c36da3049c2a36c39b6b85fc6fcca7e93e31c90742fd5"
+    },
+    {
+      "name": "frozen-identities.json",
+      "sha256": "940793daf475741d85f7bb9d32fa15255294501f172072b9760a76cfc8278858"
+    },
+    {
+      "name": "evidence-manifest.json",
+      "sha256": "1fe1947843d055cccd5ddc7b3a10c98aa8e4573e5c89ec4b26eb7670a8a75185"
+    }
+  ],
+  "frozen_identities": {
+    "host_package_sha256": "36e8240aa22bd56370e955888b790b4a489c83c886df73d10e798fcbc30a7de3",
+    "combined_manifest_sha256": "6ecc46f67a61de536f3371289610bcdf633497f83f050620dd9b82e316cc09a1",
+    "executor_sha256": "be1f1f901121ea044ce836928981f59d8904411fa802b31f55e81b496a389f05",
+    "finalizer_sha256": "3a68f286c18f27a01e8312d16538d785874a6ba12b213d85ca7392cd9f8bb20c",
+    "dataset_sha256": "c53992acaf9072551620bacce89d3ea03565174af15c48c6cb8a0d2a66787996",
+    "gold_sha256": "cfb6315accf50792248d4d27c48c8eacd3b2a6974cc5bb3a1cdf47fc20955bcd",
+    "original_protocol_sha256": "ff4d8aa6c244cc7a1f39f4d457aa1643bcc6a094be22fbc6ab647d5ff35c7660",
+    "original_oracle_sha256": "dac5a79ee6b8c5d9a0807b043eb67bd47403ebba5eb1a8514bec9d1d6e982fb6"
+  },
+  "results": {
+    "planned": 15,
+    "started": 8,
+    "scored": 5,
+    "pass": 1,
+    "fail": 4,
+    "not_scored": 3,
+    "not_run": 7,
+    "planned_coverage": {
+      "numerator": 8,
+      "denominator": 15,
+      "percent": 53.33
+    },
+    "scored_coverage": {
+      "numerator": 5,
+      "denominator": 15,
+      "percent": 33.33
+    },
+    "scored_success": {
+      "numerator": 1,
+      "denominator": 5,
+      "percent": 20,
+      "wilson95_percent": [
+        3.62,
+        62.45
+      ],
+      "is_full_15_task_success_rate": false
+    },
+    "single": {
+      "planned": 5,
+      "started": 2,
+      "scored": 2,
+      "pass": 1,
+      "fail": 1,
+      "not_scored": 0,
+      "not_run": 3,
+      "wilson95_scored_percent": [
+        9.45,
+        90.55
+      ]
+    },
+    "multi": {
+      "planned": 10,
+      "started": 6,
+      "scored": 3,
+      "pass": 0,
+      "fail": 3,
+      "not_scored": 3,
+      "not_run": 4,
+      "wilson95_scored_percent": [
+        0,
+        56.15
+      ]
+    },
+    "not_run_is_observed_failure": false,
+    "not_scored_is_oracle_fail": false
+  },
+  "tasks": [
+    {
+      "position": 1,
+      "task_id": "eval_test_A1_71",
+      "architecture": "single",
+      "original_oracle_result": "FAIL",
+      "execution_protocol_result": "SAFETY_STOPPED",
+      "run_status": "COMPLETED",
+      "original_primary_failure": "CANDIDATE_COUNT",
+      "provider_http_attempts": 3
+    },
+    {
+      "position": 2,
+      "task_id": "eval_test_B2_71",
+      "architecture": "multi",
+      "original_oracle_result": "FAIL",
+      "execution_protocol_result": "SAFETY_STOPPED",
+      "run_status": "PARTIAL",
+      "original_primary_failure": "AFTERSALES_INELIGIBLE",
+      "provider_http_attempts": 9
+    },
+    {
+      "position": 3,
+      "task_id": "eval_test_B1_71",
+      "architecture": "multi",
+      "original_oracle_result": "NOT_SCORED",
+      "execution_protocol_result": "PROTOCOL_VIOLATION",
+      "run_status": "PARTIAL",
+      "original_primary_failure": "SCRIPTED_CASE_NOT_UNIQUE; EPISODE_90_SECONDS",
+      "provider_http_attempts": 3
+    },
+    {
+      "position": 4,
+      "task_id": "eval_test_E1_71",
+      "architecture": "multi",
+      "original_oracle_result": "FAIL",
+      "execution_protocol_result": "FORENSIC_FAILURE_PRESERVED",
+      "run_status": "PARTIAL",
+      "original_primary_failure": "RESOURCE_DELTA",
+      "provider_http_attempts": 2
+    },
+    {
+      "position": 5,
+      "task_id": "eval_test_A1_72",
+      "architecture": "single",
+      "original_oracle_result": "PASS",
+      "execution_protocol_result": "NORMAL_FINALIZATION",
+      "run_status": "COMPLETED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 2
+    },
+    {
+      "position": 6,
+      "task_id": "eval_test_B2_72",
+      "architecture": "multi",
+      "original_oracle_result": "FAIL",
+      "execution_protocol_result": "NORMAL_FINALIZATION",
+      "run_status": "PARTIAL",
+      "original_primary_failure": "RESOURCE_DELTA",
+      "provider_http_attempts": 4
+    },
+    {
+      "position": 7,
+      "task_id": "eval_test_B1_72",
+      "architecture": "multi",
+      "original_oracle_result": "NOT_SCORED",
+      "execution_protocol_result": "SAFETY_STOPPED",
+      "run_status": "WAITING_INPUT",
+      "original_primary_failure": "IMMUTABLE_SNAPSHOT_CHANGED",
+      "provider_http_attempts": 5
+    },
+    {
+      "position": 8,
+      "task_id": "eval_test_E1_72",
+      "architecture": "multi",
+      "original_oracle_result": "NOT_SCORED",
+      "execution_protocol_result": "SAFETY_STOPPED",
+      "run_status": "PARTIAL",
+      "original_primary_failure": "TOOL_ARGUMENT_SCHEMA_INVALID",
+      "provider_http_attempts": 1
+    },
+    {
+      "position": 9,
+      "task_id": "eval_test_A2_71",
+      "architecture": "single",
+      "original_oracle_result": "NOT_RUN",
+      "execution_protocol_result": "NOT_RUN",
+      "run_status": "NOT_STARTED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 0
+    },
+    {
+      "position": 10,
+      "task_id": "eval_test_B2_73",
+      "architecture": "multi",
+      "original_oracle_result": "NOT_RUN",
+      "execution_protocol_result": "NOT_RUN",
+      "run_status": "NOT_STARTED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 0
+    },
+    {
+      "position": 11,
+      "task_id": "eval_test_B1_73",
+      "architecture": "multi",
+      "original_oracle_result": "NOT_RUN",
+      "execution_protocol_result": "NOT_RUN",
+      "run_status": "NOT_STARTED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 0
+    },
+    {
+      "position": 12,
+      "task_id": "eval_test_E1_73",
+      "architecture": "multi",
+      "original_oracle_result": "NOT_RUN",
+      "execution_protocol_result": "NOT_RUN",
+      "run_status": "NOT_STARTED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 0
+    },
+    {
+      "position": 13,
+      "task_id": "eval_test_A3_71",
+      "architecture": "single",
+      "original_oracle_result": "NOT_RUN",
+      "execution_protocol_result": "NOT_RUN",
+      "run_status": "NOT_STARTED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 0
+    },
+    {
+      "position": 14,
+      "task_id": "eval_test_B2_74",
+      "architecture": "multi",
+      "original_oracle_result": "NOT_RUN",
+      "execution_protocol_result": "NOT_RUN",
+      "run_status": "NOT_STARTED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 0
+    },
+    {
+      "position": 15,
+      "task_id": "eval_test_R1_71",
+      "architecture": "single",
+      "original_oracle_result": "NOT_RUN",
+      "execution_protocol_result": "NOT_RUN",
+      "run_status": "NOT_STARTED",
+      "original_primary_failure": null,
+      "provider_http_attempts": 0
+    }
+  ],
+  "incident_08": {
+    "error_code": "TOOL_ARGUMENT_SCHEMA_INVALID",
+    "final_root_cause_classification": "INSUFFICIENT_EVIDENCE",
+    "confirmed_stage": "FIRST_SUPERVISOR_RESPONSE_STRICT_JSON_PYDANTIC_REJECTION_BEFORE_TOOLS",
+    "tool_calls": 0,
+    "delegations": 0,
+    "hitl": 0,
+    "business_writes": 0,
+    "responsibility": {
+      "model_invalid_arguments": "POSSIBLE_NOT_CONFIRMED",
+      "host_schema_mismatch": "NOT_PROVED",
+      "provider_response_protocol_invalid": "NOT_PROVED"
+    },
+    "actual_tool_name": "UNKNOWN_ROUTE_IS_SOURCE_PATH_INFERENCE_ONLY",
+    "original_arguments": "NOT_RETAINED",
+    "original_raw_response": "NOT_RETAINED",
+    "original_request_schema_hash": "NOT_RETAINED",
+    "original_response_hash": "NOT_RETAINED",
+    "provider_request_id": "NOT_RETAINED",
+    "original_ledger": {
+      "state": "UNKNOWN",
+      "usage": "UNKNOWN",
+      "actual_cost_cny": "UNKNOWN",
+      "reserved_cny": "2.113536",
+      "sha256": "f77f5d156c709a3753018d175920d5de6a4b100e8d06a1445f4f69657ded5fd8",
+      "changed": false,
+      "reservation_releasable": false
+    },
+    "recovered_host_observation": {
+      "evidence_level": "CORRELATED_HOST_METADATA_NOT_RAW_PROVIDER_SETTLEMENT",
+      "source_sha256_at_d3d_audit": "5992782713e44e9a6b1b379f8662124aa84e8c8baf05db41149eb97ead3a17ef",
+      "in_original_seal": false,
+      "first_hash_anchor": "D3D_AUDIT_NOT_RETROACTIVE",
+      "http_status": 200,
+      "response_model": "deepseek-flash",
+      "system_fingerprint": "UNKNOWN",
+      "input_tokens": 3654,
+      "output_tokens": 293,
+      "total_tokens": 3947,
+      "host_egress_seconds": 1.854968292,
+      "duration_is_pure_provider_network_time": false,
+      "peak_fee_arithmetic_cny": "0.009652",
+      "is_actual_cost_or_ledger_settlement": false
+    },
+    "ledger_unknown_path": "WHOLE_RESPONSE_INVALID_RESTORES_PRESEND_RESERVATION_AND_UNKNOWN",
+    "ledger_disk_failure_proved": false,
+    "historical_stop_preserved": true
+  },
+  "usage_and_cost": {
+    "provider_http_attempts": 29,
+    "settled_attempts": 28,
+    "unknown_attempts": 1,
+    "historical_settled_subtotal": {
+      "input_tokens": 87625,
+      "output_tokens": 7152,
+      "peak_price_estimate_cny": "0.232466",
+      "is_provider_invoice": false
+    },
+    "complete_authoritative_token_usage": "UNKNOWN",
+    "complete_actual_cost_cny": "UNKNOWN",
+    "provider_invoices": "UNKNOWN",
+    "preserved_reservation_cny": "2.113536",
+    "host_metadata_only_combined_arithmetic": {
+      "input_tokens": 91279,
+      "output_tokens": 7445,
+      "peak_fee_cny": "0.242118",
+      "is_ledger_settled_total": false,
+      "is_actual_cost": false
+    }
+  },
+  "diagnostic_boundaries": {
+    "01": "CONFIRMED_PRODUCT_COMPARISON_AND_CANDIDATE_COUNT_WORK",
+    "02": "INITIAL_ELIGIBILITY_TRUE_CASE_REQUESTED_FINAL_EXACT_SELECTION_NOT_RETAINED",
+    "03": "PROTOCOL_TIMEOUT_UNDERLYING_CAUSE_UNKNOWN",
+    "04": "CONFIRMED_SUPPORT_INTENT_GAP_MODEL_REASON_SUPPORT_DRIFT_REJECTED",
+    "06": "CONFIRMED_PROCUREMENT_QUANTITY_AND_RETURN_PROPOSAL_INTENT_WORK",
+    "07": "PRIVATE_EVALUATION_HOST_MUTABLE_STATUS_SNAPSHOT_HASH_DEFECT_NOT_FORMAL_PRODUCT_BUG",
+    "08": "INSUFFICIENT_EVIDENCE_NO_CAUSAL_REPAIR_CLAIM"
+  },
+  "v215": {
+    "scope": "LOCAL_PRODUCT_RELIABILITY_AND_SYNTHETIC_REGRESSION_PORTFOLIO",
+    "implementation_status": "IMPLEMENTED_PENDING_FINAL_VERIFICATION",
+    "synthetic_regression": "LOCAL_OFFLINE_VERIFIED",
+    "full_backend_regression": "LOCAL_OFFLINE_VERIFIED",
+    "frontend_regression": "LOCAL_OFFLINE_VERIFIED",
+    "live_evaluation": "NOT_RUN",
+    "provider_calls_authorized": false,
+    "remote_ci": "NOT_RUN",
+    "release": "NOT_PUBLISHED",
+    "v214_release": "ON_HOLD",
+    "recommendation_completion_scope": {
+      "applies_to": "RECOMMENDATION_READ_ONLY",
+      "purchase_completion": "EXISTING_SEMANTICS",
+      "return_completion": "EXISTING_SEMANTICS",
+      "bundle_completion": "EXISTING_SEMANTICS",
+      "language_scope": "BOUNDED_CHINESE_RULES_WITH_CLARIFICATION"
+    },
+    "diagnostics": {
+      "scope": "MODEL_CONTROL_MODEL_CALL_FORMAL_RUN_PATHS",
+      "legacy_single_agent_guard_captured": false,
+      "model_request_id": "LOCAL_UUID4_HEX_PER_CALL_NOT_PROVIDER_ID",
+      "tool_schema_sha256": "CANONICAL_JSON_OF_ACTUAL_SDK_TOOLS_ARRAY",
+      "response_body_sha256": "CANONICAL_JSON_OF_SDK_RESPONSE_OBJECT_NOT_RAW_HTTP_BYTES",
+      "provider_response_id": "FILTERED_RESPONSE_BODY_ID_NOT_HTTP_REQUEST_ID_HEADER",
+      "provider_usage_state": "UNKNOWN_OR_INVALID_OR_OBSERVED_VALID",
+      "observed_valid_means": "BOUNDED_NONNEGATIVE_INTEGER_USAGE_WITH_INPUT_PLUS_OUTPUT_EQUAL_TOTAL_ONLY",
+      "is_provider_invoice_or_authoritative_settlement": false,
+      "output_budget_state": "LOCAL_OUTPUT_BUDGET_RECONCILED_OR_UNRESOLVED_NOT_PROVIDER_BILLING",
+      "parse_error_code": "MODEL_RESPONSE_INVALID",
+      "private_prompt_arguments_response_body_exported": false,
+      "historical_08_evidence_reconstructed": false
+    },
+    "source_and_test_entrypoints": [
+      "backend/src/agentmall/infra/model_diagnostics.py",
+      "backend/tests/test_v215_model_diagnostics.py",
+      "backend/tests/test_v215_failure_feedback.py",
+      "backend/tests/test_v215_workflow.py",
+      "frontend/src/api/runFailure.ts",
+      "frontend/src/api/timelineSummary.ts"
+    ]
+  },
+  "preservation": {
+    "historical_results_rewritten": false,
+    "historical_tasks_rerun": false,
+    "gold_or_future_inputs_exported": false,
+    "private_raw_content_exported": false,
+    "absolute_machine_paths_exported": false,
+    "frozen_runtime_changed_by_this_summary": false
+  },
+  "v215_local_verification_receipt": "verification.json"
+}

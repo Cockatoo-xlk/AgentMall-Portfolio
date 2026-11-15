@@ -95,20 +95,49 @@ def deepseek_model(key, *, http_client=None, http_async_client=None):
     from langchain_deepseek import ChatDeepSeek
 
     class CheckedToolWireDeepSeek(ChatDeepSeek):
+        def _get_request_payload(self, input_, *, stop=None, **kwargs):
+            from agentmall.infra.model_diagnostics import observe_request, parsing_failed
+
+            try:
+                payload = super()._get_request_payload(input_, stop=stop, **kwargs)
+                observe_request(payload)
+                return payload
+            except Exception:
+                parsing_failed("SDK_REQUEST_BUILD")
+                raise
+
         def _create_chat_result(self, response, generation_info=None):
             # SDK normalization discards valid calls' original JSON spelling.
             # Retain fixed error enums ONLY, never raw arguments or model prose.
             from agentmall.agents.model_control import raw_tool_wire_failures
+            from agentmall.infra.model_diagnostics import (
+                CURRENT,
+                observe_response,
+                parsing_failed,
+            )
 
-            body = response if isinstance(response, dict) else response.model_dump()
-            checks = [
-                raw_tool_wire_failures(choice.get("message", {}).get("tool_calls") or [])
-                for choice in body.get("choices", [])
-            ]
-            result = super()._create_chat_result(response, generation_info)
+            try:
+                # Malformed typed responses can make Pydantic warnings echo raw content.
+                # Keep validation errors, but never serialize private response previews to logs.
+                body = (
+                    response if isinstance(response, dict) else response.model_dump(warnings=False)
+                )
+                observe_response(body)
+                checks = [
+                    raw_tool_wire_failures(choice.get("message", {}).get("tool_calls") or [])
+                    for choice in body.get("choices", [])
+                ]
+                result = super()._create_chat_result(response, generation_info)
+            except Exception:
+                parsing_failed("SDK_RESPONSE_PARSE")
+                raise
             for generation, flags in zip(result.generations, checks, strict=False):
                 if flags:
                     generation.message.response_metadata["agentmall_tool_wire_failures"] = flags
+                if receipt := CURRENT.get():
+                    generation.message.response_metadata["agentmall_diagnostics"] = (
+                        receipt.summary()
+                    )
             return result
 
     return CheckedToolWireDeepSeek(

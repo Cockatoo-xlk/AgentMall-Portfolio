@@ -24,6 +24,7 @@ const labels: Record<string, string> = {
   tool: '工具调用',
   model_start: 'LLM 请求',
   model_end: 'LLM 返回',
+  tool_batch_rejected: '工具调用拒绝',
   specialist_result: '专业任务结果',
   business_receipt: '真实业务回执',
   resume_received: 'Resume',

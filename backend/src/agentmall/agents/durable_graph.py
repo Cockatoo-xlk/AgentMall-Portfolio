@@ -34,6 +34,60 @@ class DurableState(TypedDict, total=False):
     handled: list[str]
 
 
+def apply_legacy_clarification(runtime, message):
+    """Supplement one trusted unfinished Run; never parse two turns as one action batch."""
+    from agentmall.agents.context import Constraints, scoped_purchase_quantity, user_constraints
+    from agentmall.agents.product_preferences import connection_choice, recommendation_revoked
+    from agentmall.agents.purchase_intent import purchase_intent
+    from agentmall.agents.request_intents import return_intent, support_intent
+
+    old = runtime.constraints.model_dump(mode="json")
+    current = user_constraints(
+        runtime.input.model_copy(update={"message": message, "constraints": None})
+    ).model_dump(mode="json", exclude_none=True, exclude_unset=True)
+    decisions = {
+        "purchase_requested": purchase_intent(message).requested,
+        "return_requested": return_intent(message),
+        "support_requested": support_intent(message),
+    }
+    merged = {**old, **{key: value for key, value in current.items() if key not in decisions}}
+    for field, decision in decisions.items():
+        merged[field] = old[field] if decision is None else decision
+    merged["product_needs"] = {**old["product_needs"], **current.get("product_needs", {})}
+    if connection_choice(message).broadened:
+        merged["product_needs"]["connection"] = None
+    merged["exclude_original"] = old["exclude_original"] or current.get("exclude_original", False)
+    if old["max_price_cents"] is not None and current.get("max_price_cents") is not None:
+        merged["max_price_cents"] = min(old["max_price_cents"], current["max_price_cents"])
+    if decisions["purchase_requested"] is False:
+        merged["quantity"] = merged["address_label"] = None
+    elif (
+        decisions["purchase_requested"] is None
+        and old["purchase_requested"]
+        and not old.get("bundle")
+    ):
+        quantity = scoped_purchase_quantity(message, supplemental=True)
+        if quantity is not None:
+            merged["quantity"] = quantity
+    if decisions["support_requested"] is not None:
+        merged["support_declined"] = decisions["support_requested"] is False
+    if recommendation_revoked(message):
+        merged.pop("recommendation", None)
+    elif old.get("recommendation"):
+        requirement = dict(old["recommendation"])
+        update = current.get("recommendation", {})
+        if update.get("count") is not None:
+            requirement["count"] = update["count"]
+        requirement["compare_connections"] |= update.get("compare_connections", False)
+        merged["recommendation"] = requirement
+    runtime.constraints = Constraints.model_validate(merged)
+    # state.user_goal retains the original goal; reconstructed runtimes consume
+    # this current turn plus the trusted merged contract, never a concatenated batch.
+    runtime.input = runtime.input.model_copy(
+        update={"message": message, "constraints": runtime.constraints}
+    )
+
+
 def build_durable_graph(base, saver, store):
     branch_barriers = {}
 
@@ -189,12 +243,14 @@ def build_durable_graph(base, saver, store):
             read_only=False,
             remaining_budget=runtime.budget.snapshot(),
         )
-        result = await run_specialist(runtime, envelope)
+        result = await run_specialist(runtime, envelope, user_goal=state.get("user_goal"))
         # Explicit clarification remains possible after an earlier independent
         # business decision. A completed action never authorizes the next action.
         return {"next": "clarify" if result.status == "needs_input" else "finish"}
 
     async def merge(runtime, state):
+        if "MODEL_RESPONSE_INVALID" in runtime.errors:
+            return {"next": "choose_confirmation"}
         handled = set(state.get("handled", []))
         if any(
             kind == "proposal"
@@ -255,7 +311,6 @@ def build_durable_graph(base, saver, store):
                 **({"round": state.get("round", 0) + 1} if runtime.single else {}),
             }
         if payload.get("clarification"):
-            from agentmall.agents.context import user_constraints
             from agentmall.agents.purchase_intent import purchase_intent
 
             if runtime.thread_snapshot:
@@ -267,12 +322,7 @@ def build_durable_graph(base, saver, store):
                 )
                 runtime.constraints = Constraints.model_validate(binding["constraints"])
             else:
-                runtime.input = runtime.input.model_copy(
-                    update={
-                        "message": (runtime.input.message + " " + payload["clarification"])[:2000]
-                    }
-                )
-                runtime.constraints = user_constraints(runtime.input)
+                apply_legacy_clarification(runtime, payload["clarification"])
             intent = purchase_intent(payload["clarification"])
             if not runtime.constraints.purchase_requested or intent.product_id:
                 runtime.purchase_target_id = intent.product_id

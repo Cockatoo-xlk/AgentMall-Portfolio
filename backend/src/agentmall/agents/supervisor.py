@@ -9,6 +9,7 @@ from pydantic import ValidationError
 
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import IntentPlan, asks_return_policy
+from agentmall.agents.goal_receipts import action_outcomes
 from agentmall.agents.model_control import model_call, validate_wire
 from agentmall.agents.runtime import fingerprint
 from agentmall.agents.specialist_tools import WRITE_TOOLS_BY_GOAL
@@ -133,6 +134,7 @@ async def choose_plan(runtime, user_goal=None, *, durable=False):
             "entity_refs": [r.model_dump(mode="json") for r in runtime.references.values()],
             "evidence_refs": list(runtime.citations),
             "completed": [r.model_dump(mode="json") for r in runtime.completed.values()],
+            "action_outcomes": action_outcomes(runtime.facts),
             "return_assessments": [
                 v for (kind, _), v in runtime.facts.items() if kind == "return_assessment"
             ],

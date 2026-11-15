@@ -10,6 +10,7 @@ from sqlalchemy import select
 from agentmall.actions.service import database_now, payload_hash
 from agentmall.agents.context import Constraints, MultiRequest, user_constraints
 from agentmall.agents.models import CandidateSet, ContextMutation, ThreadContext
+from agentmall.agents.product_preferences import connection_choice, recommendation_revoked
 from agentmall.agents.purchase_intent import ORDINAL, purchase_intent
 from agentmall.catalog import service as catalog
 from agentmall.catalog.categories import categories_in_text
@@ -56,10 +57,7 @@ def resolve_preferences(previous, payload):
     """Only current authenticated user input can replace a persisted preference."""
     text = payload.message
     amounts = {int(Decimal(v) * 100) for v in re.findall(r"(\d+(?:\.\d{1,2})?)\s*元", text)}
-    connection_text = re.sub(
-        r"(?:不接受|排除|拒绝)(?:双模|三模)(?:[／/、和或]*(?:双模|三模))*", "", text
-    )
-    connections = {v for v in ("有线", "无线", "双模", "三模") if v in connection_text}
+    choice = connection_choice(text)
     if len(categories_in_text(text)) > 1:
         raise conflict()
     for choices in (
@@ -69,19 +67,22 @@ def resolve_preferences(previous, payload):
         if sum(word in text for word in choices) > 1:
             raise conflict()
     clears = set()
+    if choice.broadened:
+        clears.add("connection")
     if re.search(r"(?:忘记|清除|取消|删除|不要).{0,6}预算", text):
         clears.add("max_price_cents")
-    if re.search(r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", text):
+    if not choice.explicit and re.search(
+        r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", text
+    ):
         clears.add("connection")
         positive = re.sub(
             r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", "", text
         )
         if any(word in positive for word in ("有线", "无线", "双模", "三模")):
             raise conflict()
-        connections = set()
     if re.search(r"(?:不要|取消|清除|删除)静音", text):
         clears.add("noise_preference")
-    if len(amounts) > 1 or len(connections) > 1 or (amounts and "max_price_cents" in clears):
+    if len(amounts) > 1 or (amounts and "max_price_cents" in clears):
         raise conflict()
     raw = user_constraints(
         MultiRequest(
@@ -418,6 +419,8 @@ async def patch_context(app, actor, thread_id, payload):
 
 async def accept_clarification(session, actor, run, message):
     """A new explicit user input is versioned before graph execution, never parsed as old prose."""
+    from agentmall.agents.context import scoped_purchase_quantity
+    from agentmall.agents.request_intents import return_intent, support_intent
     from agentmall.agents.run_schemas import RunCreate
 
     intent = purchase_intent(message)
@@ -443,25 +446,38 @@ async def accept_clarification(session, actor, run, message):
     ]
     prior = max(bindings, key=lambda b: b["version"]) if bindings else run.context_snapshot
     active = prior["constraints"]
+    if recommendation_revoked(message):
+        constraints.pop("recommendation", None)
+    elif active.get("recommendation"):
+        requirement = deepcopy(active["recommendation"])
+        current = constraints.get("recommendation") or {}
+        if current.get("count") is not None:
+            requirement["count"] = current["count"]
+        requirement["compare_connections"] = requirement.get(
+            "compare_connections", False
+        ) or current.get("compare_connections", False)
+        constraints["recommendation"] = requirement
+    if intent.requested is None and active["purchase_requested"]:
+        quantity = scoped_purchase_quantity(message, supplemental=True)
+        if quantity is not None:
+            constraints["quantity"] = quantity
     # This is the SAME unfinished Run, not a new shopping turn. Missing details
     # supplement its current intent; an explicit negation revokes it immediately.
     for field in ("quantity", "address_label", "reason_code"):
         if constraints[field] is None:
             constraints[field] = active[field]
     revoked_purchase = False
-    for field, pattern in (
-        ("purchase_requested", r"(?:准备)?(?:购买|下单|买)"),
-        ("return_requested", r"(?:申请|准备)?退(?:货|掉)"),
-        ("support_requested", r"(?:转|联系|找)人工"),
-    ):
-        revoked = (
-            intent.requested is False
-            if field == "purchase_requested"
-            else re.search(r"(?:不要|不想|不需要|别|暂不|不)\s*" + pattern, message)
-        )
-        if not constraints[field] and not revoked:
+    decisions = {
+        "purchase_requested": intent.requested,
+        "return_requested": return_intent(message),
+        "support_requested": support_intent(message),
+    }
+    for field, decision in decisions.items():
+        if decision is None:
             constraints[field] = active[field]
-        if field == "purchase_requested" and revoked:
+        else:
+            constraints[field] = decision
+        if field == "purchase_requested" and decision is False:
             revoked_purchase = True
             constraints["quantity"] = constraints["address_label"] = None
     constraints["support_declined"] = (

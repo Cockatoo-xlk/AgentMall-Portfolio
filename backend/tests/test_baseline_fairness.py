@@ -263,12 +263,13 @@ async def test_return_confirmation_then_purchase_clarification(
         script=[inspect, prepare, final('{"terminal":"clarify"}'), search, buy_retrieved, final()],
     )
     tid = await thread(env, buyer, architecture)
+    goal = f"订单{old['id']}有质量问题，申请退货；另准备购买静音键盘，稍后补数量地址"
     run = (
         await start(
             env,
             buyer,
             tid,
-            message=f"订单{old['id']}有质量问题，申请退货；另准备购买静音键盘，稍后补数量地址",
+            message=goal,
         )
     ).json()
     pid = run["pending_confirmation"]["proposal_id"]
@@ -296,3 +297,14 @@ async def test_return_confirmation_then_purchase_clarification(
     assert done["status"] == "COMPLETED", json.dumps(done, ensure_ascii=False)
     assert row(env[1], "SELECT count(*) n FROM aftersales_cases")["n"] == 1
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 2
+    if architecture == "single":
+        contexts = [
+            json.loads(m.content)
+            for batch in env[2].state.durable_single_model.seen
+            for m in batch
+            if m.type == "human"
+        ]
+        assert all(c["user_goal"] == goal for c in contexts)
+        assert any(
+            c.get("clarification") == "预算500元以内，准备购买一款，送演示宿舍" for c in contexts
+        )

@@ -8,6 +8,14 @@ from pydantic import BaseModel, ConfigDict, Field, model_serializer, model_valid
 
 from agentmall.aftersales.schemas import ReasonCode
 from agentmall.agents.bundle_contracts import BundleRequirements, parse_bundle
+from agentmall.agents.product_preferences import (
+    RecommendationRequirements,
+    connection_choice,
+    recommendation_requirements,
+)
+from agentmall.agents.product_preferences import (
+    clarify as preference_clarification,
+)
 from agentmall.catalog.categories import (
     KIND_ATTRIBUTES,
     Category,
@@ -71,12 +79,15 @@ class ProductNeeds(Strict):
 
 class Constraints(Strict):
     bundle: BundleRequirements | None = None
+    recommendation: RecommendationRequirements | None = None
 
     @model_serializer(mode="wrap")
     def compatible_bundle(self, handler):
         data = handler(self)
         if self.bundle is None:
             data.pop("bundle", None)
+        if self.recommendation is None:
+            data.pop("recommendation", None)
         return data
 
     max_price_cents: int | None = Field(None, ge=0, le=100_000_000, strict=True)
@@ -196,6 +207,35 @@ def asks_return_policy(message):
     )
 
 
+def scoped_purchase_quantity(message, *, typed_quantity=None, supplemental=False):
+    """Quantity parsing only; the caller must already hold the current purchase intent."""
+    from agentmall.agents.product_preferences import affirmative
+    from agentmall.agents.request_intents import COUNT, purchase_quantity
+
+    clauses = re.split(r"([，。；,;\n])", message)
+    for index in range(0, len(clauses), 2):
+        clause = clauses[index].strip()
+        if COUNT.fullmatch(clause):
+            clauses[index] = "数量为" + clause
+        elif supplemental and clause == "一款":
+            clauses[index] = "数量为一件"
+    text = "".join(clauses)
+    if supplemental:
+        # The same unfinished Run already supplies intent, never a new authorization.
+        text = "请购买商品，" + text
+    quantity = purchase_quantity(text, typed_quantity=typed_quantity)
+    legacy_single = re.finditer(
+        r"(?:购买|采购|下单|买)\s*一款|(?:找|推荐)(?:另)?一款[^。；！？\n]*准备购买",
+        message,
+    )
+    if quantity is None and (
+        any(affirmative(message, match.start()) for match in legacy_single)
+        or (supplemental and message.strip(" ，。；,;\n") == "一款")
+    ):
+        return 1
+    return quantity
+
+
 def user_constraints(request):
     """Extract explicit safety constraints, never route agents here.
 
@@ -206,10 +246,12 @@ def user_constraints(request):
     amount = re.search(r"(\d+(?:\.\d{1,2})?)\s*元(?:以内|以下|内|预算)?", message)
     from decimal import Decimal
 
-    from agentmall.agents.purchase_intent import purchase_intent
+    from agentmall.agents.purchase_intent import ACTION, purchase_intent
+    from agentmall.agents.request_intents import return_intent, support_intent
 
     values = {}
     needs = {}
+    bundle = parse_bundle(message)
     if kind := infer_product_kind(message):
         needs["product_kind"] = kind
     screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", message)
@@ -227,12 +269,12 @@ def user_constraints(request):
         needs["excluded_connections"] = [
             word for word in ("双模", "三模") if any(word in part for part in excluded)
         ]
-    connection_text = re.sub(
-        r"(?:不接受|排除|拒绝)(?:双模|三模)(?:[／/、和或]*(?:双模|三模))*", "", message
-    )
-    for word in ("有线", "无线", "双模", "三模"):
-        if word in connection_text:
-            needs["connection"] = word
+    if bundle is None and not (request.constraints and request.constraints.bundle):
+        choice = connection_choice(message)
+        if choice.connection is not None:
+            needs["connection"] = choice.connection
+        if recommendation := recommendation_requirements(message, choice):
+            values["recommendation"] = recommendation
     for word, kind in [("机械", "mechanical"), ("薄膜", "membrane")]:
         if word in message:
             needs["keyboard_type"] = kind
@@ -246,22 +288,17 @@ def user_constraints(request):
         values["category"] = category
     if any(x in message for x in ("安静", "静音", "低噪声")):
         values["noise_preference"] = "quiet"
-    if any(x in message for x in ("一款", "一件", "一个")):
-        values["quantity"] = 1
     if "演示宿舍" in message and "演示家庭" not in message:
         values["address_label"] = "demo_dorm"
     elif "演示家庭" in message and "演示宿舍" not in message:
         values["address_label"] = "demo_home"
     intent = purchase_intent(message)
-    values["purchase_requested"] = intent.requested is True
-    return_clauses = re.split(r"[，。！？；,;\n]", message)
-    direct_return = any(
-        not asks_return_policy(clause)
-        and any(text in clause for text in ("想退掉", "申请退货", "准备退货"))
-        for clause in return_clauses
-    )
-    values["return_requested"] = direct_return
-    values["support_requested"] = any(x in message for x in ("转人工", "联系人工", "找人工"))
+    decisions = {
+        "purchase_requested": intent.requested,
+        "return_requested": return_intent(message),
+        "support_requested": support_intent(message),
+    }
+    values.update({field: decision is True for field, decision in decisions.items()})
     values["exclude_original"] = any(x in message for x in ("替代", "另一款", "再帮我推荐")) or (
         values["return_requested"] and "再推荐" in message
     )
@@ -269,6 +306,7 @@ def user_constraints(request):
         values["reason_code"] = "QUALITY_ISSUE"
     if request.constraints is not None:
         explicit = request.constraints.model_dump(exclude_unset=True)
+        parsed_recommendation = values.get("recommendation")
         if (
             values.get("max_price_cents") is not None
             and explicit.get("max_price_cents") is not None
@@ -277,45 +315,61 @@ def user_constraints(request):
                 values["max_price_cents"], explicit["max_price_cents"]
             )
         values.update(explicit)
+        if parsed_recommendation is not None and explicit.get("recommendation") is not None:
+            supplied = explicit["recommendation"]
+            if (
+                parsed_recommendation.count is not None
+                and supplied.get("count") is not None
+                and supplied["count"] != parsed_recommendation.count
+            ) or (
+                parsed_recommendation.compare_connections
+                and supplied.get("compare_connections") is False
+            ):
+                raise preference_clarification()
+            values["recommendation"] = {
+                **parsed_recommendation.model_dump(),
+                **{key: value for key, value in supplied.items() if value is not None},
+            }
     # Explicit negation wins over a substring match or contradictory structured input.
-    if intent.requested is not None:
+    for field, decision in decisions.items():
+        if decision is None:
+            continue
         if (
-            intent.requested
+            decision
             and request.constraints is not None
-            and (
-                "purchase_requested" in request.constraints.model_fields_set
-                and not request.constraints.purchase_requested
-            )
+            and field in request.constraints.model_fields_set
+            and not getattr(request.constraints, field)
         ):
             from agentmall.infra.errors import DomainError
 
-            raise DomainError(409, "CONTEXT_CLARIFICATION_REQUIRED", "购买意图与结构化选择冲突")
-        values["purchase_requested"] = intent.requested
-    for field, words in (
-        ("return_requested", r"(?:申请|准备)?退(?:货|掉)"),
-        ("support_requested", r"(?:转|联系|找)人工"),
-    ):
-        if re.search(r"(?:不要|不想|不需要|别|暂不|不)\s*" + words, message):
-            values[field] = False
-            if field == "support_requested":
-                values["support_declined"] = True
-    if not direct_return and asks_return_policy(message):
-        values["return_requested"] = False
+            raise DomainError(409, "CONTEXT_CLARIFICATION_REQUIRED", "动作意图与结构化选择冲突")
+        values[field] = decision
+    if decisions["support_requested"] is not None:
+        values["support_declined"] = decisions["support_requested"] is False
     if values["purchase_requested"]:
-        # A recommendation of one item must not turn a conflicting explicit count
-        # into a one-item purchase. Non-single counts can use the typed quantity.
-        counts = re.findall(
-            r"(?<![第0-9一二两三四五六七八九十百])([0-9]+|[一二两三四五六七八九十百]+)\s*件",
+        per_part_quantity = re.search(
+            r"(?:每样|每类|各|每件)\s*[0-9一二两三四五六七八九十]+\s*(?:件|个|台|把|副|只)",
             message,
         )
-        typed_quantity = request.constraints.quantity if request.constraints is not None else None
-        if counts and (
-            typed_quantity is None and any(count not in {"一", "1"} for count in counts)
+        actions = [action for action in ACTION.finditer(message) if not action["negative"]]
+        bundle_target = len(actions) == 1 and re.match(
+            r"(?:修改后的|刚才推荐的|刚才的|刚才|已选(?:择)?的?)?"
+            r"(?:这套|那套|这组|整套(?:方案)?)",
+            message[actions[0].end() :].lstrip(),
+        )
+        if (
+            bundle is None
+            and not (request.constraints and request.constraints.bundle)
+            and not (per_part_quantity and bundle_target)
         ):
-            values["quantity"] = None
+            typed_quantity = (
+                request.constraints.quantity if request.constraints is not None else None
+            )
+            values["quantity"] = scoped_purchase_quantity(
+                message, typed_quantity=typed_quantity, supplemental=intent.requested is None
+            )
         if "演示宿舍" in message and "演示家庭" in message:
             values["address_label"] = None
-    bundle = parse_bundle(message)
     if bundle is not None:
         if (
             request.constraints is not None
@@ -331,6 +385,7 @@ def user_constraints(request):
             max_price_cents=None,
             noise_preference=None,
             product_needs={},
+            recommendation=None,
         )
     return Constraints.model_validate(values)
 
