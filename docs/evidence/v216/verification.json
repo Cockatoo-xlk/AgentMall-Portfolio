@@ -1,0 +1,623 @@
+{
+  "task": "AGENTMALL_V216_PRODUCT_DEMO_AND_MULTI_RELIABILITY",
+  "state": "LOCAL_OFFLINE_VERIFIED",
+  "generated_at": "2026-11-15T16:28:50.344807+00:00",
+  "source": {
+    "baseline_commit": "d18161d1eb40667f4658e745d2f58369767d67f5",
+    "baseline_tree": "548b2f8e3180027bb179c2b42a1c4367984ff489",
+    "branch": "codex/v216-product-demo-reliability",
+    "candidate_identity": "Git commit containing these code-file hashes; no self-referential commit hash embedded",
+    "changed_code_files": {
+      "backend/src/agentmall/agents/runtime.py": "2896f317d5ab34f7e3c5813849a96d90c67bb860d1bd918087eb40359cffb976",
+      "backend/tests/playground_helpers.py": "889f0c628fe1d5154c0931145b9b7cdb971d93c1f37882ea415664cb237d1a45",
+      "backend/tests/test_v216_agent_runtime.py": "1883d410b4cb4320e4f6ba50632d2d82b76909d2b9e18108cbf7a15a198a12e7",
+      "backend/tests/test_v216_controlled_eval.py": "5df97ac2b07ab923d5539cda98484abce39764cce35d42786c24557a69ee72fe",
+      "backend/tests/web_e2e_server.py": "e4f2969b5e1b037985458f20e71d9aa4a1d52ac8b8fd4e1f64c04748144e42bb",
+      "evals/controlled_offline.py": "87cf2f0f4476e1ff967a3999817325c5795f231239b100be930b057d8e254b30",
+      "frontend/src/api/providerRuntime.test.ts": "000fd821a515d160db5af554999f7a078a05d0dfa74fa8b0f99d640450cd71f3",
+      "frontend/src/api/providerRuntime.ts": "c7b4e7c3efc2c151fae65800cceb1fe46e5116577852c71c2a32b4fce2643de4",
+      "frontend/src/api/timelineSummary.test.ts": "64273b92601e501e92fcd25fa11d9aac85190a21d1bfbd017f69588ac836305a",
+      "frontend/src/api/timelineSummary.ts": "a4cb7bd72cee3b54ae6d548e57818930a9a8f89c119a1c82c7bfc68fbf5a4e47",
+      "frontend/src/components/RecommendationResults.css": "7e9932875b992d1fb710753740c249a2e423e3cd621c69259b792ac5b9376af9",
+      "frontend/src/components/RecommendationResults.test.tsx": "301c092627e21d642e45dc1e40b92191a8c5da6fa656515791b4f02eb8901f04",
+      "frontend/src/components/RecommendationResults.tsx": "d0737880c28f5e379c70cae5930dd8dba57ca2c2ccd400e95afe6118e93a432c",
+      "frontend/src/components/WorkflowConfirmationCard.tsx": "8dee0f0101f81c8e4eb6638dfd28d03b76a20014e05f952191e405f239e607d3",
+      "frontend/src/components/WorkflowProposalDetails.test.tsx": "9dc17482bf04d1c3bd3e8993eb49aa5bcdfa1ac43804b2c00a8f5a5a055a320b",
+      "frontend/src/components/WorkflowProposalDetails.tsx": "4c243dd1ab7b4f92937093339ae0023918ef78bcd02b5493e2a448efedba3ad2",
+      "frontend/src/components/WorkflowResources.test.tsx": "a66babd9bf7cad4b0476f7a775a766e0efa01bce9c61d5a16880d215f54f5828",
+      "frontend/src/components/WorkflowResources.tsx": "33a0366dc0a515aa1372bf99871ebac1edb047ad879d114233abc118b4949815",
+      "frontend/src/pages/AgentWorkspace.tsx": "cfc956e87b4029585bcaa488f00941fc3b406aa0c28a37dfe9a59a5a91822988",
+      "frontend/tests/product-demo.spec.ts": "3c611ec284ecee6f77e8b50ccb36b53f59a1c83ed726f2715677178ded45672d",
+      "frontend/tests/return_replace.spec.ts": "392b27e3e80b05f3d5d38e084f32df2c979e636c5de08d411b3cac9ed47ed0cc"
+    },
+    "code_inventory_sha256": "a8331a324bbbcc6976b6a6f4f813b2cf5a07da9785cdca7c004d6b3bbb46eb07"
+  },
+  "checks": [
+    {
+      "name": "core-backend-full",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/.playground/v216-20261115T153441Z/receipts/backend-full.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 843.014043291,
+      "completed_at": "2026-11-15T16:05:35.304310+00:00",
+      "log_sha256": "e2e876762cf3d0783dca7c94ee980c99eb2f17c54169d6dcadcd64ef7bf1c1a2"
+    },
+    {
+      "name": "real-bge",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_live_preflight.py",
+        "backend/tests/test_multiagent_integration.py",
+        "backend/tests/test_retrieval_ingest.py",
+        "-m",
+        "real_bge",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/.playground/v216-20261115T153441Z/receipts/real-bge.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 24.446285833,
+      "completed_at": "2026-11-15T15:49:32.974333+00:00",
+      "log_sha256": "a835c90dc7cda873b1c09a6525ee17b911df65ff4555dd8854167166a9f58a24"
+    },
+    {
+      "name": "core-controlled-final",
+      "argv": [
+        "python",
+        "-m",
+        "evals.controlled_offline"
+      ],
+      "exit_code": 0,
+      "seconds": 9.244560084,
+      "completed_at": "2026-11-15T15:50:10.062471+00:00",
+      "log_sha256": "c2616818449120e2bce26e2de7bd51495efcbcf0ca90d86fbde48c9530b91a1a"
+    },
+    {
+      "name": "core-final-contracts",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_v216_agent_runtime.py",
+        "backend/tests/test_v216_controlled_eval.py",
+        "backend/tests/test_v215_workflow.py",
+        "backend/tests/test_handoff_constraint_continuation.py",
+        "backend/tests/test_resume_authorization.py",
+        "backend/tests/test_v215_rc1_runtime.py",
+        "backend/tests/test_v213_l4_business.py",
+        "-q",
+        "--tb=short"
+      ],
+      "exit_code": 0,
+      "seconds": 37.013650625000004,
+      "completed_at": "2026-11-15T16:13:25.766714+00:00",
+      "log_sha256": "c11d45c152a1e5f37e4a22e49b651632d7657bc80a46a11450dfcc18e14cc8ca"
+    },
+    {
+      "name": "core-runtime-green",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_v216_agent_runtime.py",
+        "backend/tests/test_supervisor_routing.py",
+        "backend/tests/test_v213_l4_handoff.py",
+        "backend/tests/test_v213_l2_batch.py",
+        "-q",
+        "--tb=short"
+      ],
+      "exit_code": 0,
+      "seconds": 8.205304667,
+      "completed_at": "2026-11-15T15:42:58.151449+00:00",
+      "log_sha256": "e120d0c417c678512c3777a076a91d80a425afdf7f0082a748cdc89ebd222bd1"
+    },
+    {
+      "name": "frontend-final",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "cd frontend && npm run test && npm run typecheck && npm run lint && npm run build"
+      ],
+      "exit_code": 0,
+      "seconds": 7.577936542,
+      "completed_at": "2026-11-15T16:07:49.931181+00:00",
+      "log_sha256": "6cb2d797a0afb0f7546ff020d7b31c490608af6303d15aaa990bccadfc0f8ac0"
+    },
+    {
+      "name": "playwright-acceptance",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "cd frontend && npm run test:e2e"
+      ],
+      "exit_code": 0,
+      "seconds": 281.364262458,
+      "completed_at": "2026-11-15T16:27:22.484769+00:00",
+      "log_sha256": "c4583620ffbef80a9ee6ef5165bdf608badc28c14a19137aa2e752888ec594ee"
+    },
+    {
+      "name": "core-quality-final",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "python -m ruff check backend/src backend/tests evals scripts && python -m ruff format --check backend/src backend/tests evals scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.118646584,
+      "completed_at": "2026-11-15T15:58:23.685656+00:00",
+      "log_sha256": "d0abdde2780e71cf7ce90df830435be349e1871d150335158f57c0a10fad269c"
+    },
+    {
+      "name": "environment-verification",
+      "argv": [
+        "python",
+        "-c",
+        "import importlib.metadata as m, json, pathlib; from sqlalchemy import create_engine,text; from agentmall.infra.config import Settings; from agentmall.agents.budgets import Limits; from dataclasses import asdict; manifest=json.loads(pathlib.Path(\"evals/data/embedding_manifest.json\").read_text()); import hashlib; root=pathlib.Path(\".models\")/manifest[\"revision\"]; assert len(manifest[\"files\"])==6; assert all(hashlib.sha256((root/n).read_bytes()).hexdigest()==v[\"sha256\"] and (root/n).stat().st_size==v[\"size_bytes\"] for n,v in manifest[\"files\"].items()); engine=create_engine(Settings().test_database_url.get_secret_value()); c=engine.connect(); print(json.dumps({\"postgres\":c.scalar(text(\"SHOW server_version\")), \"pgvector\":c.scalar(text(\"SELECT extversion FROM pg_extension WHERE extname=\\x27vector\\x27\")), \"packages\":{n:m.version(n) for n in [\"langgraph\",\"langgraph-checkpoint-postgres\",\"langchain-deepseek\",\"openai\",\"httpx\",\"torch\",\"transformers\",\"mcp\"]},\"bge_revision\":manifest[\"revision\"],\"six_files_verified\":True,\"limits\":asdict(Limits()),\"real_key_reads\":0,\"provider_requests\":0}));c.close();engine.dispose()"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8550225,
+      "completed_at": "2026-11-15T16:10:52.393400+00:00",
+      "log_sha256": "b3a9132d66fd0cc405cdbc89e3c5724346736dd06f3811b6a5dee92fcdfa0d44"
+    },
+    {
+      "name": "core-package-boundary",
+      "argv": [
+        "python",
+        "-c",
+        "import importlib.util,json; assert importlib.util.find_spec(\"torch\") is None; assert importlib.util.find_spec(\"transformers\") is None; print(json.dumps({\"torch_installed\":False,\"transformers_installed\":False,\"CI_OFFLINE_CORE\":True}))"
+      ],
+      "exit_code": 0,
+      "seconds": 0.061738,
+      "completed_at": "2026-11-15T16:10:52.544497+00:00",
+      "log_sha256": "98d5c2de7e67b5bc70a94d9d67dd5181df0784960541689264d4ff9eb05fc50f"
+    }
+  ],
+  "results": {
+    "backend": {
+      "passed": 1603,
+      "failed": 0,
+      "skipped": 14,
+      "warnings": 3,
+      "seconds_pytest": 836.09,
+      "core_packages_without_torch": true,
+      "skips": {
+        "real_bge_separately_executed": 13,
+        "private_historical_evidence_unavailable": 1
+      },
+      "warnings_source": "3 existing jieba regex SyntaxWarnings"
+    },
+    "real_bge": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "deselected": 52,
+      "warnings": 3,
+      "seconds_pytest": 19.69,
+      "model_id": "BAAI/bge-small-zh-v1.5",
+      "revision": "7999e1d3359715c523056ef9478215996d62a620",
+      "dimension": 512,
+      "device": "CPU",
+      "files": {
+        "config.json": {
+          "sha256": "3853a7979202c348751b753e36f579c41d8da7d36af617d3d907e1fc9b441f2a",
+          "size_bytes": 776
+        },
+        "model.safetensors": {
+          "sha256": "354763b9b1357bc9c44f62c6be2276321081ed2567773608c0d0785b61d5a026",
+          "size_bytes": 95827648
+        },
+        "special_tokens_map.json": {
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "size_bytes": 125
+        },
+        "tokenizer.json": {
+          "sha256": "48cea5d44424912a6fd1ea647bf4fe50b55ab8b1e5879c3275f80e339e8fae26",
+          "size_bytes": 439125
+        },
+        "tokenizer_config.json": {
+          "sha256": "e6f3b96db926a37d4039995fbf5ad17de158dfb8f6343d607e4dbaad18d75f5a",
+          "size_bytes": 367
+        },
+        "vocab.txt": {
+          "sha256": "45bbac6b341c319adc98a532532882e91a9cefc0329aa57bac9ae761c27b291c",
+          "size_bytes": 109540
+        }
+      },
+      "provider": "SDK_MOCK_TRANSPORT"
+    },
+    "vitest": {
+      "files": 23,
+      "passed": 146,
+      "failed": 0
+    },
+    "playwright": {
+      "passed": 128,
+      "failed": 0,
+      "skipped": 0,
+      "retries": 0,
+      "flaky": 0,
+      "stats": {
+        "startTime": "2026-11-15T16:22:41.554Z",
+        "duration": 280913.314,
+        "expected": 128,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "json_sha256": "2ff32d7f7b2c50b2014cc40d24a6b9b81a9da945493f1b12fe86f2c14a7541e5"
+    },
+    "controlled_entry": {
+      "passed": 11,
+      "separate_explicit_decision_resume": true,
+      "recover": false,
+      "scoring": "post-freeze status/error contract, not business Oracle"
+    },
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "build": "PASS",
+    "ruff": "PASS",
+    "format": "PASS"
+  },
+  "product_scenarios": [
+    {
+      "scenario": "V216-A-explicit-no-purchase-constraint-never-creates-approval-or-transaction",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "stock_reserved_total": 0,
+      "confirmations": [],
+      "checkpoint_rows": 12,
+      "model_wire_requests_synthetic": 3,
+      "sql_evidence_sha256": "450bf6c4cbdc6edb380b3f96e95c2d4cf655f9ec8ac512d4e767b9621427b287",
+      "screenshot_sha256": "f81b46cd795ac97f39f86f6ed949bbed616a7bf1743c63670e57a095f70921e2"
+    },
+    {
+      "scenario": "V216-A-recommendation-comparison-reads-real-retrieved-facts-and-count",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "stock_reserved_total": 0,
+      "confirmations": [],
+      "checkpoint_rows": 13,
+      "model_wire_requests_synthetic": 2,
+      "sql_evidence_sha256": "4665addb303334c17d65103431d67f98cad7193ef30894870bd709cfb5688f80",
+      "screenshot_sha256": "7fed00beec408272bdca2e05217dd6a9111b7c3a4db6c97859c66fb97c67d509"
+    },
+    {
+      "scenario": "V216-A-safe-provider-failure-retains-UNKNOWN-instead-of-success-or-zero-usage",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "PARTIAL"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "stock_reserved_total": 0,
+      "confirmations": [],
+      "checkpoint_rows": 3,
+      "model_wire_requests_synthetic": 1,
+      "sql_evidence_sha256": "b44f9fb530b3756c6182902a0d27d2b0c15c463d02170d85362403eee420fc05",
+      "screenshot_sha256": "eb79b6e614d56b28c53594c42500639a66eaf26f23d333a1de9b53648d3dd2c5"
+    },
+    {
+      "scenario": "V216-B-changed-catalogue-rejects-stale-approval-without-inventory-write",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "PARTIAL"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "stock_reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": false
+        }
+      ],
+      "checkpoint_rows": 23,
+      "model_wire_requests_synthetic": 5,
+      "sql_evidence_sha256": "4f870b3853273157a940c76bb26eac9c2d86e3b4ccc1585361887df5eefaf0d5",
+      "screenshot_sha256": "d8392db0d5d277ecec416871e36087246cbf609e79b3ba28ffa6aeb2bb05a0a5"
+    },
+    {
+      "scenario": "V216-B-manual-rejection-records-a-decision-with-no-order",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 0,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "stock_reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "reject",
+          "consumed": false
+        }
+      ],
+      "checkpoint_rows": 23,
+      "model_wire_requests_synthetic": 5,
+      "sql_evidence_sha256": "5156fdc2a02c65b25ce1baf9c2814aa5e7b61c9b57062982347efe1e09b26bce",
+      "screenshot_sha256": "6df5b4d0cd252148a55f264ba3fc8098496733320b78c0e244f29e11a51c70a0"
+    },
+    {
+      "scenario": "V216-B-purchase-approval-response-loss-replay-refresh-and-SQL-agree",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 1,
+      "cases_total": 0,
+      "payments_total": 0,
+      "refunds_total": 0,
+      "stock_reserved_total": 1,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        }
+      ],
+      "checkpoint_rows": 23,
+      "model_wire_requests_synthetic": 5,
+      "sql_evidence_sha256": "fb9670e8e979f1e0ad4a22a95adf7bb913d1cc15f0aa90598cf84ac1bbb3a76e",
+      "screenshot_sha256": "f8a57a26ba65a4a329b3fb6328ea3ae54b17d57acaf760c2b94a7678b0f8b4d2"
+    },
+    {
+      "scenario": "V216-C-later-invalid-wire-response-preserves-committed-return-and-independent-receipt",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "PARTIAL"
+      ],
+      "orders_total": 1,
+      "cases_total": 1,
+      "payments_total": 1,
+      "refunds_total": 0,
+      "stock_reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        }
+      ],
+      "checkpoint_rows": 27,
+      "model_wire_requests_synthetic": 6,
+      "sql_evidence_sha256": "d5f1ceb95c418b7c1d8190373472495a6a3edecca50924f5603121200e6e43d2",
+      "screenshot_sha256": "d950c8c6bcf94c602879c7f35612bf556692075069fea94d580c99d4bf51678d"
+    },
+    {
+      "scenario": "V216-C-rejecting-return-cannot-authorize-replacement-checkout",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 1,
+      "cases_total": 0,
+      "payments_total": 1,
+      "refunds_total": 0,
+      "stock_reserved_total": 0,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "reject",
+          "consumed": false
+        },
+        {
+          "decision": "reject",
+          "consumed": false
+        }
+      ],
+      "checkpoint_rows": 42,
+      "model_wire_requests_synthetic": 9,
+      "sql_evidence_sha256": "dff066fdeee6ce697b9753f41362fe6038ba6aa7d4f007417b5bee8a52fa8474",
+      "screenshot_sha256": "3719cdcbd5a9482ad0c163f9c5c6b01439c41ca6088338adbc9d8d0539e91388"
+    },
+    {
+      "scenario": "V216-C-two-independent-HITL-approvals-create-one-case-and-one-replacement-order",
+      "classification": "CONTRACT_TEST_ONLY",
+      "status": "passed",
+      "run_status": [
+        "COMPLETED"
+      ],
+      "orders_total": 2,
+      "cases_total": 1,
+      "payments_total": 1,
+      "refunds_total": 0,
+      "stock_reserved_total": 1,
+      "confirmations": [
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        },
+        {
+          "decision": "approve",
+          "consumed": true
+        }
+      ],
+      "checkpoint_rows": 42,
+      "model_wire_requests_synthetic": 9,
+      "sql_evidence_sha256": "356f4700e2e1d3d6fc45e89f83a788a59b2c24b3255c93262e90c551d2c668b1",
+      "screenshot_sha256": "55848a2336d9403016427c514bc9196dc8854c4fa4f9d8bfaa7a422d5eac5c27"
+    }
+  ],
+  "screenshots": {
+    "recommendation.png": "7fed00beec408272bdca2e05217dd6a9111b7c3a4db6c97859c66fb97c67d509",
+    "purchase.png": "f8a57a26ba65a4a329b3fb6328ea3ae54b17d57acaf760c2b94a7678b0f8b4d2",
+    "return-replacement.png": "55848a2336d9403016427c514bc9196dc8854c4fa4f9d8bfaa7a422d5eac5c27"
+  },
+  "important_semantics": {
+    "C_setup": "1 DELIVERED order / 1 mock payment / 2 setup approvals; subtract this baseline from business effects",
+    "rejection": "REJECTED confirmation is recorded but not consumed as an approved transaction; separate checkout may still require a new explicit decision",
+    "run_success_is_not_evaluation_success": true,
+    "usage_unknown_never_zero_or_settled": true,
+    "synthetic_tokens_are_not_provider_billing": true
+  },
+  "intermediate_failures_preserved": [
+    {
+      "name": "core-runtime-red",
+      "exit_code": 1,
+      "log_sha256": "f0612f4fc09f3d6b9970a047b7fe011e629d9738076199d0ab7f4d710823a1e4"
+    },
+    {
+      "name": "controlled-sdk",
+      "exit_code": 1,
+      "log_sha256": "11c9d90e2e294fd1f841a80bcc7a8abf971be03712db1733e429ebd32204e878"
+    },
+    {
+      "name": "product-ui-first",
+      "exit_code": 1,
+      "log_sha256": "04cc1c18df936d763c79ff7427f49efa55af0ec12f304a2ef91681256670e169"
+    },
+    {
+      "name": "product-ui-second",
+      "exit_code": 1,
+      "log_sha256": "e3d4faae7e5ae310e6bb7b44f2cefa8a4e1109ad28361905a48a84f3c569e812"
+    },
+    {
+      "name": "playwright-full",
+      "exit_code": 1,
+      "log_sha256": "90e25b5b706570020b3fe5ad6088de0bcdeadc313a63c249dde310cb8cafb777"
+    },
+    {
+      "name": "core-quality",
+      "exit_code": 1,
+      "log_sha256": "1f00a3714d4b90fda7cabbcba2d5e07126797071f9b80e7a026039282c07b2f7"
+    },
+    {
+      "name": "core-format-first",
+      "exit_code": 1,
+      "log_sha256": "22a7f7a2abaf6cfa0399f0872456aa766083820e5a2cc87bce5f9543f35aa167"
+    }
+  ],
+  "review": {
+    "blocking_findings": 0,
+    "minor_fixed": "timelineSummary unit fixture now matches actual EXECUTED receipt without action_type",
+    "test_harness_adjustments": "native parameter projection, wait for resume response, exact proposal notice locator, separately reject purchase after rejected return; no domain protections relaxed"
+  },
+  "protected_files_unchanged": [
+    "evals/oracles.py",
+    "evals/data",
+    "docs/evidence/v215",
+    "docs/evidence/v215-rc1",
+    "docs/EVALUATION_RESULTS.md",
+    ".github",
+    "backend/alembic",
+    "backend/pyproject.toml",
+    "backend/uv.lock",
+    "frontend/package.json",
+    "frontend/package-lock.json"
+  ],
+  "l8": {
+    "planned": 15,
+    "scored": 5,
+    "pass": 1,
+    "fail": 4,
+    "not_scored": 3,
+    "not_run": 7,
+    "independent_holdout_count": 0,
+    "episode08_ledger": "UNKNOWN",
+    "episode08_actual_cost": "UNKNOWN",
+    "episode08_rca": "INSUFFICIENT_EVIDENCE",
+    "episode08_reservation_cny": "2.113536",
+    "E1": "ORACLE_CONTRACT_MISMATCH",
+    "summary_sha256": "211a4127c79e8c878f55cad9d656d923b956c17c48613837b21b5c1eac6b93be"
+  },
+  "limits_unchanged": {
+    "models": 12,
+    "tools": 16,
+    "delegations": 4,
+    "steps": 24,
+    "output_tokens": 12000,
+    "run_seconds": 90
+  },
+  "boundaries": {
+    "real_provider_requests": 0,
+    "real_provider_key_reads": 0,
+    "actual_cost_cny": "0",
+    "github_writes": 0,
+    "new_l8_episodes": 0,
+    "remote_v216_ci": "NOT_RUN",
+    "release": "ON_HOLD",
+    "RELEASE_COMMIT": "UNBOUND",
+    "video": "VIDEO_NOT_RECORDED",
+    "MCP": "REMOTE_AUTH_NOT_IMPLEMENTED"
+  },
+  "resources": {
+    "state": "RESOURCE_CLEANUP_COMPLETED",
+    "owned_containers_removed_verified": 3,
+    "owned_volumes_removed_verified": 5,
+    "historical_resource_scope": "metadata snapshot captured during V216 run; all mutations independently limited to exact new owner IDs",
+    "historical_container_metadata_unchanged": true,
+    "historical_volume_names_unchanged": true,
+    "original_local_config_restored": true,
+    "temporary_synthetic_credentials_removed": true,
+    "receipt_sha256": "abf8ec174f3bf2fede2a20297166bf47aa46991d1d80a0746c7885f32f97e06d"
+  },
+  "quality_audit": {
+    "relative_links_checked": 229,
+    "link_errors": [],
+    "privacy_findings": [],
+    "audit_sha256": "f640049640cee22ae8c8f87aa93f3901590254905b3863dd287a33a4b81bd641",
+    "scope": "new or modified source and nine current Markdown files; explicit synthetic demo identities allowed"
+  }
+}

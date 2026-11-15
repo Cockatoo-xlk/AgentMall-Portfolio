@@ -5,6 +5,13 @@ describe("server provider identity and safe usage", () => {
   it("does not invent Live or Fixture identity without a server response", () => {
     expect(modeLabel(null)).toContain("待核对");
   });
+  it("marks offline demos only for backend-confirmed mock or fixture modes", () => {
+    for (const mode of ["MOCK_TRANSPORT", "FIXTURE"] as const)
+      expect(modeLabel({ mode, valid_responses: 0 })).toContain("OFFLINE DEMO / MOCK MODEL");
+    for (const mode of ["LIVE_DEEPSEEK", "MODEL_DISABLED", "MODEL_ENABLED_UNVERIFIED"] as const)
+      expect(modeLabel({ mode, valid_responses: 0 })).not.toContain("OFFLINE DEMO");
+    expect(modeLabel(null)).not.toContain("OFFLINE DEMO");
+  });
   it("labels the actual SDK mock explicitly without claiming paid inference", () => {
     expect(modeLabel({ mode: "MOCK_TRANSPORT", valid_responses: 2 })).toContain(
       "MockTransport",

@@ -1,6 +1,14 @@
 # 架构：模型建议、持久执行、领域事务
 
-当前 V2.15 在 `main 71970c88d8827d22cd5626de20317a89d389bafc` / tree `50921e7431437e0603f6b59487dbbf6cf6e80ec6` 上做本地可靠性改进。产品改进已实现，验证汇总 **LOCAL_OFFLINE_VERIFIED**，真实 Provider和新 L8 Episode未在本轮运行；本地与远程CI证据分别核验，后续RC1结果见[RC1审核](V215_RC1_REVIEW.md)。V2.14 Release **ON_HOLD**，V2.15 未发布。历史源码与验证身份见[历史结果](RESULTS.md)，L8结果见[评测报告](EVALUATION_RESULTS.md)。
+当前本地候选为 **V2.16**，基于 V2.15 已合并的 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。基线 main CI 43718887411 已通过；V2.16 本地证据见[本轮交付](V216_PRODUCT_DEMO.md)，未 Push / PR / 发布 / 部署。本轮不运行真实 Provider，不改 L8 结果。V2.14 Release **ON_HOLD**；**RELEASE_COMMIT=UNBOUND**。
+
+## V2.16：界面事实与整批派发
+
+[RecommendationResults](../frontend/src/components/RecommendationResults.tsx)只展示 Run 的服务端约束及 `replacement` 商品引用对应的事实快照，缺少数据保持 UNKNOWN，不补造候选；[WorkflowResources](../frontend/src/components/WorkflowResources.tsx)通过认证 GET 独立核对当前商品、订单和 Case。比较表不是锁库存或报价，审批卡展示的是服务端 Proposal 快照。刷新不重新批准或下单。
+
+[Runtime.validate_tasks](../backend/src/agentmall/agents/runtime.py)先验证整个 Handoff 批次。V2.16 补充批次内签名集合：相同约束、引用及事实版本的等价任务即使 subtask_id 不同，也在预算预留及派发前整批拒绝。原先跨批次检查继续有效；不同订单引用仍可合法并行。不是扩大角色权限或增加重试。
+
+[受控离线入口](../evals/controlled_offline.py)复用原生 pytest、正式 API 和 SDK MockTransport。inspect、decide、resume 为独立调用，没有 Recover 或授权决策循环；结果冻结为规范 JSON 后才做状态/错误契约评分，SQL 业务断言与原 Oracle 分开。不新增通用 Orchestrator，不修改旧 Simulator 的历史语义。
 
 ## 两条执行路径与一个业务边界
 

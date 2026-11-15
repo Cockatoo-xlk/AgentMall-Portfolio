@@ -2,7 +2,7 @@
 
 展示目标是“自然语言建议 → 可信提案 → 用户独立确认 → 唯一待支付订单 → 读回原工作流”。**SDK MockTransport / Fixture Embedding / 合成数据 / TEST_OPERATOR**；FastAPI、PostgreSQL、业务事务与官方Checkpoint真实运行。没有真实付款、退款、Provider请求或部署。
 
-本轮V2.15新演示 **NOT_RUN**；以下复用已有脚本和Fixture程序，不声称当前版本已重新演示。V2.14 Release仍 **ON_HOLD**，V2.15未发布。历史截图仅用作操作参考，**VIDEO_NOT_RECORDED**。
+V2.16 的三条 SDK MockTransport 浏览器业务链已通过本轮 [9项产品场景](../frontend/tests/product-demo.spec.ts)，分别独立核对 SQL；[当前回执](evidence/v216/verification.json)与 V2.15 基线 CI 分开。以下是可手动复现的讲解脚本，自动化点击属于明确的合成 TEST_OPERATOR 操作，不是实际人类测试研究。V2.14 Release仍 **ON_HOLD**，V2.15已合并但未发布，V2.16仅本地候选；**VIDEO_NOT_RECORDED**。
 
 ## 演示前准备（不计入6分钟）
 
@@ -11,7 +11,7 @@
 在仓库根目录操作。Mac例子使用 `desktop-linux`；其他环境显式换成已核对的Docker Context，不修改全局Context。项目名须独占；发现同名历史资源或端口占用时换名称/端口，不停止未知进程。
 
 ```sh
-export COMPOSE_PROJECT_NAME=agentmall-v215-fixture-demo
+export COMPOSE_PROJECT_NAME=agentmall-v216-fixture-demo
 docker --context desktop-linux compose --env-file /dev/null \
   -f compose.ci.yaml -f compose.portfolio-local.yaml ps -a
 lsof -nP -iTCP:8026 -iTCP:5196 -sTCP:LISTEN
@@ -28,10 +28,12 @@ docker --context desktop-linux compose --env-file /dev/null \
   -f compose.ci.yaml -f compose.portfolio-local.yaml up -d --wait postgres
 docker --context desktop-linux compose --env-file /dev/null \
   -f compose.ci.yaml -f compose.portfolio-local.yaml run --rm --no-deps \
-  runner python scripts/demo.py --catalog-profile expanded --seconds 900
+  runner python scripts/demo.py --catalog-profile legacy --prepare-return --seconds 900
 ```
 
 保持这个终端在前台。`--env-file /dev/null`避免Compose自动读取本地`.env`；不附加真实Key、旧PGDATA或私有配置。脚本只在新建容器/临时Schema中运行，禁止复用业务Schema。公开演示账号和测试标签均为合成配置。
+
+`--prepare-return`通过正式 API 准备一笔合成 DELIVERED 原订单，包括独立的**测试环境模拟付款与发货**；这不属于演示中的新购买，也不是真实资金。先记录控制台 `delivered_order_id`，后续核对付款/订单增量时减去这份初始化基线。不执行任何用户 Agent Run，不自动批准演示 Proposal。
 
 第二个终端选择既有 `context-catalog` 程序：
 
@@ -45,25 +47,44 @@ curl --fail --silent --show-error -X POST http://127.0.0.1:8026/__test/sdk-mode 
 
 健康标识应为 `fake-model-real-fastapi-postgresql`，程序返回 `MOCK_TRANSPORT`、`real_model_calls=0`。`/__test`只属于专用测试入口，不对公网开放；普通 `agentmall.main` 默认MODEL_DISABLED。不要在运行中切换程序或reset。
 
-## 六分钟脚本
+## 5–7分钟讲解脚本
 
-打开 `http://127.0.0.1:5196`，使用公开合成账号 `buyer1` / `AgentMall-demo-2026!`。进入工作流，新建 **Single Thread**，执行模式选 **Legacy Sync**。
+打开 `http://127.0.0.1:5196`，公开合成账号 `buyer1` / `AgentMall-demo-2026!`。进入工作流，执行模式选 **Legacy Sync**，不勾选 Durable Async。先用 Single Thread 展示A/B，再用新 Multi Thread 展示C。
 
 | 时间 | 操作/讲解 | 核对事实 |
 |---|---|---|
-| 0:00–0:40 | 展示Mock/Fixture标签与架构边界 | 真实后端 + 受控模型回包；不是DeepSeek实况 |
-| 0:40–1:30 | 输入“推荐300元以内的静音键盘，不要购买。” | 返回当前目录候选和工具事件，订单增量0 |
-| 1:30–2:20 | 输入“我改主意了，要支持无线连接的，预算提高到400元。” | 保留静音偏好，预算替换400，出现新的候选集合 |
-| 2:20–3:15 | 输入“就买刚才推荐的第二款，一件，送演示宿舍。” | 当前第二款绑定Product ID；WAITING_INPUT；展示数量/价格/地址快照，尚无订单 |
-| 3:15–4:10 | 以TEST_OPERATOR审阅后独立批准并继续 | 唯一PENDING_PAYMENT订单，付款增量0；不要点击模拟付款 |
-| 4:10–5:10 | 打开订单详情；刷新并重新登录、恢复原Thread | 原订单和时间线可读，不发送新购买请求，不产生第二订单 |
-| 5:10–6:00 | 打开[评测报告](EVALUATION_RESULTS.md)，解释1/5和UNKNOWN | 已评分20%不是15题通过率；08未定责，完整实费UNKNOWN |
+| 0:00–0:40 | 展示 OFFLINE DEMO / MOCK MODEL，解释 FastAPI、PG、LangGraph、RAG | 模型为受控回包；真实BGE专项与Demo的Fixture Embedding分开 |
+| 0:40–1:30 | A：输入“推荐三款400元以内支持无线连接的静音键盘，不要购买。” | 比较表3款、真实价格/库存快照、独立GET当前状态；订单增量0 |
+| 1:30–2:20 | B：输入“就买第二款，一件，送演示宿舍。” | WAITING_INPUT；核对商品、数量、金额、地址、政策、快照标识；批准前无新订单 |
+| 2:20–3:00 | 明确选择批准并继续；打开订单，刷新重登恢复同Thread | 唯一PENDING_PAYMENT、库存预留1、付款增量0，刷新不重放购买 |
+| 3:00–3:30 | 原Run已终态后，切换下方return_replace程序，新建Multi Thread | 不在运行中更换程序；使用控制台的原订单ID |
+| 3:30–4:30 | C：申请质量退货并购买替代商品；检查后批准第一份退货提案 | Case REQUESTED新增1，新订单仍未产生，无退款 |
+| 4:30–5:30 | 检查第二份CHECKOUT；再次独立批准 | 不同Proposal/Confirmation；第二份批准才新增待付款订单 |
+| 5:30–6:30 | 展示时间线、SQL投影、失败场景和L8历史分母 | 已提交Case不会因后续失败消失；1/5历史成绩不被本轮Mock覆盖 |
 
-名单、按钮和SKU按当前页面为准，不从历史截图抄ID。Mock协议里的模型名、Token和费用不是Provider用量/账单。历史[Proposal截图](screenshots/portfolio/04-proposal-confirmation.jpg)、[订单详情](screenshots/portfolio/06-order-detail.jpg)、[Thread恢复](screenshots/portfolio/07-restored-thread.jpg)及[来源哈希](evidence/portfolio-demo/verification.json)可作为备用讲解材料，须一直标注历史Mock/Fixture来源。
+切换C（**仅在原Run已终态**）时，将下面值替换为本次初始化输出的合成订单ID，不抄历史ID：
+
+```sh
+curl --fail --silent --show-error -X POST http://127.0.0.1:8026/__test/sdk-mode \
+  -H 'X-E2E-Key: agentmall-local-e2e' -H 'Content-Type: application/json' \
+  --data '{"program":"return_replace","order_id":"本次delivered_order_id"}'
+```
+
+C输入：`订单<本次ID>有质量问题，申请退货；然后推荐另一款500元以内静音键盘，准备购买一件，送演示宿舍。` 两次均先审阅实际快照，再明确点击批准或拒绝；第一份确认不能授权第二份。按钮由用户触发，前端通过独立 Confirmation / Resume API 提交，未额外直接调用订单/售后写接口。
+
+### 拒绝与安全失败
+
+用全新的演示环境运行反例，不复用已执行交易或未结束的Run：
+
+- A：明确“不要购买”时没有Proposal/订单；选择 `missing_usage` Mock程序验证UNKNOWN停止。
+- B：审批时选择拒绝，订单/预留增量0；浏览器测试另在Proposal创建后下架该合成商品，证明过时快照不允许下单。
+- C：拒绝退货不会自动购买；独立的购买意图仍可能生成新提案，须另行检查并决定；`return_wire_failure` Mock程序在退货已提交后注入非法响应，原校验层以PROVIDER_TOOL_INVALID停止，Case和已消费确认仍保留。
+
+`/__test`只用于本地专用测试入口，不能公开部署。演示程序不是任意自然语言模型，不推断真实DeepSeek完成能力。本轮实际截图和来源见[验证材料](V216_PRODUCT_DEMO.md#浏览器与数据库证据)。
 
 ## 展示与核验范围
 
-页面展示“待支付”、确认卡和事件；不把HTTP200或回答文字当数据库Oracle。自动化验证入口是[多轮浏览器测试](../frontend/tests/multiturn.spec.ts)、[下单测试](../frontend/tests/purchase.spec.ts)、[订单幂等/并发](../backend/tests/test_order_concurrency.py)、[Checkpoint恢复](../backend/tests/test_checkpoint_resume.py)。V2.15另有[两次独立确认与后续解析失败回归](../backend/tests/test_v215_workflow.py)、[用户失败反馈回归](../backend/tests/test_v215_failure_feedback.py)、[安全诊断回归](../backend/tests/test_v215_model_diagnostics.py)。当前验证汇总LOCAL_OFFLINE_VERIFIED；这些测试入口和实现不等于本轮已重演这条浏览器Demo。
+页面展示“待支付”、确认卡和事件；不把HTTP200或回答文字当数据库Oracle。自动化验证入口是[多轮浏览器测试](../frontend/tests/multiturn.spec.ts)、[下单测试](../frontend/tests/purchase.spec.ts)、[订单幂等/并发](../backend/tests/test_order_concurrency.py)、[Checkpoint恢复](../backend/tests/test_checkpoint_resume.py)。V2.15另有[两次独立确认与后续解析失败回归](../backend/tests/test_v215_workflow.py)、[用户失败反馈回归](../backend/tests/test_v215_failure_feedback.py)、[安全诊断回归](../backend/tests/test_v215_model_diagnostics.py)。V2.16三场景实际执行结果见[本轮回执](evidence/v216/verification.json)；测试环境与手动演示依赖准备分开披露。
 
 解释时间线时，model_request_id只关联本地一次模型调用；Schema/响应哈希来自规范化SDK对象，不是原HTTP字节；响应body.id不是HTTP request-id。OBSERVED_VALID是数字自洽的响应观察，output_budget_state是本地预算状态，不讲成供应商已结算。旧single_agent.Guard不在新捕获范围。[完整字段边界](ARCHITECTURE.md#正式run模型诊断的证据边界)。
 

@@ -11,9 +11,10 @@ from multiagent_helpers import ai, call, choose_purchase, final, payload, route
 
 
 class SDKProgram:
-    def __init__(self, program="purchase", order_id=None, *, delay_ms=0):
+    def __init__(self, program="purchase", order_id=None, *, delay_ms=0, failure_role=None):
         self.program, self.order_id = program, order_id
         self.delay_ms = delay_ms
+        self.failure_role = failure_role
         self.counts, self.requests = {}, []
 
     def plan(self, messages):
@@ -67,6 +68,20 @@ class SDKProgram:
             index = self.counts.get(role, 0)
             self.counts[role] = index + 1
             self.requests.append({"role": role, "body": body})
+            if role == self.failure_role:
+                return httpx.Response(
+                    200,
+                    json={
+                        "id": "mock-invalid-message",
+                        "model": "deepseek-flash",
+                        "choices": [{"index": 0, "message": "CONTRACT_TEST_ONLY_INVALID"}],
+                        "usage": {
+                            "prompt_tokens": 100,
+                            "completion_tokens": 30,
+                            "total_tokens": 130,
+                        },
+                    },
+                )
             human = [
                 HumanMessage(content=m["content"]) for m in body["messages"] if m["role"] == "user"
             ]
@@ -158,7 +173,9 @@ class SDKProgram:
         return httpx.MockTransport(delayed if self.delay_ms else respond)
 
 
-async def install_sdk(env, state_dir, program="purchase", order_id=None, *, delay_ms=0):
+async def install_sdk(
+    env, state_dir, program="purchase", order_id=None, *, delay_ms=0, failure_role=None
+):
     from retrieval_helpers import index
 
     from agentmall.playground.app import attach_models
@@ -167,7 +184,7 @@ async def install_sdk(env, state_dir, program="purchase", order_id=None, *, dela
     provider = getattr(env[2].state, "playground", None)
     if provider:
         await provider.close()
-    scripted = SDKProgram(program, order_id, delay_ms=delay_ms)
+    scripted = SDKProgram(program, order_id, delay_ms=delay_ms, failure_role=failure_role)
     policy = PlaygroundPolicy(
         enabled=True,
         evidence_mode="MOCK_TRANSPORT",

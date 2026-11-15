@@ -1,3 +1,27 @@
+# V2.16：从可运行页面到可核验业务
+
+基于已合并 V2.15 main `d18161d1eb40667f4658e745d2f58369767d67f5`。本轮是本地离线产品改进，实际结果见[交付](V216_PRODUCT_DEMO.md)和[回执](evidence/v216/verification.json)。没有真实 Provider、付款、退款、部署或 L8 复测。
+
+## 同批次重复 Handoff 绕过已存在的防重复检查
+
+**复现：** Supervisor 一次生成两个不同 subtask_id、其余字段相同的只读查单任务。原实现仅检查已派发的 signatures，在整批验证结束后才加入新签名，因此两个重复任务都执行并消费两次 delegation。真实 PostgreSQL 的临时与持久图回归均观察到2次，预期整批拒绝、0次。
+
+**最小修复：** [runtime.py](../backend/src/agentmall/agents/runtime.py)增加局部 batch_signatures，使用原有完整指纹，在任何派发和原子预算预留前拒绝重复。未改权限、Prompt、工具 Schema、事务、Fence 或预算。正向控制用同一个查询 goal 读取两个不同订单，仍执行两次合法派发。不是禁止所有相同 goal。[3项回归](../backend/tests/test_v216_agent_runtime.py)及既有路由/批次/依赖测试共同验证。
+
+## UI 成功必须和数据库事实一致
+
+[9条产品场景](../frontend/tests/product-demo.spec.ts)通过真实 SDK MockTransport 进入正式 Agent API，页面人工点击分别批准/拒绝；独立 SQL 连接查询商品、Proposal、Confirmation、订单、Case、库存、幂等回执、RunEvent 和 Checkpoint。购买成功须有且仅有一个 PENDING_PAYMENT 订单，不能以模型回答当订单；退换购第一份批准后只有 Case，第二份批准才允许购买。错误确认复用被拒绝，响应丢失重放与刷新不增加订单或模型请求。
+
+页面将推荐事实快照和独立 GET 的当前业务状态分开；售后 REQUESTED 和后续失败可以同时存在。合成的后续 Provider wire 异常在原有校验层以 PROVIDER_TOOL_INVALID 安全停止，Case和已消费确认仍保留，没有伪装成历史08号故障复现。[审批快照](../frontend/src/components/WorkflowProposalDetails.tsx)、[比较表](../frontend/src/components/RecommendationResults.tsx)、[资源核对](../frontend/src/components/WorkflowResources.tsx)。
+
+## 受控评测不沿用自动授权脚本
+
+旧 UserSimulator 虽使用预声明脚本，却会自动确认、Resume 和 Recover。新[离线入口](../evals/CONTROLLED_OFFLINE.md)将读取、明确决定、Resume分开，冻结后才评分；完整 Usage 缺失时保留 UNKNOWN，合成 Token 不等于平台结算。只使用开发和 CONTRACT_TEST_ONLY 样本，不读取 L8 09—15，不构建新 Holdout 或通用评测平台。
+
+以下保留 V2.15 阶段的原始说明与测试归属，不冒充 V2.16 新结论。
+
+---
+
 # V2.15：把真实失败变为可回归的工程问题
 
 本轮基线 `71970c88d8827d22cd5626de20317a89d389bafc` / tree `50921e7431437e0603f6b59487dbbf6cf6e80ec6`。以下产品改进已实现，验证汇总为 **LOCAL_OFFLINE_VERIFIED**，[本地回执](evidence/v215/verification.json)已归档；没有新 Provider 请求或 L8 复测。原15题结果不改写，[完整结果和证据层级](EVALUATION_RESULTS.md)独立保留。

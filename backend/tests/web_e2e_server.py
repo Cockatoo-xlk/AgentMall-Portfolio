@@ -556,6 +556,7 @@ def mount_controls(harness):
             "recommend",
             "orders",
             "return_replace",
+            "return_wire_failure",
             "timeout",
             "missing_usage",
             "malicious",
@@ -591,9 +592,10 @@ def mount_controls(harness):
         _, harness.sdk_program = await install_sdk(
             (None, harness.db, harness.app, harness.settings),
             Path(harness.sdk_directory.name),
-            payload.program,
+            "return_replace" if payload.program == "return_wire_failure" else payload.program,
             str(payload.order_id) if payload.order_id else None,
             delay_ms=payload.delay_ms,
+            failure_role="shopping" if payload.program == "return_wire_failure" else None,
         )
         return {"mode": "MOCK_TRANSPORT", "real_model_calls": 0}
 

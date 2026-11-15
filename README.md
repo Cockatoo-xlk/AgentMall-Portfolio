@@ -4,9 +4,9 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 
 **Python 3.12 / FastAPI · LangGraph · PostgreSQL 17 / pgvector · React / TypeScript · MCP**
 
-当前工作为 **V2.15 本地可靠性改进与自动回归**，基线 `main 71970c88d8827d22cd5626de20317a89d389bafc`，源码树 `50921e7431437e0603f6b59487dbbf6cf6e80ec6`。V2.15 尚未发布；V2.14 Release 继续 **ON_HOLD**。本轮不继续 L8 评测，不调用 Provider；本轮验证状态见下表，不能借用历史 CI 成绩。
+当前本地候选为 **V2.16 产品演示与 Multi-Agent 可靠性改进**，基于已合并的 V2.15 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。V2.15 合并后的 [main CI 43718887411](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/43718887411) 已通过，这是基线证据；V2.16 的本地回归单独记录在[本轮交付](docs/V216_PRODUCT_DEMO.md)。本候选未 Push、未创建 PR、未发布或部署；V2.14 Release 继续 **ON_HOLD**。
 
-[6分钟无Key演示](docs/DEMO_GUIDE.md) · [架构与源码](docs/ARCHITECTURE.md) · [工程案例](docs/ENGINEERING_CASES.md) · [评测结果](docs/EVALUATION_RESULTS.md) · [本轮验收与新评测预案](docs/V215_RELIABILITY_ENGINEERING.md) · [限制](docs/KNOWN_LIMITATIONS.md) · [10个面试问题](docs/INTERVIEW_TALKING_POINTS.md)
+[6分钟无Key演示](docs/DEMO_GUIDE.md) · [架构与源码](docs/ARCHITECTURE.md) · [工程案例](docs/ENGINEERING_CASES.md) · [评测结果](docs/EVALUATION_RESULTS.md) · [V2.16验收与复现](docs/V216_PRODUCT_DEMO.md) · [限制](docs/KNOWN_LIMITATIONS.md) · [10个面试问题](docs/INTERVIEW_TALKING_POINTS.md)
 
 ## 三分钟了解项目
 
@@ -40,7 +40,17 @@ flowchart LR
   C["外部 MCP Client"] --> M["MCP Gateway"] --> D
 ```
 
-## 无Key演示：约6分钟
+## 三条无Key产品演示
+
+V2.16 页面从正式 API 展示约束、已核验候选数量、价格/库存/属性对比，展示每份 Proposal 的不可变快照、独立 Confirmation 及业务回执。候选是 Run 快照，当前库存用独立 GET 核对；`REQUESTED` 售后不是退款，`PENDING_PAYMENT` 订单不是付款。
+
+- A：推荐与条件澄清，不产生交易；缺失用量时安全停止并保留 UNKNOWN。
+- B：审阅购买提案后明确批准或拒绝，唯一订单、库存预留、响应丢失幂等核对及刷新读回。
+- C：Multi 退货与替换购买，两次独立审批；后续模型失败时保留已提交的 Case。
+
+[9条浏览器场景](frontend/tests/product-demo.spec.ts)使用 SDK MockTransport、真实 FastAPI / PostgreSQL / Checkpoint 和独立 SQL 查询；本轮通过情况见[回执](docs/evidence/v216/verification.json)。页面仅在服务端确认 Mock/Fixture 时标注 **OFFLINE DEMO / MOCK MODEL**。另有[受控离线验证命令](evals/CONTROLLED_OFFLINE.md)，不会调用旧 Simulator 的自动批准 / Recover 循环。
+
+## 约6分钟讲解
 
 [完整启动与清理步骤](docs/DEMO_GUIDE.md)使用现有 Docker Compose / `scripts/demo.py`，以合成账号进入 **Single / Legacy Sync / context-catalog**：
 
@@ -62,7 +72,8 @@ flowchart LR
 | V2.15 产品修复 / 自动回归 | **已实现 / LOCAL_OFFLINE_VERIFIED**；RC1后端1591 passed / 14 skipped / 3 warnings；Vitest132；Playwright119 / 0 retries；[RC1回执](docs/evidence/v215-rc1/verification.json) |
 | RC1真实BGE专项 | **13 passed / 0 skipped**；固定六文件、CPU512维、Mock Provider；[审核与边界](docs/V215_RC1_REVIEW.md) |
 | V2.15 真实 Provider / 新 L8 Episode | **NOT_RUN**；本轮不调用、不续评 |
-| V2.15 远程 CI / Push / PR / Release / 部署 | 本地回执不含GitHub结论；须按准确SHA另核自动CI与PR。Release/部署 **NOT_PUBLISHED** |
+| V2.15 集成状态 | [PR #5](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/pull/5) 已合并；基线 main CI 43718887411 success；Release/部署 **NOT_PUBLISHED** |
+| V2.16 本地产品回归 | 三条 UI / API / SQL 演示及实际测试结果见[本轮回执](docs/evidence/v216/verification.json)；不借用 V2.15 CI 成绩，远程 CI **NOT_RUN** |
 | 历史 L8，自建前瞻性15题 | 启动8、评分5：PASS1 / FAIL4 / NOT_SCORED3 / NOT_RUN7；已评分成功率 **1/5 = 20%**，95% Wilson **3.62%–62.45%** |
 | 评测性质 / 费用 | `PROSPECTIVE_SELF_AUTHORED`，独立 Holdout **0**；总29次HTTP=28 SETTLED+1 UNKNOWN，完整实费 **UNKNOWN** |
 

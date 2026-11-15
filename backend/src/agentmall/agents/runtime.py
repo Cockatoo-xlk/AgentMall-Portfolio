@@ -298,6 +298,7 @@ class RunContext:
                 await self.budget.record_model_event(self.trace["events"][-1])
             raise RunStopped("REPEATED_DELEGATION")
         envelopes = []
+        batch_signatures = set()
         async with self.sessions.begin() as session:
             actor = await authenticate(self, session)
             for task in tasks:
@@ -357,8 +358,9 @@ class RunContext:
                     task.model_dump(exclude={"subtask_id", "depends_on"})
                     | {"facts": fingerprint({str(k): v for k, v in self.facts.items()})}
                 )
-                if signature in self.signatures:
+                if signature in self.signatures or signature in batch_signatures:
                     raise RunStopped("REPEATED_DELEGATION")
+                batch_signatures.add(signature)
                 envelopes.append((task, signature))
         # Whole batch validates before any delegation. A shared atomic reservation prevents races.
         await self.budget.take("delegations", len(envelopes))

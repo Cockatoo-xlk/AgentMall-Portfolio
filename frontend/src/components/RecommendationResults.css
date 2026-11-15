@@ -1,0 +1,33 @@
+.recommendation-results table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+.recommendation-results caption {
+  text-align: left;
+  padding: 0 0 12px;
+  color: #657571;
+  font-size: 12px;
+}
+.recommendation-results th,
+.recommendation-results td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #d7dfd3;
+  vertical-align: top;
+}
+.recommendation-results thead {
+  background: #edf2e6;
+  color: #153f3b;
+}
+.recommendation-results th[scope='row'] {
+  min-width: 170px;
+}
+.recommendation-results td {
+  min-width: 84px;
+}
+.recommendation-results th small {
+  margin-top: 8px;
+  font-weight: normal;
+}
