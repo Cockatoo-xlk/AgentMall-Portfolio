@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "status": "RC1_LOCAL_OFFLINE_VERIFIED",
+  "recorded_at": "2026-11-15T11:35:54.373344+00:00",
+  "source": {
+    "base": "71970c88d8827d22cd5626de20317a89d389bafc",
+    "starting_candidate": "f017880dec3b644b133a6adbae114c63ea0cf589",
+    "source_and_tests": {
+      "backend/src/agentmall/agents/context.py": "193810097f08f1f5d26094835aa5e6b9f8ec23e96460897334a74f1f1ff7cd8f",
+      "backend/src/agentmall/agents/durable_graph.py": "07b6bd716670025936aa40a3c75784e6dcc530e841bcb0099244c9897ad72f9d",
+      "backend/src/agentmall/agents/goal_receipts.py": "271faf63ec7f99535a95c2428258051d487773f3c38da8da61e742697d2348a2",
+      "backend/src/agentmall/agents/graph.py": "4eba9fe746ab4f067135436791ed5f606b3423d8bf8f7f28bbf49c76b9cdc36e",
+      "backend/src/agentmall/agents/memory.py": "5585494e617ead7d7511fb0deb878dbff13fee6d803e04edb7b0b0883212dbbc",
+      "backend/src/agentmall/agents/model_control.py": "1393986087a57d47a42d56f413dcb0be2e84d2fb3935acd14b366ef1a801553e",
+      "backend/src/agentmall/agents/product_preferences.py": "030b313b676fc245d802c8eb9725e2e18d5915d0eec15b9d2728f2b8cc0b3d89",
+      "backend/src/agentmall/agents/purchase_intent.py": "1c489b79479dde420b89ac29cf2b6e357c3481fa5353f79e1f936d1b2496c2e6",
+      "backend/src/agentmall/agents/request_intents.py": "0af94ca93e4bc9416cf3337453578a5372b69a9635176e8c036af55c4585b799",
+      "backend/src/agentmall/agents/specialists/runner.py": "9bcd5584e84fafc11a02c5a96438963e7ca3006f38c29a53a78b65d240744c72",
+      "backend/src/agentmall/agents/supervisor.py": "5c09afb788e99fb35d82091c75f17c4a81469575a63eed5b0284ae899a002e5c",
+      "backend/src/agentmall/infra/llm.py": "4f01f8e470f36ba9dce62f61da5d0b48637e5c19822b1fec8fd84baed88263a9",
+      "backend/src/agentmall/infra/model_diagnostics.py": "5eb959bf4ce1404d2af434b24e20f57dcf982a1cb73b12d0ac8573c3a14eaa14",
+      "backend/src/agentmall/infra/observability.py": "d2107f38491c59328b07d9290cde4e8340affe95b6f7963c533e9924f48aebcc",
+      "backend/tests/test_baseline_fairness.py": "bb5b66c2aa4a28d2a4ab49692c244d5137dfddb7fd4ba75c45bbd77796406866",
+      "backend/tests/test_live_preflight.py": "cbc6a242be5bbb467446c7c98cb3718448fd12e1c07b60e729244465e42319eb",
+      "backend/tests/test_v213_l2_sdk.py": "fb5442808549a3d1db41ded45cebcfeec6e3a047bf27bb20a93700534c140fc0",
+      "backend/tests/test_v215_failure_feedback.py": "1825f9ddb3b9ea52073b28769a44df4162fe7300ec39b9d99e238e50a43275a1",
+      "backend/tests/test_v215_goal_receipts.py": "6a8d68ac8d2c72a79e87e7a50cb50a1cb4987efd39a56ec3b2214012152292c8",
+      "backend/tests/test_v215_intent_integration.py": "b1f274a8ae1d1c106e9071e54c45dc6f9b63016e56dbb8b8dcf7535cbc44530e",
+      "backend/tests/test_v215_legacy_clarification.py": "1486c353ffffb3115e94f2a435cf6cb0cb36fd7793747b2065e3f09bb0d7050a",
+      "backend/tests/test_v215_model_diagnostics.py": "519f39d488ab761e196c61a6551c6589eeb63b88e68e845fb85c6b3e4dd4473a",
+      "backend/tests/test_v215_rc1_runtime.py": "1837ea798671a4267bdbd8c2c65ec5b52af2e2f7496a91c6ef16615f5551e673",
+      "backend/tests/test_v215_recommendations.py": "2ff37bceb7b6de4a69af0e10fae3e8652fdb7bb923d13d915e232d9e2e253afc",
+      "backend/tests/test_v215_request_intents.py": "08405ee5fc1fd2c491bb9daee91a16a98f13168c2aa754898470056bedb28f98",
+      "backend/tests/test_v215_workflow.py": "80d31ab6a3083fddcae2d78711ff3747f69c5d72018b1ac116c7c3a86289bdaa",
+      "backend/tests/test_v2_intent_routing.py": "8cce4df7690872ce349781c959d3beef28277590dc9f2b9d0467f3ab83428c0f",
+      "frontend/src/api/runFailure.test.ts": "7e9d2f1f95f1c3113b231c94d61480d478431bfbb99a3173e5c70739eda7691e",
+      "frontend/src/api/runFailure.ts": "632c6683c23933834159ce3964ff1cee5c38b4b3f8876198a27a399b98b3cfe3",
+      "frontend/src/api/timelineSummary.test.ts": "4fc958020dd62f24d0e532ca238e0fcdcb167c49fc5bcbd43a2c0f238623ec0d",
+      "frontend/src/api/timelineSummary.ts": "446853e1026f6e71f74d87f1f7228fff00120ef1b723bd0725abcaa4bade81f1",
+      "frontend/src/components/RunTimeline.tsx": "18856f46f86b0b4a496b66ff28736f8b32f4f534b20204bf7b76e06f51dce085",
+      "frontend/src/pages/AgentWorkspace.tsx": "bcf20fd5bc7f428cf39f876d313848f83b657896d6c82458e52e16e80b7ae9c6"
+    },
+    "bundle_sha256": "24ae4ed94a273f29288f12bfec1dc0e4bc4777a92abc66854383d00ac40e2381"
+  },
+  "environment": {
+    "os": "Linux",
+    "architecture": "aarch64",
+    "python": "3.12.10",
+    "postgres": "17.11",
+    "pgvector": "0.8.7",
+    "core_embedding_packages": "torch/transformers NOT_INSTALLED",
+    "bge_torch": "2.9.1",
+    "bge_transformers": "4.57.6",
+    "network": "owned PG namespace with no external route",
+    "provider_environment_inherited": false,
+    "migration": "0011"
+  },
+  "backend": {
+    "tests": 1605,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 14,
+    "passed": 1591,
+    "seconds": 668.106,
+    "warnings": 3,
+    "warnings_source": "existing jieba invalid escape SyntaxWarnings",
+    "junit_sha256": "4a31abac5c6154d949d4f88e489cedbd2cb1b188360e8196c29a392d43154d43"
+  },
+  "real_bge": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 13,
+    "seconds": 15.216,
+    "warnings": 3,
+    "junit_sha256": "586963bdc5f0fa56c622d7719f0d8a31cdf4e3037b47051d76cebee5238a10a8",
+    "identity": {
+      "status": "PINNED_SIX_FILES_VERIFIED",
+      "model_id": "BAAI/bge-small-zh-v1.5",
+      "revision": "7999e1d3359715c523056ef9478215996d62a620",
+      "dimension": 512,
+      "files": {
+        "config.json": {
+          "sha256": "3853a7979202c348751b753e36f579c41d8da7d36af617d3d907e1fc9b441f2a",
+          "size_bytes": 776
+        },
+        "model.safetensors": {
+          "sha256": "354763b9b1357bc9c44f62c6be2276321081ed2567773608c0d0785b61d5a026",
+          "size_bytes": 95827648
+        },
+        "special_tokens_map.json": {
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "size_bytes": 125
+        },
+        "tokenizer.json": {
+          "sha256": "48cea5d44424912a6fd1ea647bf4fe50b55ab8b1e5879c3275f80e339e8fae26",
+          "size_bytes": 439125
+        },
+        "tokenizer_config.json": {
+          "sha256": "e6f3b96db926a37d4039995fbf5ad17de158dfb8f6343d607e4dbaad18d75f5a",
+          "size_bytes": 367
+        },
+        "vocab.txt": {
+          "sha256": "45bbac6b341c319adc98a532532882e91a9cefc0329aa57bac9ae761c27b291c",
+          "size_bytes": 109540
+        }
+      },
+      "downloads": 0,
+      "evidence_class": "REAL_LOCAL_BGE_CPU_WITH_SDK_MOCK_AND_POSTGRES",
+      "warnings": 3
+    }
+  },
+  "frontend": {
+    "vitest_passed": 132,
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "build": "PASS",
+    "playwright_passed": 119,
+    "playwright_failed": 0,
+    "playwright_skipped": 0,
+    "retries": 0,
+    "playwright_ms": 230159.37099999998,
+    "playwright_result_sha256": "42bf6c589a301ad14e94315df7f5ecc80adeb7b49a6855b2ce43c85c66c5c2b4"
+  },
+  "gates": {
+    "core-backend-full": {
+      "name": "core-backend-full",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/.playground/v215-rc1-20261115T104203Z/receipts/core-backend-full.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 673.0949141250001,
+      "completed_at": "2026-11-15T11:28:06.817023+00:00",
+      "log_sha256": "98ed4eac67e7fd19304cd259a0a25e450a63630d1d183cbef4c8f020c33189c0",
+      "runner_id": "c43184350bb98f7d0d0def09195008303c12ffe531c13c3d461844c6e041b3aa",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "real-bge-special-3": {
+      "name": "real-bge-special-3",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "backend/tests/test_live_preflight.py",
+        "backend/tests/test_multiagent_integration.py",
+        "backend/tests/test_retrieval_ingest.py",
+        "-m",
+        "real_bge",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/.playground/v215-rc1-20261115T104203Z/receipts/real-bge-special-3.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 18.441826209,
+      "completed_at": "2026-11-15T11:13:44.599537+00:00",
+      "log_sha256": "bc388438d2b1582952c9aa83ad367839d74826eba33101643387b1671f7f3a40",
+      "runner_id": "caabd86d1fc38a6dab1e1e00ce171fa6e8d16f327056bee85157d27540d7c9a9",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "frontend-final": {
+      "name": "frontend-final",
+      "argv": [
+        "/usr/local/bin/node",
+        "-e",
+        "const {spawnSync}=require(\"node:child_process\");process.chdir(\"/work/frontend\");for(const x of [\"test\",\"typecheck\",\"lint\",\"build\"]){const r=spawnSync(\"npm\",[\"run\",x],{stdio:\"inherit\"});if(r.status!==0)process.exit(r.status??1)}"
+      ],
+      "exit_code": 0,
+      "seconds": 6.639638625,
+      "completed_at": "2026-11-15T11:00:29.843908+00:00",
+      "log_sha256": "1000c40d62b1b3d9d8ffb9c7fb3495ff73370aed1a00802c1987405f3977bf8c",
+      "runner_id": "caabd86d1fc38a6dab1e1e00ce171fa6e8d16f327056bee85157d27540d7c9a9",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "playwright-full": {
+      "name": "playwright-full",
+      "argv": [
+        "/usr/local/bin/node",
+        "-e",
+        "process.chdir(\"/work/frontend\");const r=require(\"node:child_process\").spawnSync(\"npm\",[\"run\",\"test:e2e\"],{stdio:\"inherit\"});process.exit(r.status??1)"
+      ],
+      "exit_code": 0,
+      "seconds": 230.578513208,
+      "completed_at": "2026-11-15T11:12:14.947875+00:00",
+      "log_sha256": "08d8e181f41a2341e16032381cb5eb8dade9aada209295e33e576329377606e5",
+      "runner_id": "caabd86d1fc38a6dab1e1e00ce171fa6e8d16f327056bee85157d27540d7c9a9",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "core-ruff-final": {
+      "name": "core-ruff-final",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11310895800000001,
+      "completed_at": "2026-11-15T11:34:05.946302+00:00",
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "runner_id": "c43184350bb98f7d0d0def09195008303c12ffe531c13c3d461844c6e041b3aa",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "core-format-final": {
+      "name": "core-format-final",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "backend",
+        "evals",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "seconds": 0.10841350000000002,
+      "completed_at": "2026-11-15T11:34:05.941607+00:00",
+      "log_sha256": "3fd0c66a7c348aea301c845ea2dbd910849a2ad9fa0eb44a967b12ecfa3bc5ed",
+      "runner_id": "c43184350bb98f7d0d0def09195008303c12ffe531c13c3d461844c6e041b3aa",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "bge-cpu-512": {
+      "name": "bge-cpu-512",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-c",
+        "import os,json,math,importlib.metadata as m;from agentmall.retrieval.embedding import LocalEncoder;from pathlib import Path;e=LocalEncoder();v=e.encode([\"静音键盘\"],query=True)[0];assert len(v)==512 and abs(sum(x*x for x in v)-1)<1e-4;assert not any(k in os.environ for k in [\"DEEPSEEK_API_KEY\",\"OPENAI_API_KEY\",\"HF_TOKEN\"]);assert os.getuid()==501 and 0 not in os.getgroups();assert not Path(\"/var/run/docker.sock\").exists();print(json.dumps({\"model\":e.model_id,\"revision\":e.revision,\"dimensions\":len(v),\"l2_norm\":math.sqrt(sum(x*x for x in v)),\"device\":str(next(e.model.parameters()).device),\"uid\":os.getuid(),\"groups\":os.getgroups(),\"provider_names_present\":False,\"packages\":{x:m.version(x) for x in [\"torch\",\"transformers\",\"pytest\",\"langchain-deepseek\"]}},ensure_ascii=False))"
+      ],
+      "exit_code": 0,
+      "seconds": 3.586286959,
+      "completed_at": "2026-11-15T10:58:09.009161+00:00",
+      "log_sha256": "71de3b2200589515c1b6e2cd484f6cbfcd740c4661233be04919761795f220fb",
+      "runner_id": "caabd86d1fc38a6dab1e1e00ce171fa6e8d16f327056bee85157d27540d7c9a9",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "core-dependency-gate": {
+      "name": "core-dependency-gate",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-c",
+        "import importlib.util,importlib.metadata as m,json,os;assert importlib.util.find_spec(\"torch\") is None;assert importlib.util.find_spec(\"transformers\") is None;assert importlib.util.find_spec(\"mcp\") is not None;assert \"DEEPSEEK_API_KEY\" not in os.environ;print(json.dumps({\"torch\":\"NOT_INSTALLED\",\"transformers\":\"NOT_INSTALLED\",\"mcp\":m.version(\"mcp\"),\"provider_key_names_present\":False}))"
+      ],
+      "exit_code": 0,
+      "seconds": 0.10516191700000002,
+      "completed_at": "2026-11-15T11:15:59.628389+00:00",
+      "log_sha256": "15ff77c0e2c7310f7f8ac46bad4ee43b5169343cd4a30ac70983b8a90125d283",
+      "runner_id": "c43184350bb98f7d0d0def09195008303c12ffe531c13c3d461844c6e041b3aa",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "environment-bootstrap-2": {
+      "name": "environment-bootstrap-2",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433"
+      ],
+      "exit_code": 0,
+      "seconds": 1.780706041,
+      "completed_at": "2026-11-15T10:50:29.633000+00:00",
+      "log_sha256": "91ecbb180918ee50c712071a131df573727d665559e10f58998262018bbd1dc1",
+      "runner_id": "caabd86d1fc38a6dab1e1e00ce171fa6e8d16f327056bee85157d27540d7c9a9",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    },
+    "rc1-targeted-green": {
+      "name": "rc1-targeted-green",
+      "argv": [
+        "/work/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "backend/tests/test_v215_rc1_runtime.py",
+        "backend/tests/test_v215_legacy_clarification.py",
+        "backend/tests/test_v215_request_intents.py",
+        "backend/tests/test_v215_intent_integration.py",
+        "backend/tests/test_v215_model_diagnostics.py",
+        "backend/tests/test_v215_workflow.py",
+        "--strict-markers",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/.playground/v215-rc1-20261115T104203Z/receipts/rc1-targeted-green.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 6.566507333,
+      "completed_at": "2026-11-15T10:57:46.070124+00:00",
+      "log_sha256": "b0854950cb6e82fa587512c5c7f0ed15fe428aeec36ec6607f8ae56d3ac96282",
+      "runner_id": "caabd86d1fc38a6dab1e1e00ce171fa6e8d16f327056bee85157d27540d7c9a9",
+      "real_key_reads": 0,
+      "real_provider_requests": 0
+    }
+  },
+  "initial_bge_failure": {
+    "result": "9 passed / 4 failed",
+    "exit_code": 1,
+    "log_sha256": "0829f9a05693ef27bf0e5076f9ead5299480cd803624472a5f51f0efdd89c0cf",
+    "classification": "EVALUATION_TEST_ADAPTER_DEFECT",
+    "oracle_and_business_assertions_preserved": true,
+    "strict_task_tool_variant_tests": 18
+  },
+  "review": {
+    "five_findings_reproduced_and_fixed": true,
+    "cross_review": "No remaining confirmed blocker in reviewed patch",
+    "classification": "AI-assisted static review plus fresh actual tests"
+  },
+  "boundaries": {
+    "real_provider_requests": 0,
+    "real_key_reads": 0,
+    "paid_cost_cny": 0,
+    "original_l8_tasks_rerun": 0,
+    "unrun_09_15_used_for_debugging": false,
+    "original_oracle_datasets_prompts_locks_workflows_budget_permissions_unchanged": true,
+    "l8_results": "PASS1 FAIL4 NOT_SCORED3 NOT_RUN7",
+    "episode_08_ledger": "UNKNOWN",
+    "episode_08_actual_cost": "UNKNOWN",
+    "github_write_authorization": "NOT_GRANTED_AT_LOCAL_FREEZE",
+    "github_ci": "NOT_INCLUDED_IN_THIS_LOCAL_RECEIPT",
+    "release": "ON_HOLD",
+    "release_commit": "UNBOUND",
+    "independent_holdout_count": 0
+  },
+  "skip_explanation": [
+    "13 real-BGE tests intentionally skipped in separate no-torch CI_OFFLINE_CORE environment; all13 executed andpassed in separate real-BGE environment",
+    "1 raw private historical Live-evidence test remains skipped because raw inputs not supplied to this isolated worktree"
+  ],
+  "intermediate_logs_preserved": true,
+  "protected_artifact_sha256": {
+    "evals/oracles.py": "dac5a79ee6b8c5d9a0807b043eb67bd47403ebba5eb1a8514bec9d1d6e982fb6",
+    "evals/data/agent_dev.jsonl": "a645fe1799ba46dda5a3fb59fd0d3d6778c8eb9dd4523dc3cbfef021b95c8336",
+    "evals/data/agent_test.jsonl": "0218907c3adb439c9a075396f2b9652ed73bf6441bab9f7e4c19c757027b65ac",
+    "backend/uv.lock": "44b989033fb7cb3102073fb6e7b1eb40b2926d399dafd2b4a7c0ccfcfc0e988d",
+    "frontend/package-lock.json": "1a831ce8c10d6c68ab9350576831fde9dc0ffbc6a085c013411c4c0d167dbd6a",
+    ".github/workflows/ci.yml": "caeead202e2ad517a9d0ffd551e60345fd27d2e52df66457ac29930963d00ed5",
+    "evals/data/embedding_manifest.json": "ad3148b5ab67ddc377d228476957f1c2d6c1c69ac220f28f3a55ae6c0b0233d6",
+    "docs/evidence/v215/l8-summary.json": "211a4127c79e8c878f55cad9d656d923b956c17c48613837b21b5c1eac6b93be",
+    "docs/evidence/v215/verification.json": "fd0faafa69cb6eb6738fe56a96ea065dc327eed34acb4bebe165d018e4ca2b4d"
+  }
+}

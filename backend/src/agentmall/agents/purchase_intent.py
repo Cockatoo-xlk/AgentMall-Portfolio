@@ -17,9 +17,9 @@ MODIFIERS = r"(?:(?:再|要|继续|直接|立即|马上)\s*)*"
 ACTION = re.compile(
     r"(?P<negative>先别|不要|不想|不需要|不打算|不准备|不用|暂不|别|取消|撤销|放弃|不)?\s*"
     + MODIFIERS
-    + r"(?P<prefix>准备|帮我|我要|我想|就|(?<![修更])改)?"
+    + r"(?P<prefix>请(?:帮我)?|准备|帮我|我要|我想|就|(?<![修更])改)?"
     + MODIFIERS
-    + r"(?:购买|下单|买)\s*"
+    + r"(?P<action>采购|购买|下单|买)\s*"
     r"(?:(?:最新|刚才)(?:推荐的|那款)?)?"
     r"(?:(?P<ordinal>第(?:[一二三四五六七八九十]|\d+)(?:款|个))|(?P<product_id>"
     + PRODUCT_ID
@@ -35,12 +35,21 @@ class PurchaseIntent:
 
 
 def purchase_intent(message):
+    from agentmall.agents.request_intents import CLAUSES, NEGATIVE, action_decision, action_scope
+
     positive, negative = set(), set()
     buying = denying = global_denial = False
     reference = list(message)
     previous_end = 0
     for match in ACTION.finditer(message):
-        prefix = re.split(r"[，。；,;\n]", message[previous_end : match.start()])[-1]
+        if match["action"] == "买" and re.search(
+            r"(?:修改|更改)\s*$", message[: match.start("action")]
+        ):
+            continue
+        prefix = CLAUSES.split(message[previous_end : match.start()])[-1]
+        clause = (
+            CLAUSES.split(message[: match.start()])[-1] + CLAUSES.split(message[match.start() :])[0]
+        )
         previous_end = match.end()
         ordinal = match["ordinal"]
         target = None
@@ -52,13 +61,21 @@ def purchase_intent(message):
             )
         elif match["product_id"]:
             target = ("product", match["product_id"].lower())
+        decision = None
         if match["negative"]:
+            decision = False
+        elif match["prefix"] or target or match["action"] == "采购" or NEGATIVE.search(prefix):
+            actor_scope = CLAUSES.split(message[: match.start("action")])[-1]
+            decision = action_decision(
+                clause, actor_scope, scope=action_scope(message, match.start())
+            )
+        if decision is False:
             denying = True
             global_denial |= target is None
             if target:
                 negative.add(target)
             reference[match.start() : match.end()] = " " * (match.end() - match.start())
-        elif match["prefix"] or target:
+        elif decision is True:
             if re.search(r"不(?!超过|高于|大于|多于)|别|没|取消|撤销|放弃|是否|考虑|犹豫", prefix):
                 raise DomainError(
                     409, "CONTEXT_CLARIFICATION_REQUIRED", "购买意图作用域不明确，请单独说明决定"
@@ -66,6 +83,7 @@ def purchase_intent(message):
             buying = True
             if target:
                 positive.add(target)
+    positive_ordinals = re.findall(ORDINAL, message) if buying else []
     if buying and (
         global_denial
         or len(positive) > 1
@@ -74,6 +92,7 @@ def purchase_intent(message):
         or MULTIPLE_IDS.search(message)
         # Mixed UUID revocation has no displayed-list binding: ask rather than expose a choice.
         or any(kind == "product" for kind, _ in negative)
+        or (len(set(positive_ordinals)) > 1 and re.search(r"和|或|、", message))
     ):
         raise DomainError(
             409, "CONTEXT_CLARIFICATION_REQUIRED", "购买对象或意图冲突，请明确唯一商品"

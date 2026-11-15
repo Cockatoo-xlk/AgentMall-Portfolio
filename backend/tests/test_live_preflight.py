@@ -22,7 +22,13 @@ from pydantic import ValidationError
 from sqlalchemy import text
 from test_eval_budget import policy
 
-from agentmall.agents.specialist_tools import ALLOWLISTS, BUNDLE_SCHEMAS, SCHEMAS
+from agentmall.agents.specialist_tools import (
+    ALLOWLISTS,
+    BUNDLE_SCHEMAS,
+    SCHEMAS,
+    WRITE_TOOLS_BY_GOAL,
+    WRITES,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 PILOT = [
@@ -269,6 +275,138 @@ def test_no_tool_schema_grants_authority(field):
     assert "refund" not in SCHEMAS
 
 
+def infer_wire_role(names, architecture, *, goal=None, read_only=None):
+    """Match exact task capabilities; never infer a role from a permissive subset."""
+    if names == {"route"}:
+        return "supervisor"
+    if architecture == "single":
+        assert names == {name for allowed in ALLOWLISTS.values() for name in allowed}
+        return "single"
+    matches = []
+    for role, allowed in ALLOWLISTS.items():
+        reads = set(allowed) - WRITES
+        variants = [reads] + [
+            reads | {name} for name in WRITE_TOOLS_BY_GOAL.values() if name in allowed
+        ]
+        if names in variants:
+            matches.append(role)
+    assert len(matches) == 1, "Fixture tool capability mismatch"
+    role = matches[0]
+    assert type(read_only) is bool
+    write = WRITE_TOOLS_BY_GOAL.get(goal) if not read_only else None
+    assert write is None or write in ALLOWLISTS[role]
+    assert names == (set(ALLOWLISTS[role]) - WRITES) | ({write} if write else set())
+    return role
+
+
+@pytest.mark.parametrize(
+    "names,architecture,goal,read_only,expected",
+    [
+        ({"route"}, "multi", None, None, "supervisor"),
+        ({"retrieve_products", "get_product"}, "multi", "find_products", True, "shopping"),
+        (
+            {"list_orders", "get_order", "get_product", "get_cart"},
+            "multi",
+            "inspect_orders",
+            True,
+            "order",
+        ),
+        (
+            {"list_orders", "get_order", "get_product", "get_cart", "prepare_checkout"},
+            "multi",
+            "prepare_checkout",
+            False,
+            "order",
+        ),
+        (
+            {"get_order", "check_eligibility", "retrieve_policies"},
+            "multi",
+            "assess_return",
+            True,
+            "aftersales",
+        ),
+        (
+            {"get_order", "check_eligibility", "retrieve_policies", "prepare_return"},
+            "multi",
+            "prepare_return",
+            False,
+            "aftersales",
+        ),
+        (
+            {"get_order", "check_eligibility", "retrieve_policies", "create_support_ticket"},
+            "multi",
+            "human_support",
+            False,
+            "aftersales",
+        ),
+        (
+            {
+                "retrieve_products",
+                "get_product",
+                "list_orders",
+                "get_order",
+                "get_cart",
+                "prepare_checkout",
+                "check_eligibility",
+                "retrieve_policies",
+                "prepare_return",
+                "create_support_ticket",
+            },
+            "single",
+            None,
+            False,
+            "single",
+        ),
+    ],
+)
+def test_sdk_wire_role_accepts_exact_task_capabilities(
+    names, architecture, goal, read_only, expected
+):
+    assert infer_wire_role(names, architecture, goal=goal, read_only=read_only) == expected
+
+
+@pytest.mark.parametrize(
+    "names,goal,read_only",
+    [
+        (set(), "find_products", True),
+        ({"unknown_tool"}, "find_products", True),
+        ({"retrieve_products", "get_product", "list_orders"}, "find_products", True),
+        (
+            {
+                "get_order",
+                "check_eligibility",
+                "retrieve_policies",
+                "prepare_return",
+                "create_support_ticket",
+            },
+            "prepare_return",
+            False,
+        ),
+        (
+            {"get_order", "check_eligibility", "retrieve_policies", "create_support_ticket"},
+            "prepare_return",
+            False,
+        ),
+        (
+            {"get_order", "check_eligibility", "retrieve_policies", "prepare_checkout"},
+            "prepare_checkout",
+            False,
+        ),
+        (
+            {"get_order", "check_eligibility", "retrieve_policies", "prepare_return"},
+            "assess_return",
+            True,
+        ),
+        ({"get_order", "check_eligibility", "retrieve_policies"}, "prepare_return", False),
+        ({"retrieve_products"}, "find_products", True),
+        ({"route", "prepare_checkout"}, "prepare_checkout", False),
+    ],
+)
+def test_sdk_wire_role_rejects_unknown_mixed_or_wrong_goal_capabilities(names, goal, read_only):
+    with pytest.raises(AssertionError):
+        infer_wire_role(names, "multi", goal=goal, read_only=read_only)
+
+
 @pytest.mark.parametrize("task_id", PILOT)
 @pytest.mark.parametrize("architecture", ["single", "multi"])
 @pytest.mark.real_bge
@@ -357,14 +495,14 @@ async def test_pilot_sdk_pg_checkpoint_and_real_local_embedding(
     async def wire(request):
         body = json.loads(request.content)
         names = {t["function"]["name"] for t in body["tools"]}
-        if names == {"route"}:
-            role = "supervisor"
+        context = json.loads(next(m["content"] for m in body["messages"] if m["role"] == "user"))
+        role = infer_wire_role(
+            names, architecture, goal=context.get("goal"), read_only=context.get("read_only")
+        )
+        if role == "supervisor":
             assert body["tool_choice"] == {"type": "function", "function": {"name": "route"}}
-        elif architecture == "single":
-            role = "single"
-            assert names == {name for allowed in ALLOWLISTS.values() for name in allowed}
-        else:
-            role = next(r for r, allowed in ALLOWLISTS.items() if names == set(allowed))
+        elif role != "single":
+            assert context["target"] == role
         assert str(request.url) == "https://api.deepseek.com/chat/completions"
         assert body["model"] == "deepseek-flash"
         assert body["thinking"] == {"type": "disabled"}
@@ -388,6 +526,7 @@ async def test_pilot_sdk_pg_checkpoint_and_real_local_embedding(
             (await model._agenerate(messages, max_tokens=body["max_tokens"])).generations[0].message
         )
         for call in reply.tool_calls:
+            assert call["name"] in names
             assert call["id"] not in outstanding
             outstanding[call["id"]] = call["name"]
         wire_receipts.append(
@@ -431,7 +570,37 @@ async def test_pilot_sdk_pg_checkpoint_and_real_local_embedding(
     assert result["final"]["checkpoint_counts"]["checkpoints"] > 0
     assert result["final"]["invariants"]["violations"] == []
     assert result["model_calls"] == len(wire_receipts) == len(ledger.read()["attempts"])
-    assert any(r["tool_result_ids"] for r in wire_receipts)
+    returned = {ident: name for ident, name in outstanding.items() if name != "route"}
+    tool_events = {
+        event["payload_summary"]["tool_call_id"]: event["payload_summary"]
+        for event in result["final"]["run_events"]
+        if event["event_type"] == "tool"
+    }
+    assert returned
+    for ident, name in returned.items():
+        assert tool_events[ident]["name"] == name and tool_events[ident]["ok"] is True
+    if not any(r["tool_result_ids"] for r in wire_receipts):
+        # Fulfilled read-only batches intentionally finish without a redundant HTTP
+        # round trip. Every returned call must still have its actual persisted result
+        # and exactly one server receipt for that role/subtask's completed read goal.
+        completed_reads = [
+            event["payload_summary"]
+            for event in result["final"]["run_events"]
+            if event["event_type"] == "read_goal_completed"
+            and event["payload_summary"].get("model_round_skipped") is True
+            and event["payload_summary"].get("completion_basis")
+            in {"PRODUCT_RECEIPTS", "ASSESSMENT_RECEIPTS"}
+        ]
+        for ident, name in returned.items():
+            executed = tool_events[ident]
+            matches = [
+                completed
+                for completed in completed_reads
+                if completed["role"] == executed["role"]
+                and completed["subtask_id"] == executed["subtask_id"]
+                and name in completed["tool_names"]
+            ]
+            assert len(matches) == 1
     if architecture == "multi":
         assert any(r["role"] == "supervisor" for r in wire_receipts)
     assert all(

@@ -120,7 +120,10 @@ def build_graph(runtime):
 
 
 def render(runtime, terminal):
+    from agentmall.agents.product_preferences import recommendation_shortage
+
     runtime.prune_excluded_candidates()
+    shortage = recommendation_shortage(runtime)
     results = list(runtime.completed.values())
     facts = [
         {"kind": kind, "id": ident, "data": value} for (kind, ident), value in runtime.facts.items()
@@ -144,15 +147,36 @@ def render(runtime, terminal):
                 f"商品 {data['name']}（{fact['id']}）："
                 f"{data['price_cents']}分，可用{data['available']}。"
             )
+            requirement = getattr(runtime.constraints, "recommendation", None)
+            if requirement is not None and requirement.compare_connections:
+                connection = data.get("attributes", {}).get("connection")
+                if connection not in {"有线", "无线", "双模", "三模"}:
+                    connection = "未知"
+                lines.append(f"连接方式：{connection}。")
         elif fact["kind"] == "order":
             lines.append(
                 f"本人订单 {fact['id']}：{data['status']}，政策 {data['policy_version']}。"
             )
         elif fact["kind"] == "eligibility":
+            explanations = {
+                "ACTIVE_CASE_EXISTS": "已有进行中的售后申请",
+                "OUTSIDE_RETURN_WINDOW": "超出当前政策的退货期限",
+                "NOT_DELIVERED": "订单尚未处于已送达状态",
+                "NOT_PAID": "缺少已支付记录",
+                "ALREADY_REFUNDED": "订单已有退款记录",
+                "UNSUPPORTED_POLICY": "当前政策版本需要人工核验",
+                "MISSING_DELIVERY_TIME": "缺少送达时间记录",
+                "INVALID_DELIVERY_TIME": "送达时间记录需要人工核验",
+                "REQUIRES_HUMAN_REVIEW": "所选售后原因需要人工审核",
+                "HUMAN_HANDOFF_REQUIRED": "需要人工接管核验",
+            }
             lines.append(
                 f"确定性售后资格：{'符合' if data['eligible'] else '不符合'}；"
                 f"原因 {','.join(data['reason_codes']) or '无'}。"
             )
+            for code in data["reason_codes"]:
+                if code in explanations:
+                    lines.append(explanations[code] + "。")
         elif fact["kind"] == "ticket":
             lines.append(f"人工工单 {fact['id']}：{data['status']}，未授权任何退款。")
         elif fact["kind"] == "cart":
@@ -176,8 +200,17 @@ def render(runtime, terminal):
         lines.append("请明确要处理的本人原订单；替代推荐需要先确定原商品。")
     if "PURCHASE_DETAILS_REQUIRED" in errors:
         lines.append("购买提案需要明确购买意图、数量及演示地址。")
+    if "MODEL_RESPONSE_INVALID" in errors:
+        lines.append("模型响应解析失败，当前步骤已停止；已有业务以数据库回执为准。")
     if errors:
         lines.append("部分步骤未完成，已有真实结果保留。")
+    if shortage:
+        if shortage["count_missing"]:
+            lines.append(
+                f"候选不足：已核验{shortage['observed']}款，请求{shortage['requested']}款。"
+            )
+        if shortage["comparison_missing"]:
+            lines.append("缺少所请求连接方式的对照候选，比较尚未完成。")
     pending = any(p["data"]["status"] in {"PENDING", "APPROVED"} for p in proposals)
     rejected = bool(proposals) and all(p["data"]["status"] == "REJECTED" for p in proposals)
     status = (
@@ -188,7 +221,7 @@ def render(runtime, terminal):
         else "proposal"
         if pending
         else "needs_input"
-        if terminal == "clarify" or not facts
+        if terminal == "clarify" or not facts or shortage
         else "done"
     )
     return GraphResult(

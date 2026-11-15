@@ -35,9 +35,14 @@ export function timelineSummary(event: RunEvent): string {
     return `${p.name ?? '工具'}${p.category ? `（${categoryLabels[p.category as Category] ?? '未知品类'}）` : ''} · ${p.ok === true ? '成功' : p.ok === false ? '失败' : '结果待核对'}${Number.isSafeInteger(p.duration_ms) ? ` · ${p.duration_ms} ms` : ''}`
   if (event.event_type === 'model_start')
     return `模型请求 #${p.attempt ?? 'UNKNOWN'} · Usage UNKNOWN（尚未收到回执）`
+  if (event.event_type === 'tool_batch_rejected')
+    return `${p.diagnostic_code === 'TOOL_ARGUMENT_SCHEMA_INVALID' ? '工具参数不符合 Schema' : p.diagnostic_code === 'TOOL_ARGUMENT_JSON_INVALID' ? '工具参数 JSON 无效' : '工具调用批次被拒绝'}${p.tools_executed === false ? ' · 本批工具未执行' : ' · 执行状态待核对'}`
   if (event.event_type === 'model_end') {
     const usage = p.usage as { input_tokens?: number; output_tokens?: number } | undefined
-    return `${p.status === 'completed' ? '有效返回' : '错误或未知返回'} · ${usage && typeof usage === 'object' && Number.isSafeInteger(usage.input_tokens) && Number.isSafeInteger(usage.output_tokens) ? `${usage.input_tokens} / ${usage.output_tokens} tokens（输入 / 输出）` : 'Usage UNKNOWN'}`
+    const observed = p.observed_provider_usage as { input_tokens?: number; output_tokens?: number } | undefined
+    const observation = p.provider_usage_state === 'OBSERVED_VALID' && observed && Number.isSafeInteger(observed.input_tokens) && Number.isSafeInteger(observed.output_tokens) && p.output_budget_state === 'UNRESOLVED' ? ` · 响应观测 ${observed.input_tokens} / ${observed.output_tokens} tokens；运行预算未核对完成` : ''
+    const parsing = p.diagnostic_stage === 'SDK_RESPONSE_PARSE' ? ' · SDK 响应解析失败' : ''
+    return `${p.status === 'completed' ? '有效返回' : '错误或未知返回'} · ${usage && typeof usage === 'object' && Number.isSafeInteger(usage.input_tokens) && Number.isSafeInteger(usage.output_tokens) ? `${usage.input_tokens} / ${usage.output_tokens} tokens（输入 / 输出）` : 'Usage UNKNOWN'}${observation}${parsing}`
   }
   return ''
 }

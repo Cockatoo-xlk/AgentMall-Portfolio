@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router'
 import { useAuth } from '../state/Auth'
 import { useMounted } from '../state/useResource'
 import { ApiError, errorMessage } from '../api/client'
+import { runFailure } from '../api/runFailure'
 import type { Run, Thread } from '../api/agentWorkflow'
 import { uuidPattern, recoverable, recommendation } from '../api/agentWorkflow'
 import RunTimeline from '../components/RunTimeline'
@@ -353,10 +354,10 @@ function Workspace({
                       <p className="notice">MODEL_DISABLED · 模型未启用</p>
                     )}
                     {run.last_error && run.last_error !== 'MODEL_DISABLED' && (
-                      <p>执行错误码 {run.last_error}。业务结果须以下方真实回执为准。</p>
+                      <p>{runFailure(run.last_error)}（{run.last_error}）业务结果须以下方真实回执为准。</p>
                     )}
                     {run.result?.error_codes.length ? (
-                      <p>未完成原因：{run.result.error_codes.join(' · ')}</p>
+                      <p>未完成原因：{run.result.error_codes.map((code) => `${runFailure(code)}（${code}）`).join(' · ')}</p>
                     ) : null}
                     {run.result?.unfinished.length ? (
                       <p>待处理任务：{run.result.unfinished.join(' · ')}</p>

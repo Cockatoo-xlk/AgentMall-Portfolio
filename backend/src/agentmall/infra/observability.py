@@ -31,6 +31,7 @@ TOOLS = {
 }
 CONSTRAINT_FIELDS = {
     "bundle",
+    "recommendation",
     "max_price_cents",
     "category",
     "noise_preference",
@@ -291,6 +292,10 @@ def public_summary(kind, event):
                 if isinstance(name, str) and name in CONSTRAINT_FIELDS
             }
         )
+    if kind in {"model_start", "model_end", "tool_batch_rejected"}:
+        from agentmall.infra.model_diagnostics import public_model_diagnostics
+
+        result.update(public_model_diagnostics(data))
     if kind in {"model_start", "model_end"}:
         usage = data.get("usage")
         result["usage"] = (

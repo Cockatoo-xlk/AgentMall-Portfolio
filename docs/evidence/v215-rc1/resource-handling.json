@@ -1,0 +1,13 @@
+{
+  "status": "RC1_OWNED_TEST_RESOURCES_REMOVED",
+  "verified_absent": true,
+  "historical_resources_operated": false,
+  "existing_model_or_dependency_images_changed": false,
+  "prior_owned_env_rag_restored": true,
+  "seal_sha256": "db65540100d1dc6a6a32e67bb378d2bccf32f99d5b3627326e662b03f5d53847",
+  "real_key_reads": 0,
+  "real_provider_requests": 0,
+  "containers_removed": 3,
+  "volumes_removed": 5,
+  "private_receipt_sha256": "8483c48aa0d9c6e9e58d712bc1e96a6d15489498740b980c35d8dc2c810b6e70"
+}

@@ -13,9 +13,15 @@ from agentmall.agents.budgets import RunStopped
 from agentmall.agents.read_completion import finish_read_batch, supports_read_completion
 from agentmall.agents.runtime import fingerprint
 from agentmall.agents.specialist_tools import ALL_SCHEMAS, WRITE_TOOLS_BY_GOAL, WRITES
+from agentmall.infra.model_diagnostics import capture_model_diagnostics, public_model_diagnostics
 
 
 async def model_call(runtime, role, invoke):
+    with capture_model_diagnostics() as receipt:
+        return await observed_model_call(runtime, role, invoke, receipt)
+
+
+async def observed_model_call(runtime, role, invoke, receipt):
     model = runtime.models[role]
     if getattr(model, "max_retries", 0) != 0:
         raise RunStopped("HIDDEN_RETRIES_FORBIDDEN")
@@ -27,10 +33,12 @@ async def model_call(runtime, role, invoke):
         attempt=reservation,
         max_output_tokens=cap,
         budget=dict(runtime.budget.used),
+        model_request_id=receipt.request_id,
     )
     if hasattr(runtime.budget, "record_model_event"):
         await runtime.budget.record_model_event(runtime.trace["events"][-1])
     message = None
+    invocation_error = None
     started = monotonic()
     try:
         async with asyncio.timeout(min(30, runtime.budget.seconds_left)):
@@ -43,6 +51,12 @@ async def model_call(runtime, role, invoke):
                 raise RunStopped("MODEL_PROTOCOL_ERROR")
             message = messages[0]
         return result
+    except Exception as exc:
+        if receipt.stage == "SDK_RESPONSE_PARSE":
+            invocation_error = "MODEL_RESPONSE_INVALID"
+            raise RunStopped("MODEL_RESPONSE_INVALID") from None
+        invocation_error = exc.code if isinstance(exc, RunStopped) else "MODEL_INVOKE_FAILED"
+        raise
     finally:
         settlement_error = None
         try:
@@ -61,7 +75,7 @@ async def model_call(runtime, role, invoke):
                 "model_end",
                 duration_ms=round((monotonic() - started) * 1000),
                 status="completed" if message and not settlement_error else "failed",
-                error_code=settlement_error,
+                error_code=settlement_error or invocation_error,
                 role=role,
                 budget=dict(runtime.budget.used),
                 attempt=reservation,
@@ -69,6 +83,8 @@ async def model_call(runtime, role, invoke):
                 response_model=message.response_metadata.get("model_name", "UNKNOWN")
                 if message
                 else "UNKNOWN",
+                output_budget_state="RECONCILED" if message and usage else "UNRESOLVED",
+                **receipt.summary(),
             )
             if hasattr(runtime.budget, "record_model_event"):
                 await runtime.budget.record_model_event(runtime.trace["events"][-1])
@@ -453,6 +469,7 @@ class SpecialistGuard(AgentMiddleware):
                 tools_executed=False,
                 phase="MODEL_OUTPUT_VALIDATION",
                 budget=dict(self.runtime.budget.used),
+                **public_model_diagnostics(message.response_metadata.get("agentmall_diagnostics")),
             )
             if hasattr(self.runtime.budget, "record_model_event"):
                 await self.runtime.budget.record_model_event(

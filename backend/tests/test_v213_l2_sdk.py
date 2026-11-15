@@ -148,6 +148,22 @@ async def test_sdk_b2_repairs_in_place_keeps_reads_and_two_confirmations(
         )
         assert detail["tools_executed"] is False
         assert detail["tool_names"] == ["prepare_return"]
+        # V2.15 correlates a schema/JSON rejection with its already recorded SDK call;
+        # a diagnostic receipt neither authorizes the tool nor settles supplier billing.
+        observation = row(
+            env[1],
+            "SELECT payload_summary FROM run_events WHERE event_type='model_end' "
+            "AND payload_summary->>'model_request_id'=:id",
+            id=detail["model_request_id"],
+        )["payload_summary"]
+        assert detail["tool_schema_sha256"] == observation["tool_schema_sha256"]
+        assert detail["response_body_sha256"] == observation["response_body_sha256"]
+        assert (
+            detail["provider_usage_state"]
+            == observation["provider_usage_state"]
+            == "OBSERVED_VALID"
+        )
+        assert len(detail["tool_schema_sha256"]) == 64
         assert detail["repair_consumed"] is False
     finally:
         await clients.aclose()

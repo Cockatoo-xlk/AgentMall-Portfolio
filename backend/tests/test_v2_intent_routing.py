@@ -5,7 +5,16 @@ from uuid import uuid4
 import pytest
 from aftersales_helpers import delivered_order
 from conftest import row
-from multiagent_helpers import ai, assessment_reads, call, final, install, make_models, route
+from multiagent_helpers import (
+    ai,
+    assessment_reads,
+    call,
+    choose_purchase,
+    final,
+    install,
+    make_models,
+    route,
+)
 from playground_helpers import install_sdk
 from t09_helpers import confirm, resume, start, thread
 from t09_helpers import durable_env as durable_env
@@ -147,13 +156,6 @@ async def test_sdk_policy_lookup_and_foreign_order(
             [route("order", "prepare_checkout", "no_candidate", read_only=False)],
         ),
         (
-            "推荐一款静音键盘，然后我要买两件，送演示宿舍",
-            [
-                route("shopping", "find_products", "shop"),
-                route("order", "prepare_checkout", "ambiguous_qty", read_only=False),
-            ],
-        ),
-        (
             "我要买一件静音键盘，送演示宿舍还是演示家庭",
             [
                 route("shopping", "find_products", "shop"),
@@ -185,6 +187,50 @@ async def test_checkout_handoff_and_finish_use_trusted_intent(
         assert run["pending_confirmation"]["type"] == "clarification"
     assert not models["order"].seen
     assert business(env[1]) == dict(orders=0, cases=0, confirmations=0, refunds=0, checkouts=0)
+
+
+async def test_explicit_purchase_count_is_separate_from_recommendation_count(durable_env, buyer):
+    """V2.15: the former unsupported 两件 case now has stronger positive HITL assertions."""
+    env = durable_env
+    models = make_models(
+        supervisor=[
+            route("shopping", "find_products", "shop"),
+            route("order", "prepare_checkout", "buy_two", depends=["shop"], read_only=False),
+            route("finish"),
+        ],
+        shopping=[ai(call("retrieve_products", {"query": "静音键盘"})), final()],
+        order=[choose_purchase],
+    )
+    await install(env, models)
+    tid = await thread(env, buyer)
+    response = await start(env, buyer, tid, message="推荐一款静音键盘，然后我要买两件，送演示宿舍")
+    assert response.status_code == 201, response.text
+    run = response.json()
+    assert run["status"] == "WAITING_INPUT", run
+    assert run["constraints"]["recommendation"]["count"] == 1
+    assert run["constraints"]["quantity"] == 2
+    assert run["pending_confirmation"]["action_type"] == "CHECKOUT"
+    assert business(env[1])["orders"] == business(env[1])["confirmations"] == 0
+    assert row(env[1], "SELECT sum(reserved) n FROM products")["n"] == 0
+    proposal = await env[0].get(
+        f"/api/v1/proposals/{run['pending_confirmation']['proposal_id']}", headers=buyer
+    )
+    assert proposal.status_code == 200 and proposal.json()["status"] == "PENDING"
+    cid = await confirm(env, buyer, run["pending_confirmation"]["proposal_id"])
+    request_id = str(uuid4())
+    done = (await resume(env, buyer, tid, run, cid, request_id)).json()
+    assert done["status"] == "COMPLETED", done
+    assert (await resume(env, buyer, tid, run, cid, request_id)).json() == done
+    item = row(
+        env[1],
+        "SELECT o.status,o.total_cents,oi.quantity,oi.unit_price_cents,p.reserved FROM orders o "
+        "JOIN order_items oi ON oi.order_id=o.id JOIN products p ON p.id=oi.product_id",
+    )
+    assert item["status"] == "PENDING_PAYMENT" and item["quantity"] == item["reserved"] == 2
+    assert item["total_cents"] == item["quantity"] * item["unit_price_cents"]
+    assert business(env[1])["orders"] == business(env[1])["confirmations"] == 1
+    assert row(env[1], "SELECT count(*) n FROM payments")["n"] == 0
+    assert business(env[1])["refunds"] == 0
 
 
 async def test_model_cannot_make_read_only_order_goal_writable(durable_env, buyer):
