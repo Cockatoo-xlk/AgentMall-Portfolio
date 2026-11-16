@@ -1,0 +1,129 @@
+{
+  "version": "v217-smoke-v1",
+  "purpose": "EXPLORATORY_PRODUCT_SMOKE",
+  "live_authorization": "NONE",
+  "independent_holdout_count": 0,
+  "model": {
+    "name": "deepseek-flash",
+    "thinking": {
+      "type": "disabled"
+    },
+    "temperature": 0
+  },
+  "limits": {
+    "http": 12,
+    "models": 12,
+    "tools": 16,
+    "delegations": 4,
+    "steps": 24,
+    "input_tokens": 3145728,
+    "output_tokens": 12000,
+    "episode_seconds": 90,
+    "outer_seconds": 300,
+    "task_cost_cny": "2.50",
+    "batch_cost_cny": "7.50"
+  },
+  "tasks": [
+    {
+      "id": "v217_smoke_A",
+      "architecture": "single",
+      "user_request": "为共享办公室比较两款400元以内的静音键盘，分别说明有线与无线连接能力、当前价格和库存；只比较，不购买。",
+      "fixture": {
+        "catalog": "legacy",
+        "source": "agentmall.seed.seed",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "actor_login": "buyer1",
+        "products": "12 synthetic seed products, active=true, on_hand=20, reserved=0",
+        "isolation": "new owned PG/business+checkpoint schema, Run/Thread/Execution/Ledger per task",
+        "index": "fresh fixed-BGE index built before Episode; no shared mutable index",
+        "setup_excluded_from_deltas": true,
+        "recipe": "fresh-legacy-no-orders",
+        "initial_orders": 0,
+        "initial_cases": 0
+      },
+      "required_human_decisions": 0,
+      "assertions": [
+        "Run COMPLETED; exactly two distinct verified candidate IDs",
+        "each active/owned product price<=40000 cents and quiet-switch fact comes from server",
+        "verified candidates collectively cover wired and wireless capability; no invented Bluetooth/2.4GHz claim",
+        "orders/proposals/confirmations/payments/refunds delta=0",
+        "event/checkpoint identities agree; no unowned resource access"
+      ]
+    },
+    {
+      "id": "v217_smoke_B",
+      "architecture": "single",
+      "user_request": "准备购买两件199元的宿舍静音K68键盘，送演示宿舍。先给我购买提案，我核对商品、数量、金额和库存后再决定。",
+      "fixture": {
+        "catalog": "legacy",
+        "source": "agentmall.seed.seed",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "actor_login": "buyer1",
+        "products": "12 synthetic seed products, active=true, on_hand=20, reserved=0",
+        "isolation": "new owned PG/business+checkpoint schema, Run/Thread/Execution/Ledger per task",
+        "index": "fresh fixed-BGE index built before Episode; no shared mutable index",
+        "setup_excluded_from_deltas": true,
+        "recipe": "fresh-legacy-no-orders",
+        "initial_orders": 0,
+        "initial_cases": 0
+      },
+      "required_human_decisions": 1,
+      "assertions": [
+        "before explicit approval: orders/payments/reserved delta=0",
+        "exactly one fresh CHECKOUT Proposal for K68 quantity=2 unit_price=19900 total=39800 address_label=demo_dorm",
+        "one independent approve Confirmation consumed by original Run/Thread/Interrupt",
+        "after Resume: unique PENDING_PAYMENT order+1, reserved+2, on_hand unchanged",
+        "same-request reconciliation/replay never adds an order; refresh GET agrees",
+        "payments/refunds delta=0; no authorization of payment"
+      ]
+    },
+    {
+      "id": "v217_smoke_C",
+      "architecture": "multi",
+      "user_request": "订单{delivered_order_id}的静音K87键盘按键失灵，请先申请质量退货，再推荐一款250元以内的有线静音键盘，准备购买一件送演示宿舍。退货和购买分别让我审查确认。",
+      "fixture": {
+        "catalog": "legacy",
+        "source": "agentmall.seed.seed",
+        "store_id": "00000000-0000-0000-0000-000000000001",
+        "actor_login": "buyer1",
+        "products": "12 synthetic seed products, active=true, on_hand=20, reserved=0",
+        "isolation": "new owned PG/business+checkpoint schema, Run/Thread/Execution/Ledger per task",
+        "index": "fresh fixed-BGE index built before Episode; no shared mutable index",
+        "setup_excluded_from_deltas": true,
+        "recipe": "fresh-legacy-delivered",
+        "original_product": "静音 K87",
+        "original_quantity": 1,
+        "setup": "formal checkout Proposal/Confirmation/order/mock-payment/merchant ship/deliver; record all setup receipts before baseline; no Agent run",
+        "initial_orders": 1,
+        "initial_cases": 0,
+        "initial_mock_payments": 1,
+        "initial_setup_confirmations": 2
+      },
+      "required_human_decisions": 2,
+      "assertions": [
+        "initial deterministic eligibility=true; Actor/Store/original order verified before Episode",
+        "first RETURN_REQUEST approval creates exactly one REQUESTED Case; replacement order not yet created",
+        "second distinct CHECKOUT Proposal for K68 quantity1 total19900, independent approval consumed",
+        "exactly one new PENDING_PAYMENT order, reserved+1, no repeated Case/order",
+        "two distinct new Confirmation IDs consumed; return confirmation cannot authorize checkout",
+        "payments/refunds delta=0 relative to setup baseline; committed Case retained if later model step fails"
+      ]
+    }
+  ],
+  "rules": {
+    "retry": false,
+    "recover": false,
+    "auto_approve": false,
+    "unknown_stops_batch": true,
+    "waiting_counts_toward_episode": true,
+    "fresh_environment_per_task": true
+  },
+  "execution_contract": "docs/V217_LIVE_SMOKE.md",
+  "assertion_implementations": [
+    "frontend/tests/product-demo.spec.ts",
+    "frontend/tests/interview-demo.spec.ts",
+    "backend/tests/test_v216_controlled_eval.py"
+  ],
+  "evidence_projection": "evals.product_smoke.agent_input excludes fixture/assertions; substitute delivered_order_id only from verified owned setup receipt",
+  "source_binding": "Separate freeze receipt after final CLEAN local Commit; this proposal never grants authorization."
+}

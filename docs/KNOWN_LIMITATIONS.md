@@ -1,3 +1,13 @@
+# V2.17 当前限制
+
+V2.17本轮为本地离线作品集交付，无新真实模型结果、生产部署或Release。新的四分钟视频是V2.16真实Mock业务素材的字幕剪辑，原录制器收尾失败不改写，SQL卡明确为证据投影。媒体可播放不等于录制器正常退出。
+
+新Smoke为EXPLORATORY_PRODUCT_SMOKE，三题未运行；其静态validator不是Live启动器/权限平台，执行前仍需Owner授权、价格24h新鲜度和现有Runner各项硬门禁复核。L8 PASS1/FAIL4/NOT_SCORED3/NOT_RUN7、08 Ledger/实费UNKNOWN、E1_ORACLE_CONTRACT_MISMATCH、Independent Holdout=0不变。真实Provider请求与Key读取均0，Release ON_HOLD，RELEASE_COMMIT=UNBOUND，MCP REMOTE_AUTH_NOT_IMPLEMENTED。
+
+以下保留各阶段限制的原始说明；其中VIDEO_NOT_RECORDED只适用于注明的历史阶段，不代表本轮没有成片。
+
+---
+
 # 已知限制与证据边界
 
 当前本地候选为 **V2.16**，基于 V2.15 已合并的 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。基线 main CI 43718887411 已通过；V2.16 本地证据见[本轮交付](V216_PRODUCT_DEMO.md)，未 Push / PR / 发布 / 部署。本轮不运行真实 Provider，不改 L8 结果。V2.14 Release **ON_HOLD**；**RELEASE_COMMIT=UNBOUND**。

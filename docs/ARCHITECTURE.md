@@ -1,3 +1,13 @@
+# V2.17 架构阅读入口
+
+当前开发基线为V2.16 main `8e21bdcad3170487626a17ccda0f624457bccd26`，主线结构沿用下图与模块，V2.17没有新增Agent、Orchestrator、业务权限或评测平台。LangChain在[Specialist runner](../backend/src/agentmall/agents/specialists/runner.py)中创建受限工具Agent；LangGraph在[持久图](../backend/src/agentmall/agents/durable_graph.py)中组织Supervisor/角色路由、中断与Resume。PostgreSQL同时承载业务事务、Jobs、Checkpoint/Journal，pgvector负责本地向量查询。
+
+[面试12问](INTERVIEW_TALKING_POINTS.md)逐条对应源码与回归；[产品Smoke方案](V217_LIVE_SMOKE.md)只新增静态输入投影与冻结，不改变运行架构。Redis目前不是部署依赖：现有[队列](../backend/src/agentmall/agents/jobs.py)使用PostgreSQL行锁领取，持久性由PG承担；这不是“任何规模都无需Redis”的性能结论。未压测吞吐、不宣称生产SLA。
+
+以下原架构说明保留阶段归属，详细新验证见[V2.17回执](V217_INTERVIEW_READY.md)。
+
+---
+
 # 架构：模型建议、持久执行、领域事务
 
 当前本地候选为 **V2.16**，基于 V2.15 已合并的 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。基线 main CI 43718887411 已通过；V2.16 本地证据见[本轮交付](V216_PRODUCT_DEMO.md)，未 Push / PR / 发布 / 部署。本轮不运行真实 Provider，不改 L8 结果。V2.14 Release **ON_HOLD**；**RELEASE_COMMIT=UNBOUND**。
