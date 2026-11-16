@@ -1,0 +1,482 @@
+{
+  "schema_version": 1,
+  "milestone": "V217_INTERVIEW_READY",
+  "state": "V217_INTERVIEW_READY_LOCAL_VERIFIED",
+  "source_base": "8e21bdcad3170487626a17ccda0f624457bccd26",
+  "base_tree": "1d51671f38c49bfb0986cfb8182b8f81087c9f9b",
+  "branch": "codex/v217-interview-ready",
+  "main_ci": {
+    "run": 43783548437,
+    "attempt": 1,
+    "event": "push",
+    "conclusion": "success",
+    "backend_job": 133026021065,
+    "frontend_job": 133026020847,
+    "gate_job": 133031102179,
+    "pytest_passed": 1603,
+    "pytest_skipped": 14,
+    "pytest_warnings": 3,
+    "pytest_seconds": 935.37,
+    "vitest": 146,
+    "playwright": 128,
+    "gate_marker": "RELEASE_GATE_PASSED",
+    "t16": "expected_skipped"
+  },
+  "evidence_class": "CONTRACT_TEST_ONLY_OFFLINE_ENGINEERING_REGRESSION",
+  "checks": [
+    {
+      "name": "core-bootstrap",
+      "argv": [
+        "python",
+        "scripts/ci/bootstrap.py",
+        "--port",
+        "55433"
+      ],
+      "exit_code": 0,
+      "seconds": 1.563309958,
+      "completed_at": "2026-11-16T01:26:16.641278+00:00",
+      "log_sha256": "2e3cbe8fe93c8104d2b5f1dab56e0176292ede4ac8e6a1febe2c84a68ef37ec6"
+    },
+    {
+      "name": "core-final-static-targeted",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "ruff check backend evals scripts && ruff format --check backend evals scripts && python -m pytest backend/tests/test_v217_smoke_contract.py -q"
+      ],
+      "exit_code": 0,
+      "seconds": 2.8682719170000004,
+      "completed_at": "2026-11-16T01:46:12.187367+00:00",
+      "log_sha256": "d759b0c019592edb156b1cfd6876c952957d7279cabf33b5e9d586dd1a186a58"
+    },
+    {
+      "name": "core-backend-full",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests",
+        "--ci-offline-core",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=/work/test-results/backend-full.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 775.898870875,
+      "completed_at": "2026-11-16T02:00:02.373932+00:00",
+      "log_sha256": "080bb67a1369d18e353ba43808c91e252c0778b505709b99a3fd7e53060e49b8"
+    },
+    {
+      "name": "real-bge",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "backend/tests/test_live_preflight.py",
+        "backend/tests/test_multiagent_integration.py",
+        "backend/tests/test_retrieval_ingest.py",
+        "-m",
+        "real_bge",
+        "--strict-markers",
+        "-ra",
+        "-q",
+        "--junitxml=/work/test-results/real-bge.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 28.405728792,
+      "completed_at": "2026-11-16T01:47:32.625967+00:00",
+      "log_sha256": "9509aac5f3392e04494033be0654764e0f305b9112ec963a514bc7498833f079"
+    },
+    {
+      "name": "frontend-full",
+      "argv": [
+        "/bin/sh",
+        "-c",
+        "cd frontend && npm run test && npm run typecheck && npm run lint && npm run build && npm run test:e2e"
+      ],
+      "exit_code": 0,
+      "seconds": 296.624253,
+      "completed_at": "2026-11-16T01:52:01.941119+00:00",
+      "log_sha256": "31aa6d2d6fdc2abc6c87ee4c76da0cd43a17692db8340d8f0ed86820a4716731"
+    }
+  ],
+  "backend": {
+    "passed": 1626,
+    "failed": 0,
+    "skipped": 14,
+    "warnings": 3,
+    "pytest_seconds": 769.5,
+    "skip_reasons": {
+      "real_bge_separately_executed": 13,
+      "private_historical_original_unavailable": 1
+    }
+  },
+  "real_bge": {
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0,
+    "deselected": 52,
+    "warnings": 3,
+    "pytest_seconds": 24.29,
+    "model": {
+      "revision": "7999e1d3359715c523056ef9478215996d62a620",
+      "files": {
+        "config.json": {
+          "sha256": "3853a7979202c348751b753e36f579c41d8da7d36af617d3d907e1fc9b441f2a",
+          "size_bytes": 776
+        },
+        "model.safetensors": {
+          "sha256": "354763b9b1357bc9c44f62c6be2276321081ed2567773608c0d0785b61d5a026",
+          "size_bytes": 95827648
+        },
+        "special_tokens_map.json": {
+          "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+          "size_bytes": 125
+        },
+        "tokenizer.json": {
+          "sha256": "48cea5d44424912a6fd1ea647bf4fe50b55ab8b1e5879c3275f80e339e8fae26",
+          "size_bytes": 439125
+        },
+        "tokenizer_config.json": {
+          "sha256": "e6f3b96db926a37d4039995fbf5ad17de158dfb8f6343d607e4dbaad18d75f5a",
+          "size_bytes": 367
+        },
+        "vocab.txt": {
+          "sha256": "45bbac6b341c319adc98a532532882e91a9cefc0329aa57bac9ae761c27b291c",
+          "size_bytes": 109540
+        }
+      }
+    },
+    "cpu_dimension": 512
+  },
+  "frontend": {
+    "vitest_passed": 146,
+    "vitest_files": 23,
+    "playwright_passed": 129,
+    "playwright_failed": 0,
+    "playwright_skipped": 0,
+    "playwright_retries": 0,
+    "playwright_seconds": 288.18728000000004,
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "production_build": "PASS"
+  },
+  "ruff_format": {
+    "ruff": "PASS",
+    "format": "PASS",
+    "files": 334
+  },
+  "continuous_A_B_C": {
+    "classification": "SDK_MOCK_REAL_FORMAL_API_POSTGRESQL",
+    "stages": {
+      "setup": {
+        "orders": 1,
+        "cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 0,
+        "confirmations": 2,
+        "checkpoint_rows": 0
+      },
+      "recommendation": {
+        "orders": 1,
+        "cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 0,
+        "confirmations": 2,
+        "checkpoint_rows": 13
+      },
+      "waitingPurchase": {
+        "orders": 1,
+        "cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 0,
+        "confirmations": 2,
+        "checkpoint_rows": 26
+      },
+      "purchased": {
+        "orders": 2,
+        "cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 1,
+        "confirmations": 3,
+        "checkpoint_rows": 35
+      },
+      "beforeReturn": {
+        "orders": 2,
+        "cases": 0,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 1,
+        "confirmations": 3,
+        "checkpoint_rows": 55
+      },
+      "middle": {
+        "orders": 2,
+        "cases": 1,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 1,
+        "confirmations": 4,
+        "checkpoint_rows": 74
+      },
+      "result": {
+        "orders": 3,
+        "cases": 1,
+        "payments": 1,
+        "refunds": 0,
+        "reserved": 2,
+        "confirmations": 5,
+        "checkpoint_rows": 77
+      }
+    },
+    "new_independent_decisions": 3,
+    "multi_confirmation_count": 2,
+    "stale_confirmation_http": 409,
+    "payment_refund_increment": 0,
+    "provider_requests": 0,
+    "key_reads": 0,
+    "raw_export_sha256": "ed077b0e2aea18e82d6f7fe2ce5834767dcab1d99ea9bf39c2ee0b9df680bae0"
+  },
+  "safety_regression_examples": {
+    "cross_store": [
+      "backend.tests.test_cart.test_cross_store_and_unlisted_product_writes_rejected",
+      "backend.tests.test_multiagent_tools.test_cross_store_product_rejected",
+      "backend.tests.test_refund_idempotency.test_cross_store_merchant_is_denied_while_real_refund_waits"
+    ],
+    "INSUFFICIENT_STOCK": [
+      "backend.tests.test_checkout.test_revalidate_product_under_transaction[on_hand=0-INSUFFICIENT_STOCK]"
+    ],
+    "fence": [
+      "backend.tests.test_thread_concurrency.test_same_thread_concurrent_resume_and_lost_connection_fences_old_worker",
+      "backend.tests.test_v215_model_diagnostics.test_failed_sdk_node_diagnostics_are_fenced_durable_and_deduplicated"
+    ],
+    "unknown_usage": [
+      "backend.tests.test_eval_budget.test_unknown_usage_retains_reservation_and_restart_does_not_reset",
+      "backend.tests.test_live_ledger.test_resume_rejects_unknown_usage_or_modified_cost",
+      "backend.tests.test_live_preflight.test_sdk_failure_has_one_charged_attempt_no_hidden_retry[unknown_usage]",
+      "backend.tests.test_llm.test_budget_reserves_before_send_and_unknown_usage_stops"
+    ],
+    "checkpoint": [
+      "backend.tests.integration.test_crash_matrix.test_saved_checkpoint_answer_failure_then_reference_recovery",
+      "backend.tests.test_agent_write_sequencing.test_failed_repair_keeps_rejections_when_node_never_checkpoints",
+      "backend.tests.test_bundle_shopping.test_checkpoint_delta_persists_invalidated_maps_without_changing_other_fields",
+      "backend.tests.test_checkpoint_resume.test_checkpoint_roundtrip_after_connection_reopen"
+    ],
+    "confirmation": [
+      "backend.tests.test_aftersales.test_request_replay_requires_confirmation_and_keeps_order_delivered",
+      "backend.tests.test_baseline_fairness.test_same_goal_two_independent_business_confirmations[decisions0-single]",
+      "backend.tests.test_baseline_fairness.test_same_goal_two_independent_business_confirmations[decisions0-multi]",
+      "backend.tests.test_baseline_fairness.test_same_goal_two_independent_business_confirmations[decisions1-single]"
+    ]
+  },
+  "media": {
+    "render": {
+      "source_sha256": "c2becdda2b5b33d467d3ff789a83af79d94ca1aa32d775a0bd3c90c5c70e45e1",
+      "output_sha256": "143c029a324632309ded3a03d1847e0944d5718d3034bb351ebf390e25cbe24e",
+      "bytes": 2728972,
+      "duration_seconds": 210,
+      "width": 1440,
+      "height": 1080,
+      "fps": 25,
+      "codec": "H264/yuv420p/MP4",
+      "audio": "NONE_SILENT_CAPTIONED_EDIT",
+      "source_recorder_exit_code": 1,
+      "original_preserved": true,
+      "card_kind": "EXPLANATORY_EVIDENCE_PROJECTION_NOT_RECORDED_TERMINAL",
+      "chapters": [
+        [
+          0,
+          12,
+          "AgentMall · 可核验的电商 Agent"
+        ],
+        [
+          12,
+          31,
+          "A · 推荐与商品事实"
+        ],
+        [
+          31,
+          43,
+          "候选数量与约束"
+        ],
+        [
+          43,
+          51,
+          "B · 先审查，再决定"
+        ],
+        [
+          51,
+          66,
+          "B · 购买与刷新"
+        ],
+        [
+          66,
+          74,
+          "C · Multi 退货与替换购买"
+        ],
+        [
+          74,
+          104,
+          "C · 两次独立批准"
+        ],
+        [
+          104,
+          118,
+          "确认不能跨阶段复用"
+        ],
+        [
+          118,
+          130,
+          "C · 已提交业务与事件"
+        ],
+        [
+          130,
+          146,
+          "失败路径 · UNKNOWN"
+        ],
+        [
+          146,
+          168,
+          "SQL 与 Checkpoint · 证据投影"
+        ],
+        [
+          168,
+          192,
+          "架构与可靠性边界"
+        ],
+        [
+          192,
+          210,
+          "可复现，也公开限制"
+        ]
+      ],
+      "provider_requests": 0
+    },
+    "qa": {
+      "complete_decode_exit": 0,
+      "black_segments": [],
+      "sample_times_seconds": [
+        1,
+        13,
+        32,
+        44,
+        55,
+        67,
+        80,
+        96,
+        101,
+        106,
+        119,
+        132,
+        147,
+        169,
+        193,
+        209
+      ],
+      "visual_review": "16 representative frames, including separate RETURN_REQUEST/CHECKOUT cards and all13 chapters; Source footage and explanatory projections distinct.",
+      "ocr_frame_count": 16,
+      "sensitive_pattern_findings": [],
+      "scan_limit": "representative frame visual/OCR, not exhaustive compressed-pixel guarantee",
+      "output_sha256": "143c029a324632309ded3a03d1847e0944d5718d3034bb351ebf390e25cbe24e",
+      "source_sha256": "c2becdda2b5b33d467d3ff789a83af79d94ca1aa32d775a0bd3c90c5c70e45e1",
+      "ocr_sha256": "86a3b01759d3079086e6b7a86bf11e36c462000c13d8534a006d64cfc6ff919b"
+    },
+    "edl_sha256": "7435cd6ae2dc535cf925810a84428470a4073bf340437c64b294cb12c3846642",
+    "source_failure": "original recorder exit1 administrative timeout retained; output separately verified",
+    "first_edit_preserved": "First240s candidate retained privately; final210s removes idle/duplicate view. Original415s WebM remains immutable."
+  },
+  "smoke": {
+    "purpose": "EXPLORATORY_PRODUCT_SMOKE",
+    "tasks": [
+      "v217_smoke_A",
+      "v217_smoke_B",
+      "v217_smoke_C"
+    ],
+    "architectures": [
+      "single",
+      "single",
+      "multi"
+    ],
+    "state": "STATIC_PLAN_VALIDATED_FINAL_SOURCE_BINDING_PENDING",
+    "episodes_started": 0,
+    "live_authorization": "NONE",
+    "proposal_sha256": "4dd539b51bc1b3162825a3721bb3e99c59d264ad9794d49db6107603fa620230",
+    "protocol_sha256": "bd5a7a44a16b5f8e2a112a42ae2c647364b97eec407ae186250369031758d96e",
+    "price_snapshot_sha256": "f44c23859e729fea16e301f19653cfae88da8c53630c9527be232f5dab1486b7",
+    "task_cap_cny": "2.50",
+    "batch_cap_cny": "7.50",
+    "live_entry": "NOT_IMPLEMENTED_BY_STATIC_VALIDATOR; reuse current API/Runner only after authorization and admission checks"
+  },
+  "review": {
+    "method": "fresh independent read-only agent review",
+    "critical": 0,
+    "important": 0,
+    "minor": 1,
+    "minor_ruling": "renderer is intentionally bound to reviewed V216 source SHA; inherited recorder exit1 matches this source. Metadata must be updated if changing source. No current artifact invalidity.",
+    "important_found": 1,
+    "important_open": 0,
+    "resolution": "Corrected pre-commit smoke state to binding PENDING; completed binding belongs only to separate actual post-commit receipt."
+  },
+  "preserved_history": {
+    "L8": {
+      "PASS": 1,
+      "FAIL": 4,
+      "NOT_SCORED": 3,
+      "NOT_RUN": 7
+    },
+    "08_ledger": "UNKNOWN",
+    "08_actual_cost": "UNKNOWN",
+    "E1": "ORACLE_CONTRACT_MISMATCH",
+    "independent_holdout": 0,
+    "Release": "ON_HOLD",
+    "RELEASE_COMMIT": "UNBOUND"
+  },
+  "boundaries": {
+    "real_provider_requests": 0,
+    "real_key_reads": 0,
+    "actual_cost_cny": "0",
+    "github_writes": 0,
+    "new_smoke_episodes": 0,
+    "L8_reruns": 0,
+    "business_agent_code_modified": false,
+    "prompt_or_oracle_modified": false
+  },
+  "final_source_binding": "Written separately after local commit to avoid self-referential Git object identity; exact SHA/Tree supplied in final local receipt.",
+  "resources": {
+    "state": "RESOURCE_CLEANUP_COMPLETED",
+    "owner": "v217-20261116T011800Z",
+    "containers_removed_verified": 3,
+    "volumes_removed_verified": 5,
+    "known_historical_containers_metadata_unchanged": 258,
+    "metadata_scope": [
+      "ID",
+      "name",
+      "image",
+      "labels",
+      "mounts"
+    ],
+    "historical_volume_names_preserved": true,
+    "cleanup_receipt_sha256": "8f2dbdd7821f9680878825782ee88970651ca79730404bf6e3038c15ddaba3fa",
+    "original_checkout_private_config_untouched": true,
+    "new_owned_synthetic_credentials_removed": true
+  },
+  "warnings_and_intermediate_failures": {
+    "expected_red_tests": {
+      "missing_module": 1,
+      "missing_projection": 1,
+      "bad_scalar_and_assertion_validation": 3
+    },
+    "ruff_initial": "PLW1510 explicit check=False added; final check PASS",
+    "git_fetch": "certificate chain failure exit128; default-verified TLS GitHub REST and exact signed Git object hash used",
+    "summary_read_probe": "unmatched parenthesis corrected; no suite or source state effect",
+    "all_final_test_exit_codes": 0,
+    "jieba_regex_syntax_warnings_per_backend_run": 3
+  }
+}

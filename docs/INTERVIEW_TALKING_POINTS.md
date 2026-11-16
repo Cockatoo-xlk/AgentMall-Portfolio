@@ -1,3 +1,24 @@
+# V2.17 · 12个源码可展开的面试主题
+
+使用[4分钟成片](media/v217/agentmall-v217-demo.mp4)与[简历稿](RESUME_PROJECT.md)，每个结论以相邻源码/测试为准。基线为已验收V2.16 main `8e21bdcad3170487626a17ccda0f624457bccd26`；V2.17新测试数量见[交付回执](V217_INTERVIEW_READY.md)。AI辅助开发，个人贡献按实际走读、设计、修改、复现与审查范围说明。
+
+1. **LangGraph的作用。** 将路由、状态、失败和中断建模为图，持久路径支持interrupt/Resume和Checkpoint；它不负责数据库交易授权。临时graph不等于持久图，见[durable_graph](../backend/src/agentmall/agents/durable_graph.py)、[临时graph](../backend/src/agentmall/agents/graph.py)、[Checkpoint回归](../backend/tests/test_checkpoint_resume.py)。
+2. **Supervisor怎样派发。** Supervisor产出受约束TaskSpec，runtime先验证角色、实体来源、依赖、批次和预算，再执行Specialist。模型不能声明Actor/Store或批准权限；[Supervisor](../backend/src/agentmall/agents/supervisor.py)、[runtime](../backend/src/agentmall/agents/runtime.py)、[批次重复回归](../backend/tests/test_v216_agent_runtime.py)。LangChain的[create_agent适配](../backend/src/agentmall/agents/specialists/runner.py)处理模型/工具middleware，不是另一个交易服务。
+3. **Checkpoint的职责。** 它保存图运行位置和待确认中断，业务回执保存已经提交的订单/Case；恢复先读回执，不能凭Checkpoint重复写入。[持久化](../backend/src/agentmall/agents/persistence.py)、[提交后故障测试](../backend/tests/test_commit_then_crash.py)。不承诺所有外部副作用的任意exactly-once。
+4. **HITL与事务怎样衔接。** 不可变Proposal包含服务端快照，用户身份下独立创建Confirmation；Resume重验绑定、时效和业务状态，事务中消费确认及提交业务。[动作服务](../backend/src/agentmall/actions/service.py)、[Run服务](../backend/src/agentmall/agents/run_service.py)、[双确认回归](../backend/tests/test_v215_workflow.py)。退货批准不授权购买，更不授权付款退款。
+5. **防止重复下单。** 使用稳定request/command身份、一次性确认消费和持久幂等回执；响应丢失后读回原结果而不是创建新请求。[订单服务](../backend/src/agentmall/orders/service.py)、[浏览器响应丢失/刷新](../frontend/tests/product-demo.spec.ts)、[连续演示](../frontend/tests/interview-demo.spec.ts)。UI禁用按钮只是辅助保护。
+6. **库存不超卖。** 交易服务按固定顺序锁定相关商品行，重读active/version/价格/可用库存，检查数量后在同一事务预留、建单和记幂等结果；异常整体回滚。[订单事务](../backend/src/agentmall/orders/service.py)、[库存并发回归](../backend/tests/test_order_concurrency.py)。这是受控数据库测试，不是生产吞吐承诺。
+7. **工具调用失败处理。** 校验JSON、Schema、工具白名单、写入顺序、当前意图、角色和预算；非法批次整批拒绝，错误码与有界诊断字段脱敏，已提交Case仍可与后续PARTIAL并存。[模型控制](../backend/src/agentmall/agents/model_control.py)、[安全诊断](../backend/src/agentmall/infra/model_diagnostics.py)、[失败反馈回归](../backend/tests/test_v215_failure_feedback.py)。不存Prompt/Key或原始异常内容。
+8. **PostgreSQL/pgvector的选择。** 业务事务、状态机、Jobs、Checkpoint和向量检索共用清晰的关系/事务边界；关键词为Jieba+PG全文ts_rank_cd，向量为本地BGE/pgvector，用RRF融合，默认不启用Reranker。[检索实现](../backend/src/agentmall/retrieval)、[检索验证](REAL_RETRIEVAL.md)。不能说成Elasticsearch/BM25或未经测量的性能优势。
+9. **Token和费用控制。** Run预算限制models/tools/delegations/steps和输出Token；Live传输另外发送前持久预留费用、核对完整Usage并结算，UNKNOWN保留预留且停止。[GraphBudget](../backend/src/agentmall/agents/budgets.py)、[Ledger/Transport](../evals/provider.py)、[费用门禁测试](../backend/tests/test_eval_budget.py)。本地模型事件的OBSERVED_VALID不等于供应商账单，成本预留也不是实费。
+10. **当前不需要Redis的原因。** 当前Jobs用PostgreSQL行锁及skip_locked领取，Thread advisory lock与epoch fence隔离旧Worker；已有PG承担持久性，没有引入新的缓存失效和双写边界。[Jobs](../backend/src/agentmall/agents/jobs.py)、[锁](../backend/src/agentmall/agents/locking.py)、[Worker](../backend/src/agentmall/agents/worker.py)。未来只有测量出队列/缓存瓶颈才讨论Redis，不声称它永远无用。
+11. **模型错误与工具错误如何区分。** 先看实际拒绝阶段、Schema哈希、关联ID、原始证据是否足够，再分别归类产品、编排、模型、评测工具或证据不足。08历史错误码不足以归责，仍INSUFFICIENT_EVIDENCE/UNKNOWN；07是私有Host校验问题。[L8报告](EVALUATION_RESULTS.md)、[工程案例](ENGINEERING_CASES.md)。诊断增强不能补造历史响应。
+12. **哪些能力真正验收。** 本轮独立重跑真实PG后端、固定六文件BGE专项、Vitest与Playwright，正式API/SQL核对三业务链和安全负例；代码与日志SHA见[回执](evidence/v217/verification.json)。录屏为SDK Mock/Fixture，不是新Live成绩；L8只有5题评分、1PASS/4FAIL，另3未评分/7未运行，Independent Holdout0。新Smoke、生产SLA和吞吐均未验证。
+
+下面保留V2.16及更早阶段的问题与回执归属；其中候选、未Push及VIDEO_NOT_RECORDED属于历史阶段，不能当作当前状态。
+
+---
+
 # 10个可用源码展开的面试问题
 
 当前本地候选为 **V2.16**，基于 V2.15 已合并的 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。基线 main CI 43718887411 已通过；V2.16 本地证据见[本轮交付](V216_PRODUCT_DEMO.md)，未 Push / PR / 发布 / 部署。本轮不运行真实 Provider，不改 L8 结果。V2.14 Release **ON_HOLD**；**RELEASE_COMMIT=UNBOUND**。

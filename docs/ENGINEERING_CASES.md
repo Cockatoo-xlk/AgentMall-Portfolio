@@ -1,3 +1,15 @@
+# V2.17 · 把现有系统变成可复现作品集
+
+基线main `8e21bdcad3170487626a17ccda0f624457bccd26` 的自动CI已验收。此轮优先验证与展示现有产品，不为历史L8分数增加业务特例，也不重建私有Host框架。
+
+- **跨场景一致性：** 新[连续浏览器回归](../frontend/tests/interview-demo.spec.ts)从同一会话完成推荐、购买、刷新和退换购；每份真实Proposal先检查再合成独立决定，退货确认复用得到409；独立SQL核对库存、Case和订单。
+- **媒体诚实性：** [3分30秒成片与剪辑稿](media/v217/agentmall-v217-demo-script.md)保留原录屏SHA和exit1；删除长等待，说明卡与真实业务画面分开。SQL投影不冒充终端录屏，录屏不冒充Live。
+- **预注册边界：** [静态Smoke契约](../evals/product_smoke.py)只校验/冻结与投影Agent必要输入；拒绝预算扩大、自动批准、伪造独立性及预填授权。Fixture/评分条件不进入message；[契约测试](../backend/tests/test_v217_smoke_contract.py)含红绿证据。它不是新Live执行器或生产授权体系。
+
+新测试/媒体/资源回执见[本轮交付](V217_INTERVIEW_READY.md)。以下真实缺陷案例与L8失败归因保持历史原貌，不能将新离线验收覆盖旧结果。
+
+---
+
 # V2.16：从可运行页面到可核验业务
 
 基于已合并 V2.15 main `d18161d1eb40667f4658e745d2f58369767d67f5`。本轮是本地离线产品改进，实际结果见[交付](V216_PRODUCT_DEMO.md)和[回执](evidence/v216/verification.json)。没有真实 Provider、付款、退款、部署或 L8 复测。

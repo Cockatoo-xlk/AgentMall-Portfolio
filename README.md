@@ -4,11 +4,13 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 
 **Python 3.12 / FastAPI · LangGraph · PostgreSQL 17 / pgvector · React / TypeScript · MCP**
 
-当前本地候选为 **V2.16 产品演示与 Multi-Agent 可靠性改进**，基于已合并的 V2.15 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。V2.15 合并后的 [main CI 43718887411](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/43718887411) 已通过，这是基线证据；V2.16 的本地回归单独记录在[本轮交付](docs/V216_PRODUCT_DEMO.md)。V2.16 尚未发布或部署；V2.14 Release 继续 **ON_HOLD**。RC1本地审核、重新回归与媒体结果见[RC1回执](docs/V216_RC1_REVIEW.md)；Push CI与PR CI仍须分别按准确SHA核验，不能由本地成绩推断。
+当前为 **V2.17 面试作品集本地开发**，准确基线为已合并V2.16 `main 8e21bdcad3170487626a17ccda0f624457bccd26` / tree `1d51671f38c49bfb0986cfb8182b8f81087c9f9b`。[main CI 43783548437](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/43783548437) 已独立验收：Backend1603/14skip、Vitest146、Playwright128、Release Gate成功。V2.17新成绩在[本轮交付](docs/V217_INTERVIEW_READY.md)独立记录，不沿用基线成绩。Release继续 **ON_HOLD**，没有发布或部署。
 
-[6分钟无Key演示](docs/DEMO_GUIDE.md) · [架构与源码](docs/ARCHITECTURE.md) · [工程案例](docs/ENGINEERING_CASES.md) · [评测结果](docs/EVALUATION_RESULTS.md) · [V2.16验收与复现](docs/V216_PRODUCT_DEMO.md) · [限制](docs/KNOWN_LIMITATIONS.md) · [10个面试问题](docs/INTERVIEW_TALKING_POINTS.md)
+**招聘者快速入口：** [3分30秒产品MP4](docs/media/v217/agentmall-v217-demo.mp4) · [讲解稿](docs/media/v217/agentmall-v217-demo-script.md) · [源码架构](docs/ARCHITECTURE.md) · [工程亮点](docs/ENGINEERING_CASES.md) · [12个面试问题](docs/INTERVIEW_TALKING_POINTS.md) · [简历项目描述](docs/RESUME_PROJECT.md) · [评测/限制](docs/EVALUATION_RESULTS.md) · [新Smoke方案](docs/V217_LIVE_SMOKE.md)。
 
-RC1已核验原34项变更，未发现需要修改的产品代码问题。重新执行结果：Backend **1603 passed / 14 skipped**，真实BGE **13 passed**，Vitest **146 passed**，Playwright **128 passed / 0 retries**。另保存 **6:55、1440×1000、25fps的实际静音原始录屏**，覆盖推荐、购买、双HITL与安全失败；录制器在业务阶段结束后等待收尾指令超时，未伪造正常完成，媒体已独立解码核验。原件仅在本地私有材料中，未上传GitHub；[来源、SHA与限制](docs/V216_RC1_REVIEW.md#实际录屏与质量限制)。
+成片为 **OFFLINE MOCK DEMO / REAL BUSINESS API / REAL POSTGRESQL**，剪自真实V2.16 RC1素材，字幕和SQL证据卡均标明来源，原6:55 WebM及录制器收尾exit1原样保留。V2.17另新增[连续A/B/C浏览器回归](frontend/tests/interview-demo.spec.ts)，不以视频字幕替代API/SQL断言。
+
+本项目无线上用户量、QPS/SLA或独立盲测可靠性证明。L8仍是PASS1/FAIL4/NOT_SCORED3/NOT_RUN7，只有5题评分；08用量/实费UNKNOWN，独立Holdout=0。新三场景Smoke为EXPLORATORY_PRODUCT_SMOKE，尚未运行，当前真实API/费用授权0。
 
 ## 三分钟了解项目
 

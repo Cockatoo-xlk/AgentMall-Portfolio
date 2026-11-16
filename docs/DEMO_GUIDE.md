@@ -1,3 +1,13 @@
+# V2.17 产品演示入口
+
+优先播放[3分30秒MP4](media/v217/agentmall-v217-demo.mp4)并使用[讲解稿/EDL](media/v217/agentmall-v217-demo-script.md)。这是V2.16真实离线素材的字幕剪辑，不是新录制的Live模型结果。V2.17新增[连续A/B/C验收](../frontend/tests/interview-demo.spec.ts)，在一次会话中完成比较→购买→刷新→Multi双HITL，SQL与正式API独立核对；新结果见[本轮交付](V217_INTERVIEW_READY.md)。
+
+现场演示继续使用下方既有Compose/正式API入口，以新的项目名和空闲端口启动；不连接历史PG、不复制旧.env、不提供真实Key。每次审批先审查当前Proposal，演示员分别明确点击，不能预批准第二份。自动化测试中的合成TEST_OPERATOR不冒称真人研究。12问与[简历稿](RESUME_PROJECT.md)只描述源码与实际证据。
+
+以下为保留的V2.16/RC1原始素材和启动说明，其历史“候选/VIDEO_NOT_RECORDED/尚待CI”等状态仅属于当时快照；当前main与新成绩以本页顶部及V2.17交付为准。
+
+---
+
 # 5–7分钟无Key演示
 
 展示目标是“自然语言建议 → 可信提案 → 用户独立确认 → 唯一待支付订单 → 读回原工作流”。**SDK MockTransport / Fixture Embedding / 合成数据 / TEST_OPERATOR**；FastAPI、PostgreSQL、业务事务与官方Checkpoint真实运行。没有真实付款、退款、Provider请求或部署。

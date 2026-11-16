@@ -1,0 +1,129 @@
+{
+  "version": "v217-captioned-edit-v1",
+  "source_commit": "ae10b253819e08f468f18e60cf4c46b674b95a5c",
+  "source_sha256": "c2becdda2b5b33d467d3ff789a83af79d94ca1aa32d775a0bd3c90c5c70e45e1",
+  "source_filename": "agentmall-v216-rc1-offline-demo.webm",
+  "source_recorder_exit_code": 1,
+  "segments": [
+    {
+      "kind": "card",
+      "duration_seconds": 12,
+      "chapter": "AgentMall · 可核验的电商 Agent",
+      "title": "AgentMall · 可核验的电商 Agent",
+      "body": [
+        "FastAPI + PostgreSQL/pgvector + LangGraph + React",
+        "模型提出建议，业务服务决定事务，用户独立批准。",
+        "画面来源：V2.16 RC1 真实离线录屏；V2.17完成剪辑。"
+      ]
+    },
+    {
+      "kind": "source",
+      "source_start_seconds": 32,
+      "duration_seconds": 19,
+      "chapter": "A · 推荐与商品事实",
+      "caption": "A · 商品事实来自服务端；Mock 模型不等于真实 DeepSeek"
+    },
+    {
+      "kind": "card",
+      "duration_seconds": 12,
+      "chapter": "候选数量与约束",
+      "title": "候选数量与约束",
+      "body": [
+        "页面比较名称、价格、库存、静音与连接方式。",
+        "候选不足应澄清，不编造商品；推荐不授权下单。"
+      ]
+    },
+    {
+      "kind": "card",
+      "duration_seconds": 8,
+      "chapter": "B · 先审查，再决定",
+      "title": "B · 先审查，再决定",
+      "body": [
+        "Proposal 与独立 Confirmation 绑定，批准不授权付款。"
+      ]
+    },
+    {
+      "kind": "source",
+      "source_start_seconds": 107,
+      "duration_seconds": 15,
+      "chapter": "B · 购买与刷新",
+      "caption": "人工检查购买快照 → 明确批准 → 唯一待付款订单 → 刷新读回"
+    },
+    {
+      "kind": "card",
+      "duration_seconds": 8,
+      "chapter": "C · Multi 退货与替换购买",
+      "title": "C · Multi 退货与替换购买",
+      "body": [
+        "Supervisor → AfterSales → Shopping → Order；两次独立 HITL。"
+      ]
+    },
+    {
+      "kind": "source",
+      "source_start_seconds": 122,
+      "duration_seconds": 30,
+      "chapter": "C · 两次独立批准",
+      "caption": "第一次退货批准只产生 Case；第二次批准才创建替换订单"
+    },
+    {
+      "kind": "card",
+      "duration_seconds": 14,
+      "chapter": "确认不能跨阶段复用",
+      "title": "确认不能跨阶段复用",
+      "body": [
+        "RETURN_REQUEST 与 CHECKOUT 各自审阅、批准、消费。",
+        "旧退货确认不能批准新购买；Case 已提交不等于退款。"
+      ]
+    },
+    {
+      "kind": "source",
+      "source_start_seconds": 166,
+      "duration_seconds": 12,
+      "chapter": "C · 已提交业务与事件",
+      "caption": "工作流时间线与独立资源读回；模型回答不是业务事实"
+    },
+    {
+      "kind": "source",
+      "source_start_seconds": 231,
+      "duration_seconds": 16,
+      "chapter": "失败路径 · UNKNOWN",
+      "caption": "模拟缺失 Usage → 安全停止；画面预算为原 Mock 会话配置"
+    },
+    {
+      "kind": "card",
+      "duration_seconds": 22,
+      "chapter": "SQL 与 Checkpoint · 证据投影",
+      "title": "SQL 与 Checkpoint · 证据投影",
+      "body": [
+        "本卡为原始 SQL 回执的说明投影，不是新终端录屏。",
+        "A：订单 +0；B：PENDING_PAYMENT +1；C：Case +1 / 订单 +1。",
+        "三份新确认独立消费；付款/退款新增0，扣除初始化。",
+        "Checkpoint 13 → 35 → 77；恢复位置与事务回执职责不同。"
+      ]
+    },
+    {
+      "kind": "card",
+      "duration_seconds": 24,
+      "chapter": "架构与可靠性边界",
+      "title": "架构与可靠性边界",
+      "body": [
+        "React → FastAPI → LangGraph → 受控工具 → 领域服务 → PostgreSQL。",
+        "LangChain：模型/工具适配；LangGraph：路由、状态、interrupt。",
+        "订单事务：权限与快照重验、库存锁、确认消费、幂等回执。",
+        "Checkpoint/Journal/Fence：持久恢复与旧执行者隔离。"
+      ]
+    },
+    {
+      "kind": "card",
+      "duration_seconds": 18,
+      "chapter": "可复现，也公开限制",
+      "title": "可复现，也公开限制",
+      "body": [
+        "真实 API + 真实 PG；SDK Mock/Fixture，不是 Live 模型成功率。",
+        "L8 仅5题评分：1 PASS / 4 FAIL；另3未评分、7未运行。",
+        "独立 Holdout=0；新Smoke须另行授权；Release ON_HOLD。"
+      ]
+    }
+  ],
+  "revision_note": "Final visual QA removed duplicate static comparison segment and first idle frames; no fabricated actions, source footage unchanged."
+}

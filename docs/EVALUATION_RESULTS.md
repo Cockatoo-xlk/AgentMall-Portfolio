@@ -1,3 +1,11 @@
+# V2.17 当前验证与历史评测的关系
+
+本轮新增结果仅为**CONTRACT_TEST_ONLY / OFFLINE_ENGINEERING_REGRESSION**，详见[V2.17交付](V217_INTERVIEW_READY.md)。真实PostgreSQL、固定BGE专项与SDK Mock分别记录；不以新离线成绩重算L8。
+
+三项新的[EXPLORATORY_PRODUCT_SMOKE](V217_LIVE_SMOKE.md)已设计，真实Episode仍NOT_RUN，当前Key/Provider/费用授权0。其未来结果独立版本，不是Holdout，不覆盖原15题分母。以下L8原始报告、UNKNOWN和未运行状态完整保留。
+
+---
+
 # 评测结果：保留分母、失败和未知项
 
 **L8 已以 `L8_D3D_CLOSED_WITH_UNRESOLVED_UNKNOWN` 收口。** 这是自建前瞻性评测 `PROSPECTIVE_SELF_AUTHORED`，独立 Holdout **0**。计划15题，启动8题，评分5题；**PASS1 / FAIL4 / NOT_SCORED3 / NOT_RUN7**。本轮 V2.15 进行产品改进和合成自动回归，不继续评测、不调用 Provider、不修改旧评分。

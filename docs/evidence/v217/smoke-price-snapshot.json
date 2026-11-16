@@ -1,0 +1,37 @@
+{
+  "evidence_kind": "PUBLIC_OFFICIAL_DOCUMENT_CHECK_NOT_PROVIDER_REQUEST",
+  "checked_at": "2026-11-16T01:49:43+00:00",
+  "expires_at": "2026-11-17T01:49:43+00:00",
+  "source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+  "source_extract_sha256": "7363d3b983206ec8a7f8c0351ffed01da9865f0374b3ea7040faa97eca8983e4",
+  "extraction": "BROWSING_TOOL_NORMALIZED_EXTRACT_NOT_RAW_HTTP",
+  "model_alias": "deepseek-flash",
+  "documented_revision": "DeepSeek-V4.1-Flash-1017",
+  "immutable_provider_weight_identity": "UNKNOWN",
+  "request": {
+    "thinking": {
+      "type": "disabled"
+    },
+    "temperature": 0
+  },
+  "cny_per_million_tokens": {
+    "peak": {
+      "cache_miss_input": "2",
+      "cache_hit_input": "0.04",
+      "output": "8"
+    },
+    "off_peak": {
+      "cache_miss_input": "1",
+      "cache_hit_input": "0.02",
+      "output": "4"
+    }
+  },
+  "peak_periods_beijing": "Mon-Fri excluding PRC legal holidays 09:00-12:00,14:00-18:00",
+  "reservation": "peak/all cache miss; no paid server tools",
+  "max_context": 1048576,
+  "per_request_output": 2048,
+  "full_request_reservation_cny": "2.113536",
+  "task_cap_cny": "2.50",
+  "batch_cap_cny": "7.50",
+  "live_authorization": "NONE"
+}
