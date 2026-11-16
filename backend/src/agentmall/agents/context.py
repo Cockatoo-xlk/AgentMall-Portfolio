@@ -243,11 +243,26 @@ def user_constraints(request):
     Typed caller input can express the same user choices without text parsing.
     """
     message = request.message
-    amount = re.search(r"(\d+(?:\.\d{1,2})?)\s*元(?:以内|以下|内|预算)?", message)
+    amount = None
+    for candidate in re.finditer(r"(\d+(?:\.\d{1,2})?)\s*元(以内|以下|内|预算)?", message):
+        before, after = message[: candidate.start()], message[candidate.end() :]
+        unit_quote = not candidate[2] and (
+            re.match(r"\s*的", after) or re.search(r"(?:单价|每件价格)(?:为|是)?\s*$", before)
+        )
+        total_limit = re.search(r"(?:预算|总价|总金额)[^\d，。；,;\n]{0,12}$", before)
+        if not unit_quote or total_limit:
+            amount = candidate
+            break
     from decimal import Decimal
 
     from agentmall.agents.purchase_intent import ACTION, purchase_intent
-    from agentmall.agents.request_intents import return_intent, support_intent
+    from agentmall.agents.request_intents import (
+        CONDITION,
+        REPORTED,
+        THIRD_PARTY,
+        return_intent,
+        support_intent,
+    )
 
     values = {}
     needs = {}
@@ -259,7 +274,7 @@ def user_constraints(request):
         needs["screen_inches"] = screen[1]
     if "公路车" in message:
         needs["activity"] = "road_cycling"
-    layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键", message)
+    layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键(?!盘)", message)
     if layout:
         needs["layout"] = layout[1] + "键"
     excluded = re.findall(
@@ -302,7 +317,16 @@ def user_constraints(request):
     values["exclude_original"] = any(x in message for x in ("替代", "另一款", "再帮我推荐")) or (
         values["return_requested"] and "再推荐" in message
     )
-    if "质量问题" in message:
+    if "质量问题" in message or (
+        values["return_requested"]
+        and any(
+            re.search(r"质量退货|按键失灵", sentence)
+            and not REPORTED.search(sentence)
+            and not CONDITION.search(sentence)
+            and not re.search(THIRD_PARTY, sentence)
+            for sentence in re.split(r"[。；;\n]", message)
+        )
+    ):
         values["reason_code"] = "QUALITY_ISSUE"
     if request.constraints is not None:
         explicit = request.constraints.model_dump(exclude_unset=True)
