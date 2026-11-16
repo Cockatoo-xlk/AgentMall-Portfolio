@@ -152,9 +152,12 @@ The core suite's 14 BGE skips were executed separately above. The remaining skip
 requires unavailable historical private Live evidence; its synthetic regression
 still ran. Six backend warnings concern existing `record_property` with xunit2;
 the BGE warnings are existing jieba escape-sequence warnings. A first full run
-reported 1679 passed / 1 failed / 15 skipped when a global schema-snapshot cleanup
-test overlapped independent BGE teardown. Its assertion was unchanged; the final
-serialized full run above passed. Other retained red/green failures cover fixture
+reported 1679 passed / 1 failed / 15 skipped: a global schema-snapshot assertion
+observed a previously existing schema disappear while BGE and frontend suites
+were also using this task's PG. The exact deleting process was not retained in a
+DDL audit and is UNKNOWN. Concurrency interference is supported by the snapshot
+delta and the passing serialized rerun; it is not an attribution to a specific
+suite. The assertion was unchanged. Other retained red/green failures cover fixture
 selection, operator identity, fatal-first-Run export and post-freeze writes. None
 is erased or represented as an original Smoke model result.
 
