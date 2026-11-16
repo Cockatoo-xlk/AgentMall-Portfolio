@@ -36,6 +36,14 @@ describe('readable persisted event summaries', () => {
       '失败',
     )
   })
+  it('shows persisted run transitions and committed receipt identities without inferring payment', () => {
+    expect(timelineSummary(event('run_state', { status: 'WAITING_INPUT' }))).toContain('等待用户输入或确认')
+    expect(timelineSummary(event('run_state', { status: 'PARTIAL', error_code: 'MODEL_RESPONSE_INVALID' }))).toContain('MODEL_RESPONSE_INVALID')
+    const receipt = timelineSummary(event('business_receipt', { status: 'EXECUTED', resource_id: 'order-1' }))
+    expect(receipt).toContain('业务操作 · EXECUTED')
+    expect(receipt).toContain('order-1')
+    expect(receipt).not.toContain('已支付')
+  })
   it('never invents token usage when unknown', () => {
     expect(
       timelineSummary(event('model_end', { status: 'completed', usage: 'UNKNOWN' })),

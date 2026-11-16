@@ -1,8 +1,8 @@
 # 10个可用源码展开的面试问题
 
-项目一句话：AgentMall 把模型建议、可恢复执行和确定性交易连接起来，重点研究“建议怎么变成可核验业务结果，以及失败后怎样安全恢复”。项目有AI辅助；以下是可验证的仓库行为，个人贡献须按本人实际设计、修改、复现与审核范围补充，不能直接当作独立完成声明。
+当前本地候选为 **V2.16**，基于 V2.15 已合并的 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。基线 main CI 43718887411 已通过；V2.16 本地证据见[本轮交付](V216_PRODUCT_DEMO.md)，未 Push / PR / 发布 / 部署。本轮不运行真实 Provider，不改 L8 结果。V2.14 Release **ON_HOLD**；**RELEASE_COMMIT=UNBOUND**。
 
-当前V2.15为本地可靠性工作，基线 `71970c88d8827d22cd5626de20317a89d389bafc` / tree `50921e7431437e0603f6b59487dbbf6cf6e80ec6`；产品改进已实现、验证汇总 **LOCAL_OFFLINE_VERIFIED**，未发布。不要将历史CI或L8结果当本轮测试。
+项目一句话：把模型建议、可恢复执行和确定性交易连接起来。项目有AI辅助；个人贡献须按实际设计、修改、复现与审核范围说明，不能将整个仓库描述为独立手写。
 
 1. **为什么不让模型直接下单？** 模型只生成提案，Actor/Store来自认证，价格库存由服务端重新读取；独立Confirmation后才执行领域事务。购买批准不含付款退款批准。可沿[工具](../backend/src/agentmall/agents/specialist_tools.py)→[动作服务](../backend/src/agentmall/actions/service.py)→[订单事务](../backend/src/agentmall/orders/service.py)解释，再看[写顺序](../backend/tests/test_agent_write_sequencing.py)和[订单并发](../backend/tests/test_order_concurrency.py)。
 
@@ -25,3 +25,17 @@
 10. **怎样向招聘者证明系统可以复现？** 用[6分钟无KeyDemo](DEMO_GUIDE.md)展示MockTransport/Fixture + 真实PG/Checkpoint，独立TEST_OPERATOR确认后唯一待支付订单、付款0、刷新读回。CI按[workflow](../.github/workflows/ci.yml)分后端/前端与严格release gate；成绩需绑定准确SHA和新日志。历史截图明确来源；MCP为独立外部入口、REMOTE_AUTH_NOT_IMPLEMENTED，VIDEO_NOT_RECORDED，无生产SLA或部署证明。
 
 面试前至少独立走读一条完整调用链，并将自己的具体修改、错误定位过程和真实验证收据对应到[工程案例](ENGINEERING_CASES.md)。没有亲自验证或证据不足的内容直接标UNKNOWN；不要承诺量化性能提升、独立开发全部代码或生产级可靠性。
+
+
+## V2.16 面试展开
+
+用[5–7分钟讲解](DEMO_GUIDE.md)展示三条业务路径，再打开[批次重复派发修复](ENGINEERING_CASES.md#同批次重复-handoff-绕过已存在的防重复检查)：两个不同任务ID为何仍是同一个业务读取、为什么要在整批派发前检查、如何用不同订单的正向控制防止过度拦截。用SQL、确认消费及持久化事件证明结果，不只展示聊天答复。
+
+说明本轮 UI/E2E 是真实后端加 SDK MockTransport / Fixture Embedding；真实 BGE 专项单独验证固定六文件和512维CPU推理。没有新真实模型结果，不能宣称 Multi-Agent 可靠性提升了某个百分比。L8只有5题评分、1通过，另3题未评分、7题未运行，独立Holdout0；本轮不改变这些成绩。
+
+
+## RC1 面试材料使用
+
+[RC1证据](V216_RC1_REVIEW.md)为本轮新跑的Backend1603/14skip、真实BGE13、Vitest146和Playwright128/0重试，不借用V2.15远程CI。可播放本地6:55静音原始录屏，按[时间码](DEMO_GUIDE.md#rc1-实际录屏)补充口头讲解；声明其无旁白、末段静态较长、录制器收尾超时，不能称精剪视频或真实DeepSeek实况。面试优先展示两次不同Proposal/Confirmation、Case与新订单的SQL增量，再解释模型失败与已提交事务为何可以同时存在。
+
+产品代码在RC1未改；真实模型可靠性仍NOT_TESTED。先通过后续经授权的Push/PR各自CI，再由Owner单独决定合并，不把候选或CI成功说成Release。

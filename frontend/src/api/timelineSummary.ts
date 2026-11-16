@@ -18,6 +18,12 @@ const goals: Record<string, string> = {
 }
 export function timelineSummary(event: RunEvent): string {
   const p = event.payload_summary
+  if (event.event_type === 'run_state') {
+    const labels: Record<string, string> = { RUNNING: '工作流正在执行', WAITING_INPUT: '等待用户输入或确认', COMPLETED: '工作流已完成', PARTIAL: '部分成功，请分别核对结果', FAILED: '工作流未完成' }
+    return `${labels[String(p.status)] ?? '运行状态待核对'} · ${p.status ?? 'UNKNOWN'}${p.error_code ? ` · ${p.error_code}` : ''}`
+  }
+  if (event.event_type === 'business_receipt')
+    return `${p.action_type ?? '业务操作'} · ${p.status ?? 'UNKNOWN'} · 资源 ${p.resource_id ?? 'UNKNOWN'}（以独立查询为准）`
   if (event.event_type.startsWith('job_')) return `${p.status ?? 'UNKNOWN'}${p.error_code ? ` · ${p.error_code}` : ''}`
   if (event.event_type === 'route_decision') {
     if (p.terminal === 'finish') return 'Supervisor · 完成当前工作流'

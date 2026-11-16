@@ -225,7 +225,9 @@ test('return_replace: real handoff, waiting, approval, timeline and checkpoint a
 test('return_replace: rejection is recorded and creates no order', async ({ page, request }) => {
   await workspace(page)
   await page.getByRole('button', { name: '拒绝并继续工作流' }).click()
-  await expect(page.getByText(/用户已拒绝/)).toBeVisible()
+  // The API answer now also repeats the rejection. Check the durable proposal notice.
+  await expect(page.locator('p.notice').filter({ hasText: '用户已拒绝' })).toBeVisible()
+  await expect(page.getByTestId('workflow-answer')).toContainText('用户已拒绝')
   const f = await facts(request)
   expect(f.orders).toBe(0)
   expect(f.confirmations).toBe(1)

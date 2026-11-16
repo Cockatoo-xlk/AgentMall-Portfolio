@@ -69,8 +69,8 @@ export function modeLabel(
       ? "Live DeepSeek · 已观察到 Provider 回执"
       : "Live DeepSeek · 已启用，尚无有效 Provider 回执";
   return {
-    MOCK_TRANSPORT: "DeepSeek SDK · MockTransport（离线，未调用真实模型）",
-    FIXTURE: "Fixture · Fake Model（未调用付费模型）",
+    MOCK_TRANSPORT: "OFFLINE DEMO / MOCK MODEL · DeepSeek SDK · MockTransport（离线，未调用真实模型）",
+    FIXTURE: "OFFLINE DEMO / MOCK MODEL · Fixture · Fake Model（未调用付费模型）",
     MODEL_DISABLED: "MODEL_DISABLED · 服务端未启用模型",
     MODEL_ENABLED_UNVERIFIED: "模型已注入，Provider 身份未核验",
   }[status.mode];

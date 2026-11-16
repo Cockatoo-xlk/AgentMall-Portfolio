@@ -14,6 +14,7 @@ import PolicyCitation from '../components/PolicyCitation'
 import ClarificationCard from '../components/ClarificationCard'
 import ProviderPanel from '../components/ProviderPanel'
 import ThreadMemory from '../components/ThreadMemory'
+import RecommendationResults from '../components/RecommendationResults'
 import { contextRunInput, freshRecommendationConstraints, type ContextOperation } from '../api/threadContext'
 export default function AgentWorkspace() {
   const [params, setParams] = useSearchParams()
@@ -388,6 +389,7 @@ function Workspace({
                       </>
                     )}
                   </section>
+                  <RecommendationResults run={run} />
                   <div hidden={!(run.status === 'WAITING_INPUT' || recoverable(run)) || !run.pending_confirmation}>
                     {run.pending_confirmation?.proposal_id && (
                       <WorkflowConfirmationCard

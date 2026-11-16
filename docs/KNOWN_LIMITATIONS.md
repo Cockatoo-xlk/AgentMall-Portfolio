@@ -1,6 +1,6 @@
 # 已知限制与证据边界
 
-本页适用于V2.15本地工作。基线 `71970c88d8827d22cd5626de20317a89d389bafc` / tree `50921e7431437e0603f6b59487dbbf6cf6e80ec6`；产品改进已实现，验证汇总 **LOCAL_OFFLINE_VERIFIED**，V2.14 Release **ON_HOLD**，V2.15 **NOT_PUBLISHED**。
+当前本地候选为 **V2.16**，基于 V2.15 已合并的 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。基线 main CI 43718887411 已通过；V2.16 本地证据见[本轮交付](V216_PRODUCT_DEMO.md)，未 Push / PR / 发布 / 部署。本轮不运行真实 Provider，不改 L8 结果。V2.14 Release **ON_HOLD**；**RELEASE_COMMIT=UNBOUND**。
 
 | 范围 | 已知限制 | 核查入口 |
 |---|---|---|
@@ -15,11 +15,11 @@
 | 检索质量 | 历史真实BGE/Reranker实验为本地Linux aarch64/CPU、固定40条合成查询、单标注者；Reranker默认关闭，不能等同当前Agent质量 | [真实检索报告](REAL_RETRIEVAL.md) |
 | MCP认证 | 仅stdio/localhost；**REMOTE_AUTH_NOT_IMPLEMENTED**，未实现可公网使用的完整远程认证；无付款退款执行工具 | [MCP指南](MCP_GATEWAY.md) |
 | Demo | SDK MockTransport / Fixture Embedding / 合成账号 / TEST_OPERATOR；真实后端不等于真实模型。准备依赖后的无Provider演示不保证首次构建全离线 | [6分钟演示](DEMO_GUIDE.md) |
-| 影像素材 | 复用历史截图，未生成V2.15新录屏；**VIDEO_NOT_RECORDED** | [截图来源](screenshots/portfolio/README.md)、[原哈希](evidence/portfolio-demo/verification.json) |
+| 影像素材 | 保留历史截图，V2.16初次交付未录屏；RC1另有6:55静音原始录屏，非精剪演示片，收尾超时如实保留 | [截图来源](screenshots/portfolio/README.md)、[原哈希](evidence/portfolio-demo/verification.json) |
 | 规模与部署 | 没有生产部署、真实用户规模、QPS、SLA、真实付款或退款证明；公开合成配置不能作为公网认证 | [项目说明](../README.md)、[架构](ARCHITECTURE.md) |
 | 统计与版本 | 历史离线CI、真实本地BGE、Mock、不同Live会话分别绑定原SHA，不能相加或当V2.15结果。模型别名也不是不可变权重身份 | [历史结果](RESULTS.md)、[L8身份](EVALUATION_RESULTS.md#身份与公开投影) |
 | 旧E1错误契约 | **ORACLE_CONTRACT_MISMATCH**仍未解决：Native的TOOL_NOT_DECLARED/SPECIALIST_FAILED与正式SDK的INVALID_TOOL_BATCH属于不同校验路径，未放行未知工具或修改原Oracle | [既有运行时修复](../backend/tests/test_l8_r4_original_oracle.py)、[批次硬拒绝](../backend/src/agentmall/agents/model_control.py) |
-| 发布身份 | V2.14仍ON_HOLD，V2.15仅本地工程候选，**RELEASE_COMMIT=UNBOUND**；本地回归与GitHub CI须分别核验；无Tag、Release或部署 | [本轮验收](V215_RELIABILITY_ENGINEERING.md) |
+| 发布身份 | V2.14仍ON_HOLD，V2.15已合并但未发布，V2.16为本地候选，**RELEASE_COMMIT=UNBOUND**；本地回归与GitHub CI须分别核验；无Tag、Release或部署 | [本轮验收](V215_RELIABILITY_ENGINEERING.md) |
 
 ## 历史失败仍保留
 
@@ -34,3 +34,13 @@
 项目使用AI辅助开发。面试中只陈述本人能够解释、定位和复现的设计、修改、验证与审查；仓库源码和测试数量不证明独立个人贡献。私有Gold、未运行任务输入、Key、完整Prompt、地址和原始响应不进入公开作品集；本页只说明保留的缺口，不要求读取它们。
 
 本轮没有新L8授权，不继续09—15，不重跑01—08，不修改原Ledger、Oracle、评分或冻结身份。以后发布、部署或新Live实验仍应以新的准确源码与独立授权/回执记录，当前本地文档不代表已发布。
+
+
+## V2.16 有界支持
+
+- 比较表使用 Run 的检索事实快照；当前库存须独立GET核对，审批时服务端仍重验。界面不能保证任意自然语言都被正确解释。
+- 同批重复派发拦截使用既有完整指纹；不保证语义不同但业务等价的任意模型表达都能判重。没有新增自动修复或重试。
+- 受控入口是固定合成契约测试与薄API辅助类，不是新通用评测器；状态/错误评分不是业务Oracle，也不是独立盲测。
+- SDK MockTransport完整业务链与真实BGE专项分开运行；不能将两者合并描述为本轮真实DeepSeek+BGE端到端评测。
+- 原有13项real_bge标记在轻量核心回归中按策略跳过，本轮另行实际执行；私有历史证据测试缺少原件仍跳过。准确数量见[回执](evidence/v216/verification.json)。
+- V2.16初次交付的**VIDEO_NOT_RECORDED**是历史状态；RC1原始录屏已独立验证，但没有旁白、末段静态停留较长，录制器未正常FINISHED。见[媒体限制](V216_RC1_REVIEW.md#实际录屏与质量限制)。本地验收时真实Provider请求0、真实Key读取0、GitHub写入0；远程CI和发布需另核。

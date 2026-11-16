@@ -6,7 +6,7 @@ import { decide, operationKey, readOperation, saveOperation } from '../api/agent
 import type { Operation, Run, Thread } from '../api/agentWorkflow'
 import type { Proposal } from '../api/types'
 import WorkflowResources from './WorkflowResources'
-import { money } from '../api/format'
+import WorkflowProposalDetails from './WorkflowProposalDetails'
 import { expiryLabel } from '../api/proposalExpiry'
 import { useProposalExpiry } from '../state/useProposalExpiry'
 export default function WorkflowConfirmationCard({
@@ -74,41 +74,13 @@ export default function WorkflowConfirmationCard({
       <span className="eyebrow">YOUR DECISION</span>
       <h2>{pending.action_type === 'RETURN_REQUEST' ? '确认退货申请' : '确认购买快照'}</h2>
       <p className="muted">每份提案单独确认。批准后由工作流提交，前端不重复执行交易。</p>
+      <small>当前授权节点 {pending.interrupt_id} · Run {run.id}</small>
       {error && <p role="alert">{error}</p>}
       {!proposal && !error && <p>读取服务端快照…</p>}
       {proposal && (
         <>
-          <small>proposal_id {proposal.proposal_id}</small>
-          <p>
-            服务端状态：<strong>{proposal.status}</strong>
-          </p>
-          {proposal.action_type === 'CHECKOUT' && (
-            <>
-              <ul>
-                {proposal.canonical_payload.items.map((item) => (
-                  <li key={item.product_id}>
-                    {item.name_snapshot} × {item.quantity} · {money(item.unit_price_cents)}
-                  </li>
-                ))}
-              </ul>
-              <p className="workflow-total">
-                合计 {money(proposal.canonical_payload.total_cents)}
-              </p>
-              <p>
-                地址：{proposal.canonical_payload.address_label} · 政策{' '}
-                {proposal.canonical_payload.policy_version}
-              </p>
-            </>
-          )}
-          {proposal.action_type === 'RETURN_REQUEST' && (
-            <>
-              <p>原订单：{proposal.canonical_payload.order_id}</p>
-              <p>原因：{proposal.canonical_payload.reason_code}</p>
-              <p>{proposal.canonical_payload.description}</p>
-              <p>政策：{proposal.canonical_payload.policy_version}</p>
-              <p>申请成功仅代表 REQUESTED，仍需商家审核。</p>
-            </>
-          )}
+          <WorkflowProposalDetails proposal={proposal} />
+          {operation.current && <small data-testid="resume-request-id">原恢复 request_id {operation.current.request_id} · {retry ? '仅在点击核对后重试原请求' : '已保留请求身份'}</small>}
           {proposal.result && (
             <p className="notice">
               业务已执行，工作流回答尚待核实。请以下方真实资源状态为准，恢复不会重新提交该业务。
