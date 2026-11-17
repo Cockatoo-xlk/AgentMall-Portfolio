@@ -1,6 +1,7 @@
 """Strict handoff contracts; no raw chats, identities, sessions or authorizations."""
 
 import re
+from decimal import Decimal
 from typing import Literal
 from uuid import UUID
 
@@ -236,6 +237,36 @@ def scoped_purchase_quantity(message, *, typed_quantity=None, supplemental=False
     return quantity
 
 
+def price_limit(message, *, purchasing):
+    """One price rule for stateless and Thread requests, never a product quotation.
+
+    Recommendation amounts are per-product upper filters. A purchase's unit
+    description is not a total cap; only limits constrain the checkout total.
+    Distinct limits require clarification rather than silently choosing one.
+    """
+    limits, unit_quotes = set(), set()
+    for amount in re.finditer(r"(\d+(?:\.\d{1,2})?)\s*元(以内|以下|内|预算)?", message):
+        before, after = message[: amount.start()], message[amount.end() :]
+        limit = amount[2] or re.search(
+            r"(?:预算|总价|总金额|总额|不超过|不高于|不大于|不多于|上限)"
+            r"[^\d，。；,;\n]{0,12}$",
+            before,
+        )
+        unit_quote = (
+            re.match(r"\s*的", after)
+            or re.search(r"(?:单价|每件价格)(?:为|是)?\s*$", before)
+            or infer_category(re.split(r"[，。；,;\n]", after)[0]) is not None
+        )
+        cents = int(Decimal(amount[1]) * 100)
+        if purchasing and unit_quote and not limit:
+            unit_quotes.add(cents)
+        else:
+            limits.add(cents)
+    if len(limits) > 1 or len(unit_quotes) > 1:
+        raise preference_clarification()
+    return next(iter(limits)) if limits else None
+
+
 def user_constraints(request):
     """Extract explicit safety constraints, never route agents here.
 
@@ -243,18 +274,6 @@ def user_constraints(request):
     Typed caller input can express the same user choices without text parsing.
     """
     message = request.message
-    amount = None
-    for candidate in re.finditer(r"(\d+(?:\.\d{1,2})?)\s*元(以内|以下|内|预算)?", message):
-        before, after = message[: candidate.start()], message[candidate.end() :]
-        unit_quote = not candidate[2] and (
-            re.match(r"\s*的", after) or re.search(r"(?:单价|每件价格)(?:为|是)?\s*$", before)
-        )
-        total_limit = re.search(r"(?:预算|总价|总金额)[^\d，。；,;\n]{0,12}$", before)
-        if not unit_quote or total_limit:
-            amount = candidate
-            break
-    from decimal import Decimal
-
     from agentmall.agents.purchase_intent import ACTION, purchase_intent
     from agentmall.agents.request_intents import (
         CONDITION,
@@ -267,6 +286,18 @@ def user_constraints(request):
     values = {}
     needs = {}
     bundle = parse_bundle(message)
+    intent = purchase_intent(message)
+    # Price classification grants no action authority. Bare purchase topics can
+    # describe a unit price without satisfying the stricter purchase-intent gate.
+    purchasing = intent.requested is not False and (
+        intent.requested is True
+        or (request.constraints and request.constraints.purchase_requested)
+        or any(not action["negative"] for action in ACTION.finditer(message))
+    )
+    if bundle is None and not (request.constraints and request.constraints.bundle):
+        limit = price_limit(message, purchasing=purchasing)
+        if limit is not None:
+            values["max_price_cents"] = limit
     if kind := infer_product_kind(message):
         needs["product_kind"] = kind
     screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", message)
@@ -297,8 +328,6 @@ def user_constraints(request):
         if word in message:
             needs["usage"] = word
     values["product_needs"] = needs
-    if amount:
-        values["max_price_cents"] = int(Decimal(amount[1]) * 100)
     if category := infer_category(message):
         values["category"] = category
     if any(x in message for x in ("安静", "静音", "低噪声")):
@@ -307,7 +336,6 @@ def user_constraints(request):
         values["address_label"] = "demo_dorm"
     elif "演示家庭" in message and "演示宿舍" not in message:
         values["address_label"] = "demo_home"
-    intent = purchase_intent(message)
     decisions = {
         "purchase_requested": intent.requested,
         "return_requested": return_intent(message),
@@ -331,12 +359,11 @@ def user_constraints(request):
     if request.constraints is not None:
         explicit = request.constraints.model_dump(exclude_unset=True)
         parsed_recommendation = values.get("recommendation")
-        if (
-            values.get("max_price_cents") is not None
-            and explicit.get("max_price_cents") is not None
-        ):
-            explicit["max_price_cents"] = min(
-                values["max_price_cents"], explicit["max_price_cents"]
+        if values.get("max_price_cents") is not None and "max_price_cents" in explicit:
+            explicit["max_price_cents"] = (
+                min(values["max_price_cents"], explicit["max_price_cents"])
+                if explicit["max_price_cents"] is not None
+                else values["max_price_cents"]
             )
         values.update(explicit)
         if parsed_recommendation is not None and explicit.get("recommendation") is not None:
