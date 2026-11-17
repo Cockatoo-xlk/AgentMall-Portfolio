@@ -261,7 +261,7 @@ class SmokeSession:
                     self.settings.storefront_id
                 ):
                     raise SmokeStopped("ACTOR_STORE_MISMATCH")
-                task = self.gate.proposal["tasks"][len(self.gate.read()["tasks"]) - 1]
+                task = self.gate.current_task()
                 self.setup = (
                     await prepare_delivered_fixture(
                         self.client, self.auth, task["fixture"]["original_product"]
@@ -297,7 +297,7 @@ class SmokeSession:
             await self.close()
             raise
 
-    async def start(self):
+    async def start(self, *, expected_context_version=None):
         self.require_mutable()
         self.gate.start_episode()
         message = self.task["user_request"]
@@ -311,9 +311,20 @@ class SmokeSession:
         self.gate.audit("resolved_input", message_sha256=digest(message))
         self.start_request_id = str(uuid4())
         self.gate.audit("start_request", request_id=self.start_request_id)
-        self.run = await self.operator.start(
-            self.thread_id, self.start_request_id, message
-        )
+        if expected_context_version is None:
+            self.run = await self.operator.start(
+                self.thread_id, self.start_request_id, message
+            )
+        else:
+            self.run = await self.operator._request(
+                "POST",
+                f"/api/v1/agent/threads/{self.thread_id}/runs",
+                {
+                    "request_id": self.start_request_id,
+                    "message": message,
+                    "expected_context_version": expected_context_version,
+                },
+            )
         self.stage_facts.append({"stage": "after-start", "facts": self.facts()})
         return self.run
 
@@ -397,7 +408,7 @@ class SmokeSession:
             },
             "binding": self.gate.binding,
             "task_id": self.task["id"],
-            "case_index": len(self.gate.read()["tasks"]) - 1,
+            "case_index": self.gate.case_index(),
             "run": safe,
             "product_facts": [
                 f

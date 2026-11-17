@@ -41,6 +41,24 @@ def digest(value):
     ).hexdigest()
 
 
+def execution_plan(proposal, task_ids=None):
+    """Select an ordered subset; original task inputs and case semantics stay fixed."""
+    original = [task["id"] for task in proposal["tasks"]]
+    selected = original if task_ids is None else task_ids
+    if (
+        not isinstance(selected, (list, tuple))
+        or not selected
+        or any(not isinstance(task, str) for task in selected)
+        or len(set(selected)) != len(selected)
+        or list(selected) != [task for task in original if task in selected]
+    ):
+        raise SmokeStopped("TASK_SELECTION_INVALID")
+    limit = min(
+        Decimal(proposal["limits"]["batch_cost_cny"]), Decimal("2.50") * len(selected)
+    )
+    return list(selected), str(limit)
+
+
 def static_admission(proposal):
     """Pure parser/goal compatibility for this fixed smoke, never an Agent episode.
 
@@ -135,8 +153,10 @@ class SmokeBatch:
         mode="CONTRACT_TEST_ONLY",
         approval=None,
         verify_source=None,
+        task_ids=None,
     ):
         self.path, self.proposal = Path(path), validate_proposal(proposal)
+        self.task_order, self.batch_cost_limit = execution_plan(self.proposal, task_ids)
         if mode not in {"CONTRACT_TEST_ONLY", "LIVE_DEEPSEEK"}:
             raise SmokeStopped("MODE_INVALID")
         self.approval = (
@@ -173,7 +193,8 @@ class SmokeBatch:
             "binding": binding,
             "proposal_sha256": digest(self.proposal),
             "mode": mode,
-            "task_order": [t["id"] for t in self.proposal["tasks"]],
+            "task_order": self.task_order,
+            "batch_cost_limit_cny": self.batch_cost_limit,
             "tasks": [],
             "stop_code": None,
             "task_fee_holds_cny": "0",
@@ -199,6 +220,9 @@ class SmokeBatch:
             data["binding"] != self.binding
             or data["proposal_sha256"] != digest(self.proposal)
             or data["mode"] != self.mode
+            or data["task_order"] != self.task_order
+            or data.get("batch_cost_limit_cny", self.batch_cost_limit)
+            != self.batch_cost_limit
         ):
             raise SmokeStopped("EXECUTION_BINDING_MISMATCH")
         return data
@@ -278,12 +302,12 @@ class SmokeBatch:
         self.check()
         data = self.read()
         index = len(data["tasks"])
-        if index >= 3 or task_id != data["task_order"][index]:
+        if index >= len(self.task_order) or task_id != data["task_order"][index]:
             raise SmokeStopped("TASK_ORDER")
         if index and data["tasks"][-1]["state"] != "VERIFIED":
             raise SmokeStopped("PRIOR_TASK_NOT_FINALIZED")
         held = Decimal(data["task_fee_holds_cny"]) + Decimal("2.50")
-        if held > Decimal("7.50"):
+        if held > Decimal(self.batch_cost_limit):
             raise SmokeStopped("BATCH_COST_EXHAUSTED")
         row = {
             "task_id": task_id,
@@ -297,6 +321,15 @@ class SmokeBatch:
         data["task_fee_holds_cny"] = str(held)
         self.write(data)
         return deepcopy(row)
+
+    def case_index(self):
+        task_id = self.read()["tasks"][-1]["task_id"]
+        return next(
+            i for i, task in enumerate(self.proposal["tasks"]) if task["id"] == task_id
+        )
+
+    def current_task(self):
+        return deepcopy(self.proposal["tasks"][self.case_index()])
 
     def initialized(self, environment_id, business, checkpoint):
         self.check()
@@ -689,7 +722,7 @@ class SmokeOperator(Operator):
             "RETURN_REQUEST",
         }:
             raise SmokeStopped("SMOKE_ACTION_FORBIDDEN")
-        index = len(self.gate.read()["tasks"]) - 1
+        index = self.gate.case_index()
         actions = ([], ["CHECKOUT"], ["RETURN_REQUEST", "CHECKOUT"])[index]
         decisions = sum(
             a["kind"] == "operator_decision"

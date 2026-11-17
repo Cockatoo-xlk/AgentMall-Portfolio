@@ -23,6 +23,7 @@ from evals.smoke_runner import (
     SmokeBatch,
     SmokeStopped,
     digest,
+    execution_plan,
     static_admission,
     validate_price,
 )
@@ -42,7 +43,7 @@ def git(*args):
     ).strip()
 
 
-def prepare(proposal, protocol, price_path):
+def prepare(proposal, protocol, price_path, *, task_ids=None):
     if (
         hashlib.sha256(Path(proposal).read_bytes()).hexdigest() != PROPOSAL_SHA
         or hashlib.sha256(Path(protocol).read_bytes()).hexdigest() != PROTOCOL_SHA
@@ -54,6 +55,9 @@ def prepare(proposal, protocol, price_path):
     binding = freeze_proposal(proposal, source_commit=source, source_tree=tree)
     price = json.loads(Path(price_path).read_bytes())
     validate_price(price)
+    order, cost_limit = execution_plan(
+        json.loads(Path(proposal).read_bytes()), task_ids
+    )
     files = git("ls-files").splitlines()
     binding.update(
         protocol_sha256=hashlib.sha256(Path(protocol).read_bytes()).hexdigest(),
@@ -69,6 +73,9 @@ def prepare(proposal, protocol, price_path):
         actual_supplier_invoice="UNKNOWN_REPORTED_SEPARATELY_FROM_SETTLED_USAGE",
         runtime="FORMAL_FASTAPI_ASGI_AND_NATIVE_CHATDEEPSEEK_HTTPS",
         admission=static_admission(json.loads(Path(proposal).read_bytes())),
+        execution_task_order=order,
+        execution_cost_limit_cny=cost_limit,
+        expected_context_version=0 if task_ids is not None else None,
     )
     return binding
 
@@ -98,6 +105,15 @@ def validate_binding(binding):
         ):
             raise SmokeStopped("SOURCE_FILE_MISMATCH")
     validate_price(binding["price"])
+    order, cost_limit = execution_plan(
+        binding["proposal"], binding.get("execution_task_order")
+    )
+    if (
+        binding.get("execution_cost_limit_cny", cost_limit) != cost_limit
+        or binding.get("execution_task_order", order) != order
+        or binding.get("expected_context_version") not in (None, 0)
+    ):
+        raise SmokeStopped("EXECUTION_PLAN_MISMATCH")
     if static_admission(binding["proposal"])["codes"]:
         raise SmokeStopped("FROZEN_TASK_CONTRACT_INCOMPATIBLE")
 
@@ -185,6 +201,7 @@ async def operate(args):
         mode="LIVE_DEEPSEEK",
         approval=args.owner_receipt,
         verify_source=lambda: validate_binding(binding),
+        task_ids=binding.get("execution_task_order"),
     )
     config = json.loads(args.database_config.read_bytes())
     session, inspection = None, None
@@ -222,7 +239,9 @@ async def operate(args):
                 )
                 result = {"phase": "READY", "thread_id": session.thread_id}
             elif op == "start" and session and not command:
-                result = await session.start()
+                result = await session.start(
+                    expected_context_version=binding.get("expected_context_version")
+                )
             elif op == "inspect" and session and not command:
                 inspection = await session.inspect()
                 result = {
@@ -343,13 +362,16 @@ def main(argv=None):
     prepared.add_argument("--protocol", type=Path, required=True)
     prepared.add_argument("--price", type=Path, required=True)
     prepared.add_argument("--output", type=Path, required=True)
+    prepared.add_argument("--task-id", action="append", dest="task_ids")
     console = sub.add_parser("operate")
     for name in ("binding", "owner-receipt", "database-config", "state-dir"):
         console.add_argument("--" + name, type=Path, required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == "prepare":
-            binding = prepare(args.proposal, args.protocol, args.price)
+            binding = prepare(
+                args.proposal, args.protocol, args.price, task_ids=args.task_ids
+            )
             fd = os.open(
                 args.output, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600
             )
