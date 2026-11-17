@@ -3,7 +3,7 @@
 import re
 from copy import deepcopy
 from decimal import Decimal
-from uuid import UUID
+from uuid import UUID, uuid5
 
 from sqlalchemy import select
 
@@ -258,9 +258,34 @@ async def publish_candidates(session, run, runtime):
     if not run.context_snapshot:
         return
     context = await locked_context(session, run.thread_id)
+    from agentmall.agents.product_preferences import recommendation_products
+
+    selected = recommendation_products(runtime)
     offered = []
     binding = runtime.thread_snapshot
-    for ident, candidate in runtime.candidate_lists.items():
+    candidates = runtime.candidate_lists
+    if selected:
+        # Publish the actual visible list, including verified get_product reads,
+        # rather than fragments of each exploratory retrieval batch.
+        items = [
+            dict(
+                rank=i + 1,
+                **p.model_dump(
+                    mode="json",
+                    include={"id", "name", "price_cents", "currency", "catalog_version"},
+                ),
+            )
+            for i, p in enumerate(selected)
+        ]
+        ident = str(
+            uuid5(run.id, "recommendation:" + payload_hash([binding["preferences"], items]))
+        )
+        candidates = {
+            ident: {"items": items, "preferences_digest": payload_hash(binding["preferences"])}
+        }
+    elif selected is not None:
+        candidates = {}
+    for ident, candidate in candidates.items():
         if candidate["preferences_digest"] != payload_hash(binding["preferences"]):
             continue
         items = candidate["items"]
@@ -278,7 +303,7 @@ async def publish_candidates(session, run, runtime):
                     details=candidate.get("details", {}),
                 )
             )
-        offered.append(ident)
+        offered.append(str(candidate_id))
     bundle_status = runtime.facts.get(("bundle_status", "current"))
     if bundle_status and context.version == binding["version"]:
         context.provenance = {**context.provenance, "bundle_status": bundle_status}

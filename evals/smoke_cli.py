@@ -12,6 +12,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from uuid import UUID, uuid4
 
 from agentmall.playground.environment import private_write
 
@@ -154,6 +155,25 @@ class ConsoleInput:
             os.set_blocking(self.fd, blocking)
 
 
+def prepare_resume_command(inspection, confirmation):
+    """Print a copyable command after success; never approve or execute a Resume."""
+    try:
+        if (
+            confirmation["proposal_id"] != inspection["proposal"]["proposal_id"]
+            or confirmation["decision"] not in {"approve", "reject"}
+            or confirmation["consumed_at"] is not None
+        ):
+            raise ValueError()
+        UUID(confirmation["confirmation_id"])
+    except (KeyError, ValueError, TypeError, AttributeError):
+        raise SmokeStopped("CONFIRMATION_BINDING_INVALID") from None
+    return {
+        "op": "resume",
+        "confirmation_id": confirmation["confirmation_id"],
+        "request_id": str(uuid4()),
+    }
+
+
 async def operate(args):
     binding = json.loads(args.binding.read_bytes())
     validate_binding(binding)
@@ -224,6 +244,10 @@ async def operate(args):
                 result = await session.decide(
                     inspection, op, operator="TEST_OPERATOR_CODEX"
                 )
+                result = result | {
+                    "resume_command": prepare_resume_command(inspection, result),
+                    "remaining_seconds": gate.remaining(),
+                }
             elif (
                 op == "resume"
                 and session

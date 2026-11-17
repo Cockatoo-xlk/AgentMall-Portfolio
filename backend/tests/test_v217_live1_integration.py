@@ -1,6 +1,7 @@
 """DEVELOPMENT / CONTRACT_TEST_ONLY. Real PG/API/SDK; never the new Live inputs."""
 
 import json
+from time import perf_counter, time
 from uuid import uuid4
 
 import httpx
@@ -65,7 +66,17 @@ class SingleWire:
         return httpx.MockTransport(respond)
 
 
-async def test_full_api_single_multi_operator_and_freeze_lifecycle(env, tmp_path):
+async def test_full_api_single_multi_operator_and_freeze_lifecycle(env, tmp_path, record_property):
+    from evals.smoke_cli import prepare_resume_command
+
+    timings = []
+
+    async def timed(stage, operation):
+        start = perf_counter()
+        result = await operation
+        timings.append({"stage": stage, "seconds": perf_counter() - start})
+        return result
+
     p = proposal()
     p["tasks"][0]["user_request"] = "推荐一款300元以内静音键盘，仅供选择，不购买。"
     # Product max_price is a total purchase constraint: two299yuan items need598.
@@ -75,7 +86,15 @@ async def test_full_api_single_multi_operator_and_freeze_lifecycle(env, tmp_path
         "订单{delivered_order_id}有质量问题，申请退货，再推荐另一款500元以内静音键盘准备购买一件，送演示宿舍。"
     )
     p["tasks"][2]["fixture"]["original_product"] = "静音 K87"
-    g = SmokeBatch(tmp_path / "batch.json", p, "c" * 64)
+    epoch, monotonic_start = time(), perf_counter()
+    # Real elapsed test time, resilient to VM/NTP wall-clock adjustments. The
+    # production rollback guard remains unchanged and is tested separately.
+    g = SmokeBatch(
+        tmp_path / "batch.json",
+        p,
+        "c" * 64,
+        clock=lambda: epoch + perf_counter() - monotonic_start,
+    )
     sql = []
     schemas = []
     for index, task in enumerate(p["tasks"]):
@@ -89,21 +108,24 @@ async def test_full_api_single_multi_operator_and_freeze_lifecycle(env, tmp_path
             return wire.transport(role)
 
         try:
-            await s.initialize(
-                env[3].database_url.get_secret_value(),
-                price(),
-                encoder_factory=FixtureEncoder,
-                transport_factory=transport,
+            await timed(
+                f"{index}:initialize",
+                s.initialize(
+                    env[3].database_url.get_secret_value(),
+                    price(),
+                    encoder_factory=FixtureEncoder,
+                    transport_factory=transport,
+                ),
             )
             schemas.append(s.settings.db_schema)
-            run = await s.start()
+            run = await timed(f"{index}:start-to-first-result", s.start())
             before = sql_facts(s.settings)
             if index == 0:
                 assert run["status"] == "COMPLETED"
                 assert not before["orders"] and not before["confirmations"]
             else:
                 assert run["status"] == "WAITING_INPUT", run
-                first = await s.inspect()
+                first = await timed(f"{index}:inspect-first", s.inspect())
                 expected = "RETURN_REQUEST" if index == 2 else "CHECKOUT"
                 assert first["proposal"]["action_type"] == expected
                 assert len(before["orders"]) == (index == 2)
@@ -121,22 +143,36 @@ async def test_full_api_single_multi_operator_and_freeze_lifecycle(env, tmp_path
                     match="EXPLICIT_OPERATOR_DECISION_REQUIRED|CONFIRMATION_BINDING_INVALID",
                 ):
                     await s.resume(first, str(uuid4()), str(uuid4()))
-                c1 = await s.decide(first, "approve", operator="TEST_OPERATOR_CODEX")
+                c1 = await timed(
+                    f"{index}:explicit-first-approval",
+                    s.decide(first, "approve", operator="TEST_OPERATOR_CODEX"),
+                )
                 assert len(sql_facts(s.settings)["orders"]) == len(before["orders"])
-                rid = str(uuid4())
-                run = await s.resume(first, c1["confirmation_id"], rid)
+                command = prepare_resume_command(first, c1)
+                rid = command["request_id"]
+                run = await timed(
+                    f"{index}:explicit-first-resume",
+                    s.resume(first, command["confirmation_id"], rid),
+                )
                 if index == 2:
                     assert run["status"] == "WAITING_INPUT", run
                     middle = sql_facts(s.settings)
                     assert len(middle["cases"]) == 1 and len(middle["orders"]) == 1
-                    second = await s.inspect()
+                    second = await timed(f"{index}:inspect-second", s.inspect())
                     assert second["proposal"]["action_type"] == "CHECKOUT"
                     with pytest.raises(SmokeStopped, match="CONFIRMATION_BINDING_INVALID"):
                         await s.resume(second, c1["confirmation_id"], str(uuid4()))
-                    c2 = await s.decide(second, "approve", operator="TEST_OPERATOR_CODEX")
+                    c2 = await timed(
+                        f"{index}:explicit-second-approval",
+                        s.decide(second, "approve", operator="TEST_OPERATOR_CODEX"),
+                    )
                     assert c1["confirmation_id"] != c2["confirmation_id"]
-                    rid = str(uuid4())
-                    run = await s.resume(second, c2["confirmation_id"], rid)
+                    command = prepare_resume_command(second, c2)
+                    rid = command["request_id"]
+                    run = await timed(
+                        f"{index}:explicit-second-resume",
+                        s.resume(second, command["confirmation_id"], rid),
+                    )
                     original = second
                     cid = c2["confirmation_id"]
                 else:
@@ -185,3 +221,4 @@ async def test_full_api_single_multi_operator_and_freeze_lifecycle(env, tmp_path
     assert len(set(schemas)) == 3
     assert g.read()["task_fee_holds_cny"] == "7.50"
     assert len(sql[1]["after"]["orders"]) == 1 and len(sql[2]["after"]["orders"]) == 2
+    record_property("CONTRACT_TEST_ONLY_stage_timings", json.dumps(timings))

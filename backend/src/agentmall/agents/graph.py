@@ -120,13 +120,28 @@ def build_graph(runtime):
 
 
 def render(runtime, terminal):
-    from agentmall.agents.product_preferences import recommendation_shortage
+    from agentmall.agents.product_preferences import (
+        recommendation_products,
+        recommendation_shortage,
+    )
 
     runtime.prune_excluded_candidates()
     shortage = recommendation_shortage(runtime)
-    results = list(runtime.completed.values())
+    selected = recommendation_products(runtime)
+    selected_ids = None if selected is None else {str(p.id) for p in selected}
+
+    def presented(kind, ident):
+        return kind != "product" or selected_ids is None or str(ident) in selected_ids
+
+    # Only the public result is projected. Checkpoint/journal exploration remains intact.
+    results = [
+        r.model_copy(update={"entity_refs": [e for e in r.entity_refs if presented(e.kind, e.id)]})
+        for r in runtime.completed.values()
+    ]
     facts = [
-        {"kind": kind, "id": ident, "data": value} for (kind, ident), value in runtime.facts.items()
+        {"kind": kind, "id": ident, "data": value}
+        for (kind, ident), value in runtime.facts.items()
+        if presented(kind, ident)
     ]
     proposals = [f for f in facts if f["kind"] == "proposal"]
     errors = list(dict.fromkeys(runtime.errors + [r.error_code for r in results if r.error_code]))
@@ -230,7 +245,7 @@ def render(runtime, terminal):
         status=status,
         answer="".join(lines) or "需要补充明确需求，尚未产生业务回执。",
         results=results,
-        entity_refs=list(runtime.references.values()),
+        entity_refs=[e for e in runtime.references.values() if presented(e.kind, e.id)],
         proposal_ids=[p["id"] for p in proposals],
         citations=list(runtime.citations.values()),
         facts=facts,

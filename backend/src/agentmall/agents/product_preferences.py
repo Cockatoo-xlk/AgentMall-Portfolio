@@ -116,8 +116,8 @@ def recommendation_requirements(message, choice):
     )
 
 
-def recommendation_shortage(runtime, entity_refs=None):
-    """Inspect only verified replacement snapshots; never trigger a retrieval or a write."""
+def recommendation_products(runtime, entity_refs=None):
+    """Bound final read-only recommendations, retaining exploration in the runtime."""
     c = runtime.constraints
     requirement = getattr(c, "recommendation", None)
     if requirement is None or c.bundle or c.purchase_requested or c.return_requested:
@@ -129,12 +129,41 @@ def recommendation_shortage(runtime, entity_refs=None):
     refs = runtime.references.values() if entity_refs is None else entity_refs
     identifiers = {str(e.id) for e in refs if e.kind == "product" and e.relation == "replacement"}
     products = []
-    for ident in sorted(identifiers):
-        fact = runtime.facts.get(("product", ident))
-        if fact is not None:
+    for (kind, ident), fact in runtime.facts.items():
+        if kind == "product" and ident in identifiers:
             product = ProductDTO.model_validate(fact)
             if product_allowed(runtime, product):
                 products.append(product)
+    limit = requirement.count or len(products)
+    selected = products[:limit]
+    if requirement.compare_connections:
+        modes = ("有线", "无线")
+        if not all(any(connection_matches(p.attributes, m) for p in selected) for m in modes):
+            # Preserve ranked/insertion order when the first N already cover the
+            # comparison. Otherwise use the smallest verified covering subset.
+            covering = [
+                next((p for p in products if connection_matches(p.attributes, m)), None)
+                for m in modes
+            ]
+            covering = list({p.id: p for p in covering if p is not None}.values())
+            if len(covering) <= limit:
+                chosen = {p.id for p in covering}
+                for product in products:
+                    if len(chosen) >= limit:
+                        break
+                    chosen.add(product.id)
+                selected = [p for p in products if p.id in chosen]
+    return selected
+
+
+def recommendation_shortage(runtime, entity_refs=None):
+    """Assess the final subset, not the union of explored product quotes."""
+    from agentmall.catalog.capabilities import connection_matches
+
+    products = recommendation_products(runtime, entity_refs)
+    if products is None:
+        return None
+    requirement = runtime.constraints.recommendation
     count_missing = requirement.count is not None and len(products) < requirement.count
     comparison_missing = requirement.compare_connections and not all(
         any(connection_matches(p.attributes, connection) for p in products)

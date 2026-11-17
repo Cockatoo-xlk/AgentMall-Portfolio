@@ -1,8 +1,41 @@
 # V2.17 当前验证与历史评测的关系
 
-本轮新增结果仅为**CONTRACT_TEST_ONLY / OFFLINE_ENGINEERING_REGRESSION**，详见[V2.17交付](V217_INTERVIEW_READY.md)。真实PostgreSQL、固定BGE专项与SDK Mock分别记录；不以新离线成绩重算L8。
+本次硬化新增验证仅为**CONTRACT_TEST_ONLY / OFFLINE_ENGINEERING_REGRESSION**；首次真实Smoke原成绩另列下文，不被离线修复覆盖。此前真实PostgreSQL、固定BGE专项与SDK Mock交付见[V2.17交付](V217_INTERVIEW_READY.md)，本次未重跑BGE专项，也不以新离线成绩重算L8。
 
-三项新的[EXPLORATORY_PRODUCT_SMOKE](V217_LIVE_SMOKE.md)已设计，真实Episode仍NOT_RUN，当前Key/Provider/费用授权0。其未来结果独立版本，不是Holdout，不覆盖原15题分母。以下L8原始报告、UNKNOWN和未运行状态完整保留。
+三项新的[EXPLORATORY_PRODUCT_SMOKE](V217_LIVE_SMOKE.md)在独立Owner授权后于2026-11-17实际执行，结果单独记录如下，不是Holdout，不覆盖原15题分母。当前收尾任务不含新的Key读取、Provider或费用授权。以下L8原始报告、UNKNOWN和未运行状态完整保留。
+
+## 首次V2.17真实Smoke与离线收尾
+
+实际执行Source `115905a3cb45bfd2b70384fec7375be9243a6f92`，Tree `73bbecb8923a393fb0abbf003589fa54ff2963b4`。冻结输入SHA `4dd539b51bc1b3162825a3721bb3e99c59d264ad9794d49db6107603fa620230`、协议SHA `bd5a7a44a16b5f8e2a112a42ae2c647364b97eec407ae186250369031758d96e`。最终私有回执SHA `9fcd8bc6fbe6c0d6cf68371db7587629b48e953e6ecad76421c3e95b6c5f0d10`。
+
+| 任务 | 原结果 | 实际业务事实 | HTTP / 保守峰值估算 |
+|---|---|---|---|
+| A Single比较 | FAIL / CANDIDATE_COUNT | 最终商品事实3个，要求2个；无订单写入 | 3 / ¥0.021104 |
+| B Single购买 | PASS | 待付款订单1、数量2、总价39800分、库存预留+2 | 4 / ¥0.022302 |
+| C Multi退换购 | NOT_SCORED | 退货Case1；两份确认已批准，仅退货确认消费；无新增替换订单 | 10 / ¥0.075610 |
+
+计划3题全部启动一次，评分2题：PASS1 / FAIL1 / NOT_SCORED1 / NOT_RUN0；已评分成功1/2，计划中PASS为1/3。17次HTTP全部SETTLED，输入46356/输出3288 Tokens；合计峰值保守估算¥0.119016，供应商实际账单UNKNOWN。支付/退款相对各题Setup基线增量均0。未重跑或重评分，C的数据库和原证据保留，停止的Run不再Resume。Release仍ON_HOLD。
+
+A为产品展示约束缺陷：原`graph.render`逐一展示所有探索商品，`recommendation_shortage`仅检查数量不足，不限制超量。原模型最终原文和完整Run.result未被独立导出，不能声称LLM自由回答推荐了3款；但原已核验事实、Specialist引用和确定性renderer足以确认产品最终视图会展示3款。新补丁只对明确数量的只读推荐投影最终事实/引用，保持原始探索状态，并使Thread候选列表、连续序号及不可变列表身份与展示一致。购买、售后和组合交易事实不裁剪，不硬编码商品ID。
+
+C连续Episode计时分解（秒）：
+
+| 区间 | 耗时 | 时钟证据 |
+|---|---:|---|
+| Episode开始→首次WAITING_INPUT | 10.462 | Host持久起点 / PostgreSQL RunEvent |
+| 首次WAITING_INPUT→退货Confirmation创建 | 14.261 | RunEvent / Confirmation.decided_at |
+| 首次Confirmation创建→显式Resume命令 | 14.341 | Confirmation / Host命令接收UTC |
+| 首次Resume命令→第二次WAITING_INPUT | 9.211 | Host命令 / RunEvent |
+| 第二次WAITING_INPUT→购买Confirmation创建 | 35.563 | RunEvent / Confirmation |
+| 第二次Confirmation创建→90秒截止 | 6.163 | Confirmation / 持久Episode起点+90 |
+
+首个批准命令接收到Confirmation创建仅0.469秒，批准后14.341秒主要是操作员/工具调度间隔，没有证据表明API在此期间持续处理。SDK模型调用诊断累计17.181秒；HTTP预留至结算边界累计13.899秒，不能混称模型总耗时。工具诊断累计0.230秒（可重叠且包含DB操作），独立SQL/Checkpoint耗时UNKNOWN。工具RunEvent时间可能是节点Journal提交时间，不能据此伪造逐SQL延迟。
+
+原始停码仍为`OPERATOR_OR_RUNTIME_STOPPED`；结合等待路径与90秒截止时间判断为时钟边界停止，底层异常类型未保留。收尾补丁仅让既有CLI在独立决定成功后显示绑定Confirmation及全新request_id的可复制`resume_command`和剩余时间；操作员仍须另行显式提交Resume。没有自动批准/Resume，也未修改90秒/300秒协议。此改进减少手工拼接，但不能保证远程审阅与调度满足90秒。
+
+本次验证使用新DEV/CONTRACT_TEST_ONLY样本、SDK MockTransport、正式API及全新隔离PG，不重放原A/B/C Live。合成操作员分两次独立决定和Resume，Mock计时不含人的实际阅读和远程命令等待，不能当作真实DeepSeek PASS。原Smoke断言、原Oracle及历史回执未改；后续真实验证必须冻结新的Source/Task/Execution并另获Owner授权，不覆盖上述原始成绩。
+
+收尾相关回归203项通过；随后修正列表身份的偏好绑定后，仅补跑受影响121项并全部通过（两组有重叠，不能相加充当独立测试数量）。生产90秒/300秒及回拨拒绝不变；离线性能测试使用真实单调流逝计时，避免VM壁钟校正污染性能样本。未改前端或BGE实现，不重复运行其完整矩阵。初始只读缓存配置、测试GET路由及VM时钟回拨造成的中间失败日志均保留，不计为最终通过。
 
 ---
 
