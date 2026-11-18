@@ -284,9 +284,6 @@ async def run_specialist(runtime, envelope, *, user_goal=None):
     )
     if unsupported:
         error = error or "UNSUPPORTED_EVIDENCE"
-    # Durable single only re-enters after handling its current proposal. A failed
-    # execution can leave it APPROVED; this still is not a request for clarification.
-    decided = runtime.single and any(kind == "proposal" for kind, _ in runtime.facts)
     status = (
         "proposal"
         if proposals
@@ -295,7 +292,7 @@ async def run_specialist(runtime, envelope, *, user_goal=None):
         else "needs_input"
         if terminal == "clarify"
         else "done"
-        if context.records or terminal == "finish" or decided
+        if context.records or terminal == "finish"
         else "needs_input"
     )
     if (

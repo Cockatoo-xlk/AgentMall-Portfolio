@@ -41,7 +41,12 @@ async def test_single_read_only_progress_cannot_finish_purchase(
     correction = ai(call("prepare_checkout", {"product_id": product})) if corrects else final()
     model = SingleModel(
         role="order",
-        script=[ai(call("get_product", {"product_id": product})), final(), correction, final()],
+        script=[
+            ai(call("get_product", {"product_id": product})),
+            final(),
+            correction,
+            final('{"terminal":"finish"}'),
+        ],
     )
     env[2].state.durable_single_model = model
     tid = await thread(env, buyer, "single")
@@ -268,7 +273,7 @@ async def test_single_pending_return_interrupt_precedes_purchase_completion_chec
                 )
             ),
             ai(call("prepare_checkout", {"product_id": alternative})),
-            final(),
+            final('{"terminal":"finish"}'),
         ],
     )
     env[2].state.durable_single_model = model

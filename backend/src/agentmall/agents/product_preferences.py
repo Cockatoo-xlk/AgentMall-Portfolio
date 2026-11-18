@@ -73,10 +73,15 @@ def product_requirement_text(message):
         if (
             categories
             and not new_item(clause)
-            and re.search(
-                r"(?<!新)订单\s*(?:" + PRODUCT_ID + r"|\d+)|原订单|旧订单|原商品|原来的|退货|退掉",
+            and re.match(
+                r"\s*(?:(?:我|本人)的)?(?:(?:这|那)(?:笔|个)?)?"
+                r"(?:订单\s*(?:" + PRODUCT_ID + r"|\d+)|原订单|旧订单|原商品|原来的)",
                 clause,
             )
+            # A return is an action/time reference, not an item's identity.
+            # Even an original-order reference may describe its replacement;
+            # retain such ambiguous clauses rather than silently dropping constraints.
+            and not re.search(r"新|替|换|改|后", clause)
         ):
             # A conflict within the original description is not permission to ignore it.
             if len(categories) > 1:

@@ -1,7 +1,6 @@
 """The persistent outer graph; same supervisor/specialist core, isolated branch runtime."""
 
 import asyncio
-import re
 from typing import Annotated, TypedDict
 from uuid import UUID
 
@@ -11,13 +10,12 @@ from langgraph.types import Send, interrupt
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import HandoffEnvelope, SpecialistResult
 from agentmall.agents.durable_budget import node_key
-from agentmall.agents.goal_receipts import action_outcomes
 from agentmall.agents.resume import execute_confirmation
 from agentmall.agents.runtime import RunContext
 from agentmall.agents.specialist_tools import authenticate, recover_receipts
 from agentmall.agents.specialists.runner import run_specialist
 from agentmall.agents.state import delta, merge_state, restore, snapshot
-from agentmall.agents.supervisor import choose_plan, unfinished_goal
+from agentmall.agents.supervisor import choose_plan
 from agentmall.infra.errors import DomainError
 
 
@@ -246,46 +244,10 @@ def build_durable_graph(base, saver, store):
     async def single(runtime, state):
         await recover_receipts(runtime)
         handled = set(state.get("handled", []))
-        user_goal = state.get("user_goal") or runtime.input.message
-        required = {
-            action
-            for action, requested in (
-                ("CHECKOUT", runtime.constraints.purchase_requested),
-                ("RETURN_REQUEST", runtime.constraints.return_requested),
-            )
-            if requested
-        }
-        committed = {
-            outcome["action_type"]
-            for outcome in action_outcomes(runtime.facts)
-            if outcome["proposal_id"] in handled
-            and outcome["status"] == "EXECUTED"
-            and (runtime.facts[("proposal", outcome["proposal_id"])].get("result") or {}).get(
-                "resource_id"
-            )
-        }
-        if (
-            required
-            and required <= committed
-            and not runtime.errors
-            and all(
-                result.status in {"done", "proposal"} and not result.error_code
-                for result in runtime.completed.values()
-            )
-            and unfinished_goal(runtime, user_goal) is None
-            and not runtime.constraints.support_requested
-            and runtime.constraints.recommendation is None
-            # Unmodelled independent read requests keep their original model path.
-            # A checkout receipt alone cannot certify that these goals were fulfilled.
-            and not re.search(
-                r"推荐|比较|对比|对照|(?:查询|查看|列出|检查|核对|看看)[^，。；;\n]{0,20}"
-                r"(?:订单|购物车|工单|售后|支付|退款)",
-                user_goal,
-            )
-        ):
-            # These receipts were just re-read from the current Actor/Run's DB scope.
-            # A completed transaction needs no model re-planning or new authorization.
-            return {"next": "finish"}
+        # A transaction receipt proves only that action. Single has no complete
+        # structured inventory of the user's independent goals, so continue with
+        # the original goal, persisted receipts and prior results. The existing
+        # terminal protocol ends pure purchases; repeated writes remain rejected.
         if any(
             kind == "proposal"
             and ident not in handled

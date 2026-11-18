@@ -203,7 +203,7 @@ async def test_single_receipt_finishes_without_replanning_checkout(
     durable_env, buyer, tmp_path, break_stock, record_property
 ):
     env = durable_env
-    provider = await attach_wire(env, tmp_path, RepeatCheckoutWire())
+    provider = await attach_wire(env, tmp_path, SingleWire())
     try:
         tid = await thread(env, buyer, "single")
         waiting = (
@@ -228,7 +228,9 @@ async def test_single_receipt_finishes_without_replanning_checkout(
             assert row(env[1], "SELECT consumed_at FROM confirmations")["consumed_at"] is None
         else:
             assert done["status"] == "COMPLETED", done
-            assert done["budget"]["models"] == models_before
+            # The existing structured terminal finishes only after the model has
+            # received the original goal and persisted transaction receipt.
+            assert done["budget"]["models"] == models_before + 1
             assert (await resume(env, buyer, tid, waiting, cid, request_id)).json() == done
             assert (await resume(env, buyer, tid, waiting, cid)).status_code == 409
             assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 1

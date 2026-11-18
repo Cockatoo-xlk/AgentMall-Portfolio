@@ -269,7 +269,9 @@ def fixture_models(program, goal, refs, fault):
         # Inner single loops keep reading until a write/terminal, no invented supervisor calls.
         single_steps.extend(script(stages, finish=False))
     scripts["supervisor"].append(route("finish"))
-    single_steps.append(final())
+    # Single completion is explicit; an earlier action receipt cannot certify
+    # that all independent goals in this disclosed development program are done.
+    single_steps.append(final('{"terminal":"finish"}'))
 
     def inject(steps):
         if fault == "provider_error":
