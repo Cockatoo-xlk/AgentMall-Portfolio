@@ -1,10 +1,51 @@
-# V2.17 当前验证与历史评测的关系
+# V2.17 验证结果：按Source、会话和证据性质分别记录
 
-本次硬化新增验证仅为**CONTRACT_TEST_ONLY / OFFLINE_ENGINEERING_REGRESSION**；首次真实Smoke原成绩另列下文，不被离线修复覆盖。此前真实PostgreSQL、固定BGE专项与SDK Mock交付见[V2.17交付](V217_INTERVIEW_READY.md)，本次未重跑BGE专项，也不以新离线成绩重算L8。
+最终产品代码验收提交为 `759391cd6c33a1bbc906df34e6de87126cb53dac`，Tree `339d618bd92d092467e62e0511649c77b3a701d8`。该源码的完整Backend CI Offline Core为 **1824 PASS / 0 FAIL / 16 SKIP**，Ruff / Format / Diff通过。以下真实模型成功案例使用更早源码；**最终修复提交没有新的真实模型评测结果**。本次仅核对回执与整理文档，不重跑Backend、Smoke或Holdout。
 
-三项新的[EXPLORATORY_PRODUCT_SMOKE](V217_LIVE_SMOKE.md)在独立Owner授权后于2026-11-17实际执行，结果单独记录如下，不是Holdout，不覆盖原15题分母。当前收尾任务不含新的Key读取、Provider或费用授权。以下L8原始报告、UNKNOWN和未运行状态完整保留。
+## 三个独立执行的真实成功案例
+
+这些是经过产品调试和操作流程改进后的功能验收案例，不是未见输入盲测，不是同一版本连续3/3，也不用于统计可靠性认证。模型记录为 `deepseek-flash`，使用真实固定BGE、正式FastAPI/PostgreSQL/Checkpoint；涉及写入时由Owner独立审查Proposal、创建Confirmation并显式Resume。没有真实资金支付或退款。
+
+| 案例 | 原执行Source Commit | 结果与SQL业务事实 | Episode / HTTP | 输入 / 输出Tokens | 当次保守费用上界 |
+|---|---|---|---|---|---|
+| A 商品推荐与比较 | `8171e5576180e8827b78fff3d6c9f58051729f08` | PASS；最终展示2款，Thread候选ID一致，探索记录保留；订单/确认/支付/退款增量0 | 7.094秒 / 3 | 9246 / 669 | CNY0.023844 |
+| B 购买两件商品 | `115905a3cb45bfd2b70384fec7375be9243a6f92` | PASS；PENDING_PAYMENT订单+1、数量2、总价39800分、确认创建/消费+1/+1、库存预留+2；支付/退款+0 | 54.036秒 / 4 | 9523 / 407 | CNY0.022302 |
+| C Multi退货与替换购买 | `8171e5576180e8827b78fff3d6c9f58051729f08` | PASS；Run COMPLETED、Case+1、PENDING_PAYMENT订单+1、确认创建/消费+2/+2、库存预留+1、支付/退款+0；Checkpoint 48行 | **81.333秒 / 11** | 40306 / 2276 | CNY0.098820 |
+
+Source `115905…`的Tree为 `73bbecb8923a393fb0abbf003589fa54ff2963b4`；Source `8171…`的Tree为 `505dab36d2bcd07b6259fa9f67a3f5d899c3ba47`。C由Mac本地TTY操作员完成两轮独立审查、决定和Resume，连续90秒计时包含人工等待。成功案例各自的Provider用量均已SETTLED；上述金额按当次冻结峰值费率计算，**供应商实际账单均为UNKNOWN**，不能称作实际支付费用或当前价格报价。
+
+| 私有回执的公开哈希锚点 | SHA256 |
+|---|---|
+| A所在Postfix A/C会话最终回执（其中C仍NOT_SCORED） | `3a52da4f4cf1148308b05cef601cf4c10b7f95a8a6f40919ab163a1e830eaddf` |
+| B所在首次A/B/C会话最终回执 | `9fcd8bc6fbe6c0d6cf68371db7587629b48e953e6ecad76421c3e95b6c5f0d10` |
+| 后续本地TTY真实C成功回执 | `e984adca9953fb1d192d589f307b36096138e63fd0ccd90b60a274dcf944b435` |
+
+只公开汇总与哈希；不公开私有目录、运行身份、凭据传递日志、数据库连接信息或完整调试原件。哈希不能代替未公开原件的第三方审计。
+
+## 原Owner提供四题：保留失败与未运行
+
+该批次性质是 **PROSPECTIVE_OWNER_SUPPLIED / INDEPENDENCE_NOT_ESTABLISHED**，不是独立盲测。原计划4题；H01—H03拟执行3题，实际启动2题、完成原Oracle评分1题。H04未进入Episode，原静态拒绝保留。
+
+| 原任务 | 历史状态 | 证据与后续开发的边界 |
+|---|---|---|
+| H01 推荐 | **FAIL** | 原商品SQL证据投影缺少category；独立事实复查不构成重评分，原FAIL不变 |
+| H02 购买 | **NOT_SCORED** | 交易已提交后再调用prepare_checkout，被REPEATED_TOOL_CALL拒绝；保留已提交订单及原停止结果，不恢复该Run |
+| H03 总预算负例 | **NOT_RUN** | 未启动；不得作为已观察失败或开发调试样本 |
+| H04 跨商品售后购买 | **STATIC_ADMISSION_REJECTED / Oracle NOT_RUN** | 原商品与新商品属性作用域冲突导致静态拒绝；原记录不改，暴露后的场景仅转为开发回归 |
+
+原Source为 `8171e5576180e8827b78fff3d6c9f58051729f08`。原四题输入SHA256为 `33556ae1f5aa39bdb3c140d3b61ce8d916e4cebd5ae255e83206304760ee0ac7`；原Oracle代码SHA256为 `08d60ce38d6d63ea6da9a3837b6581b7eed7840cb6bbea05feee1e97b4be11f3`。原79份封存证据及评分全部保留，不合并开发回归、不重算通过率。**独立盲测数量仍为0**。
+
+## 最终源码工程验证
+
+最终提交在真实隔离PostgreSQL、SDK MockTransport/Fixture下完整运行一次Backend：**1824 PASS / 0 FAIL / 16 SKIP**，pytest耗时831.85秒，退出码0。16项Skip为15项真实BGE依赖测试与1项缺少私有历史原件测试；[精确分类与命令](V217_INTERVIEW_READY.md#最终源码验收)。本轮文档收尾没有重新执行该套件，也未重跑前端或BGE矩阵。
+
+完整Backend日志SHA256：`9e1c650840160e2a9a1f2e1ef108d2b770ec8e7eac87e5cbff4c7587f754afc0`；JUnit SHA256：`97623d36657d4186468913d165c1b6d5888a7cfe27f660b28206ee2b7c7d66c7`。早期RED和合成脚本协议适配的中间失败已保留，不累加不同源码结果充当全绿。
+
+开发修复包括商品事实category投影、同一新商品的真实属性冲突澄清、价格语义统一、推荐数量/Thread候选一致性，以及交易回执不代替独立目标完成判断。纯购买通过既有结构化结束信号收尾；查询、比较、售后继续既有执行路径；重复写、独立确认、库存事务、Fence和预算守卫不放宽。[最终P2回归](../backend/tests/test_final_p2_contract.py)、[商品与交易回归](../backend/tests/test_post_holdout_product_fix.py)。这些是开发验证，不能倒改上表评分，也不证明最终源码已通过新的Live验收。
 
 ## 首次V2.17真实Smoke与离线收尾
+
+本节记录首次Smoke和当时的Post-Live离线收尾；后续独立执行结果已在上文另列，不将历史阶段的“当时未运行”沿用为当前状态。
 
 实际执行Source `115905a3cb45bfd2b70384fec7375be9243a6f92`，Tree `73bbecb8923a393fb0abbf003589fa54ff2963b4`。冻结输入SHA `4dd539b51bc1b3162825a3721bb3e99c59d264ad9794d49db6107603fa620230`、协议SHA `bd5a7a44a16b5f8e2a112a42ae2c647364b97eec407ae186250369031758d96e`。最终私有回执SHA `9fcd8bc6fbe6c0d6cf68371db7587629b48e953e6ecad76421c3e95b6c5f0d10`。
 
@@ -14,7 +55,7 @@
 | B Single购买 | PASS | 待付款订单1、数量2、总价39800分、库存预留+2 | 4 / ¥0.022302 |
 | C Multi退换购 | NOT_SCORED | 退货Case1；两份确认已批准，仅退货确认消费；无新增替换订单 | 10 / ¥0.075610 |
 
-计划3题全部启动一次，评分2题：PASS1 / FAIL1 / NOT_SCORED1 / NOT_RUN0；已评分成功1/2，计划中PASS为1/3。17次HTTP全部SETTLED，输入46356/输出3288 Tokens；合计峰值保守估算¥0.119016，供应商实际账单UNKNOWN。支付/退款相对各题Setup基线增量均0。未重跑或重评分，C的数据库和原证据保留，停止的Run不再Resume。Release仍ON_HOLD。
+计划3题全部启动一次，评分2题：PASS1 / FAIL1 / NOT_SCORED1 / NOT_RUN0；已评分成功1/2，计划中PASS为1/3。17次HTTP全部SETTLED，输入46356/输出3288 Tokens；合计峰值保守估算¥0.119016，供应商实际账单UNKNOWN。支付/退款相对各题Setup基线增量均0。该批次原评分与证据不改，停止的Run不再Resume；后续独立授权、新执行身份的成功案例见上文，不与此批次合并。Release仍ON_HOLD。
 
 A为产品展示约束缺陷：原`graph.render`逐一展示所有探索商品，`recommendation_shortage`仅检查数量不足，不限制超量。原模型最终原文和完整Run.result未被独立导出，不能声称LLM自由回答推荐了3款；但原已核验事实、Specialist引用和确定性renderer足以确认产品最终视图会展示3款。新补丁只对明确数量的只读推荐投影最终事实/引用，保持原始探索状态，并使Thread候选列表、连续序号及不可变列表身份与展示一致。购买、售后和组合交易事实不裁剪，不硬编码商品ID。
 
@@ -33,7 +74,7 @@ C连续Episode计时分解（秒）：
 
 原始停码仍为`OPERATOR_OR_RUNTIME_STOPPED`；结合等待路径与90秒截止时间判断为时钟边界停止，底层异常类型未保留。收尾补丁仅让既有CLI在独立决定成功后显示绑定Confirmation及全新request_id的可复制`resume_command`和剩余时间；操作员仍须另行显式提交Resume。没有自动批准/Resume，也未修改90秒/300秒协议。此改进减少手工拼接，但不能保证远程审阅与调度满足90秒。
 
-本次验证使用新DEV/CONTRACT_TEST_ONLY样本、SDK MockTransport、正式API及全新隔离PG，不重放原A/B/C Live。合成操作员分两次独立决定和Resume，Mock计时不含人的实际阅读和远程命令等待，不能当作真实DeepSeek PASS。原Smoke断言、原Oracle及历史回执未改；后续真实验证必须冻结新的Source/Task/Execution并另获Owner授权，不覆盖上述原始成绩。
+当时的离线收尾使用新DEV/CONTRACT_TEST_ONLY样本、SDK MockTransport、正式API及全新隔离PG，没有在该工程回归中重放A/B/C Live。合成操作员分两次独立决定和Resume，Mock计时不含人的实际阅读和远程命令等待，不能当作真实DeepSeek PASS。原Smoke断言、原Oracle及历史回执未改；此后真实验证另获Owner授权、绑定各自Source与新执行身份，结果见上文，不覆盖首次成绩。
 
 收尾相关回归203项通过；随后修正列表身份的偏好绑定后，仅补跑受影响121项并全部通过（两组有重叠，不能相加充当独立测试数量）。生产90秒/300秒及回拨拒绝不变；离线性能测试使用真实单调流逝计时，避免VM壁钟校正污染性能样本。未改前端或BGE实现，不重复运行其完整矩阵。初始只读缓存配置、测试GET路由及VM时钟回拨造成的中间失败日志均保留，不计为最终通过。
 
