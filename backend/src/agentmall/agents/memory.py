@@ -12,6 +12,7 @@ from agentmall.agents.models import CandidateSet, ContextMutation, ThreadContext
 from agentmall.agents.product_preferences import (
     comparison_revoked,
     connection_choice,
+    product_requirement_text,
     recommendation_revoked,
 )
 from agentmall.agents.purchase_intent import ORDINAL, purchase_intent
@@ -59,14 +60,15 @@ def normalize_preferences(prefs):
 def resolve_preferences(previous, payload):
     """Only current authenticated user input can replace a persisted preference."""
     text = payload.message
-    choice = connection_choice(text)
-    if len(categories_in_text(text)) > 1:
+    product_text = product_requirement_text(text)
+    choice = connection_choice(product_text)
+    if len(categories_in_text(product_text)) > 1:
         raise conflict()
     for choices in (
         ("机械", "薄膜"),
         ("61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"),
     ):
-        if sum(word in text for word in choices) > 1:
+        if sum(word in product_text for word in choices) > 1:
             raise conflict()
     clears = set()
     if choice.broadened:
@@ -74,15 +76,15 @@ def resolve_preferences(previous, payload):
     if re.search(r"(?:忘记|清除|取消|删除|不要).{0,6}预算", text):
         clears.add("max_price_cents")
     if not choice.explicit and re.search(
-        r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", text
+        r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", product_text
     ):
         clears.add("connection")
         positive = re.sub(
-            r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", "", text
+            r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", "", product_text
         )
         if any(word in positive for word in ("有线", "无线", "双模", "三模")):
             raise conflict()
-    if re.search(r"(?:不要|取消|清除|删除)静音", text):
+    if re.search(r"(?:不要|取消|清除|删除)静音", product_text):
         clears.add("noise_preference")
     raw = user_constraints(
         MultiRequest(

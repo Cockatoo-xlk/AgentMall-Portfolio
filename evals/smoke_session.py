@@ -61,7 +61,7 @@ def sql_facts(settings):
                     "FROM action_proposals ORDER BY id"
                 ),
                 "products": (
-                    "SELECT id,store_id,name,price_cents,active,on_hand,reserved,attributes "
+                    "SELECT id,store_id,name,category,price_cents,active,on_hand,reserved,attributes "
                     "FROM products ORDER BY id"
                 ),
                 "runs": (

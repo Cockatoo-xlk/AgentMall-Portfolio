@@ -12,6 +12,7 @@ from agentmall.agents.bundle_contracts import BundleRequirements, parse_bundle
 from agentmall.agents.product_preferences import (
     RecommendationRequirements,
     connection_choice,
+    product_requirement_text,
     recommendation_requirements,
 )
 from agentmall.agents.product_preferences import (
@@ -285,6 +286,7 @@ def user_constraints(request):
 
     values = {}
     needs = {}
+    product_text = product_requirement_text(message)
     bundle = parse_bundle(message)
     intent = purchase_intent(message)
     # Price classification grants no action authority. Bare purchase topics can
@@ -298,39 +300,39 @@ def user_constraints(request):
         limit = price_limit(message, purchasing=purchasing)
         if limit is not None:
             values["max_price_cents"] = limit
-    if kind := infer_product_kind(message):
+    if kind := infer_product_kind(product_text):
         needs["product_kind"] = kind
-    screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", message)
+    screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", product_text)
     if screen:
         needs["screen_inches"] = screen[1]
-    if "公路车" in message:
+    if "公路车" in product_text:
         needs["activity"] = "road_cycling"
-    layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键(?!盘)", message)
+    layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键(?!盘)", product_text)
     if layout:
         needs["layout"] = layout[1] + "键"
     excluded = re.findall(
-        r"(?:不接受|排除|拒绝)((?:双模|三模)(?:[／/、和或]*(?:双模|三模))*)", message
+        r"(?:不接受|排除|拒绝)((?:双模|三模)(?:[／/、和或]*(?:双模|三模))*)", product_text
     )
     if excluded:
         needs["excluded_connections"] = [
             word for word in ("双模", "三模") if any(word in part for part in excluded)
         ]
     if bundle is None and not (request.constraints and request.constraints.bundle):
-        choice = connection_choice(message)
+        choice = connection_choice(product_text)
         if choice.connection is not None:
             needs["connection"] = choice.connection
-        if recommendation := recommendation_requirements(message, choice):
+        if recommendation := recommendation_requirements(product_text, choice):
             values["recommendation"] = recommendation
     for word, kind in [("机械", "mechanical"), ("薄膜", "membrane")]:
-        if word in message:
+        if word in product_text:
             needs["keyboard_type"] = kind
     for word in ("宿舍", "办公", "游戏"):
-        if word in message:
+        if word in product_text:
             needs["usage"] = word
     values["product_needs"] = needs
-    if category := infer_category(message):
+    if category := infer_category(product_text):
         values["category"] = category
-    if any(x in message for x in ("安静", "静音", "低噪声")):
+    if any(x in product_text for x in ("安静", "静音", "低噪声")):
         values["noise_preference"] = "quiet"
     if "演示宿舍" in message and "演示家庭" not in message:
         values["address_label"] = "demo_dorm"

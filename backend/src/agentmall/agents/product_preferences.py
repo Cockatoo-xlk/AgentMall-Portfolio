@@ -42,6 +42,50 @@ class ConnectionChoice:
     explicit: bool = False
 
 
+def product_requirement_text(message):
+    """Separate an explicitly returned item from a separately requested new item.
+
+    This projection only scopes product preferences; action authorization always
+    consumes the complete original request. Ambiguous or conflicting target
+    descriptions remain in scope and must still be clarified.
+    """
+    from agentmall.agents.purchase_intent import PRODUCT_ID, purchase_intent
+    from agentmall.agents.request_intents import return_intent
+    from agentmall.catalog.categories import categories_in_text
+
+    if return_intent(message) is not True:
+        return message
+    clauses = re.split(r"([，。；！？,;\n])", message)
+
+    def new_item(clause):
+        return bool(categories_in_text(clause)) and (
+            purchase_intent(clause).requested is True
+            or any(
+                affirmative(clause, match.start())
+                for match in re.finditer(r"推荐|比较|对比|对照", clause)
+            )
+        )
+
+    if not any(new_item(clause) for clause in clauses):
+        return message
+    for index, clause in enumerate(clauses):
+        categories = categories_in_text(clause)
+        if (
+            categories
+            and not new_item(clause)
+            and re.search(
+                r"(?<!新)订单\s*(?:" + PRODUCT_ID + r"|\d+)|原订单|旧订单|原商品|原来的|退货|退掉",
+                clause,
+            )
+        ):
+            # A conflict within the original description is not permission to ignore it.
+            if len(categories) > 1:
+                raise clarify()
+            connection_choice(clause)
+            clauses[index] = ""
+    return "".join(clauses)
+
+
 def connection_choice(message):
     text = re.sub(EXCLUDED_MODES, "", message)
     mentions = {word for word in CONNECTIONS if word in text}

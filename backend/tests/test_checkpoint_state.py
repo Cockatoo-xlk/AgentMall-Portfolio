@@ -94,8 +94,9 @@ async def test_single_mode_uses_same_confirmation_budget_and_recovery(durable_en
     cid = await confirm(env, buyer, run["pending_confirmation"]["proposal_id"])
     done = await resume(env, buyer, tid, run, cid)
     assert done.json()["status"] == "COMPLETED", done.text
-    # T12 continues the original goal after confirmation, charging the same ledger.
-    assert done.json()["budget"]["models"] == 2
+    # A verified committed receipt finishes the same graph without another model call.
+    assert done.json()["budget"]["models"] == run["budget"]["models"] == 1
+    assert done.json()["budget"]["tools"] == run["budget"]["tools"]
 
 
 async def test_database_disconnect_is_recoverable_not_sqlalchemy_document_code(
