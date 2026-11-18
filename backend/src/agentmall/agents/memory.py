@@ -7,7 +7,12 @@ from uuid import UUID, uuid5
 from sqlalchemy import select
 
 from agentmall.actions.service import database_now, payload_hash
-from agentmall.agents.context import Constraints, MultiRequest, user_constraints
+from agentmall.agents.context import (
+    Constraints,
+    MultiRequest,
+    user_constraints,
+    validate_unit_prices,
+)
 from agentmall.agents.models import CandidateSet, ContextMutation, ThreadContext
 from agentmall.agents.product_preferences import (
     comparison_revoked,
@@ -21,6 +26,8 @@ from agentmall.catalog.categories import categories_in_text
 from agentmall.infra.errors import DomainError
 
 FIELDS = {
+    "unit_price_cents",
+    "max_unit_price_cents",
     "category",
     "max_price_cents",
     "noise_preference",
@@ -34,6 +41,8 @@ FIELDS = {
     "product_kind",
 }
 NEEDS = {
+    "unit_price_cents",
+    "max_unit_price_cents",
     "layout",
     "connection",
     "excluded_connections",
@@ -75,6 +84,8 @@ def resolve_preferences(previous, payload):
         clears.add("connection")
     if re.search(r"(?:忘记|清除|取消|删除|不要).{0,6}预算", text):
         clears.add("max_price_cents")
+    if re.search(r"(?:忘记|清除|取消|删除|不要).{0,6}单价(?:要求|限制)", text):
+        clears.update({"unit_price_cents", "max_unit_price_cents"})
     if not choice.explicit and re.search(
         r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", product_text
     ):
@@ -101,6 +112,11 @@ def resolve_preferences(previous, payload):
     )
     if raw.max_price_cents is not None and "max_price_cents" in clears:
         raise conflict()
+    if any(
+        field in clears and getattr(raw.product_needs, field) is not None
+        for field in ("unit_price_cents", "max_unit_price_cents")
+    ):
+        raise conflict()
     fresh = raw.model_dump(mode="json")
     changes = {k: fresh[k] for k in FIELDS - NEEDS if fresh.get(k) is not None}
     changes.update({k: v for k, v in fresh["product_needs"].items() if v is not None and v != []})
@@ -116,7 +132,15 @@ def resolve_preferences(previous, payload):
     prefs = deepcopy(previous)
     if changes.get("category") and changes["category"] != prefs.get("category"):
         # A new category invalidates old category-specific requirements, not budgets.
-        prefs.pop("product_needs", None)
+        if prefs.get("category") is None:
+            # Merely identifying the product category cannot erase an unscoped price requirement.
+            prefs["product_needs"] = {
+                k: v
+                for k, v in prefs.get("product_needs", {}).items()
+                if k in {"unit_price_cents", "max_unit_price_cents"}
+            }
+        else:
+            prefs.pop("product_needs", None)
         prefs.pop("noise_preference", None)
     for field in clears:
         if field in NEEDS:
@@ -129,6 +153,7 @@ def resolve_preferences(previous, payload):
         else:
             prefs[field] = value
     normalize_preferences(prefs)
+    validate_unit_prices(prefs.get("product_needs", {}))
     # Non-preference capabilities are derived afresh for this Run, never from old memory.
     effective = user_constraints(
         MultiRequest(

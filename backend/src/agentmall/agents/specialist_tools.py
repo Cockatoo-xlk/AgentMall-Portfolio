@@ -177,6 +177,7 @@ def product_allowed(runtime, product):
         and product.available > 0
         and (c.category is None or product.category == c.category)
         and (c.max_price_cents is None or product.price_cents <= c.max_price_cents)
+        and needs.matches_price(product.price_cents)
         and (c.noise_preference is None or product.attributes.get("noise") == "较安静")
         and (needs.layout is None or product.attributes.get("size") == needs.layout)
         and (
@@ -266,6 +267,9 @@ class SpecialistTools:
             actor = await authenticate(r, session)
             if name == "retrieve_products":
                 maximum = r.constraints.max_price_cents
+                unit_maximum = r.constraints.product_needs.price_ceiling()
+                if unit_maximum is not None:
+                    maximum = min(maximum, unit_maximum) if maximum is not None else unit_maximum
                 if args.max_price_cents is not None:
                     maximum = (
                         min(maximum, args.max_price_cents)

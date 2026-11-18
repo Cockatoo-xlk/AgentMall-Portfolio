@@ -42,6 +42,8 @@ class Strict(BaseModel):
 
 
 class ProductNeeds(Strict):
+    unit_price_cents: int | None = Field(None, ge=0, le=100_000_000, strict=True)
+    max_unit_price_cents: int | None = Field(None, ge=0, le=100_000_000, strict=True)
     screen_inches: str | None = Field(None, pattern=r"^\d{1,2}(?:\.\d)?$", max_length=4)
     activity: Literal["road_cycling"] | None = None
     product_kind: ProductKind | None = None
@@ -54,13 +56,28 @@ class ProductNeeds(Strict):
     @model_serializer(mode="wrap")
     def compatible_payload(self, handler):
         data = handler(self)
-        for key in ("screen_inches", "activity", "product_kind"):
+        for key in (
+            "screen_inches",
+            "activity",
+            "product_kind",
+            "unit_price_cents",
+            "max_unit_price_cents",
+        ):
             if data.get(key) is None:
                 data.pop(key, None)
         # Preserve legacy handoff and request hashes when the new optional field is absent.
         if not self.excluded_connections and "excluded_connections" not in self.model_fields_set:
             data.pop("excluded_connections", None)
         return data
+
+    def matches_price(self, cents):
+        return (self.unit_price_cents is None or cents == self.unit_price_cents) and (
+            self.max_unit_price_cents is None or cents <= self.max_unit_price_cents
+        )
+
+    def price_ceiling(self):
+        bounds = [v for v in (self.unit_price_cents, self.max_unit_price_cents) if v is not None]
+        return min(bounds) if bounds else None
 
     def terms(self):
         kind = {"mechanical": "机械", "membrane": "薄膜"}.get(self.keyboard_type)
@@ -238,34 +255,63 @@ def scoped_purchase_quantity(message, *, typed_quantity=None, supplemental=False
     return quantity
 
 
-def price_limit(message, *, purchasing):
-    """One price rule for stateless and Thread requests, never a product quotation.
+def price_scopes(message, *, purchasing):
+    """User price requirements, not trusted quotations or write authority.
 
-    Recommendation amounts are per-product upper filters. A purchase's unit
-    description is not a total cap; only limits constrain the checkout total.
-    Distinct limits require clarification rather than silently choosing one.
+    Keep recommendation filters and the existing transaction-total limit intact;
+    explicit per-item limits and quotations occupy separate product requirements.
     """
-    limits, unit_quotes = set(), set()
+    limits, unit_quotes, unit_limits = set(), set(), set()
     for amount in re.finditer(r"(\d+(?:\.\d{1,2})?)\s*元(以内|以下|内|预算)?", message):
         before, after = message[: amount.start()], message[amount.end() :]
-        limit = amount[2] or re.search(
-            r"(?:预算|总价|总金额|总额|不超过|不高于|不大于|不多于|上限)"
+        total = re.search(
+            r"(?:预算|总价|总金额|总额)"
             r"[^\d，。；,;\n]{0,12}$",
+            before,
+        )
+        bounded = amount[2] or re.search(
+            r"(?:最多|至多|最高|不超过|不高于|不大于|不多于|上限)(?:为|是)?\s*$", before
+        )
+        per_item = re.search(
+            r"(?:单价|单件|每[件个只副台把款])(?:价格|售价)?(?:为|是)?\s*"
+            r"(?:(?:最多|至多|最高|不超过|不高于|不大于|不多于|上限)(?:为|是)?)?\s*$",
             before,
         )
         unit_quote = (
             re.match(r"\s*的", after)
-            or re.search(r"(?:单价|每件价格)(?:为|是)?\s*$", before)
+            or per_item
             or infer_category(re.split(r"[，。；,;\n]", after)[0]) is not None
         )
         cents = int(Decimal(amount[1]) * 100)
-        if purchasing and unit_quote and not limit:
+        if not purchasing:
+            limits.add(cents)
+        elif per_item:
+            if total:
+                raise preference_clarification()
+            (unit_limits if bounded else unit_quotes).add(cents)
+        elif total or bounded:
+            limits.add(cents)
+        elif unit_quote:
             unit_quotes.add(cents)
         else:
-            limits.add(cents)
-    if len(limits) > 1 or len(unit_quotes) > 1:
+            raise preference_clarification()
+    if any(len(values) > 1 for values in (limits, unit_quotes, unit_limits)):
         raise preference_clarification()
-    return next(iter(limits)) if limits else None
+    unit = next(iter(unit_quotes), None)
+    unit_max = next(iter(unit_limits), None)
+    if unit is not None and unit_max is not None and unit > unit_max:
+        raise preference_clarification()
+    return next(iter(limits), None), unit, unit_max
+
+
+def price_limit(message, *, purchasing):
+    return price_scopes(message, purchasing=purchasing)[0]
+
+
+def validate_unit_prices(needs):
+    unit, cap = needs.get("unit_price_cents"), needs.get("max_unit_price_cents")
+    if unit is not None and cap is not None and unit > cap:
+        raise preference_clarification()
 
 
 def user_constraints(request):
@@ -297,9 +343,13 @@ def user_constraints(request):
         or any(not action["negative"] for action in ACTION.finditer(message))
     )
     if bundle is None and not (request.constraints and request.constraints.bundle):
-        limit = price_limit(message, purchasing=purchasing)
+        limit, unit, unit_max = price_scopes(message, purchasing=purchasing)
         if limit is not None:
             values["max_price_cents"] = limit
+        if unit is not None:
+            needs["unit_price_cents"] = unit
+        if unit_max is not None:
+            needs["max_unit_price_cents"] = unit_max
     if kind := infer_product_kind(product_text):
         needs["product_kind"] = kind
     screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", product_text)
@@ -368,6 +418,19 @@ def user_constraints(request):
                 else values["max_price_cents"]
             )
         values.update(explicit)
+        if any(k in needs for k in ("unit_price_cents", "max_unit_price_cents")):
+            supplied = explicit.get("product_needs", {})
+            for field in ("unit_price_cents", "max_unit_price_cents"):
+                if field in needs and field in supplied and supplied[field] != needs[field]:
+                    raise preference_clarification()
+            values["product_needs"] = {
+                **values["product_needs"],
+                **{
+                    k: v
+                    for k, v in needs.items()
+                    if k in {"unit_price_cents", "max_unit_price_cents"}
+                },
+            }
         if parsed_recommendation is not None and explicit.get("recommendation") is not None:
             supplied = explicit["recommendation"]
             if (
@@ -440,6 +503,7 @@ def user_constraints(request):
             product_needs={},
             recommendation=None,
         )
+    validate_unit_prices(values.get("product_needs", {}))
     return Constraints.model_validate(values)
 
 

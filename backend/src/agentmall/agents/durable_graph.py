@@ -37,7 +37,12 @@ class DurableState(TypedDict, total=False):
 
 def apply_legacy_clarification(runtime, message):
     """Supplement one trusted unfinished Run; never parse two turns as one action batch."""
-    from agentmall.agents.context import Constraints, scoped_purchase_quantity, user_constraints
+    from agentmall.agents.context import (
+        Constraints,
+        scoped_purchase_quantity,
+        user_constraints,
+        validate_unit_prices,
+    )
     from agentmall.agents.product_preferences import (
         comparison_revoked,
         connection_choice,
@@ -48,8 +53,13 @@ def apply_legacy_clarification(runtime, message):
     from agentmall.agents.request_intents import return_intent, support_intent
 
     old = runtime.constraints.model_dump(mode="json")
+    active_purchase = (
+        Constraints(purchase_requested=True)
+        if old["purchase_requested"] and purchase_intent(message).requested is None
+        else None
+    )
     current = user_constraints(
-        runtime.input.model_copy(update={"message": message, "constraints": None})
+        runtime.input.model_copy(update={"message": message, "constraints": active_purchase})
     ).model_dump(mode="json", exclude_none=True, exclude_unset=True)
     decisions = {
         "purchase_requested": purchase_intent(message).requested,
@@ -89,6 +99,7 @@ def apply_legacy_clarification(runtime, message):
             or update.get("compare_connections", False)
         )
         merged["recommendation"] = requirement
+    validate_unit_prices(merged["product_needs"])
     runtime.constraints = Constraints.model_validate(merged)
     # state.user_goal retains the original goal; reconstructed runtimes consume
     # this current turn plus the trusted merged contract, never a concatenated batch.

@@ -9,6 +9,7 @@ from sqlalchemy.exc import DBAPIError
 
 from agentmall.actions import service as actions
 from agentmall.actions.models import ActionProposal
+from agentmall.agents.context import Constraints
 from agentmall.agents.schemas import TOOL_SCHEMAS, PrepareInput, ProductInput, SearchInput
 from agentmall.catalog import service as catalog
 from agentmall.catalog.schemas import ProductFilters
@@ -23,6 +24,7 @@ class ToolContext:
     actor: ActorContext
     request_id: UUID
     sessions: object
+    constraints: Constraints | None = None
     observed: dict = field(default_factory=dict)
     tool_errors: list = field(default_factory=list)
 
@@ -46,9 +48,32 @@ class ToolContext:
         try:
             async with self.sessions.begin() as session:
                 if name == "search_products":
+                    if self.constraints:
+                        bounds = [
+                            value
+                            for value in (
+                                args.max_price_cents,
+                                self.constraints.max_price_cents,
+                                self.constraints.product_needs.price_ceiling(),
+                            )
+                            if value is not None
+                        ]
+                        args = args.model_copy(
+                            update={"max_price_cents": min(bounds) if bounds else None}
+                        )
                     result = await catalog.search_products(
                         session, self.actor, ProductFilters(**args.model_dump())
                     )
+                    if self.constraints:
+                        result = result.model_copy(
+                            update={
+                                "items": [
+                                    p
+                                    for p in result.items
+                                    if self.constraints.product_needs.matches_price(p.price_cents)
+                                ]
+                            }
+                        )
                     for product in result.items:
                         self.observed[str(product.id)] = product
                 elif name == "get_product":
@@ -57,6 +82,22 @@ class ToolContext:
                 else:
                     if any(str(i.product_id) not in self.observed for i in args.items):
                         raise DomainError(409, "PRODUCT_NOT_OBSERVED", "请先查询商品")
+                    if self.constraints:
+                        total = 0
+                        for item in args.items:
+                            current = await catalog.get_product(
+                                session, self.actor, item.product_id
+                            )
+                            if not self.constraints.product_needs.matches_price(
+                                current.price_cents
+                            ):
+                                raise DomainError(409, "CONSTRAINT_MISMATCH", "不符合单价要求")
+                            total += current.price_cents * item.quantity
+                        if (
+                            self.constraints.max_price_cents is not None
+                            and total > self.constraints.max_price_cents
+                        ):
+                            raise DomainError(409, "CONSTRAINT_MISMATCH", "不符合总预算")
                     result, _ = await actions.prepare_checkout(
                         session,
                         self.actor,
