@@ -4,13 +4,15 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 
 **Python 3.12 / FastAPI · LangGraph · PostgreSQL 17 / pgvector · React / TypeScript · MCP**
 
-当前为 **V2.17 面试作品集本地开发**，准确基线为已合并V2.16 `main 8e21bdcad3170487626a17ccda0f624457bccd26` / tree `1d51671f38c49bfb0986cfb8182b8f81087c9f9b`。[main CI 43783548437](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/43783548437) 已独立验收：Backend1603/14skip、Vitest146、Playwright128、Release Gate成功。V2.17新成绩在[本轮交付](docs/V217_INTERVIEW_READY.md)独立记录，不沿用基线成绩。Release继续 **ON_HOLD**，没有发布或部署。
+当前为 **V2.17 最终本地候选**。产品代码验收提交为 `759391cd6c33a1bbc906df34e6de87126cb53dac`，Tree `339d618bd92d092467e62e0511649c77b3a701d8`；完整Backend CI Offline Core为 **1824 PASS / 0 FAIL / 16 SKIP**。2026-11-18只读核对远程main仍为 `550853eeffe113f840dbe17de57fc71e3d68434b`；这些本地修复尚未完成远程CI交付。本文档收尾不重跑测试，也不把早期CI成绩计入本次结果。[源码与验证归属](docs/V217_INTERVIEW_READY.md)。Release继续 **ON_HOLD**，没有生产部署。
 
-**招聘者快速入口：** [3分30秒产品MP4](docs/media/v217/agentmall-v217-demo.mp4) · [讲解稿](docs/media/v217/agentmall-v217-demo-script.md) · [源码架构](docs/ARCHITECTURE.md) · [工程亮点](docs/ENGINEERING_CASES.md) · [12个面试问题](docs/INTERVIEW_TALKING_POINTS.md) · [简历项目描述](docs/RESUME_PROJECT.md) · [评测/限制](docs/EVALUATION_RESULTS.md) · [新Smoke方案](docs/V217_LIVE_SMOKE.md)。
+**招聘者快速入口：** [3分30秒产品MP4](docs/media/v217/agentmall-v217-demo.mp4) · [讲解稿](docs/media/v217/agentmall-v217-demo-script.md) · [源码架构](docs/ARCHITECTURE.md) · [工程亮点](docs/ENGINEERING_CASES.md) · [12个面试问题](docs/INTERVIEW_TALKING_POINTS.md) · [简历项目描述](docs/RESUME_PROJECT.md) · [真实模型与历史评测](docs/EVALUATION_RESULTS.md) · [已知限制](docs/KNOWN_LIMITATIONS.md)。[原Smoke预注册协议](docs/V217_LIVE_SMOKE.md)是保留的历史冻结文档，不是新的运行授权。
 
 成片为 **OFFLINE MOCK DEMO / REAL BUSINESS API / REAL POSTGRESQL**，剪自真实V2.16 RC1素材，字幕和SQL证据卡均标明来源，原6:55 WebM及录制器收尾exit1原样保留。V2.17另新增[连续A/B/C浏览器回归](frontend/tests/interview-demo.spec.ts)，不以视频字幕替代API/SQL断言。
 
-本项目无线上用户量、QPS/SLA或独立盲测可靠性证明。L8仍是PASS1/FAIL4/NOT_SCORED3/NOT_RUN7，只有5题评分；08用量/实费UNKNOWN，独立Holdout=0。新三场景Smoke为EXPLORATORY_PRODUCT_SMOKE，尚未运行，当前真实API/费用授权0。
+已保留三个分别授权、分别执行的真实DeepSeek成功案例：A商品推荐、B购买、C双HITL退换购。**B使用Source `115905a3cb45bfd2b70384fec7375be9243a6f92`，A与C使用Source `8171e5576180e8827b78fff3d6c9f58051729f08`**；不是同一版本3/3、独立盲测3/3或大样本可靠性认证。首次Smoke仍为 **A FAIL / B PASS / C NOT_SCORED**。C后来的独立成功执行为81.333秒、11次HTTP、Case+1、待付款订单+1、确认消费+2、库存预留+1、支付/退款+0；实际供应商账单仍为UNKNOWN。[结果、Source与回执SHA](docs/EVALUATION_RESULTS.md#三个独立执行的真实成功案例)。
+
+原Owner提供的前瞻性四题保留 **H01 FAIL / H02 NOT_SCORED / H03 NOT_RUN / H04 STATIC_ADMISSION_REJECTED（Oracle NOT_RUN）**；修复后的开发回归不倒改评分。L8仍为PASS1/FAIL4/NOT_SCORED3/NOT_RUN7，只有5题评分；08 Ledger及实际费用UNKNOWN，E1_ORACLE_CONTRACT_MISMATCH、独立盲测数量0不变。本轮文档整理的真实Key读取、Provider请求和费用均0。
 
 ## 三分钟了解项目
 
@@ -21,6 +23,7 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 | 如何限制错误工具调用？ | Single / Supervisor + Specialists 共享领域服务；服务端校验当前意图、工具白名单、Schema、依赖和预算；不从模型参数接受权限 | [模型/工具校验](backend/src/agentmall/agents/model_control.py)、[写入顺序测试](backend/tests/test_agent_write_sequencing.py) |
 | 推荐结果如何保持事实来源？ | 版本化候选、按品类约束；Jieba + PostgreSQL 全文 / 本地 BGE / RRF，购买前重新读取当前商品 | [候选记忆](backend/src/agentmall/agents/memory.py)、[真实检索范围](docs/REAL_RETRIEVAL.md) |
 | 失败如何转为改进？ | 将可确认产品缺陷、协议异常、私有评测 Host 缺陷和证据不足分开，再添加独立合成回归 | [V2.15案例](docs/ENGINEERING_CASES.md)、[L8脱敏摘要](docs/evidence/v215/l8-summary.json) |
+| 交易完成后还有查询怎么办？ | 持久订单回执只证明该交易，原始目标与回执继续进入既有Single流程；重复写仍拒绝，不靠关键词黑名单提前结束 | [持久图](backend/src/agentmall/agents/durable_graph.py)、[最终P2回归](backend/tests/test_final_p2_contract.py) |
 
 V2.15 已实现有界中文动作/量词解析、推荐比较与款数检查、可信提案状态观察及可读失败反馈。款数/比较完成检查只用于推荐只读场景；购买、退货和Bundle沿用各自完成语义。[当前实现与测试入口](docs/ENGINEERING_CASES.md)。
 
@@ -67,17 +70,17 @@ V2.16 页面从正式 API 展示约束、已核验候选数量、价格/库存/�
 
 ![历史Mock/Fixture演示：待支付订单，付款0](docs/screenshots/portfolio/06-order-detail.jpg)
 
-截图来自历史合成 Demo，[来源与哈希](docs/evidence/portfolio-demo/verification.json)保留；不是 V2.15 新截图或真实 DeepSeek 实况。**VIDEO_NOT_RECORDED**。
+截图来自历史合成 Demo，[来源与哈希](docs/evidence/portfolio-demo/verification.json)保留，不是真实DeepSeek实况。历史初次交付的 `VIDEO_NOT_RECORDED` 不代表当前没有上述MP4；成片仍是离线Mock演示。
 
 ## 可靠性结果与边界
 
 | 证据 | 当前可表述状态 |
 |---|---|
-| V2.15 产品修复 / 自动回归 | **已实现 / LOCAL_OFFLINE_VERIFIED**；RC1后端1591 passed / 14 skipped / 3 warnings；Vitest132；Playwright119 / 0 retries；[RC1回执](docs/evidence/v215-rc1/verification.json) |
-| RC1真实BGE专项 | **13 passed / 0 skipped**；固定六文件、CPU512维、Mock Provider；[审核与边界](docs/V215_RC1_REVIEW.md) |
-| V2.15 真实 Provider / 新 L8 Episode | **NOT_RUN**；本轮不调用、不续评 |
-| V2.15 集成状态 | [PR #5](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/pull/5) 已合并；基线 main CI 43718887411 success；Release/部署 **NOT_PUBLISHED** |
-| V2.16 本地产品回归 | 三条 UI / API / SQL 演示及实际测试结果见[本轮回执](docs/evidence/v216/verification.json)；不借用 V2.15 CI 成绩，远程 CI **NOT_RUN** |
+| 最终产品源码离线回归 | Source `759391cd6c33a1bbc906df34e6de87126cb53dac`：**1824 PASS / 0 FAIL / 16 SKIP**；Ruff / Format / Diff通过；真实PG、SDK Mock/Fixture，不是真实模型成绩 |
+| 16项Skip | 15项需真实本地BGE，按CI Offline Core策略跳过；1项缺少私有历史原件，未伪造通过。[精确分类](docs/V217_INTERVIEW_READY.md#最终源码验收) |
+| 历史BGE与前端 | 早期V2.17：真实BGE13、Vitest146、Playwright129/0重试；[原回执](docs/evidence/v217/verification.json)。本次未重跑，不能绑定为最终源码的新成绩 |
+| 三个真实成功案例 | A、B、C分别绑定两种历史Source与不同执行会话；实际账单UNKNOWN，不给出合并通过率 |
+| Owner提供的四题 | 原H01 FAIL、H02 NOT_SCORED、H03 NOT_RUN、H04静态拒绝；没有重评，独立性未建立 |
 | 历史 L8，自建前瞻性15题 | 启动8、评分5：PASS1 / FAIL4 / NOT_SCORED3 / NOT_RUN7；已评分成功率 **1/5 = 20%**，95% Wilson **3.62%–62.45%** |
 | 评测性质 / 费用 | `PROSPECTIVE_SELF_AUTHORED`，独立 Holdout **0**；总29次HTTP=28 SETTLED+1 UNKNOWN，完整实费 **UNKNOWN** |
 
@@ -86,5 +89,7 @@ V2.16 页面从正式 API 展示约束、已核验候选数量、价格/库存/�
 计划覆盖 **8/15**，上述20%不是完整15题通过率。08号 `TOOL_ARGUMENT_SCHEMA_INVALID` 的最终根因是 **INSUFFICIENT_EVIDENCE**；补充 Host 用量观察不能改写原 UNKNOWN Ledger 或释放 CNY2.113536 预留。完整15题、版本、分母、费用层级与未知项见[评测报告](docs/EVALUATION_RESULTS.md)。历史 CI、Fixture、真实本地 BGE 和真实模型结果各自绑定原源码，见[历史结果](docs/RESULTS.md)，不充当 V2.15 成绩。
 
 没有生产部署、真实付款/退款、真实用户规模、QPS 或 SLA 证明；Worker 不保证任意外部调用 exactly-once。MCP 仅 stdio/localhost，**REMOTE_AUTH_NOT_IMPLEMENTED**。[已知限制](docs/KNOWN_LIMITATIONS.md)保留真实模型失败与证据缺口。
+
+历史Docker Socket整改已按精确授权删除8个Exited风险容器，保留Volume和镜像；它是本地历史资源整改，不是生产环境安全认证。普通Agent Worker仅使用已批准的安全Native入口，Docker管理留在可信Host。[隔离与保留资源边界](docs/KNOWN_LIMITATIONS.md#容器隔离与保留资源)。
 
 源码、文档与合成素材采用 [MIT](LICENSE)；[第三方许可](THIRD_PARTY_NOTICES.md)、[版权边界](COPYRIGHT.md)、[权利人确认](docs/LICENSE_DECISION.md)继续适用。面试中应按实际经历说明本人设计、实现、复现、审核和 AI 辅助范围，不将整个仓库描述为独立手写成果。

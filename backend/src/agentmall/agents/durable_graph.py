@@ -41,6 +41,7 @@ def apply_legacy_clarification(runtime, message):
     from agentmall.agents.product_preferences import (
         comparison_revoked,
         connection_choice,
+        product_requirement_text,
         recommendation_revoked,
     )
     from agentmall.agents.purchase_intent import purchase_intent
@@ -59,7 +60,7 @@ def apply_legacy_clarification(runtime, message):
     for field, decision in decisions.items():
         merged[field] = old[field] if decision is None else decision
     merged["product_needs"] = {**old["product_needs"], **current.get("product_needs", {})}
-    if connection_choice(message).broadened:
+    if connection_choice(product_requirement_text(message)).broadened:
         merged["product_needs"]["connection"] = None
     merged["exclude_original"] = old["exclude_original"] or current.get("exclude_original", False)
     if old["max_price_cents"] is not None and current.get("max_price_cents") is not None:
@@ -243,6 +244,10 @@ def build_durable_graph(base, saver, store):
     async def single(runtime, state):
         await recover_receipts(runtime)
         handled = set(state.get("handled", []))
+        # A transaction receipt proves only that action. Single has no complete
+        # structured inventory of the user's independent goals, so continue with
+        # the original goal, persisted receipts and prior results. The existing
+        # terminal protocol ends pure purchases; repeated writes remain rejected.
         if any(
             kind == "proposal"
             and ident not in handled

@@ -1,6 +1,7 @@
 """Strict handoff contracts; no raw chats, identities, sessions or authorizations."""
 
 import re
+from decimal import Decimal
 from typing import Literal
 from uuid import UUID
 
@@ -11,6 +12,7 @@ from agentmall.agents.bundle_contracts import BundleRequirements, parse_bundle
 from agentmall.agents.product_preferences import (
     RecommendationRequirements,
     connection_choice,
+    product_requirement_text,
     recommendation_requirements,
 )
 from agentmall.agents.product_preferences import (
@@ -236,6 +238,36 @@ def scoped_purchase_quantity(message, *, typed_quantity=None, supplemental=False
     return quantity
 
 
+def price_limit(message, *, purchasing):
+    """One price rule for stateless and Thread requests, never a product quotation.
+
+    Recommendation amounts are per-product upper filters. A purchase's unit
+    description is not a total cap; only limits constrain the checkout total.
+    Distinct limits require clarification rather than silently choosing one.
+    """
+    limits, unit_quotes = set(), set()
+    for amount in re.finditer(r"(\d+(?:\.\d{1,2})?)\s*元(以内|以下|内|预算)?", message):
+        before, after = message[: amount.start()], message[amount.end() :]
+        limit = amount[2] or re.search(
+            r"(?:预算|总价|总金额|总额|不超过|不高于|不大于|不多于|上限)"
+            r"[^\d，。；,;\n]{0,12}$",
+            before,
+        )
+        unit_quote = (
+            re.match(r"\s*的", after)
+            or re.search(r"(?:单价|每件价格)(?:为|是)?\s*$", before)
+            or infer_category(re.split(r"[，。；,;\n]", after)[0]) is not None
+        )
+        cents = int(Decimal(amount[1]) * 100)
+        if purchasing and unit_quote and not limit:
+            unit_quotes.add(cents)
+        else:
+            limits.add(cents)
+    if len(limits) > 1 or len(unit_quotes) > 1:
+        raise preference_clarification()
+    return next(iter(limits)) if limits else None
+
+
 def user_constraints(request):
     """Extract explicit safety constraints, never route agents here.
 
@@ -243,56 +275,69 @@ def user_constraints(request):
     Typed caller input can express the same user choices without text parsing.
     """
     message = request.message
-    amount = re.search(r"(\d+(?:\.\d{1,2})?)\s*元(?:以内|以下|内|预算)?", message)
-    from decimal import Decimal
-
     from agentmall.agents.purchase_intent import ACTION, purchase_intent
-    from agentmall.agents.request_intents import return_intent, support_intent
+    from agentmall.agents.request_intents import (
+        CONDITION,
+        REPORTED,
+        THIRD_PARTY,
+        return_intent,
+        support_intent,
+    )
 
     values = {}
     needs = {}
+    product_text = product_requirement_text(message)
     bundle = parse_bundle(message)
-    if kind := infer_product_kind(message):
+    intent = purchase_intent(message)
+    # Price classification grants no action authority. Bare purchase topics can
+    # describe a unit price without satisfying the stricter purchase-intent gate.
+    purchasing = intent.requested is not False and (
+        intent.requested is True
+        or (request.constraints and request.constraints.purchase_requested)
+        or any(not action["negative"] for action in ACTION.finditer(message))
+    )
+    if bundle is None and not (request.constraints and request.constraints.bundle):
+        limit = price_limit(message, purchasing=purchasing)
+        if limit is not None:
+            values["max_price_cents"] = limit
+    if kind := infer_product_kind(product_text):
         needs["product_kind"] = kind
-    screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", message)
+    screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", product_text)
     if screen:
         needs["screen_inches"] = screen[1]
-    if "公路车" in message:
+    if "公路车" in product_text:
         needs["activity"] = "road_cycling"
-    layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键", message)
+    layout = re.search(r"(?<!\d)(61|68|75|84|87|98|104|108)\s*键(?!盘)", product_text)
     if layout:
         needs["layout"] = layout[1] + "键"
     excluded = re.findall(
-        r"(?:不接受|排除|拒绝)((?:双模|三模)(?:[／/、和或]*(?:双模|三模))*)", message
+        r"(?:不接受|排除|拒绝)((?:双模|三模)(?:[／/、和或]*(?:双模|三模))*)", product_text
     )
     if excluded:
         needs["excluded_connections"] = [
             word for word in ("双模", "三模") if any(word in part for part in excluded)
         ]
     if bundle is None and not (request.constraints and request.constraints.bundle):
-        choice = connection_choice(message)
+        choice = connection_choice(product_text)
         if choice.connection is not None:
             needs["connection"] = choice.connection
-        if recommendation := recommendation_requirements(message, choice):
+        if recommendation := recommendation_requirements(product_text, choice):
             values["recommendation"] = recommendation
     for word, kind in [("机械", "mechanical"), ("薄膜", "membrane")]:
-        if word in message:
+        if word in product_text:
             needs["keyboard_type"] = kind
     for word in ("宿舍", "办公", "游戏"):
-        if word in message:
+        if word in product_text:
             needs["usage"] = word
     values["product_needs"] = needs
-    if amount:
-        values["max_price_cents"] = int(Decimal(amount[1]) * 100)
-    if category := infer_category(message):
+    if category := infer_category(product_text):
         values["category"] = category
-    if any(x in message for x in ("安静", "静音", "低噪声")):
+    if any(x in product_text for x in ("安静", "静音", "低噪声")):
         values["noise_preference"] = "quiet"
     if "演示宿舍" in message and "演示家庭" not in message:
         values["address_label"] = "demo_dorm"
     elif "演示家庭" in message and "演示宿舍" not in message:
         values["address_label"] = "demo_home"
-    intent = purchase_intent(message)
     decisions = {
         "purchase_requested": intent.requested,
         "return_requested": return_intent(message),
@@ -302,17 +347,25 @@ def user_constraints(request):
     values["exclude_original"] = any(x in message for x in ("替代", "另一款", "再帮我推荐")) or (
         values["return_requested"] and "再推荐" in message
     )
-    if "质量问题" in message:
+    if "质量问题" in message or (
+        values["return_requested"]
+        and any(
+            re.search(r"质量退货|按键失灵", sentence)
+            and not REPORTED.search(sentence)
+            and not CONDITION.search(sentence)
+            and not re.search(THIRD_PARTY, sentence)
+            for sentence in re.split(r"[。；;\n]", message)
+        )
+    ):
         values["reason_code"] = "QUALITY_ISSUE"
     if request.constraints is not None:
         explicit = request.constraints.model_dump(exclude_unset=True)
         parsed_recommendation = values.get("recommendation")
-        if (
-            values.get("max_price_cents") is not None
-            and explicit.get("max_price_cents") is not None
-        ):
-            explicit["max_price_cents"] = min(
-                values["max_price_cents"], explicit["max_price_cents"]
+        if values.get("max_price_cents") is not None and "max_price_cents" in explicit:
+            explicit["max_price_cents"] = (
+                min(values["max_price_cents"], explicit["max_price_cents"])
+                if explicit["max_price_cents"] is not None
+                else values["max_price_cents"]
             )
         values.update(explicit)
         if parsed_recommendation is not None and explicit.get("recommendation") is not None:

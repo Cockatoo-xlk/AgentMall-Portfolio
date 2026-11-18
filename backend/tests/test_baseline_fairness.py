@@ -90,7 +90,10 @@ async def test_same_goal_two_independent_business_confirmations(
         order=[choose_purchase],
     )
     await install(env, models)
-    single = SingleModel(role="order", script=[inspect, prepare, search, buy_retrieved, final()])
+    single = SingleModel(
+        role="order",
+        script=[inspect, prepare, search, buy_retrieved, final('{"terminal":"finish"}')],
+    )
     env[2].state.durable_single_model = single
     goal = (
         f"订单{old['id']}有质量问题，想退掉。再推荐另一款500元以内静音键盘，"
@@ -162,7 +165,7 @@ async def test_clarification_continues_same_run(durable_env, buyer, architecture
             final("请补充数量地址"),
             ai(call("retrieve_products", {"query": "静音键盘"})),
             buy_retrieved,
-            final(),
+            final('{"terminal":"finish"}'),
         ],
     )
     tid = await thread(env, buyer, architecture)
@@ -260,7 +263,14 @@ async def test_return_confirmation_then_purchase_clarification(
     await install(env, models)
     env[2].state.durable_single_model = SingleModel(
         role="order",
-        script=[inspect, prepare, final('{"terminal":"clarify"}'), search, buy_retrieved, final()],
+        script=[
+            inspect,
+            prepare,
+            final('{"terminal":"clarify"}'),
+            search,
+            buy_retrieved,
+            final('{"terminal":"finish"}'),
+        ],
     )
     tid = await thread(env, buyer, architecture)
     goal = f"订单{old['id']}有质量问题，申请退货；另准备购买静音键盘，稍后补数量地址"

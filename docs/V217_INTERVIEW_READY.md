@@ -1,59 +1,81 @@
-# V2.17 面试作品集 · 本地工程交付
+# V2.17 最终本地候选 · 工程与作品集交付
 
-本轮从V2.16准确main `8e21bdcad3170487626a17ccda0f624457bccd26` / tree `1d51671f38c49bfb0986cfb8182b8f81087c9f9b` 建立 `codex/v217-interview-ready`。**V217_INTERVIEW_READY_LOCAL_VERIFIED**：本地测试、媒体和自有资源清理已验证，最终提交身份以[机器回执](evidence/v217/verification.json)和任务最终Commit回执为准。没有Push、PR、Merge、Tag、Release、部署或真实模型消费。
+本页将当前产品代码、历史真实模型案例、离线演示与原评测结果分开记录。当前分支为 `codex/v217-post-live-hardening`，产品代码验收提交为 `759391cd6c33a1bbc906df34e6de87126cb53dac`，Tree `339d618bd92d092467e62e0511649c77b3a701d8`，Parent `2df4e594e2c2687173e9360ee351fb6f83d12fc7`。文档提交不改变这些产品/测试文件，也不声称在新的文档Tree上重跑了全部测试。
 
-## 基线验收与实际交付
+2026-11-18只读核对远程main为 `550853eeffe113f840dbe17de57fc71e3d68434b`。上述修复仍是本地交付，未完成该候选的Push/PR与远程CI；不能用早期V2.16/V2.17 CI冒充最新修复的CI。Release **ON_HOLD**，没有生产部署。
 
-[main CI 43783548437 / Attempt1 / push](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/43783548437)独立读取本次真实日志：Backend1603/14skip/3warnings、935.37秒；Vitest146、Playwright128；[Release Gate](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/43783548437/job/133031102179)出现RELEASE_GATE_PASSED，T16预期skipped。merge双父为 `d18161d1eb40667f4658e745d2f58369767d67f5` / `235f46fca326601aef14dcd2caf124209c92f152`，tree与原候选一致。
+## 最终源码验收
 
-本轮复用已通过的产品链路，**未发现必须改动业务/Agent逻辑才能完成演示的缺陷**，因此不新增Agent、Prompt特例或交易规则。新增工作是：连续场景回归、3分30秒视频及可复现编辑源码、三题新Smoke静态契约与防泄漏投影、当前状态文档和12问/简历材料。
-
-Git原生fetch在最小环境遇到证书链错误，原日志保留；使用正常验证TLS的GitHub API取得已签名commit，重建原始Git对象并在写入前核对准确SHA。没有关闭TLS、修改全局CA/remote或移动本地main。原V2.16分支和历史工作树保持原引用。
-
-## 本轮新跑的完整回归
-
-| 验证 | 实际结果 | 范围 |
+| 检查 | 已核验结果 | 归属 |
 |---|---|---|
-| Backend pytest | **1626 passed / 0 failed / 14 skipped / 3 warnings，769.50秒** | 新独占真实PG17/pgvector，完整后端；含新23项Smoke契约 |
-| 固定BGE专项 | **13 passed / 0 skipped / 52 deselected / 3 warnings，24.29秒** | 六文件SHA、固定Revision、CPU512维与SQL往返 |
-| Vitest | **146 passed / 23文件** | 前端单元回归 |
-| Playwright | **129 passed / 0 skipped / 0 retries，288.187秒** | 正式FastAPI/PG + SDK Mock；含新增连续演示 |
-| Ruff / format | PASS，334文件 | backend/evals/scripts |
-| TypeScript / ESLint / production build | PASS | 最终前端源码 |
+| 完整Backend CI Offline Core | **1824 PASS / 0 FAIL / 16 SKIP**，退出码0，pytest831.85秒 | 最终产品提交759391cd；真实隔离PG、SDK MockTransport/Fixture |
+| 最终定向回归 | 153 PASS / 0 FAIL / 10 SKIP，退出码0 | 同一最终产品实现；与全套有重叠，不累加 |
+| Ruff | PASS，退出码0 | backend/evals/scripts |
+| Format | PASS，退出码0，351文件 | backend/evals/scripts |
+| Diff检查 | staged与committed diff --check均通过 | 唯一P2修复提交，9个文件 |
+| 当前文档收尾 | 不重跑Backend/BGE/前端，只做文档核对 | 只改Markdown，不修改产品或测试 |
 
-13项BGE按CI_OFFLINE_CORE策略跳过，并在本轮独立真实执行；另1项历史私有原件不可用仍skip。3warnings来自既有jieba正则转义。Playwright中的Fixture checkout precommit rollback是成功的事务回滚负例，不隐去其异常堆栈。完整命令、退出码、耗时和日志SHA见[verification](evidence/v217/verification.json)。先前失败的红测和Ruff检查分别留证，不计为最终通过成绩。
+完整Backend仅在最终产品源码上执行一次，受控Linux测试命令为：
 
-## 连续A/B/C与独立SQL
+```text
+python -m pytest --ci-offline-core --strict-markers \
+  -o cache_dir=/tmp/pytest-cache -o junit_family=legacy \
+  --junitxml=<owned-output>/backend-final.xml -ra -q backend/tests
+```
 
-新[连续浏览器场景](../frontend/tests/interview-demo.spec.ts)在同一演示会话中完成全部流程；每份提案实际GET审查后由明确的合成TEST_OPERATOR发出独立操作。属于CONTRACT_TEST_ONLY，不声称是人类可用性研究或真实模型评测。每个写入都通过正式业务API，SQL由独立数据库连接查询。
+该命令运行于专属真实PostgreSQL网络命名空间，最终831个受控文件与工作树逐字节相符；测试容器无外网、无Docker Socket或额外组0、非privileged、只读RootFS。它不是可不经授权启动Live的命令。初始RED（10失败）与审核补充RED（6失败）、7项开发脚本兼容失败均留证；后续用既有terminal finish协议修正Fixture，SQL、独立确认、重复调用和失败断言未放宽，不把中间结果相加充当最终成绩。
 
-| 阶段 | 订单总数 | Case | 预留 | 已存在确认 | Checkpoint行 |
-|---|---:|---:|---:|---:|---:|
-| 合成Setup基线 | 1 | 0 | 0 | 2 | 0 |
-| A推荐后 | 1 | 0 | 0 | 2 | 13 |
-| B等待批准 | 1 | 0 | 0 | 2 | 26 |
-| B购买与刷新读回 | 2 | 0 | 1 | 3 | 35 |
-| C退货批准后、购买未批 | 2 | 1 | 1 | 4 | 74 |
-| C独立购买批准后 | 3 | 1 | 2 | 5 | 77 |
+16项Skip准确分解如下：
 
-Setup的原订单1、模拟付款1、确认2不算Agent增量。三份新确认分别消费；两份Multi确认ID不同；退货确认冒用购买Resume得到409且订单不增。最终新增待付款订单2、Case1；付款/退款增量0。刷新没有重放交易。人工拒绝、跨Actor/Store、库存不足、幂等、Checkpoint/Fence、模型错误和UNKNOWN负例来自完整套件，[9条既有产品场景](../frontend/tests/product-demo.spec.ts)继续通过。上述计数是当前新回归，不是剪辑字幕反向生成的事实。
+| 文件 | 数量 | 原因 |
+|---|---:|---|
+| [test_live_preflight.py](../backend/tests/test_live_preflight.py) | 10 | CI_OFFLINE_CORE未安装真实BGE权重，real_bge策略跳过 |
+| [test_multiagent_integration.py](../backend/tests/test_multiagent_integration.py) | 2 | 同上 |
+| [test_postfix_smoke_selection.py](../backend/tests/test_postfix_smoke_selection.py) | 1 | 同上 |
+| [test_retrieval_ingest.py](../backend/tests/test_retrieval_ingest.py) | 1 | 同上 |
+| [test_v217_live1_bge.py](../backend/tests/test_v217_live1_bge.py) | 1 | 同上 |
+| [test_eval_monitor_policy.py](../backend/tests/test_eval_monitor_policy.py) | 1 | 缺少原始私有历史Live证据，仍跳过；不伪造原件或通过结果 |
 
-## 可播放作品集
+以上15项BGE跳过不代表BGE测试通过；此前另行执行的真实BGE13项、Vitest146项、Playwright129项/0重试属于[早期V2.17回执](evidence/v217/verification.json)，本次没有重跑。3条warnings来自既有jieba正则转义。
 
-[agentmall-v217-demo.mp4](media/v217/agentmall-v217-demo.mp4)：**3:30 / 1440×1080 / 25fps / H.264 yuv420p / 2,728,972 bytes**，静音字幕版，13章节、faststart。[讲解与复现脚本](media/v217/agentmall-v217-demo-script.md)、[逐段EDL](media/v217/edit-list.json)、[编辑工具](../scripts/render_interview_video.py)。成片SHA256：`143c029a324632309ded3a03d1847e0944d5718d3034bb351ebf390e25cbe24e`。
+| 私有验证记录的公开哈希锚点 | SHA256 |
+|---|---|
+| 最终完整Backend日志 | `9e1c650840160e2a9a1f2e1ef108d2b770ec8e7eac87e5cbff4c7587f754afc0` |
+| 最终Backend JUnit | `97623d36657d4186468913d165c1b6d5888a7cfe27f660b28206ee2b7c7d66c7` |
+| 最终P2机器回执 | `127efdbfca57020953f785ce6d32619d7d3e93b01245d5db8f466bda532f2feb` |
+| P2修复Diff | `283d22abc62c91f1de14e0c6f3057453234cddf00f241a0bf1bb3f6ab78d7099` |
 
-保留原6:55 WebM及SHA `c2becdda2b5b33d467d3ff789a83af79d94ca1aa32d775a0bd3c90c5c70e45e1`，原录制器收尾exit1不改为成功。业务画面来自V2.16 RC1，新增说明卡为明确标注的架构/SQL投影，非新终端录屏；原片的静态尾部被移除。整片成功解码、无检测到的黑屏段；16代表帧覆盖全部章节，人工检查清晰度与来源标注，OCR模式扫描未发现用户名绝对路径、Key/JWT/授权头。抽样检查不是对每个压缩像素的绝对隐私保证。没有伪造Provider画面、业务动作或SQL。
+哈希用于绑定记录，不公开原始调试包、数据库或私有路径，不代替第三方对原件的审计。
 
-## 面试与新Smoke
+## 产品改进与源码入口
 
-[README](../README.md)、[架构](ARCHITECTURE.md)、[工程亮点](ENGINEERING_CASES.md)、[12问](INTERVIEW_TALKING_POINTS.md)、[简历项目描述](RESUME_PROJECT.md)和[限制](KNOWN_LIMITATIONS.md)均按实际源码说明LangChain/LangGraph、PG/pgvector、HITL、库存锁、持久回执、Checkpoint和fence；不虚构线上用户量、QPS、SLA或个人独立手写全部代码。
+- **事实与展示一致。** 推荐最终数量、商品引用和Thread候选绑定，同时保留探索记录；价格库存来自服务端。[偏好与投影](../backend/src/agentmall/agents/product_preferences.py)、[Thread记忆](../backend/src/agentmall/agents/memory.py)。
+- **自然语言作用域。** 区分单价描述和总预算；退货原商品属性不能污染新购买商品，“退货后/换用”的新商品约束不能整句丢弃，同一新商品真实冲突仍澄清。[上下文](../backend/src/agentmall/agents/context.py)、[最终P2回归](../backend/tests/test_final_p2_contract.py)。
+- **回执与目标分开。** 购买成功不能证明独立查询或比较完成；原目标、持久回执和prior results继续既有Single流程。纯购买通过既有结构化结束信号收尾；重复写仍硬拒绝，确认和库存事务未放宽。[持久图](../backend/src/agentmall/agents/durable_graph.py)、[Specialist执行](../backend/src/agentmall/agents/specialists/runner.py)。
+- **失败可观察。** H01补充SQL商品category投影；交易后查询、重复Resume及双HITL在正式API、PG、Checkpoint与独立SQL下回归。[开发回归](../backend/tests/test_post_holdout_product_fix.py)。最新修复没有新的真实模型成绩。
 
-新[三题Smoke方案](V217_LIVE_SMOKE.md)为EXPLORATORY_PRODUCT_SMOKE，固定A/B/C顺序和新需求/初始状态/断言，**尚未执行**。静态CLI只校验与绑定，没有Live启动命令、Key loader或授权能力。最终Source/Tree、任务/协议/断言/BGE/价格SHA在CLEAN本地提交后另封存，避免自指Git哈希。下一次需要Owner单独授权真实Provider、费用、逐项HITL、匿名FD与精确自有资源处理，并在启动前核验现有Runner的全部硬门禁；未验证的接线不能用静态测试冒充。每题上限2.50元，三题7.50元只是预案，本轮授权/实费0。价格24h门禁保留，模型别名不证明不可变权重。
+## 真实模型案例与原评分
 
-## 保留的限制和审查
+[详细Source、用量和回执SHA](EVALUATION_RESULTS.md#三个独立执行的真实成功案例)：B真实购买PASS使用Source `115905a3cb45bfd2b70384fec7375be9243a6f92`；A真实推荐PASS、C真实双HITL PASS分别执行于Source `8171e5576180e8827b78fff3d6c9f58051729f08`。C的连续Episode为81.333秒，11次HTTP；Case+1、PENDING_PAYMENT订单+1、Confirmation创建/消费+2/+2、库存预留+1、Payments/Refunds+0、Run COMPLETED。
 
-L8永久PASS1 / FAIL4 / NOT_SCORED3 / NOT_RUN7，只有5评分；08 Ledger与实际费用UNKNOWN、E1_ORACLE_CONTRACT_MISMATCH、Independent Holdout=0，原09—15未运行。新Smoke不覆盖旧统计。Release继续ON_HOLD，RELEASE_COMMIT=UNBOUND，MCP REMOTE_AUTH_NOT_IMPLEMENTED。
+这些是不同会话与两种源码下的独立成功执行案例，不是同一版本3/3、独立Holdout3/3或生产可靠性认证。成功案例用量已SETTLED，实际供应商账单UNKNOWN。首次Smoke仍A FAIL/B PASS/C NOT_SCORED；后续A/C会话的C也仍NOT_SCORED，不被更后C成功覆盖。
 
-独立只读审查发现一项最终化状态表述问题，已将预提交阶段的Smoke绑定明确标为PENDING，完成绑定只能由真实post-commit回执证明；无未解决Critical/Important问题。一个Minor为编辑工具的原录制器exit1元数据针对本次固定源素材；当前值与已核验原件一致，若未来换素材需同步其元数据，不能当作通用影片来源验证器。本轮不为该无当前影响事项扩展媒体框架。审查没有把未执行Live或主观视频质量当作通过事实。
+原Owner四题仍H01 FAIL、H02 NOT_SCORED、H03 NOT_RUN、H04 STATIC_ADMISSION_REJECTED / Oracle NOT_RUN。原输入、Oracle、Gold和79份封存证据不改；H04暴露后的开发回归不算原题重评。独立盲测数量0。L8永久PASS1/FAIL4/NOT_SCORED3/NOT_RUN7，08 Ledger与实际费用UNKNOWN，E1_ORACLE_CONTRACT_MISMATCH保留；原09—15未运行。
 
-所有测试使用显式最小子进程环境和允许清单源码副本；旧.env、私有L8/Gold、旧Host包不挂载给Guest。Runner非root、无Docker Socket/补充group0/privileged，read-only rootfs；PG网络none，Runner只共享该隔离namespace，源模型只读。证据导出并校验后仅允许清理本轮准确Owner/ID的3容器、5Volume，已完成清理并按ID独立确认不存在，机器回执记录3容器/5Volume及258个既有容器稳定元数据；历史对象不处理。最终本地Commit后停止；任何Push/PR/Merge/Release/Deploy仍需新的授权。
+## 可复现离线演示与作品集
+
+[agentmall-v217-demo.mp4](media/v217/agentmall-v217-demo.mp4)：**3:30 / 1440×1080 / 25fps / H.264 / 2,728,972 bytes**，静音字幕版。[讲解稿](media/v217/agentmall-v217-demo-script.md)、[剪辑清单](media/v217/edit-list.json)、[编辑工具](../scripts/render_interview_video.py)。成片SHA256为 `143c029a324632309ded3a03d1847e0944d5718d3034bb351ebf390e25cbe24e`；本次不修改媒体。
+
+视频来自V2.16 RC1的SDK MockTransport / Fixture素材，正式FastAPI、PostgreSQL与业务事务真实运行，明确标注OFFLINE MOCK DEMO / REAL BUSINESS API / REAL POSTGRESQL，不是真实DeepSeek在线录屏。原6:55 WebM保留，SHA256为 `c2becdda2b5b33d467d3ff789a83af79d94ca1aa32d775a0bd3c90c5c70e45e1`，录制器收尾exit1未改成成功。字幕中的SQL卡是原回执投影，不是新终端执行画面。
+
+[连续A/B/C浏览器回归](../frontend/tests/interview-demo.spec.ts)与[早期回执](evidence/v217/verification.json)验证正式API/SQL链路：A不交易、B独立确认后唯一待付款订单、C两份独立确认产生Case及替换订单，支付/退款增量0，刷新不重放交易。它们是合成模型开发验证，不是新的真实模型通过分母；历史BGE、前端及录像成绩只绑定原阶段。
+
+[演示指南](DEMO_GUIDE.md)用于无Key复现；[架构](ARCHITECTURE.md)、[工程案例](ENGINEERING_CASES.md)、[12问](INTERVIEW_TALKING_POINTS.md)、[简历稿](RESUME_PROJECT.md)用于源码讲解。项目为AI辅助开发，个人贡献只保留实际设计、实现、复现与能够解释的部分；没有线上用户量、QPS、SLA或独立手写整个仓库的证明。
+
+## 安全、资源与下一交付门禁
+
+历史8个Exited Docker Socket风险容器已按精确授权删除，Volume/镜像保留；本次只读确认这8个ID仍不存在。历史操作审计不完整，不能推定发生或未发生过越权行为；本地整改不是生产安全认证。普通Worker仅用批准的安全Native入口，Docker控制权留在可信Host，通用CI Compose不作为Agent Worker。[详细边界](KNOWN_LIMITATIONS.md#容器隔离与保留资源)。
+
+Final P2的12个临时Schema通过私有测试库快照保全，PG仍Exited。本次只读核对归属与快照哈希，不重启、不清理、不操作历史C/L8数据库或Volume。以后处置须另行授权。
+
+本地代码门禁已通过；本次只提交事实性Markdown修正。GitHub交付前仍须实时复核准确候选与main、取得针对准确SHA的Push/PR授权并验收各自CI；不自动Merge。新的Live必须另行绑定Source/任务/预算并获授权。Release继续ON_HOLD，不Tag、不Release、不Deploy。

@@ -41,7 +41,12 @@ async def test_single_read_only_progress_cannot_finish_purchase(
     correction = ai(call("prepare_checkout", {"product_id": product})) if corrects else final()
     model = SingleModel(
         role="order",
-        script=[ai(call("get_product", {"product_id": product})), final(), correction, final()],
+        script=[
+            ai(call("get_product", {"product_id": product})),
+            final(),
+            correction,
+            final('{"terminal":"finish"}'),
+        ],
     )
     env[2].state.durable_single_model = model
     tid = await thread(env, buyer, "single")
@@ -81,7 +86,16 @@ async def test_single_mixed_write_repair_is_one_per_run_across_resume(durable_en
     )
     env[2].state.durable_single_model = model
     tid = await thread(env, buyer, "single")
-    run = (await start(env, buyer, tid, message=f"帮我买一件商品{product}，送演示家庭")).json()
+    # Keep an independent goal unfinished after checkout so this still exercises
+    # the same Run's repair guard, rather than an unnecessary post-commit call.
+    run = (
+        await start(
+            env,
+            buyer,
+            tid,
+            message=f"帮我买一件商品{product}，送演示家庭。另外请联系人工客服解释订单问题。",
+        )
+    ).json()
     assert run["status"] == "WAITING_INPUT", run
     assert run["budget"]["tools"] == 2  # rejected whole batch executed zero tools
     assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 0
@@ -259,7 +273,7 @@ async def test_single_pending_return_interrupt_precedes_purchase_completion_chec
                 )
             ),
             ai(call("prepare_checkout", {"product_id": alternative})),
-            final(),
+            final('{"terminal":"finish"}'),
         ],
     )
     env[2].state.durable_single_model = model

@@ -2,8 +2,7 @@
 
 import re
 from copy import deepcopy
-from decimal import Decimal
-from uuid import UUID
+from uuid import UUID, uuid5
 
 from sqlalchemy import select
 
@@ -13,6 +12,7 @@ from agentmall.agents.models import CandidateSet, ContextMutation, ThreadContext
 from agentmall.agents.product_preferences import (
     comparison_revoked,
     connection_choice,
+    product_requirement_text,
     recommendation_revoked,
 )
 from agentmall.agents.purchase_intent import ORDINAL, purchase_intent
@@ -60,15 +60,15 @@ def normalize_preferences(prefs):
 def resolve_preferences(previous, payload):
     """Only current authenticated user input can replace a persisted preference."""
     text = payload.message
-    amounts = {int(Decimal(v) * 100) for v in re.findall(r"(\d+(?:\.\d{1,2})?)\s*元", text)}
-    choice = connection_choice(text)
-    if len(categories_in_text(text)) > 1:
+    product_text = product_requirement_text(text)
+    choice = connection_choice(product_text)
+    if len(categories_in_text(product_text)) > 1:
         raise conflict()
     for choices in (
         ("机械", "薄膜"),
         ("61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"),
     ):
-        if sum(word in text for word in choices) > 1:
+        if sum(word in product_text for word in choices) > 1:
             raise conflict()
     clears = set()
     if choice.broadened:
@@ -76,30 +76,34 @@ def resolve_preferences(previous, payload):
     if re.search(r"(?:忘记|清除|取消|删除|不要).{0,6}预算", text):
         clears.add("max_price_cents")
     if not choice.explicit and re.search(
-        r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", text
+        r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", product_text
     ):
         clears.add("connection")
         positive = re.sub(
-            r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", "", text
+            r"(?:不要|取消|清除|删除)(?:有线|无线|双模|三模|连接方式).{0,2}", "", product_text
         )
         if any(word in positive for word in ("有线", "无线", "双模", "三模")):
             raise conflict()
-    if re.search(r"(?:不要|取消|清除|删除)静音", text):
+    if re.search(r"(?:不要|取消|清除|删除)静音", product_text):
         clears.add("noise_preference")
-    if len(amounts) > 1 or (amounts and "max_price_cents" in clears):
-        raise conflict()
     raw = user_constraints(
         MultiRequest(
             request_id=payload.request_id,
             thread_id=UUID(int=0),
             message=re.sub(r"(?:送|地址[：:]?)演示(?:宿舍|家庭)", "", text),
+            constraints=(
+                Constraints(purchase_requested=payload.constraints.purchase_requested)
+                if payload.constraints
+                and "purchase_requested" in payload.constraints.model_fields_set
+                else None
+            ),
         )
     )
+    if raw.max_price_cents is not None and "max_price_cents" in clears:
+        raise conflict()
     fresh = raw.model_dump(mode="json")
     changes = {k: fresh[k] for k in FIELDS - NEEDS if fresh.get(k) is not None}
     changes.update({k: v for k, v in fresh["product_needs"].items() if v is not None and v != []})
-    if amounts:
-        changes["max_price_cents"] = next(iter(amounts))
     for field in clears:
         changes.pop(field, None)
     typed = payload.constraints.model_dump(exclude_unset=True) if payload.constraints else {}
@@ -258,9 +262,34 @@ async def publish_candidates(session, run, runtime):
     if not run.context_snapshot:
         return
     context = await locked_context(session, run.thread_id)
+    from agentmall.agents.product_preferences import recommendation_products
+
+    selected = recommendation_products(runtime)
     offered = []
     binding = runtime.thread_snapshot
-    for ident, candidate in runtime.candidate_lists.items():
+    candidates = runtime.candidate_lists
+    if selected:
+        # Publish the actual visible list, including verified get_product reads,
+        # rather than fragments of each exploratory retrieval batch.
+        items = [
+            dict(
+                rank=i + 1,
+                **p.model_dump(
+                    mode="json",
+                    include={"id", "name", "price_cents", "currency", "catalog_version"},
+                ),
+            )
+            for i, p in enumerate(selected)
+        ]
+        ident = str(
+            uuid5(run.id, "recommendation:" + payload_hash([binding["preferences"], items]))
+        )
+        candidates = {
+            ident: {"items": items, "preferences_digest": payload_hash(binding["preferences"])}
+        }
+    elif selected is not None:
+        candidates = {}
+    for ident, candidate in candidates.items():
         if candidate["preferences_digest"] != payload_hash(binding["preferences"]):
             continue
         items = candidate["items"]
@@ -278,7 +307,7 @@ async def publish_candidates(session, run, runtime):
                     details=candidate.get("details", {}),
                 )
             )
-        offered.append(ident)
+        offered.append(str(candidate_id))
     bundle_status = runtime.facts.get(("bundle_status", "current"))
     if bundle_status and context.version == binding["version"]:
         context.provenance = {**context.provenance, "bundle_status": bundle_status}
@@ -440,9 +469,6 @@ async def accept_clarification(session, actor, run, message):
         return await accept_bundle_context(
             session, actor, context, RunCreate(request_id=run.request_id, message=message), run.id
         )
-    prefs, constraints = resolve_preferences(
-        context.preferences, RunCreate(request_id=run.request_id, message=message)
-    )
     bindings = [
         e["payload"]["context_binding"]
         for e in run.resume_journal.values()
@@ -450,6 +476,20 @@ async def accept_clarification(session, actor, run, message):
     ]
     prior = max(bindings, key=lambda b: b["version"]) if bindings else run.context_snapshot
     active = prior["constraints"]
+    prefs, constraints = resolve_preferences(
+        context.preferences,
+        RunCreate(
+            request_id=run.request_id,
+            message=message,
+            # Only this unfinished Run retains its authenticated purchase intent.
+            # A unit-price supplement must not replace its existing total budget.
+            constraints=(
+                Constraints(purchase_requested=True)
+                if intent.requested is None and active["purchase_requested"]
+                else None
+            ),
+        ),
+    )
     if recommendation_revoked(message):
         constraints.pop("recommendation", None)
     elif active.get("recommendation"):

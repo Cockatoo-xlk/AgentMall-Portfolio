@@ -1,56 +1,51 @@
-# V2.17 当前限制
-
-V2.17本轮为本地离线作品集交付，无新真实模型结果、生产部署或Release。新的四分钟视频是V2.16真实Mock业务素材的字幕剪辑，原录制器收尾失败不改写，SQL卡明确为证据投影。媒体可播放不等于录制器正常退出。
-
-新Smoke为EXPLORATORY_PRODUCT_SMOKE，三题未运行；其静态validator不是Live启动器/权限平台，执行前仍需Owner授权、价格24h新鲜度和现有Runner各项硬门禁复核。L8 PASS1/FAIL4/NOT_SCORED3/NOT_RUN7、08 Ledger/实费UNKNOWN、E1_ORACLE_CONTRACT_MISMATCH、Independent Holdout=0不变。真实Provider请求与Key读取均0，Release ON_HOLD，RELEASE_COMMIT=UNBOUND，MCP REMOTE_AUTH_NOT_IMPLEMENTED。
-
-以下保留各阶段限制的原始说明；其中VIDEO_NOT_RECORDED只适用于注明的历史阶段，不代表本轮没有成片。
-
----
-
 # 已知限制与证据边界
 
-当前本地候选为 **V2.16**，基于 V2.15 已合并的 `main d18161d1eb40667f4658e745d2f58369767d67f5` / tree `548b2f8e3180027bb179c2b42a1c4367984ff489`。基线 main CI 43718887411 已通过；V2.16 本地证据见[本轮交付](V216_PRODUCT_DEMO.md)，未 Push / PR / 发布 / 部署。本轮不运行真实 Provider，不改 L8 结果。V2.14 Release **ON_HOLD**；**RELEASE_COMMIT=UNBOUND**。
+本页对应产品代码验收提交 `759391cd6c33a1bbc906df34e6de87126cb53dac`（Tree `339d618bd92d092467e62e0511649c77b3a701d8`）。当前为本地候选，Release **ON_HOLD**，没有生产部署。文档收尾没有新的模型调用、Key读取、付费评测或资源清理。
 
-| 范围 | 已知限制 | 核查入口 |
+## 真实模型与统计边界
+
+| 范围 | 可以确认 | 不能据此声称 |
 |---|---|---|
-| 真实模型可靠性 | L8自建前瞻性15题仅启动8、评分5，PASS1/FAIL4/未评分3/未运行7；独立Holdout0。不能称完整15题通过率、独立盲测或生产成功率 | [完整结果](EVALUATION_RESULTS.md)、[脱敏JSON](evidence/v215/l8-summary.json) |
-| 08号事故 | 原参数、原始响应、实际请求Schema/hash、response hash和Provider request-id缺失；根因INSUFFICIENT_EVIDENCE | [事故分层](EVALUATION_RESULTS.md#08号事故拒绝阶段已知责任未知) |
-| 费用与用量 | 29HTTP中28SETTLED、1UNKNOWN；完整结算用量与实费UNKNOWN。新增Host观察不能结算原账本，CNY2.113536预留保留 | [费用层级](EVALUATION_RESULTS.md#用量预留与费用分层) |
-| 自然语言解析 | 支持有界语义与保守澄清，不能保证任意表达。比较、量词、条件/否定范围已有新实现及合成回归，本轮合成回归通过，见[RC1回执](evidence/v215-rc1/verification.json)；不应把歧义解释为授权 | [工程案例](ENGINEERING_CASES.md)、[当前意图](../backend/src/agentmall/agents/context.py) |
-| 推荐完成检查 | 款数/连接比较的短缺检查只用于推荐只读场景；purchase、return、bundle目标沿用各自原完成语义 | [偏好/短缺实现](../backend/src/agentmall/agents/product_preferences.py)、[推荐回归](../backend/tests/test_v215_recommendations.py) |
-| 正式Run诊断 | model_request_id为本地UUID；Schema/响应为规范JSON哈希，非原wire字节；provider_response_id取body.id而非HTTP header request-id。OBSERVED_VALID只表示数字自洽，output_budget_state仅本地预算，均非账单。旧single_agent.Guard不在捕获范围 | [字段边界](ARCHITECTURE.md#正式run模型诊断的证据边界)、[诊断回归](../backend/tests/test_v215_model_diagnostics.py) |
-| 交易与HITL | 只能确认被审阅的具体提案；购买批准不含付款/退款批准。Case REQUESTED不等于退款成功 | [动作服务](../backend/src/agentmall/actions/service.py)、[售后服务](../backend/src/agentmall/aftersales/service.py) |
-| Worker / 恢复 | 受控进程故障、Journal与原业务回执有测试；没有任意崩溃下外部模型请求通用exactly-once、生产灾备或SLA证明 | [Worker指南](V212_DURABLE_WORKER.md)、[进程测试](../backend/tests/test_worker_process.py) |
-| 检索质量 | 历史真实BGE/Reranker实验为本地Linux aarch64/CPU、固定40条合成查询、单标注者；Reranker默认关闭，不能等同当前Agent质量 | [真实检索报告](REAL_RETRIEVAL.md) |
-| MCP认证 | 仅stdio/localhost；**REMOTE_AUTH_NOT_IMPLEMENTED**，未实现可公网使用的完整远程认证；无付款退款执行工具 | [MCP指南](MCP_GATEWAY.md) |
-| Demo | SDK MockTransport / Fixture Embedding / 合成账号 / TEST_OPERATOR；真实后端不等于真实模型。准备依赖后的无Provider演示不保证首次构建全离线 | [6分钟演示](DEMO_GUIDE.md) |
-| 影像素材 | 保留历史截图，V2.16初次交付未录屏；RC1另有6:55静音原始录屏，非精剪演示片，收尾超时如实保留 | [截图来源](screenshots/portfolio/README.md)、[原哈希](evidence/portfolio-demo/verification.json) |
-| 规模与部署 | 没有生产部署、真实用户规模、QPS、SLA、真实付款或退款证明；公开合成配置不能作为公网认证 | [项目说明](../README.md)、[架构](ARCHITECTURE.md) |
-| 统计与版本 | 历史离线CI、真实本地BGE、Mock、不同Live会话分别绑定原SHA，不能相加或当V2.15结果。模型别名也不是不可变权重身份 | [历史结果](RESULTS.md)、[L8身份](EVALUATION_RESULTS.md#身份与公开投影) |
-| 旧E1错误契约 | **ORACLE_CONTRACT_MISMATCH**仍未解决：Native的TOOL_NOT_DECLARED/SPECIALIST_FAILED与正式SDK的INVALID_TOOL_BATCH属于不同校验路径，未放行未知工具或修改原Oracle | [既有运行时修复](../backend/tests/test_l8_r4_original_oracle.py)、[批次硬拒绝](../backend/src/agentmall/agents/model_control.py) |
-| 发布身份 | V2.14仍ON_HOLD，V2.15已合并但未发布，V2.16为本地候选，**RELEASE_COMMIT=UNBOUND**；本地回归与GitHub CI须分别核验；无Tag、Release或部署 | [本轮验收](V215_RELIABILITY_ENGINEERING.md) |
+| 三个成功案例 | A推荐、B购买、C双HITL分别有真实DeepSeek与SQL回执；A/C Source为`8171e5576180e8827b78fff3d6c9f58051729f08`，B为`115905a3cb45bfd2b70384fec7375be9243a6f92` | 同一版本3/3、未见输入独立盲测、模型总体成功率或生产可靠性认证 |
+| 首次Smoke | A FAIL / B PASS / C NOT_SCORED；后续A/C会话的C也仍NOT_SCORED | 以后C成功可以覆盖此前的超时、操作交付问题或原评分 |
+| 原Owner四题 | H01 FAIL、H02 NOT_SCORED、H03 NOT_RUN、H04 STATIC_ADMISSION_REJECTED / Oracle NOT_RUN；原计划4，实际启动2、评分1 | 四题全跑完、未运行等于失败、后续开发回归算作原题PASS |
+| L8原15题 | PASS1 / FAIL4 / NOT_SCORED3 / NOT_RUN7，只有5题评分 | 完整15题实测通过率、统计显著Single/Multi优势 |
+| 独立性 | 四题为PROSPECTIVE_OWNER_SUPPLIED，L8为PROSPECTIVE_SELF_AUTHORED；独立盲测数量0 | 开发者自填来源即可获得第三方评测或独立盲封身份 |
+| 用量与账单 | 成功案例Usage已SETTLED；C当次保守上界CNY0.098820 | Host用量回执、峰值估算或预留就是供应商实际账单；实际账单仍UNKNOWN |
 
-## 历史失败仍保留
+[完整结果与各Source](EVALUATION_RESULTS.md)保留失败、未评分和未运行项。三个成功执行是在开发与操作流程改进后获得的功能证据，没有合并通过率。最新产品修复提交只完成离线工程回归，没有新的Live评分。
 
-- 01比较/候选数量、02/06采购及退货意图、04客服动作解析进入新产品回归，但原评分不提升。
-- 02末尾 `AFTERSALES_INELIGIBLE` 的精确选择未保存；起初资格为true且Case已REQUESTED，不能反推起初资格失败。
-- 03是时限/协议异常，底层原因UNKNOWN；07是私有评测Host误比较可变status快照，不列为正式产品bug。
-- 08责任无法确定。新增正式SDK诊断只改善未来可观察性，不补写历史响应或释放原预算预留。
-- 更早L7 B2 Multi仍 `PARTIAL / CONTEXT_SCOPE_VIOLATION`，没有完成第二次购买确认；[原记录](V214_RELEASE_CANDIDATE.md#真实模型历史)保留。离线成功不覆盖实模失败。
+## 产品与工程边界
 
-## 贡献与公开范围
+| 范围 | 限制 | 核查入口 |
+|---|---|---|
+| 自然语言 | 中文解析有明确支持范围；原商品/新商品属性与单价/总预算分开，无法确定时仍需澄清，不能保证理解任意表达 | [偏好投影](../backend/src/agentmall/agents/product_preferences.py)、[价格与上下文](../backend/src/agentmall/agents/context.py)、[P2回归](../backend/tests/test_final_p2_contract.py) |
+| 独立目标完成 | 交易回执只证明对应交易，不能替代订单查询、比较或售后目标；Single继续携原始目标、回执和prior results。纯购买显式结束通常增加一次受原预算约束的模型调用 | [持久图](../backend/src/agentmall/agents/durable_graph.py)、[Single控制](../backend/src/agentmall/agents/specialists/runner.py) |
+| 模型错误 | 即使已有订单，模型重复写或非法参数仍应失败；既有结束信号也不构成任意自然语言目标都被满足的确定性证明 | [工具校验](../backend/src/agentmall/agents/model_control.py)、[重复写回归](../backend/tests/test_agent_write_sequencing.py) |
+| HITL与资金 | 独立Confirmation只授权被审阅的具体Proposal；购买批准不授权付款或退款。REQUESTED Case不是已退款，PENDING_PAYMENT不是已支付 | [动作服务](../backend/src/agentmall/actions/service.py)、[订单事务](../backend/src/agentmall/orders/service.py) |
+| 恢复与外部副作用 | Checkpoint、Journal、Thread锁、epoch fence与持久回执有受控故障测试；不保证任意外部Provider请求exactly-once、生产灾备或SLA | [恢复测试](../backend/tests/test_recovery_interleavings.py)、[Worker](../backend/src/agentmall/agents/worker.py) |
+| 诊断与隐私 | model_request_id是本地关联UUID；Schema/响应哈希是规范JSON哈希，不是原HTTP字节；body.id不是HTTP request-id。OBSERVED_VALID仅表示用量数字自洽，不是账单 | [诊断边界](ARCHITECTURE.md#正式run模型诊断的证据边界) |
+| RAG | Jieba + PostgreSQL全文ts_rank_cd、本地BGE/pgvector、RRF；默认不启用Reranker。历史40条合成检索查询与单标注者结果不等于Agent业务可靠性 | [检索验证](REAL_RETRIEVAL.md) |
+| 工程测试 | 最终Backend为1824 PASS / 0 FAIL / 16 SKIP；15项真实BGE按CI Offline Core跳过，1项缺少私有历史原件。早期真实BGE/前端结果不能冒充此Source的新验证 | [精确归属](V217_INTERVIEW_READY.md#最终源码验收) |
+| 旧E1契约 | E1_ORACLE_CONTRACT_MISMATCH保留：Native与正式SDK校验阶段不同；没有放行未声明工具或更改原Oracle | [原Oracle回归](../backend/tests/test_l8_r4_original_oracle.py)、[批次校验](../backend/src/agentmall/agents/model_control.py) |
+| MCP与规模 | 仅stdio/localhost，REMOTE_AUTH_NOT_IMPLEMENTED；没有生产用户数、QPS、高并发压测、SLA或生产部署证据 | [MCP指南](MCP_GATEWAY.md)、[架构](ARCHITECTURE.md) |
 
-项目使用AI辅助开发。面试中只陈述本人能够解释、定位和复现的设计、修改、验证与审查；仓库源码和测试数量不证明独立个人贡献。私有Gold、未运行任务输入、Key、完整Prompt、地址和原始响应不进入公开作品集；本页只说明保留的缺口，不要求读取它们。
+L8第08题仍为INSUFFICIENT_EVIDENCE，原Ledger、实际费用UNKNOWN与CNY2.113536预留保留；新诊断不能补造历史响应或释放原预留。未继续原09—15题，不恢复停止的历史Run，不修改Gold、Oracle或旧评分。
 
-本轮没有新L8授权，不继续09—15，不重跑01—08，不修改原Ledger、Oracle、评分或冻结身份。以后发布、部署或新Live实验仍应以新的准确源码与独立授权/回执记录，当前本地文档不代表已发布。
+## 演示与历史验证
 
+[3分30秒MP4](media/v217/agentmall-v217-demo.mp4)来自V2.16 RC1的真实业务API/PG与SDK Mock素材，标注OFFLINE MOCK DEMO。原静音WebM及录制器收尾exit1保留；字幕和SQL卡不是新Live录屏。历史VIDEO_NOT_RECORDED只描述当时阶段，不能当作当前视频状态。可复现[Demo](DEMO_GUIDE.md)使用MockTransport/Fixture，真实后端不等于真实模型；首次构建仍可能下载依赖。
 
-## V2.16 有界支持
+历史V2.17 BGE13、Vitest146、Playwright129属于[原回执](evidence/v217/verification.json)对应阶段。本次只核对既有日志，不重跑完整Backend、前端或BGE，不把这些数字累加成最新Source的验证数量。
 
-- 比较表使用 Run 的检索事实快照；当前库存须独立GET核对，审批时服务端仍重验。界面不能保证任意自然语言都被正确解释。
-- 同批重复派发拦截使用既有完整指纹；不保证语义不同但业务等价的任意模型表达都能判重。没有新增自动修复或重试。
-- 受控入口是固定合成契约测试与薄API辅助类，不是新通用评测器；状态/错误评分不是业务Oracle，也不是独立盲测。
-- SDK MockTransport完整业务链与真实BGE专项分开运行；不能将两者合并描述为本轮真实DeepSeek+BGE端到端评测。
-- 原有13项real_bge标记在轻量核心回归中按策略跳过，本轮另行实际执行；私有历史证据测试缺少原件仍跳过。准确数量见[回执](evidence/v216/verification.json)。
-- V2.16初次交付的**VIDEO_NOT_RECORDED**是历史状态；RC1原始录屏已独立验证，但没有旁白、末段静态停留较长，录制器未正常FINISHED。见[媒体限制](V216_RC1_REVIEW.md#实际录屏与质量限制)。本地验收时真实Provider请求0、真实Key读取0、GitHub写入0；远程CI和发布需另核。
+## 容器隔离与保留资源
+
+历史Docker Socket整改按精确Owner授权删除8个Exited风险容器，删除退出码0、未使用force或volume删除；原Volume和镜像保留。收尾回执SHA256为 `70e9ce13b522b642904830bc185062674ce7e03afd215f709c5cbf0dfe7f582a`。本次只读核验这8个完整ID仍不存在。历史Docker API审计并不完整，是否发生过越权操作仍UNKNOWN；没有证据就不推定入侵。**本地历史整改不是生产环境安全认证**。
+
+普通Agent Worker只使用Owner批准的安全Native隔离入口：不挂载Docker Socket或其父目录、不加入额外组0、不privileged，保持只读RootFS、no-new-privileges、最小Capabilities；Docker管理留在可信Host。旧B2B2配置只读保留，通用CI Compose不作为Agent Worker入口；不能声称所有历史/通用配置都已自动加固。每次新运行仍需核验实际资源权限。
+
+Final P2在本轮独占测试PG中发现12个临时业务/Checkpoint Schema，已通过私有数据库快照保全后停止该PG。快照SHA256为 `af3ccfb0b617b5021abbdac039a279f8a97914b2eb9fec28162a4aa514ed59fb`。本次只核对Owner、Exited状态和快照哈希；不重启、不连接数据库、不清理Schema或Volume，也不声称停止的临时文件系统仍在线保有这些Schema。以后处置须另获精确授权；历史C/L8资源不在范围内。
+
+## 贡献与公开边界
+
+项目使用AI辅助开发。个人贡献只陈述自己实际设计、修改、复现、走读和能够解释的部分；测试数量不等于独立个人贡献。公开文档只给核验过的统计、业务增量与哈希，不上传Key、凭据日志、数据库密码、真实用户身份、私有运行目录、Gold或完整调试日志。Release ON_HOLD，文档、离线回归或远程CI均不构成新的模型费用、发布或部署授权。

@@ -19,7 +19,11 @@ INFORMATION = re.compile(
 REPORTED = re.compile(r"昨天|之前|曾经|上次|已经|已(?:经)?|记录|说明|提到|写着|例如|比如|[‘“\"「]")
 THIRD_PARTY = r"(?:供应商|客服|商家|卖家|平台|同事|他们|她们|他|她)"
 INDIRECT = re.compile(
-    r"(?:让|叫|要求|通知)\s*" + THIRD_PARTY + r"|" + THIRD_PARTY + r"(?:让|叫|要求|通知)(?:我|本人)"
+    r"(?:让|叫|要求|通知|请)\s*"
+    + THIRD_PARTY
+    + r"|"
+    + THIRD_PARTY
+    + r"(?:让|叫|要求|通知)(?:我|本人)"
 )
 OWN_COMMAND = re.compile(
     r"^\s*(?:(?:再|另|并|先|然后|接着|同时|也|直接|立即|马上)\s*)*"
@@ -32,7 +36,7 @@ PLANNED_ACTION = re.compile(
 )
 RETURN_ACTION = re.compile(
     r"(?:(?:生成|创建|建立|准备|发起|提交|办理)\s*(?:一[份个张]\s*)?"
-    r"退货(?:提案|申请|请求)|申请退货|准备退货|想退掉|想退货|退货|退掉)"
+    r"退货(?:提案|申请|请求)|申请(?:质量)?退货|准备退货|想退掉|想退货|退货|退掉)"
 )
 SUPPORT_ACTION = re.compile(
     r"(?:(?:转接?|联系|找)\s*人工(?:客服)?|"
@@ -108,6 +112,12 @@ def _request_intent(message, pattern, *, bare=(), explanatory_contact=False):
         start = message.find(clause, offset)
         offset = start + len(clause)
         for match in pattern.finditer(clause):
+            after = clause[match.end() :]
+            if re.match(r"\s*(?:是|属于)", after) and (
+                REPORTED.search(after) or re.search(THIRD_PARTY, after)
+            ):
+                # A named action may be a reported requirement/advice, not a command.
+                clarification("动作属于历史要求或第三方建议，请明确本人的当前决定")
             scoped_clause = clause
             if (
                 explanatory_contact

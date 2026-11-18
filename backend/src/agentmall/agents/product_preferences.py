@@ -42,6 +42,55 @@ class ConnectionChoice:
     explicit: bool = False
 
 
+def product_requirement_text(message):
+    """Separate an explicitly returned item from a separately requested new item.
+
+    This projection only scopes product preferences; action authorization always
+    consumes the complete original request. Ambiguous or conflicting target
+    descriptions remain in scope and must still be clarified.
+    """
+    from agentmall.agents.purchase_intent import PRODUCT_ID, purchase_intent
+    from agentmall.agents.request_intents import return_intent
+    from agentmall.catalog.categories import categories_in_text
+
+    if return_intent(message) is not True:
+        return message
+    clauses = re.split(r"([，。；！？,;\n])", message)
+
+    def new_item(clause):
+        return bool(categories_in_text(clause)) and (
+            purchase_intent(clause).requested is True
+            or any(
+                affirmative(clause, match.start())
+                for match in re.finditer(r"推荐|比较|对比|对照", clause)
+            )
+        )
+
+    if not any(new_item(clause) for clause in clauses):
+        return message
+    for index, clause in enumerate(clauses):
+        categories = categories_in_text(clause)
+        if (
+            categories
+            and not new_item(clause)
+            and re.match(
+                r"\s*(?:(?:我|本人)的)?(?:(?:这|那)(?:笔|个)?)?"
+                r"(?:订单\s*(?:" + PRODUCT_ID + r"|\d+)|原订单|旧订单|原商品|原来的)",
+                clause,
+            )
+            # A return is an action/time reference, not an item's identity.
+            # Even an original-order reference may describe its replacement;
+            # retain such ambiguous clauses rather than silently dropping constraints.
+            and not re.search(r"新|替|换|改|后", clause)
+        ):
+            # A conflict within the original description is not permission to ignore it.
+            if len(categories) > 1:
+                raise clarify()
+            connection_choice(clause)
+            clauses[index] = ""
+    return "".join(clauses)
+
+
 def connection_choice(message):
     text = re.sub(EXCLUDED_MODES, "", message)
     mentions = {word for word in CONNECTIONS if word in text}
@@ -116,8 +165,8 @@ def recommendation_requirements(message, choice):
     )
 
 
-def recommendation_shortage(runtime, entity_refs=None):
-    """Inspect only verified replacement snapshots; never trigger a retrieval or a write."""
+def recommendation_products(runtime, entity_refs=None):
+    """Bound final read-only recommendations, retaining exploration in the runtime."""
     c = runtime.constraints
     requirement = getattr(c, "recommendation", None)
     if requirement is None or c.bundle or c.purchase_requested or c.return_requested:
@@ -129,12 +178,41 @@ def recommendation_shortage(runtime, entity_refs=None):
     refs = runtime.references.values() if entity_refs is None else entity_refs
     identifiers = {str(e.id) for e in refs if e.kind == "product" and e.relation == "replacement"}
     products = []
-    for ident in sorted(identifiers):
-        fact = runtime.facts.get(("product", ident))
-        if fact is not None:
+    for (kind, ident), fact in runtime.facts.items():
+        if kind == "product" and ident in identifiers:
             product = ProductDTO.model_validate(fact)
             if product_allowed(runtime, product):
                 products.append(product)
+    limit = requirement.count or len(products)
+    selected = products[:limit]
+    if requirement.compare_connections:
+        modes = ("有线", "无线")
+        if not all(any(connection_matches(p.attributes, m) for p in selected) for m in modes):
+            # Preserve ranked/insertion order when the first N already cover the
+            # comparison. Otherwise use the smallest verified covering subset.
+            covering = [
+                next((p for p in products if connection_matches(p.attributes, m)), None)
+                for m in modes
+            ]
+            covering = list({p.id: p for p in covering if p is not None}.values())
+            if len(covering) <= limit:
+                chosen = {p.id for p in covering}
+                for product in products:
+                    if len(chosen) >= limit:
+                        break
+                    chosen.add(product.id)
+                selected = [p for p in products if p.id in chosen]
+    return selected
+
+
+def recommendation_shortage(runtime, entity_refs=None):
+    """Assess the final subset, not the union of explored product quotes."""
+    from agentmall.catalog.capabilities import connection_matches
+
+    products = recommendation_products(runtime, entity_refs)
+    if products is None:
+        return None
+    requirement = runtime.constraints.recommendation
     count_missing = requirement.count is not None and len(products) < requirement.count
     comparison_missing = requirement.compare_connections and not all(
         any(connection_matches(p.attributes, connection) for p in products)

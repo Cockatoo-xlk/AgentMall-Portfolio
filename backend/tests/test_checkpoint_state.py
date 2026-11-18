@@ -85,7 +85,11 @@ async def test_single_mode_uses_same_confirmation_budget_and_recovery(durable_en
 
     env = durable_env
     env[2].state.durable_single_model = SingleModel(
-        role="single", script=[ai(call("prepare_checkout", {"product_id": product})), final()]
+        role="single",
+        script=[
+            ai(call("prepare_checkout", {"product_id": product})),
+            final('{"terminal":"finish"}'),
+        ],
     )
     tid = await thread(env, buyer, "single")
     run = (await start(env, buyer, tid, message=f"准备购买一件 {product}，送演示宿舍")).json()
@@ -94,8 +98,10 @@ async def test_single_mode_uses_same_confirmation_budget_and_recovery(durable_en
     cid = await confirm(env, buyer, run["pending_confirmation"]["proposal_id"])
     done = await resume(env, buyer, tid, run, cid)
     assert done.json()["status"] == "COMPLETED", done.text
-    # T12 continues the original goal after confirmation, charging the same ledger.
-    assert done.json()["budget"]["models"] == 2
+    # Resume retains the budget and supplies the committed receipt to the same
+    # Single flow; the structured finish is a separately budgeted model call.
+    assert done.json()["budget"]["models"] == run["budget"]["models"] + 1 == 2
+    assert done.json()["budget"]["tools"] == run["budget"]["tools"]
 
 
 async def test_database_disconnect_is_recoverable_not_sqlalchemy_document_code(
