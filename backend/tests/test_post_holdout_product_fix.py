@@ -228,9 +228,9 @@ async def test_single_receipt_finishes_without_replanning_checkout(
             assert row(env[1], "SELECT consumed_at FROM confirmations")["consumed_at"] is None
         else:
             assert done["status"] == "COMPLETED", done
-            # The existing structured terminal finishes only after the model has
-            # received the original goal and persisted transaction receipt.
-            assert done["budget"]["models"] == models_before + 1
+            # A verified receipt and fully recognized checkout-only scope need no
+            # extra model turn; independent goals are exercised below.
+            assert done["budget"]["models"] == models_before
             assert (await resume(env, buyer, tid, waiting, cid, request_id)).json() == done
             assert (await resume(env, buyer, tid, waiting, cid)).status_code == 409
             assert row(env[1], "SELECT count(*) n FROM orders")["n"] == 1

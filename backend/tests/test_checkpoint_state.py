@@ -98,9 +98,9 @@ async def test_single_mode_uses_same_confirmation_budget_and_recovery(durable_en
     cid = await confirm(env, buyer, run["pending_confirmation"]["proposal_id"])
     done = await resume(env, buyer, tid, run, cid)
     assert done.json()["status"] == "COMPLETED", done.text
-    # Resume retains the budget and supplies the committed receipt to the same
-    # Single flow; the structured finish is a separately budgeted model call.
-    assert done.json()["budget"]["models"] == run["budget"]["models"] + 1 == 2
+    # Resume preserves the original budget. A verified checkout-only receipt
+    # closes the goal without another model call or any budget reset.
+    assert done.json()["budget"]["models"] == run["budget"]["models"] == 1
     assert done.json()["budget"]["tools"] == run["budget"]["tools"]
 
 

@@ -10,6 +10,7 @@ from langgraph.types import Send, interrupt
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import HandoffEnvelope, SpecialistResult
 from agentmall.agents.durable_budget import node_key
+from agentmall.agents.goal_receipts import completed_single_checkout
 from agentmall.agents.resume import execute_confirmation
 from agentmall.agents.runtime import RunContext
 from agentmall.agents.specialist_tools import authenticate, recover_receipts
@@ -255,10 +256,21 @@ def build_durable_graph(base, saver, store):
     async def single(runtime, state):
         await recover_receipts(runtime)
         handled = set(state.get("handled", []))
-        # A transaction receipt proves only that action. Single has no complete
-        # structured inventory of the user's independent goals, so continue with
-        # the original goal, persisted receipts and prior results. The existing
-        # terminal protocol ends pure purchases; repeated writes remain rejected.
+        completed_checkout = completed_single_checkout(
+            runtime, state.get("user_goal") or runtime.input.message, handled
+        )
+        if completed_checkout:
+            for identifier, result in list(runtime.completed.items()):
+                if completed_checkout in {str(pid) for pid in result.proposal_ids}:
+                    runtime.completed[identifier] = result.model_copy(
+                        update={
+                            "status": "done",
+                            "summary": "已按独立确认创建待付款订单，尚未支付。",
+                        }
+                    )
+            return {"next": "finish"}
+        # A checkout receipt does not settle any independent or unknown scope.
+        # Keep the original goal, verified facts and all repeated-write guards.
         if any(
             kind == "proposal"
             and ident not in handled
