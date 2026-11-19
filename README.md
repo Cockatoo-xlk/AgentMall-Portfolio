@@ -4,7 +4,7 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 
 **Python 3.12 / FastAPI · LangGraph · PostgreSQL 17 / pgvector · React / TypeScript · MCP**
 
-当前为 **V2.17 最终本地候选**。产品代码验收提交为 `759391cd6c33a1bbc906df34e6de87126cb53dac`，Tree `339d618bd92d092467e62e0511649c77b3a701d8`；完整Backend CI Offline Core为 **1824 PASS / 0 FAIL / 16 SKIP**。2026-11-18只读核对远程main仍为 `550853eeffe113f840dbe17de57fc71e3d68434b`；这些本地修复尚未完成远程CI交付。本文档收尾不重跑测试，也不把早期CI成绩计入本次结果。[源码与验证归属](docs/V217_INTERVIEW_READY.md)。Release继续 **ON_HOLD**，没有生产部署。
+**V2.17 交易链路复验**在源码 `f8abf931c49f182951f439f3ae2fb644050dd0a3` 上完成。单价和订单总预算分别校验，纯购买可凭已提交的待付款订单回执收尾。B 购买与 C 退货后替换购买各真实执行一次，原业务 Oracle 和自动测试策略均 PASS。Release 为 **ON_HOLD**。[修复与验证记录](docs/EVALUATION_RESULTS.md#v217-交易链路复验)
 
 **招聘者快速入口：** [3分30秒产品MP4](docs/media/v217/agentmall-v217-demo.mp4) · [讲解稿](docs/media/v217/agentmall-v217-demo-script.md) · [源码架构](docs/ARCHITECTURE.md) · [工程亮点](docs/ENGINEERING_CASES.md) · [12个面试问题](docs/INTERVIEW_TALKING_POINTS.md) · [简历项目描述](docs/RESUME_PROJECT.md) · [真实模型与历史评测](docs/EVALUATION_RESULTS.md) · [已知限制](docs/KNOWN_LIMITATIONS.md)。[原Smoke预注册协议](docs/V217_LIVE_SMOKE.md)是保留的历史冻结文档，不是新的运行授权。
 
@@ -12,7 +12,7 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 
 已保留三个分别授权、分别执行的真实DeepSeek成功案例：A商品推荐、B购买、C双HITL退换购。**B使用Source `115905a3cb45bfd2b70384fec7375be9243a6f92`，A与C使用Source `8171e5576180e8827b78fff3d6c9f58051729f08`**；不是同一版本3/3、独立盲测3/3或大样本可靠性认证。首次Smoke仍为 **A FAIL / B PASS / C NOT_SCORED**。C后来的独立成功执行为81.333秒、11次HTTP、Case+1、待付款订单+1、确认消费+2、库存预留+1、支付/退款+0；实际供应商账单仍为UNKNOWN。[结果、Source与回执SHA](docs/EVALUATION_RESULTS.md#三个独立执行的真实成功案例)。
 
-原Owner提供的前瞻性四题保留 **H01 FAIL / H02 NOT_SCORED / H03 NOT_RUN / H04 STATIC_ADMISSION_REJECTED（Oracle NOT_RUN）**；修复后的开发回归不倒改评分。L8仍为PASS1/FAIL4/NOT_SCORED3/NOT_RUN7，只有5题评分；08 Ledger及实际费用UNKNOWN，E1_ORACLE_CONTRACT_MISMATCH、独立盲测数量0不变。本轮文档整理的真实Key读取、Provider请求和费用均0。
+原Owner提供的前瞻性四题保留 **H01 FAIL / H02 NOT_SCORED / H03 NOT_RUN / H04 STATIC_ADMISSION_REJECTED（Oracle NOT_RUN）**；修复后的开发回归不倒改评分。L8仍为PASS1/FAIL4/NOT_SCORED3/NOT_RUN7，只有5题评分；08 Ledger及实际费用UNKNOWN，E1_ORACLE_CONTRACT_MISMATCH、独立盲测数量0不变。
 
 ## 三分钟了解项目
 
@@ -23,7 +23,7 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 | 如何限制错误工具调用？ | Single / Supervisor + Specialists 共享领域服务；服务端校验当前意图、工具白名单、Schema、依赖和预算；不从模型参数接受权限 | [模型/工具校验](backend/src/agentmall/agents/model_control.py)、[写入顺序测试](backend/tests/test_agent_write_sequencing.py) |
 | 推荐结果如何保持事实来源？ | 版本化候选、按品类约束；Jieba + PostgreSQL 全文 / 本地 BGE / RRF，购买前重新读取当前商品 | [候选记忆](backend/src/agentmall/agents/memory.py)、[真实检索范围](docs/REAL_RETRIEVAL.md) |
 | 失败如何转为改进？ | 将可确认产品缺陷、协议异常、私有评测 Host 缺陷和证据不足分开，再添加独立合成回归 | [V2.15案例](docs/ENGINEERING_CASES.md)、[L8脱敏摘要](docs/evidence/v215/l8-summary.json) |
-| 交易完成后还有查询怎么办？ | 持久订单回执只证明该交易，原始目标与回执继续进入既有Single流程；重复写仍拒绝，不靠关键词黑名单提前结束 | [持久图](backend/src/agentmall/agents/durable_graph.py)、[最终P2回归](backend/tests/test_final_p2_contract.py) |
+| 交易完成后还有查询或另一次购买怎么办？ | 持久回执只证明对应交易。纯购买可以收尾，独立目标继续进入原流程，重复写仍由守卫拒绝 | [收尾判断](backend/src/agentmall/agents/goal_receipts.py)、[B/C 与独立目标回归](backend/tests/test_b_post_commit_closeout.py) |
 
 V2.15 已实现有界中文动作/量词解析、推荐比较与款数检查、可信提案状态观察及可读失败反馈。款数/比较完成检查只用于推荐只读场景；购买、退货和Bundle沿用各自完成语义。[当前实现与测试入口](docs/ENGINEERING_CASES.md)。
 
@@ -76,10 +76,10 @@ V2.16 页面从正式 API 展示约束、已核验候选数量、价格/库存/�
 
 | 证据 | 当前可表述状态 |
 |---|---|
-| 最终产品源码离线回归 | Source `759391cd6c33a1bbc906df34e6de87126cb53dac`：**1824 PASS / 0 FAIL / 16 SKIP**；Ruff / Format / Diff通过；真实PG、SDK Mock/Fixture，不是真实模型成绩 |
-| 16项Skip | 15项需真实本地BGE，按CI Offline Core策略跳过；1项缺少私有历史原件，未伪造通过。[精确分类](docs/V217_INTERVIEW_READY.md#最终源码验收) |
-| 历史BGE与前端 | 早期V2.17：真实BGE13、Vitest146、Playwright129/0重试；[原回执](docs/evidence/v217/verification.json)。本次未重跑，不能绑定为最终源码的新成绩 |
-| 三个真实成功案例 | A、B、C分别绑定两种历史Source与不同执行会话；实际账单UNKNOWN，不给出合并通过率 |
+| 交易候选离线回归 | 同一受测源码的定向 **93 PASS**，完整 Backend Offline Core **1912 PASS / 0 FAIL / 16 SKIP**，各自报告。Ruff、Format、Diff 通过。[验证范围](docs/EVALUATION_RESULTS.md#v217-交易链路复验) |
+| 交易候选真实 B/C | B、C 各一次，采用自动测试审批。两题支付和退款增量均为 0。用量已结算，实际账单 `UNKNOWN`。[业务结果与费用上界](docs/EVALUATION_RESULTS.md#v217-交易链路复验) |
+| 历史BGE与前端 | 早期V2.17：真实BGE13、Vitest146、Playwright129/0重试。[原回执](docs/evidence/v217/verification.json) |
+| 三个历史真实成功案例 | A、B、C分别绑定两种历史Source与不同执行会话；实际账单UNKNOWN，不给出合并通过率 |
 | Owner提供的四题 | 原H01 FAIL、H02 NOT_SCORED、H03 NOT_RUN、H04静态拒绝；没有重评，独立性未建立 |
 | 历史 L8，自建前瞻性15题 | 启动8、评分5：PASS1 / FAIL4 / NOT_SCORED3 / NOT_RUN7；已评分成功率 **1/5 = 20%**，95% Wilson **3.62%–62.45%** |
 | 评测性质 / 费用 | `PROSPECTIVE_SELF_AUTHORED`，独立 Holdout **0**；总29次HTTP=28 SETTLED+1 UNKNOWN，完整实费 **UNKNOWN** |

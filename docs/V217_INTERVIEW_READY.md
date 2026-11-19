@@ -1,8 +1,8 @@
-# V2.17 最终本地候选 · 工程与作品集交付
+# V2.17 原 RC · 工程与作品集交付
 
-本页将当前产品代码、历史真实模型案例、离线演示与原评测结果分开记录。当前分支为 `codex/v217-post-live-hardening`，产品代码验收提交为 `759391cd6c33a1bbc906df34e6de87126cb53dac`，Tree `339d618bd92d092467e62e0511649c77b3a701d8`，Parent `2df4e594e2c2687173e9360ee351fb6f83d12fc7`。文档提交不改变这些产品/测试文件，也不声称在新的文档Tree上重跑了全部测试。
+本页记录原 V2.17 RC 的验收与演示。原 `codex/v217-post-live-hardening` 分支的代码验收提交为 `759391cd6c33a1bbc906df34e6de87126cb53dac`，Tree 为 `339d618bd92d092467e62e0511649c77b3a701d8`，Parent 为 `2df4e594e2c2687173e9360ee351fb6f83d12fc7`。后续交易候选的证据详见 [B/C 真实复验](EVALUATION_RESULTS.md#v217-交易链路复验)。
 
-2026-11-18只读核对远程main为 `550853eeffe113f840dbe17de57fc71e3d68434b`。上述修复仍是本地交付，未完成该候选的Push/PR与远程CI；不能用早期V2.16/V2.17 CI冒充最新修复的CI。Release **ON_HOLD**，没有生产部署。
+原 RC 经 PR #8 合并到 `main`，合并提交为 `39562ff1e4ad07e6c4029b1bdabd63939d46e366`。Release 为 **ON_HOLD**。[原 RC PR](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/pull/8) · [合并后的 CI](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/44338555991)
 
 ## 最终源码验收
 
@@ -78,4 +78,4 @@ python -m pytest --ci-offline-core --strict-markers \
 
 Final P2的12个临时Schema通过私有测试库快照保全，PG仍Exited。本次只读核对归属与快照哈希，不重启、不清理、不操作历史C/L8数据库或Volume。以后处置须另行授权。
 
-本地代码门禁已通过；本次只提交事实性Markdown修正。GitHub交付前仍须实时复核准确候选与main、取得针对准确SHA的Push/PR授权并验收各自CI；不自动Merge。新的Live必须另行绑定Source/任务/预算并获授权。Release继续ON_HOLD，不Tag、不Release、不Deploy。
+上述记录对应原 RC 的验收范围。后续交易候选的源码、用量、SQL 和结果见 [B/C 真实复验](EVALUATION_RESULTS.md#v217-交易链路复验)。
