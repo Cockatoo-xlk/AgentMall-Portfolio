@@ -288,7 +288,9 @@ def build_durable_graph(base, saver, store):
             read_only=False,
             remaining_budget=runtime.budget.snapshot(),
         )
-        result = await run_specialist(runtime, envelope, user_goal=state.get("user_goal"))
+        result = await run_specialist(
+            runtime, envelope, user_goal=state.get("user_goal"), handled=handled
+        )
         # Explicit clarification remains possible after an earlier independent
         # business decision. A completed action never authorizes the next action.
         return {"next": "clarify" if result.status == "needs_input" else "finish"}

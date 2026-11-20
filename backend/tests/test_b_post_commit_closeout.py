@@ -73,6 +73,10 @@ class ObservedCheckoutWire:
                     }
                 ],
             }
+            if committed and self.continuation == "empty_finish":
+                message = {"role": "assistant", "content": '{"terminal":"finish"}'}
+            if committed and self.continuation == "unrelated_read" and self.post > 1:
+                message = {"role": "assistant", "content": '{"terminal":"finish"}'}
             if committed and self.continuation in {"unfinished", "unknown_usage"}:
                 message = {"role": "assistant", "content": "仍有独立事项待核验"}
             data = {
@@ -130,7 +134,9 @@ async def test_original_b_committed_receipt_completes_without_another_write_turn
         tid = await thread(env, buyer, "single")
         waiting = await start_original(env, buyer, tid, PROPOSAL["tasks"][1]["user_request"])
         assert waiting["status"] == "WAITING_INPUT", waiting
-        assert not sql_facts(env[3])["orders"]
+        pre_approval = delta(before, sql_facts(env[3]))
+        assert all(value == 0 for value in pre_approval.values()), pre_approval
+        record_property("B_before_approval_delta", json.dumps(pre_approval))
         inspection = await env[0].get(
             f"/api/v1/proposals/{waiting['pending_confirmation']['proposal_id']}", headers=buyer
         )
@@ -154,6 +160,13 @@ async def test_original_b_committed_receipt_completes_without_another_write_turn
         assert after["orders"][0]["status"] == "PENDING_PAYMENT"
         assert after["orders"][0]["total_cents"] == 39800
         assert after["items"][0]["quantity"] == 2 and after["items"][0]["unit_price_cents"] == 19900
+        assert after["items"][0]["product_id"] == pid
+        assert after["confirmations"][0]["id"] == cid
+        assert (
+            after["confirmations"][0]["proposal_id"]
+            == waiting["pending_confirmation"]["proposal_id"]
+        )
+        record_property("B_pending_order_cents", after["orders"][0]["total_cents"])
         post = [f for f in wire.frames if f["committed"]]
         record_property("SQL_delta", json.dumps(change))
         record_property("Run_status", done["status"])
@@ -237,6 +250,38 @@ async def test_second_purchase_is_not_satisfied_by_the_first_receipt(
         await provider.close()
 
 
+@pytest.mark.parametrize(
+    "extra,continuation",
+    [
+        ("再帮我记账", "empty_finish"),
+        ("然后再买 K68 键盘", "empty_finish"),
+        ("请申请质量退货", "empty_finish"),
+        ("请查询本人的全部订单", "unrelated_read"),
+    ],
+)
+async def test_unsubstantiated_finish_after_checkout_keeps_the_next_goal_open(
+    durable_env, buyer, tmp_path, extra, continuation
+):
+    env = durable_env
+    product = row(env[1], "SELECT id FROM products WHERE name='宿舍静音 K68'")["id"]
+    wire = ObservedCheckoutWire(str(product), continuation)
+    provider = await attach_wire(env, tmp_path, wire)
+    try:
+        tid = await thread(env, buyer, "single")
+        waiting = await start_original(env, buyer, tid, "请购买一件静音键盘，送演示宿舍。" + extra)
+        proposal_id = waiting["pending_confirmation"]["proposal_id"]
+        confirmation_id = await confirm(env, buyer, proposal_id)
+        done = (await resume(env, buyer, tid, waiting, confirmation_id)).json()
+        assert done["status"] in {"WAITING_INPUT", "PARTIAL"}, done
+        assert wire.post >= 1
+        facts = sql_facts(env[3])
+        assert len(facts["orders"]) == len(facts["confirmations"]) == 1
+        assert facts["orders"][0]["status"] == "PENDING_PAYMENT"
+        assert not facts["cases"] and not facts["payments"] and not facts["refunds"]
+    finally:
+        await provider.close()
+
+
 async def test_original_c_keeps_two_independent_confirmations(
     durable_env, buyer, tmp_path, record_property
 ):
@@ -273,6 +318,8 @@ async def test_original_c_keeps_two_independent_confirmations(
         )
         bad = await resume(env, buyer, tid, second, c1)
         assert bad.status_code == 409 and sql_facts(env[3]) == mid
+        record_property("C_after_first_resume_delta", json.dumps(delta(before, mid)))
+        record_property("C_cross_proposal_response", bad.status_code)
         second_ready = perf_counter()
         inspected = await env[0].get(
             f"/api/v1/proposals/{second['pending_confirmation']['proposal_id']}", headers=buyer
@@ -280,7 +327,8 @@ async def test_original_c_keeps_two_independent_confirmations(
         assert inspected.status_code == 200 and inspected.json()["status"] == "PENDING"
         c2 = await confirm(env, buyer, second["pending_confirmation"]["proposal_id"])
         assert c1 != c2
-        done = (await resume(env, buyer, tid, second, c2)).json()
+        resume_id = str(uuid4())
+        done = (await resume(env, buyer, tid, second, c2, resume_id)).json()
         after = sql_facts(env[3])
         change = delta(before, after)
         assert done["status"] == "COMPLETED", done
@@ -302,6 +350,13 @@ async def test_original_c_keeps_two_independent_confirmations(
         assert after["cases"][0]["reason_code"] == "QUALITY_ISSUE"
         assert after["cases"][0]["order_id"] == setup["order_id"]
         assert perf_counter() - began < 90
+        replay = await resume(env, buyer, tid, second, c2, resume_id)
+        assert replay.status_code == 200 and replay.json() == done
+        assert sql_facts(env[3]) == after
+        consumed = {c["id"]: c["proposal_id"] for c in after["confirmations"] if c["consumed_at"]}
+        assert consumed[c1] == first["pending_confirmation"]["proposal_id"]
+        assert consumed[c2] == second["pending_confirmation"]["proposal_id"]
+        record_property("C_replayed_resume_sql_unchanged", True)
         record_property("C_SQL_delta", json.dumps(change))
         record_property(
             "C_phase_seconds",
@@ -315,6 +370,24 @@ async def test_original_c_keeps_two_independent_confirmations(
         )
     finally:
         await provider.close()
+
+
+def completed_purchase(message, *, name="宿舍静音 K68", category="keyboard", quantity=2):
+    from test_checkout_goal_binding import checked_out
+
+    from agentmall.catalog.schemas import ProductDTO
+
+    product = ProductDTO(
+        id=uuid4(),
+        name=name,
+        category=category,
+        attributes={"noise": "较安静", "size": "68键"} if category == "keyboard" else {},
+        description="合成商品",
+        price_cents=19900,
+        available=10,
+        catalog_version=1,
+    )
+    return checked_out(message, product, quantity=quantity)
 
 
 @pytest.mark.parametrize(
@@ -332,30 +405,52 @@ async def test_original_c_keeps_two_independent_confirmations(
     ],
 )
 def test_only_proven_checkout_scope_can_close(extra, expected):
-    from types import SimpleNamespace
-
     from agentmall.agents import goal_receipts
-    from agentmall.agents.context import MultiRequest, user_constraints
 
     message = PROPOSAL["tasks"][1]["user_request"] + extra
-    pid, order_id = str(uuid4()), str(uuid4())
-    value = {
-        "proposal_id": pid,
-        "action_type": "CHECKOUT",
-        "status": "EXECUTED",
-        "snapshot": {"items": [{"name_snapshot": "宿舍静音 K68"}]},
-        "result": {"action_id": pid, "resource_id": order_id, "status": "PENDING_PAYMENT"},
-    }
-    runtime = SimpleNamespace(
-        constraints=user_constraints(
-            MultiRequest(request_id=uuid4(), thread_id=uuid4(), message=message)
-        ),
-        input=SimpleNamespace(message=message),
-        facts={("proposal", pid): value},
-        errors=[],
-        completed={},
-    )
+    runtime, pid = completed_purchase(message)
     assert bool(goal_receipts.completed_single_checkout(runtime, message, {pid})) is expected
+
+
+@pytest.mark.parametrize(
+    "followup,expected",
+    [
+        ("单件199元，送演示宿舍", True),
+        ("单件209元，送演示宿舍", False),
+        ("再帮我购买两件K68键盘，送演示宿舍", False),
+    ],
+)
+def test_same_run_checkout_qualifiers_do_not_authorize_another_goal(followup, expected):
+    from agentmall.agents.goal_receipts import completed_single_checkout
+
+    goal = "准备购买两件K68键盘，预算600元"
+    runtime, pid = completed_purchase(goal + "，送演示宿舍")
+    runtime.input.message = followup
+    assert bool(completed_single_checkout(runtime, goal, {pid})) is expected
+
+
+@pytest.mark.parametrize(
+    "next_turn,correct_proposal,expected", [(1, True, True), (2, True, False), (1, False, False)]
+)
+def test_clarification_is_bound_to_the_following_proposal(next_turn, correct_proposal, expected):
+    from agentmall.agents.context import SpecialistResult
+    from agentmall.agents.goal_receipts import completed_single_checkout
+
+    goal = "准备购买两件K68键盘，预算600元"
+    runtime, pid = completed_purchase(goal + "，送演示宿舍")
+    runtime.input.message = "送演示宿舍"
+    question = SpecialistResult(
+        subtask_id="single_0", target="order", status="needs_input", summary=""
+    )
+    proposal = SpecialistResult(
+        subtask_id=f"single_{next_turn}",
+        target="order",
+        status="proposal",
+        summary="",
+        proposal_ids=[pid if correct_proposal else uuid4()],
+    )
+    runtime.completed = {item.subtask_id: item for item in (question, proposal)}
+    assert bool(completed_single_checkout(runtime, goal, {pid})) is expected
 
 
 @pytest.mark.parametrize(
@@ -371,29 +466,11 @@ def test_only_proven_checkout_scope_can_close(extra, expected):
     ],
 )
 def test_checkout_receipt_without_complete_current_proof_cannot_close(mutation):
-    from types import SimpleNamespace
-
     from agentmall.agents import goal_receipts
-    from agentmall.agents.context import MultiRequest, user_constraints
 
     message = PROPOSAL["tasks"][1]["user_request"]
-    pid = str(uuid4())
-    value = {
-        "proposal_id": pid,
-        "action_type": "CHECKOUT",
-        "status": "EXECUTED",
-        "snapshot": {"items": [{"name_snapshot": "宿舍静音 K68"}]},
-        "result": {"action_id": pid, "resource_id": str(uuid4()), "status": "PENDING_PAYMENT"},
-    }
-    runtime = SimpleNamespace(
-        constraints=user_constraints(
-            MultiRequest(request_id=uuid4(), thread_id=uuid4(), message=message)
-        ),
-        input=SimpleNamespace(message=message),
-        facts={("proposal", pid): value},
-        errors=[],
-        completed={},
-    )
+    runtime, pid = completed_purchase(message)
+    value = runtime.facts[("proposal", pid)]
     handled = {pid}
     if mutation == "not_handled":
         handled.clear()
@@ -414,54 +491,16 @@ def test_checkout_receipt_without_complete_current_proof_cannot_close(mutation):
 
 @pytest.mark.parametrize("catalog_name", ["宿舍静音 K68 查询本人的全部订单", "查询本人的全部订单"])
 def test_catalog_free_text_cannot_erase_an_independent_goal(catalog_name):
-    from types import SimpleNamespace
-
     from agentmall.agents import goal_receipts
-    from agentmall.agents.context import MultiRequest, user_constraints
 
     message = "请购买一件300元以内的静音键盘，送演示宿舍。请查询本人的全部订单。"
-    pid = str(uuid4())
-    value = {
-        "proposal_id": pid,
-        "action_type": "CHECKOUT",
-        "status": "EXECUTED",
-        "snapshot": {"items": [{"name_snapshot": catalog_name}]},
-        "result": {"action_id": pid, "resource_id": str(uuid4()), "status": "PENDING_PAYMENT"},
-    }
-    runtime = SimpleNamespace(
-        constraints=user_constraints(
-            MultiRequest(request_id=uuid4(), thread_id=uuid4(), message=message)
-        ),
-        input=SimpleNamespace(message=message),
-        facts={("proposal", pid): value},
-        errors=[],
-        completed={},
-    )
+    runtime, pid = completed_purchase(message, name=catalog_name, quantity=1)
     assert not goal_receipts.completed_single_checkout(runtime, message, {pid})
 
 
 def test_category_descriptor_cannot_erase_independent_operation():
-    from types import SimpleNamespace
-
     from agentmall.agents import goal_receipts
-    from agentmall.agents.context import MultiRequest, user_constraints
 
     message = "请购买一件10000元以内的相机，送演示宿舍。然后帮我摄像。"
-    pid = str(uuid4())
-    value = {
-        "proposal_id": pid,
-        "action_type": "CHECKOUT",
-        "status": "EXECUTED",
-        "snapshot": {"items": [{"name_snapshot": "相机 C1"}]},
-        "result": {"action_id": pid, "resource_id": str(uuid4()), "status": "PENDING_PAYMENT"},
-    }
-    runtime = SimpleNamespace(
-        constraints=user_constraints(
-            MultiRequest(request_id=uuid4(), thread_id=uuid4(), message=message)
-        ),
-        input=SimpleNamespace(message=message),
-        facts={("proposal", pid): value},
-        errors=[],
-        completed={},
-    )
+    runtime, pid = completed_purchase(message, name="相机 C1", category="camera", quantity=1)
     assert not goal_receipts.completed_single_checkout(runtime, message, {pid})

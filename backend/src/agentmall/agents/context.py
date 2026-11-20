@@ -19,11 +19,15 @@ from agentmall.agents.product_preferences import (
     clarify as preference_clarification,
 )
 from agentmall.catalog.categories import (
-    KIND_ATTRIBUTES,
+    KIND_NAMES,
+    MODEL_CODE,
     Category,
     ProductKind,
     infer_category,
     infer_product_kind,
+    matches_product_kind,
+    model_code_pattern,
+    purchase_identity,
 )
 
 Target = Literal["shopping", "order", "aftersales"]
@@ -47,6 +51,7 @@ class ProductNeeds(Strict):
     screen_inches: str | None = Field(None, pattern=r"^\d{1,2}(?:\.\d)?$", max_length=4)
     activity: Literal["road_cycling"] | None = None
     product_kind: ProductKind | None = None
+    model_code: str | None = Field(None, pattern=rf"^{MODEL_CODE}$", strict=True)
     layout: Literal["61键", "68键", "75键", "84键", "87键", "98键", "104键", "108键"] | None = None
     connection: Literal["有线", "无线", "双模", "三模"] | None = None
     excluded_connections: list[Literal["双模", "三模"]] = Field(default_factory=list, max_length=2)
@@ -60,6 +65,7 @@ class ProductNeeds(Strict):
             "screen_inches",
             "activity",
             "product_kind",
+            "model_code",
             "unit_price_cents",
             "max_unit_price_cents",
         ):
@@ -90,7 +96,8 @@ class ProductNeeds(Strict):
                 self.usage,
                 self.screen_inches + "英寸" if self.screen_inches else None,
                 "公路车骑行" if self.activity else None,
-                KIND_ATTRIBUTES[self.product_kind][2] if self.product_kind else None,
+                KIND_NAMES.get(self.product_kind),
+                self.model_code,
             )
             if value
         )
@@ -122,6 +129,44 @@ class Constraints(Strict):
     support_declined: bool = Field(False, strict=True)
     reason_code: ReasonCode | None = None
     product_needs: ProductNeeds = Field(default_factory=ProductNeeds)
+
+    def matches_product(self, product, *, exclusions=(), require_stock=True):
+        from agentmall.catalog.capabilities import connection_matches
+
+        needs = self.product_needs
+        if not matches_product_kind(needs.product_kind, product.category, product.attributes):
+            return False
+        return (
+            product.id not in self.exclude_product_ids
+            and product.id not in exclusions
+            and (
+                not needs.model_code
+                or re.search(model_code_pattern(needs.model_code), product.name, re.I) is not None
+            )
+            and (not require_stock or product.available > 0)
+            and (self.category is None or product.category == self.category)
+            and (self.max_price_cents is None or product.price_cents <= self.max_price_cents)
+            and needs.matches_price(product.price_cents)
+            and (self.noise_preference is None or product.attributes.get("noise") == "较安静")
+            and (needs.layout is None or product.attributes.get("size") == needs.layout)
+            and (
+                needs.screen_inches is None
+                or product.attributes.get("screen_inches") == needs.screen_inches
+            )
+            and (needs.activity is None or product.attributes.get("usage") == "公路车骑行")
+            and connection_matches(product.attributes, needs.connection, needs.excluded_connections)
+            and (
+                needs.keyboard_type is None
+                or (
+                    needs.keyboard_type == "mechanical"
+                    and product.attributes.get("switch")
+                    in {"静音轴", "线性轴", "段落轴", "青轴", "茶轴", "红轴"}
+                )
+                or (
+                    needs.keyboard_type == "membrane" and product.attributes.get("switch") == "薄膜"
+                )
+            )
+        )
 
 
 class EntityRef(Strict):
@@ -321,10 +366,16 @@ def user_constraints(request):
     Typed caller input can express the same user choices without text parsing.
     """
     message = request.message
-    from agentmall.agents.purchase_intent import ACTION, purchase_intent
+    from agentmall.agents.purchase_intent import (
+        ACTION,
+        purchase_intent,
+        purchase_subjects,
+        validate_purchase_objects,
+    )
     from agentmall.agents.request_intents import (
         CONDITION,
         REPORTED,
+        SHIPPING_ADDRESS,
         THIRD_PARTY,
         return_intent,
         support_intent,
@@ -343,14 +394,37 @@ def user_constraints(request):
         or any(not action["negative"] for action in ACTION.finditer(message))
     )
     if bundle is None and not (request.constraints and request.constraints.bundle):
-        limit, unit, unit_max = price_scopes(message, purchasing=purchasing)
+        limit, unit, unit_max = price_scopes(product_text, purchasing=purchasing)
         if limit is not None:
             values["max_price_cents"] = limit
         if unit is not None:
             needs["unit_price_cents"] = unit
         if unit_max is not None:
             needs["max_unit_price_cents"] = unit_max
-    if kind := infer_product_kind(product_text):
+    current_purchase = intent.requested is True or (
+        intent.requested is None and request.constraints and request.constraints.purchase_requested
+    )
+    subjects = []
+    identity_text = product_text
+    if (
+        current_purchase
+        and bundle is None
+        and not (request.constraints and request.constraints.bundle)
+    ):
+        from agentmall.infra.errors import DomainError
+
+        try:
+            subjects, identity_text = purchase_subjects(product_text)
+            kind, model = purchase_identity(identity_text)
+        except ValueError as exc:
+            raise DomainError(
+                409, "CONTEXT_CLARIFICATION_REQUIRED", "请明确唯一购买商品或型号"
+            ) from exc
+        if model:
+            needs["model_code"] = model
+    else:
+        kind = infer_product_kind(product_text)
+    if kind:
         needs["product_kind"] = kind
     screen = re.search(r"(?<!\d)(\d{1,2}(?:\.\d)?)\s*(?:英寸|寸)", product_text)
     if screen:
@@ -376,11 +450,12 @@ def user_constraints(request):
     for word, kind in [("机械", "mechanical"), ("薄膜", "membrane")]:
         if word in product_text:
             needs["keyboard_type"] = kind
+    usage_text = SHIPPING_ADDRESS.sub("", product_text)
     for word in ("宿舍", "办公", "游戏"):
-        if word in product_text:
+        if word in usage_text:
             needs["usage"] = word
     values["product_needs"] = needs
-    if category := infer_category(product_text):
+    if category := infer_category(identity_text) or infer_category(product_text):
         values["category"] = category
     if any(x in product_text for x in ("安静", "静音", "低噪声")):
         values["noise_preference"] = "quiet"
@@ -411,6 +486,13 @@ def user_constraints(request):
     if request.constraints is not None:
         explicit = request.constraints.model_dump(exclude_unset=True)
         parsed_recommendation = values.get("recommendation")
+        if current_purchase and category:
+            # A persisted Direct request includes null for an unspecified category.
+            if explicit.get("category") not in (None, category):
+                from agentmall.infra.errors import DomainError
+
+                raise DomainError(409, "CONTEXT_CLARIFICATION_REQUIRED", "文字与结构化商品类别冲突")
+            explicit["category"] = category
         if values.get("max_price_cents") is not None and "max_price_cents" in explicit:
             explicit["max_price_cents"] = (
                 min(values["max_price_cents"], explicit["max_price_cents"])
@@ -418,19 +500,16 @@ def user_constraints(request):
                 else values["max_price_cents"]
             )
         values.update(explicit)
-        if any(k in needs for k in ("unit_price_cents", "max_unit_price_cents")):
-            supplied = explicit.get("product_needs", {})
-            for field in ("unit_price_cents", "max_unit_price_cents"):
-                if field in needs and field in supplied and supplied[field] != needs[field]:
-                    raise preference_clarification()
-            values["product_needs"] = {
-                **values["product_needs"],
-                **{
-                    k: v
-                    for k, v in needs.items()
-                    if k in {"unit_price_cents", "max_unit_price_cents"}
-                },
-            }
+        supplied_needs = {
+            key: value
+            for key, value in explicit.get("product_needs", {}).items()
+            if value is not None
+        }
+        if any(needs[key] != supplied_needs[key] for key in needs.keys() & supplied_needs.keys()):
+            from agentmall.infra.errors import DomainError
+
+            raise DomainError(409, "CONTEXT_CLARIFICATION_REQUIRED", "文字与结构化商品约束冲突")
+        values["product_needs"] = {**needs, **supplied_needs}
         if parsed_recommendation is not None and explicit.get("recommendation") is not None:
             supplied = explicit["recommendation"]
             if (
@@ -504,7 +583,10 @@ def user_constraints(request):
             recommendation=None,
         )
     validate_unit_prices(values.get("product_needs", {}))
-    return Constraints.model_validate(values)
+    constraints = Constraints.model_validate(values)
+    if subjects:
+        validate_purchase_objects(subjects, constraints)
+    return constraints
 
 
 # Included in the versioned Run prompt fingerprint; absent for legacy stateless Runs.

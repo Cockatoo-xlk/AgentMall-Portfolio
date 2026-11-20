@@ -4,13 +4,13 @@
 
 ## V2.17 交易链路复验
 
-受测 Commit 为 `f8abf931c49f182951f439f3ae2fb644050dd0a3`，Tree 为 `0510a1ee54cdae7492f4067dd720b954a95c5bce`。交付文档提交沿用同一套产品、测试、依赖和运行配置，评测归属仍为该受测 Commit。
+受测 Commit 为 `f8abf931c49f182951f439f3ae2fb644050dd0a3`，Tree 为 `0510a1ee54cdae7492f4067dd720b954a95c5bce`。文档提交 `45d87e7` 记录了这次运行。PR #9 后续产品修复的证据列在下节。
 
 此前一次真实模型自动审批批次中，B 提交订单后仍进入下一轮规划，再次请求 `prepare_checkout`。`REPEATED_TOOL_CALL` 守卫拦截了重复调用，未新增订单。当时的 Run 为 `PARTIAL`，B 仍为 `NOT_SCORED`，C 为 `NOT_RUN`。按事件构造的离线回放观察到持久回执与旧提案摘要同时进入上下文，写工具仍可见。原始模型请求与响应正文缺失，无法确定重复请求的完整成因。
 
 这次交付分开处理单价要求、单件上限和订单总预算，商品价格仍由服务端核验。B 的纯购买目标全部满足时，Single 依据已确认的持久回执结束并显示待付款。若用户还要求查询或另买一次，第一笔回执只证明对应交易已提交，剩余目标沿原流程继续。C 的退货回执也只完成退货，替换购买须走单独的提案、确认和 Resume。[价格约束回归](../backend/tests/test_unit_price_semantics.py) · [持久回执判断](../backend/src/agentmall/agents/goal_receipts.py) · [B/C 与独立目标回归](../backend/tests/test_b_post_commit_closeout.py)
 
-本候选使用真实 DeepSeek、固定 BGE、正式 FastAPI、隔离 PostgreSQL 与 Checkpoint，按 B→C 各执行一次。每份提案使用冻结的 `AUTOMATED_TEST_POLICY` 做测试审批并显式 Resume。原业务 Oracle 和自动策略均 PASS，两题 Run 均为 `COMPLETED`。C 的合成准备订单及模拟支付在基线内，表中只统计 Agent 执行增量。
+该受测提交使用真实 DeepSeek、固定 BGE、正式 FastAPI、隔离 PostgreSQL 与 Checkpoint，按 B→C 各执行一次。每份提案使用冻结的 `AUTOMATED_TEST_POLICY` 做测试审批并显式 Resume。原业务 Oracle 和自动策略均 PASS，两题 Run 均为 `COMPLETED`。C 的合成准备订单及模拟支付在基线内，表中只统计 Agent 执行增量。
 
 | 任务 | 独立 SQL 核验 | Episode / HTTP | 输入 / 输出 Tokens | 费用上界 |
 |---|---|---|---|---:|
@@ -20,6 +20,16 @@
 两题支付与退款增量均为 0。共 14 次 HTTP、51,650 Tokens，用量全部结算。¥0.119092 为按峰值费率计算的保守费用上界，实际供应商账单为 `UNKNOWN`。本批次是两道已暴露任务的功能复验，未重跑 A。审批由自动测试策略执行，C 用到 11/12 次模型调用和 4/4 次委派，更复杂流程的调用余量仍待验证。
 
 同一受测源码的定向回归为 **93 PASS**。单独运行的 Backend Offline Core 为 **1912 PASS / 0 FAIL / 16 SKIP**，其中 15 项为核心模式跳过的真实 BGE 测试，1 项缺少私有历史原件。另已验证固定 BGE 的文件哈希与 CPU 推理。Ruff、Format、Diff 通过。两组离线测试分别计数，独立于真实模型复验。原始运行证据和测试日志私有留档。
+
+## PR #9 行为修复的离线验证
+
+换购请求分别解析旧品报价、新品单价和总预算。Thread 更新偏好时先验证合并后的精确价与上限，冲突返回澄清错误，并保留原版本。Legacy 商品分页和 Durable 检索都在数据库截取候选之前过滤精确单价。[换购和偏好回归](../backend/tests/test_replacement_price_preferences.py) · [分页与检索回归](../backend/tests/test_exact_price_retrieval.py)
+
+纯购买收尾核对本次已处理提案的商品事实与请求。同句额外动作及具有独立数量的推荐继续由原流程处理。同大类商品还须匹配明确指定的类型或型号。正式 API 回归以隔离 PostgreSQL、持久 Checkpoint 和离线模型传输验证 B 只创建一笔 398 元待付款订单、预留两件库存。C 先创建退货 Case，再用另一份确认创建替换订单。跨提案复用确认返回 409，重复 Resume 后 SQL 读回一致，两题的支付与退款增量均为零。[商品和回执绑定](../backend/tests/test_checkout_goal_binding.py) · [B/C 交易断言](../backend/tests/test_b_post_commit_closeout.py)
+
+真实 B→C 成绩归属 `f8abf931c49f182951f439f3ae2fb644050dd0a3`。本次修复仅进行了离线验证，真实模型表现仍待验证。
+
+定向回归 **403 PASS / 0 FAIL / 0 SKIP**。完整 Backend Offline Core **2064 PASS / 0 FAIL / 16 SKIP**。其中 15 项需要真实 BGE 权重，1 项需要私有历史原件。两组计数各自对应本轮离线验收。
 
 ## 三个独立执行的真实成功案例
 

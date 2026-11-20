@@ -1,5 +1,7 @@
 """Adapters own short sessions; the existing domain services own business rules."""
 
+import re
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from uuid import UUID
 
@@ -10,13 +12,48 @@ from sqlalchemy.exc import DBAPIError
 from agentmall.actions import service as actions
 from agentmall.actions.models import ActionProposal
 from agentmall.agents.context import Constraints
+from agentmall.agents.product_preferences import affirmative
 from agentmall.agents.schemas import TOOL_SCHEMAS, PrepareInput, ProductInput, SearchInput
 from agentmall.catalog import service as catalog
-from agentmall.catalog.schemas import ProductFilters
+from agentmall.catalog.schemas import ProductCriteria, ProductFilters
 from agentmall.identity.service import ActorContext, require_buyer
 from agentmall.infra.errors import DomainError
 
 SLOT = "agent_purchase"
+
+
+def requests_available_products(message):
+    request = (
+        r"推荐(?!的|过)"
+        r"|(?:只(?:要|看|找|选|列出|显示)|仅(?:限|看|选|列出|显示)|必须|要求|找|筛选|列出|显示)"
+        r"(?:当前|现在|目前)?(?:有库存|有现货|有货|现货|在库|库存充足)"
+    )
+    return any(affirmative(message, match.start()) for match in re.finditer(request, message))
+
+
+def search_criteria(
+    constraints: Constraints,
+    exclusions: Iterable[UUID],
+    tool_max_price_cents: int | None = None,
+    *,
+    in_stock: bool = True,
+) -> ProductCriteria:
+    needs = constraints.product_needs
+    bounds = (constraints.max_price_cents, needs.max_unit_price_cents, tool_max_price_cents)
+    return ProductCriteria(
+        category=constraints.category,
+        max_price_cents=min((bound for bound in bounds if bound is not None), default=None),
+        in_stock=in_stock,
+        noise_preference=constraints.noise_preference,
+        layout=needs.layout,
+        screen_inches=needs.screen_inches,
+        activity=needs.activity,
+        product_kind=needs.product_kind,
+        connection=needs.connection,
+        excluded_connections=needs.excluded_connections,
+        keyboard_type=needs.keyboard_type,
+        exclude_product_ids=list(exclusions),
+    )
 
 
 @dataclass
@@ -27,6 +64,14 @@ class ToolContext:
     constraints: Constraints | None = None
     observed: dict = field(default_factory=dict)
     tool_errors: list = field(default_factory=list)
+    available_products_requested: bool = False
+
+    @property
+    def requires_available_product(self):
+        return self.available_products_requested or bool(
+            self.constraints
+            and (self.constraints.purchase_requested or self.constraints.recommendation)
+        )
 
     async def recover(self):
         require_buyer(self.actor)
@@ -48,36 +93,28 @@ class ToolContext:
         try:
             async with self.sessions.begin() as session:
                 if name == "search_products":
-                    if self.constraints:
-                        bounds = [
-                            value
-                            for value in (
-                                args.max_price_cents,
-                                self.constraints.max_price_cents,
-                                self.constraints.product_needs.price_ceiling(),
-                            )
-                            if value is not None
-                        ]
-                        args = args.model_copy(
-                            update={"max_price_cents": min(bounds) if bounds else None}
-                        )
+                    constraints = self.constraints or Constraints()
+                    needs = constraints.product_needs
                     result = await catalog.search_products(
-                        session, self.actor, ProductFilters(**args.model_dump())
+                        session,
+                        self.actor,
+                        ProductFilters(**args.model_dump()),
+                        criteria=search_criteria(
+                            constraints,
+                            constraints.exclude_product_ids,
+                            in_stock=self.requires_available_product,
+                        ),
+                        unit_price_cents=needs.unit_price_cents,
+                        model_code=needs.model_code,
                     )
-                    if self.constraints:
-                        result = result.model_copy(
-                            update={
-                                "items": [
-                                    p
-                                    for p in result.items
-                                    if self.constraints.product_needs.matches_price(p.price_cents)
-                                ]
-                            }
-                        )
                     for product in result.items:
                         self.observed[str(product.id)] = product
                 elif name == "get_product":
                     result = await catalog.get_product(session, self.actor, args.product_id)
+                    if self.constraints and not self.constraints.matches_product(
+                        result, require_stock=self.requires_available_product
+                    ):
+                        raise DomainError(409, "CONSTRAINT_MISMATCH", "商品不符合购买约束")
                     self.observed[str(result.id)] = result
                 else:
                     if any(str(i.product_id) not in self.observed for i in args.items):
@@ -88,10 +125,8 @@ class ToolContext:
                             current = await catalog.get_product(
                                 session, self.actor, item.product_id
                             )
-                            if not self.constraints.product_needs.matches_price(
-                                current.price_cents
-                            ):
-                                raise DomainError(409, "CONSTRAINT_MISMATCH", "不符合单价要求")
+                            if not self.constraints.matches_product(current):
+                                raise DomainError(409, "CONSTRAINT_MISMATCH", "商品不符合购买约束")
                             total += current.price_cents * item.quantity
                         if (
                             self.constraints.max_price_cents is not None
