@@ -65,11 +65,14 @@ def checked_out(message, product, *other_candidates, constraints=None, quantity=
             "action_id": pid,
             "status": "PENDING_PAYMENT",
             "resource_id": str(uuid4()),
+            "total_cents": quantity * product.price_cents,
+            "currency": product.currency,
         },
     }
     runtime = SimpleNamespace(
         input=request,
         constraints=user_constraints(request),
+        submitted_recommendation=constraints is not None and constraints.recommendation is not None,
         exclusions=set(),
         thread_snapshot={},
         facts=facts,
@@ -191,6 +194,117 @@ def test_checkout_can_complete_an_implicit_product_selection(
     message = f"预算{product.price_cents // 100 * 2}元，{selection}，{purchase}，送演示宿舍"
     runtime, pid = checked_out(message, product, quantity=2)
     assert completed_single_checkout(runtime, message, {pid}) == (pid if checkout_only else None)
+
+
+@pytest.mark.parametrize(
+    "message,sku,quantity,checkout_only",
+    [
+        ("找一款1000元以内相机准备购买", "camera-01", 1, True),
+        ("帮我选1款C10相机准备买一台", "camera-10", 1, True),
+        ("帮我选1款C10相机准备买一台", "camera-01", 1, False),
+        ("找一款500元以内相机准备购买", "camera-01", 1, False),
+        ("找两款相机准备购买一台", "camera-01", 1, False),
+        ("找一款相机准备购买一台相机", "camera-01", 1, False),
+        ("比较一款相机准备购买一台", "camera-01", 1, False),
+        ("找一款相机准备购买，然后查一下本人全部订单", "camera-01", 1, False),
+        ("找一款相机准备购买，然后再买一台相机", "camera-01", 1, False),
+        ("找一款1000元以内相机准备购买两台", "camera-01", 2, False),
+        ("找一款相机准备购买两台", "camera-01", 2, True),
+    ],
+)
+def test_checkout_can_complete_a_bounded_same_clause_selection(
+    catalog, message, sku, quantity, checkout_only
+):
+    from agentmall.infra.errors import DomainError
+
+    message += "，送演示宿舍"
+    try:
+        runtime, pid = checked_out(message, catalog[sku], quantity=quantity)
+    except DomainError as error:
+        assert not checkout_only and error.code == "CONTEXT_CLARIFICATION_REQUIRED"
+        return
+    assert completed_single_checkout(runtime, message, {pid}) == (pid if checkout_only else None)
+
+
+@pytest.mark.parametrize("verb", ["找", "挑选"])
+def test_explicit_recommendation_is_independent_of_checkout_selection(catalog, verb):
+    message = f"请帮我{verb}一款C10相机准备采购一台，送演示宿舍。"
+    supplied = Constraints(recommendation={"count": 1})
+    runtime, pid = checked_out(message, catalog["camera-10"], constraints=supplied)
+    assert completed_single_checkout(runtime, message, {pid}) is None
+
+
+@pytest.mark.parametrize("versioned", [False, True])
+@pytest.mark.parametrize("submitted", [False, True])
+async def test_clarification_preserves_independent_recommendation_origin(
+    durable_env, buyer, versioned, submitted
+):
+    from conftest import row
+    from multiagent_helpers import ai, call, final, install
+    from t09_helpers import confirm, resume, thread
+    from test_baseline_fairness import SingleModel, buy_retrieved
+
+    client, db, app, _ = durable_env
+    await install(durable_env, {})
+    app.state.durable_single_model = SingleModel(
+        role="order",
+        script=[
+            final('{"terminal":"clarify"}'),
+            ai(call("retrieve_products", {"query": "静音键盘"})),
+            buy_retrieved,
+            final('{"terminal":"finish"}'),
+        ],
+    )
+    tid = await thread(durable_env, buyer, "single")
+    payload = {"request_id": str(uuid4()), "message": "找一款300元以内静音键盘准备购买"}
+    if versioned:
+        payload["expected_context_version"] = 0
+    if versioned or submitted:
+        payload["constraints"] = {"purchase_requested": True}
+    if submitted:
+        payload["constraints"]["recommendation"] = {"count": 1}
+    endpoint = f"/api/v1/agent/threads/{tid}"
+    response = await client.post(f"{endpoint}/runs", headers=buyer, json=payload)
+    assert response.status_code == 201, response.text
+    waiting = response.json()
+    assert waiting["pending_confirmation"]["type"] == "clarification"
+    response = await client.post(
+        f"{endpoint}/resume",
+        headers=buyer,
+        json={
+            "request_id": str(uuid4()),
+            "run_id": waiting["id"],
+            "interrupt_id": waiting["pending_confirmation"]["interrupt_id"],
+            "clarification": "一件，送演示宿舍",
+        },
+    )
+    assert response.status_code == 200, response.text
+    proposed = response.json()
+    assert proposed["id"] == waiting["id"]
+    assert proposed["status"] == "WAITING_INPUT", response.text
+    assert proposed["pending_confirmation"]["action_type"] == "CHECKOUT"
+    assert row(db, "SELECT count(*) n FROM orders")["n"] == 0
+    cid = await confirm(durable_env, buyer, proposed["pending_confirmation"]["proposal_id"])
+    response = await resume(durable_env, buyer, tid, proposed, cid)
+    assert response.status_code == 200, response.text
+    assert row(db, "SELECT count(*) n FROM orders")["n"] == 1
+    assert response.json()["status"] == ("WAITING_INPUT" if submitted else "COMPLETED")
+
+
+@pytest.mark.parametrize("state", ["missing", "unknown", "amount", "currency"])
+def test_selection_checkout_requires_the_matching_persisted_receipt(catalog, state):
+    message = "找一款1000元以内相机准备购买，送演示宿舍。"
+    runtime, pid = checked_out(message, catalog["camera-01"])
+    proposal = runtime.facts[("proposal", pid)]
+    if state == "missing":
+        proposal["result"] = None
+    elif state == "unknown":
+        proposal["status"] = "UNKNOWN"
+    elif state == "amount":
+        proposal["result"]["total_cents"] += 100
+    elif state == "currency":
+        proposal["result"]["currency"] = "USD"
+    assert completed_single_checkout(runtime, message, {pid}) is None
 
 
 @pytest.mark.parametrize("stage", ["search", "get", "prepare"])

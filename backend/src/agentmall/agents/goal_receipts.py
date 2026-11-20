@@ -4,6 +4,7 @@ import re
 import unicodedata
 from uuid import UUID
 
+from agentmall.agents.product_preferences import ConnectionChoice, recommendation_requirements
 from agentmall.agents.purchase_intent import (
     ACTION,
     matches_purchase_object,
@@ -98,6 +99,7 @@ def _checkout_only_clauses(message, runtime, item, product, selected, reads, ord
     address_pattern = SHIPPING_PREFIX + address
     tokens = purchase_tokens(constraints, item["name_snapshot"], product_id=item["product_id"])
     purchase_seen = False
+    selection_prefix = None
     selection = None
     clauses = [(clause, False) for clause in CLAUSES.split(message)]
     if runtime.input.message != message:
@@ -166,15 +168,31 @@ def _checkout_only_clauses(message, runtime, item, product, selected, reads, ord
         if purchase_seen or len(actions) != 1:
             return False
         action = actions[0]
-        if action["negative"] or not re.fullmatch(
-            r"(?:请|帮我|给我|先|再|准备|想|生成|创建|一份|的)*", text[: action.start()]
-        ):
+        if action["negative"]:
             return False
         if action["ordinal"] and not selected:
             return False
         if action["product_id"] and action["product_id"] != item.get("product_id"):
             return False
         subject = re.sub(address_pattern + "$", "", text[action.end() :])
+        prefix = text[: action.start()]
+        if not re.fullmatch(r"(?:请|帮我|给我|先|再|准备|想|生成|创建|一份|的)*", prefix):
+            # A request to select one product immediately before a purchase can
+            # supply its object. Keep that description for the same SKU checks.
+            preceding = re.fullmatch(
+                r"(?:请(?:帮我)?|帮我)?(?:找|挑选?|选择?|推荐)(?:一|1)款(?P<item>.+)", prefix
+            )
+            if (
+                not preceding
+                or action["prefix"] != "准备"
+                or action["ordinal"]
+                or action["product_id"]
+                or COUNT.search(preceding["item"])
+                or (subject and not COUNT.fullmatch(subject))
+            ):
+                return False
+            subject += preceding["item"]
+            selection_prefix = prefix
         subject = purchase_object_text(action, subject)
         if selection is not None:
             subject += selection
@@ -184,6 +202,18 @@ def _checkout_only_clauses(message, runtime, item, product, selected, reads, ord
         ):
             return False
         purchase_seen = True
+    recommendation = constraints.recommendation
+    if recommendation:
+        if selection_prefix is None:
+            if not reads:
+                return False
+        else:
+            # Only a recommendation derived from this proven selection belongs
+            # to the checkout. A separately supplied requirement is independent.
+            if runtime.submitted_recommendation or recommendation != recommendation_requirements(
+                selection_prefix, ConnectionChoice()
+            ):
+                return False
     return purchase_seen
 
 
@@ -194,7 +224,6 @@ def completed_single_checkout(runtime, user_goal, handled, *, reads=()):
         not c.purchase_requested
         or c.return_requested
         or c.support_requested
-        or (c.recommendation is not None and not reads)
         or c.bundle is not None
         or runtime.errors
         or getattr(runtime, "pending", {})
@@ -248,6 +277,9 @@ def completed_single_checkout(runtime, user_goal, handled, *, reads=()):
             or item["quantity"] != c.quantity
             or snapshot["address_label"] != c.address_label
             or snapshot["currency"] != product.currency
+            or result.get("currency") != snapshot["currency"]
+            or type(result.get("total_cents")) is not int
+            or result["total_cents"] != snapshot["total_cents"]
             or snapshot["total_cents"] != product.price_cents * item["quantity"]
             or c.max_price_cents is not None
             and snapshot["total_cents"] > c.max_price_cents

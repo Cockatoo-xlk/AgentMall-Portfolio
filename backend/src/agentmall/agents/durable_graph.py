@@ -126,6 +126,8 @@ def build_durable_graph(base, saver, store):
             single=base.single,
             thread_snapshot=base.thread_snapshot,
         )
+        # The restored input may contain a clarification and merged constraints.
+        local.submitted_recommendation = base.submitted_recommendation
         return restore(local, data)
 
     def wrap(name, fn):

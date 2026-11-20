@@ -83,6 +83,12 @@ class RunContext:
             if self.thread_snapshot
             else user_constraints(self.input)
         )
+        # Each durable activation starts from the submitted request before
+        # checkpoint restore or clarification replaces the current input.
+        submitted = self.input.constraints
+        self.submitted_recommendation = (
+            submitted is not None and submitted.recommendation is not None
+        )
         self.purchase_target_id = purchase_intent(self.input.message).product_id
         self.return_request_id = uuid5(self.input.request_id, "return")
         self.ticket_request_id = uuid5(self.input.request_id, "human")
