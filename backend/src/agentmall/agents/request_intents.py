@@ -4,7 +4,10 @@ import re
 
 from agentmall.infra.errors import DomainError
 
-CLAUSES = re.compile(r"[，。；,;\n]|但是|但|然后|同时|并且")
+CLAUSES = re.compile(r"[，。；,;\n]|但是|但|然后|同时|并且|(?=(?:再|并|另)(?:请|帮我|给我))")
+ADDRESS_FIELD = r"(?:收货)?地址\s*(?:是|为)?\s*[:：=]?\s*"
+SHIPPING_PREFIX = rf"(?:配送到\s*|送到?\s*|寄到?\s*|{ADDRESS_FIELD})"
+SHIPPING_ADDRESS = re.compile(SHIPPING_PREFIX + r"演示(?:宿舍|家庭)")
 NEGATIVE = re.compile(
     r"(?:(?:先别|不要|不想|不需要|不打算|不准备|不用|无需|无须|不必|暂不|取消|撤销|放弃|禁止|不得|不允许|不可以|不能|不准|切勿|勿)"
     r"[^，。；,;\n]*|(?:别|不)(?:再|先|请|帮我|直接|立即)*)\s*$"

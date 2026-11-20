@@ -9,9 +9,10 @@ from langchain_core.messages import AIMessage
 from langsmith import tracing_context
 from pydantic import ValidationError
 
+from agentmall.agents.context import MultiRequest, user_constraints
 from agentmall.agents.prompts import SYSTEM_PROMPT
 from agentmall.agents.schemas import TOOL_SCHEMAS, AgentResponse, ResourceRef
-from agentmall.agents.tools import ToolContext, build_tools
+from agentmall.agents.tools import ToolContext, build_tools, requests_available_products
 from agentmall.identity.service import require_buyer
 from agentmall.infra.llm import AgentStopped, Budget
 
@@ -138,6 +139,10 @@ async def run_single_agent(
         return proposal_response(proposal)
     if model is None:
         return AgentResponse(answer="模型未启用，尚未创建提案或订单。", status="blocked")
+    context.constraints = user_constraints(
+        MultiRequest(request_id=request_id, thread_id=request_id, message=message)
+    )
+    context.available_products_requested = requests_available_products(message)
     budget = budget or Budget()
     trace = trace if trace is not None else {}
     guard = Guard(budget, trace)

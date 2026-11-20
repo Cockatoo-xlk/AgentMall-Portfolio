@@ -8,6 +8,7 @@ import signal
 import socket
 import sys
 from pathlib import Path
+from threading import Event
 from uuid import uuid4
 
 import httpx
@@ -162,6 +163,41 @@ async def test_expire_preserves_snapshot_then_reset_restores_seed(harness):
     assert len(state["product_rows"]) == 12
     auth = await login(client)
     assert (await message(client, auth)).json()["status"] == "proposal"
+
+
+async def test_reset_reports_checkpoint_lock_and_preserves_business_rows(harness):
+    instance, client = harness
+    auth = await login(client)
+    assert (await message(client, auth)).json()["status"] == "proposal"
+    locked, release = Event(), Event()
+
+    def hold_checkpoint_lock():
+        with instance.db.begin() as connection:
+            connection.execute(
+                text(
+                    f'LOCK TABLE "{instance.settings.checkpoint_schema}".checkpoints '
+                    "IN ACCESS SHARE MODE"
+                )
+            )
+            locked.set()
+            release.wait(8)
+
+    holder = asyncio.create_task(asyncio.to_thread(hold_checkpoint_lock))
+    try:
+        assert await asyncio.to_thread(locked.wait, 5)
+        reset = await client.post("/__test/reset", headers=KEY)
+        assert reset.status_code == 503
+        assert reset.json()["code"] == "E2E_RESET_DB_TIMEOUT"
+        assert not holder.done()
+    finally:
+        release.set()
+        await holder
+
+    state = await facts(client)
+    assert (state["proposals"], state["orders"], state["reserved"]) == (1, 0, 0)
+    assert len(state["product_rows"]) == 12
+    assert (await client.post("/__test/reset", headers=KEY)).status_code == 200
+    assert (await facts(client))["proposals"] == 0
 
 
 async def test_owned_schema_is_removed_even_after_exception():

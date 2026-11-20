@@ -146,7 +146,12 @@ async def test_committed_order_does_not_turn_unfinished_or_repeated_call_into_su
     try:
         tid = await thread(env, buyer, "single")
         waiting = (
-            await start(env, buyer, tid, message="请购买一件300元以内的静音键盘，送演示宿舍")
+            await start(
+                env,
+                buyer,
+                tid,
+                message="请购买一件300元以内的静音键盘，送演示宿舍；另请查询本人的全部订单。",
+            )
         ).json()
         assert waiting["status"] == "WAITING_INPUT", waiting
         cid = await confirm(env, buyer, waiting["pending_confirmation"]["proposal_id"])

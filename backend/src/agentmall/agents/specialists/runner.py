@@ -5,6 +5,7 @@ from langgraph.errors import GraphRecursionError
 
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import SpecialistResult
+from agentmall.agents.goal_receipts import action_outcomes, completed_single_checkout
 from agentmall.agents.model_control import SpecialistGuard, ToolBatchRejected
 from agentmall.agents.product_preferences import recommendation_shortage
 from agentmall.agents.read_completion import (
@@ -95,7 +96,7 @@ def incomplete_write_goal(runtime, context):
     return not any(record["name"] == tool for record in context.records)
 
 
-async def run_specialist(runtime, envelope, *, user_goal=None):
+async def run_specialist(runtime, envelope, *, user_goal=None, handled=()):
     role = envelope.target
     context = SpecialistTools(runtime, envelope)
     runtime.event(
@@ -301,6 +302,17 @@ async def run_specialist(runtime, envelope, *, user_goal=None):
         and recommendation_shortage(runtime, entities)
     ):
         status = "needs_input"
+    if status == "done" and handled and runtime.constraints.bundle is None:
+        outcomes = action_outcomes(runtime.facts)
+        if (
+            len(outcomes) == 1
+            and outcomes[0]["proposal_id"] in handled
+            and (outcomes[0]["action_type"], outcomes[0]["status"]) == ("CHECKOUT", "EXECUTED")
+            and not completed_single_checkout(
+                runtime, user_goal or runtime.input.message, handled, reads=context.records
+            )
+        ):
+            status = "needs_input"
     if unsupported:
         status = "blocked"
     if (

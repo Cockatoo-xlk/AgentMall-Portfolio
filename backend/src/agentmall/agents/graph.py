@@ -157,6 +157,11 @@ def render(runtime, terminal):
                 lines.append("用户已拒绝，没有代替用户再次确认。")
             if data["result"]:
                 lines.append(f"数据库回执状态：{data['result']['status']}。")
+                if (
+                    data["action_type"] == "CHECKOUT"
+                    and data["result"]["status"] == "PENDING_PAYMENT"
+                ):
+                    lines.append("待付款订单已创建，尚未支付。")
         elif fact["kind"] == "product":
             lines.append(
                 f"商品 {data['name']}（{fact['id']}）："

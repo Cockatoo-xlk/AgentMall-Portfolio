@@ -367,7 +367,9 @@ class Harness:
 
     async def reset(self):
         from sqlalchemy import text
+        from sqlalchemy.exc import DBAPIError
 
+        from agentmall.infra.errors import DomainError
         from agentmall.seed import seed
 
         await self.close_sdk()
@@ -409,17 +411,23 @@ class Harness:
         )
         # Exact owned schema and full FK set; no CASCADE or search-path fallback on reset.
         targets = ", ".join(f'"{self.schema}"."{table}"' for table in tables)
-        with self.db.begin() as connection:
-            connection.execute(text(f"TRUNCATE TABLE {targets}"))
-            connection.execute(
-                text(
-                    "TRUNCATE "
-                    + ", ".join(
-                        f'"{self.settings.checkpoint_schema}"."{table}"'
-                        for table in ("checkpoints", "checkpoint_blobs", "checkpoint_writes")
+        # Await the reset with the app engine's lock timeout so other routes stay responsive.
+        try:
+            async with self.app.state.sessions.begin() as session:
+                await session.execute(text(f"TRUNCATE TABLE {targets}"))
+                await session.execute(
+                    text(
+                        "TRUNCATE "
+                        + ", ".join(
+                            f'"{self.settings.checkpoint_schema}"."{table}"'
+                            for table in ("checkpoints", "checkpoint_blobs", "checkpoint_writes")
+                        )
                     )
                 )
-            )
+        except DBAPIError as exc:
+            if getattr(exc.orig, "sqlstate", None) != "55P03":
+                raise
+            raise DomainError(503, "E2E_RESET_DB_TIMEOUT", "测试数据库重置等待锁超时") from exc
         from agentmall.payments.service import MockPaymentAdapter
 
         self.app.state.mock_payment_adapter = MockPaymentAdapter()

@@ -1,6 +1,35 @@
 # V2.17 验证结果：按Source、会话和证据性质分别记录
 
-最终产品代码验收提交为 `759391cd6c33a1bbc906df34e6de87126cb53dac`，Tree `339d618bd92d092467e62e0511649c77b3a701d8`。该源码的完整Backend CI Offline Core为 **1824 PASS / 0 FAIL / 16 SKIP**，Ruff / Format / Diff通过。以下真实模型成功案例使用更早源码；**最终修复提交没有新的真实模型评测结果**。本次仅核对回执与整理文档，不重跑Backend、Smoke或Holdout。
+本页记录交易链路复验以及此前不同源码和会话的结果。每项结果对应当时的受测源码，原评分按批次保留。
+
+## V2.17 交易链路复验
+
+受测 Commit 为 `f8abf931c49f182951f439f3ae2fb644050dd0a3`，Tree 为 `0510a1ee54cdae7492f4067dd720b954a95c5bce`。文档提交 `45d87e7` 记录了这次运行。PR #9 后续产品修复的证据列在下节。
+
+此前一次真实模型自动审批批次中，B 提交订单后仍进入下一轮规划，再次请求 `prepare_checkout`。`REPEATED_TOOL_CALL` 守卫拦截了重复调用，未新增订单。当时的 Run 为 `PARTIAL`，B 仍为 `NOT_SCORED`，C 为 `NOT_RUN`。按事件构造的离线回放观察到持久回执与旧提案摘要同时进入上下文，写工具仍可见。原始模型请求与响应正文缺失，无法确定重复请求的完整成因。
+
+这次交付分开处理单价要求、单件上限和订单总预算，商品价格仍由服务端核验。B 的纯购买目标全部满足时，Single 依据已确认的持久回执结束并显示待付款。若用户还要求查询或另买一次，第一笔回执只证明对应交易已提交，剩余目标沿原流程继续。C 的退货回执也只完成退货，替换购买须走单独的提案、确认和 Resume。[价格约束回归](../backend/tests/test_unit_price_semantics.py) · [持久回执判断](../backend/src/agentmall/agents/goal_receipts.py) · [B/C 与独立目标回归](../backend/tests/test_b_post_commit_closeout.py)
+
+该受测提交使用真实 DeepSeek、固定 BGE、正式 FastAPI、隔离 PostgreSQL 与 Checkpoint，按 B→C 各执行一次。每份提案使用冻结的 `AUTOMATED_TEST_POLICY` 做测试审批并显式 Resume。原业务 Oracle 和自动策略均 PASS，两题 Run 均为 `COMPLETED`。C 的合成准备订单及模拟支付在基线内，表中只统计 Agent 执行增量。
+
+| 任务 | 独立 SQL 核验 | Episode / HTTP | 输入 / 输出 Tokens | 费用上界 |
+|---|---|---|---|---:|
+| B 购买 | 一笔 398 元待付款订单，数量 2，确认创建/消费 1/1，库存预留 +2 | 5.851 秒 / 3 | 8,066 / 237 | ¥0.018028 |
+| C 退货与替换 | 先创建质量退货 Case，再用另一份确认创建待付款替换订单。确认创建/消费 2/2，库存预留 +1 | 19.946 秒 / 11 | 40,952 / 2,395 | ¥0.101064 |
+
+两题支付与退款增量均为 0。共 14 次 HTTP、51,650 Tokens，用量全部结算。¥0.119092 为按峰值费率计算的保守费用上界，实际供应商账单为 `UNKNOWN`。本批次是两道已暴露任务的功能复验，未重跑 A。审批由自动测试策略执行，C 用到 11/12 次模型调用和 4/4 次委派，更复杂流程的调用余量仍待验证。
+
+同一受测源码的定向回归为 **93 PASS**。单独运行的 Backend Offline Core 为 **1912 PASS / 0 FAIL / 16 SKIP**，其中 15 项为核心模式跳过的真实 BGE 测试，1 项缺少私有历史原件。另已验证固定 BGE 的文件哈希与 CPU 推理。Ruff、Format、Diff 通过。两组离线测试分别计数，独立于真实模型复验。原始运行证据和测试日志私有留档。
+
+## PR #9 行为修复的离线验证
+
+换购请求分别解析旧品报价、新品单价和总预算。Thread 更新偏好时先验证合并后的精确价与上限，冲突返回澄清错误，并保留原版本。Legacy 商品分页和 Durable 检索都在数据库截取候选之前过滤精确单价。[换购和偏好回归](../backend/tests/test_replacement_price_preferences.py) · [分页与检索回归](../backend/tests/test_exact_price_retrieval.py)
+
+纯购买收尾核对本次已处理提案的商品事实与请求。同句额外动作及具有独立数量的推荐继续由原流程处理。同大类商品还须匹配明确指定的类型或型号。正式 API 回归以隔离 PostgreSQL、持久 Checkpoint 和离线模型传输验证 B 只创建一笔 398 元待付款订单、预留两件库存。C 先创建退货 Case，再用另一份确认创建替换订单。跨提案复用确认返回 409，重复 Resume 后 SQL 读回一致，两题的支付与退款增量均为零。[商品和回执绑定](../backend/tests/test_checkout_goal_binding.py) · [B/C 交易断言](../backend/tests/test_b_post_commit_closeout.py)
+
+真实 B→C 成绩归属 `f8abf931c49f182951f439f3ae2fb644050dd0a3`。本次修复仅进行了离线验证，真实模型表现仍待验证。
+
+定向回归 **403 PASS / 0 FAIL / 0 SKIP**。完整 Backend Offline Core **2064 PASS / 0 FAIL / 16 SKIP**。其中 15 项需要真实 BGE 权重，1 项需要私有历史原件。两组计数各自对应本轮离线验收。
 
 ## 三个独立执行的真实成功案例
 
@@ -35,13 +64,13 @@ Source `115905…`的Tree为 `73bbecb8923a393fb0abbf003589fa54ff2963b4`；Source
 
 原Source为 `8171e5576180e8827b78fff3d6c9f58051729f08`。原四题输入SHA256为 `33556ae1f5aa39bdb3c140d3b61ce8d916e4cebd5ae255e83206304760ee0ac7`；原Oracle代码SHA256为 `08d60ce38d6d63ea6da9a3837b6581b7eed7840cb6bbea05feee1e97b4be11f3`。原79份封存证据及评分全部保留，不合并开发回归、不重算通过率。**独立盲测数量仍为0**。
 
-## 最终源码工程验证
+## 原 V2.17 RC 工程验证
 
-最终提交在真实隔离PostgreSQL、SDK MockTransport/Fixture下完整运行一次Backend：**1824 PASS / 0 FAIL / 16 SKIP**，pytest耗时831.85秒，退出码0。16项Skip为15项真实BGE依赖测试与1项缺少私有历史原件测试；[精确分类与命令](V217_INTERVIEW_READY.md#最终源码验收)。本轮文档收尾没有重新执行该套件，也未重跑前端或BGE矩阵。
+原验收提交 `759391cd6c33a1bbc906df34e6de87126cb53dac`（Tree `339d618bd92d092467e62e0511649c77b3a701d8`）使用真实隔离 PostgreSQL 和 SDK MockTransport/Fixture。该次 Backend 为 **1824 PASS / 0 FAIL / 16 SKIP**，pytest 耗时 831.85 秒，退出码为 0。跳过项含 15 项依赖真实 BGE 的测试和 1 项缺少私有历史原件的测试。[精确分类与命令](V217_INTERVIEW_READY.md#最终源码验收)
 
 完整Backend日志SHA256：`9e1c650840160e2a9a1f2e1ef108d2b770ec8e7eac87e5cbff4c7587f754afc0`；JUnit SHA256：`97623d36657d4186468913d165c1b6d5888a7cfe27f660b28206ee2b7c7d66c7`。早期RED和合成脚本协议适配的中间失败已保留，不累加不同源码结果充当全绿。
 
-开发修复包括商品事实category投影、同一新商品的真实属性冲突澄清、价格语义统一、推荐数量/Thread候选一致性，以及交易回执不代替独立目标完成判断。纯购买通过既有结构化结束信号收尾；查询、比较、售后继续既有执行路径；重复写、独立确认、库存事务、Fence和预算守卫不放宽。[最终P2回归](../backend/tests/test_final_p2_contract.py)、[商品与交易回归](../backend/tests/test_post_holdout_product_fix.py)。这些是开发验证，不能倒改上表评分，也不证明最终源码已通过新的Live验收。
+该阶段的开发修复包括商品事实 category 投影、同一新商品的属性冲突澄清、价格语义统一、推荐数量与 Thread 候选一致性，以及独立目标继续执行。纯购买在当时通过既有结构化结束信号收尾。该阶段只验证开发回归，原 Holdout 评分按原执行记录保留。[最终 P2 回归](../backend/tests/test_final_p2_contract.py) · [商品与交易回归](../backend/tests/test_post_holdout_product_fix.py)
 
 ## 首次V2.17真实Smoke与离线收尾
 

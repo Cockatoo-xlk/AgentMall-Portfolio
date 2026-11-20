@@ -50,43 +50,61 @@ def product_requirement_text(message):
     descriptions remain in scope and must still be clarified.
     """
     from agentmall.agents.purchase_intent import PRODUCT_ID, purchase_intent
-    from agentmall.agents.request_intents import return_intent
+    from agentmall.agents.request_intents import CLAUSES, return_intent
     from agentmall.catalog.categories import categories_in_text
 
-    if return_intent(message) is not True:
+    # A short return-object phrase can scope a catalogue quote without granting
+    # return authority. Transaction intent is still derived from the full message.
+    return_object = re.compile(
+        r"^\s*(?:(?:请|帮我|我要|我想|先)\s*)*"
+        r"(?:退(?:掉|回|还)?(?!货|款|换)|(?:把|将|为).+(?:退掉|退回|退还|退货)\s*$)"
+    )
+    next_purchase = r"(?:再|然后|接着|另外)(?:请|帮我)?(?:购买|采购|买)"
+    # Keep conjunctions as boundaries even when people omit punctuation between goals.
+    clauses = re.split(
+        rf"({CLAUSES.pattern}|[！？]|(?={next_purchase})|(?=(?:这次|本次)(?:总预算|预算)))", message
+    )
+    explicit_return = return_intent(message) is True
+    if not explicit_return and not any(return_object.match(clause) for clause in clauses):
         return message
-    clauses = re.split(r"([，。；！？,;\n])", message)
 
     def new_item(clause):
-        return bool(categories_in_text(clause)) and (
-            purchase_intent(clause).requested is True
-            or any(
-                affirmative(clause, match.start())
-                for match in re.finditer(r"推荐|比较|对比|对照", clause)
-            )
+        if purchase_intent(clause).requested is True or re.match(next_purchase, clause):
+            return True
+        return bool(categories_in_text(clause)) and any(
+            affirmative(clause, match.start())
+            for match in re.finditer(r"推荐|比较|对比|对照", clause)
         )
 
     if not any(new_item(clause) for clause in clauses):
         return message
+    describing_original = False
     for index, clause in enumerate(clauses):
+        if new_item(clause) or re.search(r"新|替|换|改|后|本次|这次", clause):
+            describing_original = False
+            continue
         categories = categories_in_text(clause)
-        if (
-            categories
-            and not new_item(clause)
-            and re.match(
-                r"\s*(?:(?:我|本人)的)?(?:(?:这|那)(?:笔|个)?)?"
-                r"(?:订单\s*(?:" + PRODUCT_ID + r"|\d+)|原订单|旧订单|原商品|原来的)",
-                clause,
-            )
-            # A return is an action/time reference, not an item's identity.
-            # Even an original-order reference may describe its replacement;
-            # retain such ambiguous clauses rather than silently dropping constraints.
-            and not re.search(r"新|替|换|改|后", clause)
+        order_reference = re.match(
+            r"\s*(?:(?:我|本人)的)?(?:(?:这|那)(?:笔|个)?)?"
+            r"(?:订单\s*(?:" + PRODUCT_ID + r"|\d+)|原订单|旧订单|原商品|原来的|旧)",
+            clause,
+        )
+        if return_object.match(clause) or (
+            explicit_return and (order_reference or return_intent(clause) is True)
         ):
+            describing_original = True
             # A conflict within the original description is not permission to ignore it.
             if len(categories) > 1:
                 raise clarify()
             connection_choice(clause)
+            clauses[index] = ""
+        elif describing_original and re.fullmatch(
+            r"\s*(?:当时|原来|原先)?(?:单价|售价|原价|每件)(?:是|为)?\s*"
+            r"\d+(?:\.\d+)?\s*元\s*",
+            clause,
+        ):
+            # A neighbouring unit quote belongs to the last named item. A new
+            # purchase or an explicit current budget ends the old description.
             clauses[index] = ""
     return "".join(clauses)
 

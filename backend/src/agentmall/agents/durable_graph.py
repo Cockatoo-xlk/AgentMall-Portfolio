@@ -10,6 +10,7 @@ from langgraph.types import Send, interrupt
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import HandoffEnvelope, SpecialistResult
 from agentmall.agents.durable_budget import node_key
+from agentmall.agents.goal_receipts import completed_single_checkout
 from agentmall.agents.resume import execute_confirmation
 from agentmall.agents.runtime import RunContext
 from agentmall.agents.specialist_tools import authenticate, recover_receipts
@@ -37,7 +38,12 @@ class DurableState(TypedDict, total=False):
 
 def apply_legacy_clarification(runtime, message):
     """Supplement one trusted unfinished Run; never parse two turns as one action batch."""
-    from agentmall.agents.context import Constraints, scoped_purchase_quantity, user_constraints
+    from agentmall.agents.context import (
+        Constraints,
+        scoped_purchase_quantity,
+        user_constraints,
+        validate_unit_prices,
+    )
     from agentmall.agents.product_preferences import (
         comparison_revoked,
         connection_choice,
@@ -48,8 +54,13 @@ def apply_legacy_clarification(runtime, message):
     from agentmall.agents.request_intents import return_intent, support_intent
 
     old = runtime.constraints.model_dump(mode="json")
+    active_purchase = (
+        Constraints(purchase_requested=True)
+        if old["purchase_requested"] and purchase_intent(message).requested is None
+        else None
+    )
     current = user_constraints(
-        runtime.input.model_copy(update={"message": message, "constraints": None})
+        runtime.input.model_copy(update={"message": message, "constraints": active_purchase})
     ).model_dump(mode="json", exclude_none=True, exclude_unset=True)
     decisions = {
         "purchase_requested": purchase_intent(message).requested,
@@ -89,6 +100,7 @@ def apply_legacy_clarification(runtime, message):
             or update.get("compare_connections", False)
         )
         merged["recommendation"] = requirement
+    validate_unit_prices(merged["product_needs"])
     runtime.constraints = Constraints.model_validate(merged)
     # state.user_goal retains the original goal; reconstructed runtimes consume
     # this current turn plus the trusted merged contract, never a concatenated batch.
@@ -114,6 +126,8 @@ def build_durable_graph(base, saver, store):
             single=base.single,
             thread_snapshot=base.thread_snapshot,
         )
+        # The restored input may contain a clarification and merged constraints.
+        local.submitted_recommendation = base.submitted_recommendation
         return restore(local, data)
 
     def wrap(name, fn):
@@ -244,10 +258,21 @@ def build_durable_graph(base, saver, store):
     async def single(runtime, state):
         await recover_receipts(runtime)
         handled = set(state.get("handled", []))
-        # A transaction receipt proves only that action. Single has no complete
-        # structured inventory of the user's independent goals, so continue with
-        # the original goal, persisted receipts and prior results. The existing
-        # terminal protocol ends pure purchases; repeated writes remain rejected.
+        completed_checkout = completed_single_checkout(
+            runtime, state.get("user_goal") or runtime.input.message, handled
+        )
+        if completed_checkout:
+            for identifier, result in list(runtime.completed.items()):
+                if completed_checkout in {str(pid) for pid in result.proposal_ids}:
+                    runtime.completed[identifier] = result.model_copy(
+                        update={
+                            "status": "done",
+                            "summary": "已按独立确认创建待付款订单，尚未支付。",
+                        }
+                    )
+            return {"next": "finish"}
+        # A checkout receipt does not settle any independent or unknown scope.
+        # Keep the original goal, verified facts and all repeated-write guards.
         if any(
             kind == "proposal"
             and ident not in handled
@@ -265,7 +290,9 @@ def build_durable_graph(base, saver, store):
             read_only=False,
             remaining_budget=runtime.budget.snapshot(),
         )
-        result = await run_specialist(runtime, envelope, user_goal=state.get("user_goal"))
+        result = await run_specialist(
+            runtime, envelope, user_goal=state.get("user_goal"), handled=handled
+        )
         # Explicit clarification remains possible after an earlier independent
         # business decision. A completed action never authorizes the next action.
         return {"next": "clarify" if result.status == "needs_input" else "finish"}

@@ -51,6 +51,8 @@ class ContextOperation(Strict):
     field: Literal[
         "category",
         "max_price_cents",
+        "unit_price_cents",
+        "max_unit_price_cents",
         "noise_preference",
         "layout",
         "connection",

@@ -14,10 +14,11 @@ from agentmall.aftersales import service as aftersales
 from agentmall.aftersales.schemas import ReasonCode, ReturnRequest
 from agentmall.agents.context import EntityRef, Strict
 from agentmall.agents.evidence import policy_support
+from agentmall.agents.tools import search_criteria
 from agentmall.cart import service as cart
 from agentmall.cart.models import Cart
 from agentmall.catalog import service as catalog
-from agentmall.catalog.categories import KIND_ATTRIBUTES, Category
+from agentmall.catalog.categories import Category
 from agentmall.identity.models import User
 from agentmall.identity.service import actor_for, require_buyer
 from agentmall.infra.errors import DomainError
@@ -155,8 +156,6 @@ def ref(kind, ident, relation="observed", policy_version=None):
 
 
 def product_allowed(runtime, product):
-    from agentmall.catalog.capabilities import connection_matches
-
     c = runtime.constraints
     if c.bundle:
         from agentmall.agents.bundle_planner import matches
@@ -167,34 +166,7 @@ def product_allowed(runtime, product):
         return product.id not in runtime.exclusions and any(
             matches(p, product) for p in c.bundle.parts
         )
-    needs = c.product_needs
-    if needs.product_kind:
-        category, attribute, term = KIND_ATTRIBUTES[needs.product_kind]
-        if product.category != category or term not in product.attributes.get(attribute, ""):
-            return False
-    return (
-        product.id not in runtime.exclusions
-        and product.available > 0
-        and (c.category is None or product.category == c.category)
-        and (c.max_price_cents is None or product.price_cents <= c.max_price_cents)
-        and (c.noise_preference is None or product.attributes.get("noise") == "较安静")
-        and (needs.layout is None or product.attributes.get("size") == needs.layout)
-        and (
-            needs.screen_inches is None
-            or product.attributes.get("screen_inches") == needs.screen_inches
-        )
-        and (needs.activity is None or product.attributes.get("usage") == "公路车骑行")
-        and connection_matches(product.attributes, needs.connection, needs.excluded_connections)
-        and (
-            needs.keyboard_type is None
-            or (
-                needs.keyboard_type == "mechanical"
-                and product.attributes.get("switch")
-                in {"静音轴", "线性轴", "段落轴", "青轴", "茶轴", "红轴"}
-            )
-            or (needs.keyboard_type == "membrane" and product.attributes.get("switch") == "薄膜")
-        )
-    )
+    return c.matches_product(product, exclusions=runtime.exclusions)
 
 
 def order_data(order):
@@ -265,33 +237,17 @@ class SpecialistTools:
         async with r.sessions.begin() as session:
             actor = await authenticate(r, session)
             if name == "retrieve_products":
-                maximum = r.constraints.max_price_cents
-                if args.max_price_cents is not None:
-                    maximum = (
-                        min(maximum, args.max_price_cents)
-                        if maximum is not None
-                        else args.max_price_cents
-                    )
-                query = (args.query + " " + r.constraints.product_needs.terms()).strip()[:500]
+                needs = r.constraints.product_needs
+                criteria = search_criteria(r.constraints, r.exclusions, args.max_price_cents)
+                query = (args.query + " " + needs.terms()).strip()[:500]
                 hits = await retrieve_products(
                     session,
                     actor,
                     query,
-                    ProductQuery(
-                        query=query,
-                        category=r.constraints.category,
-                        max_price_cents=maximum,
-                        noise_preference=r.constraints.noise_preference,
-                        layout=r.constraints.product_needs.layout,
-                        screen_inches=r.constraints.product_needs.screen_inches,
-                        activity=r.constraints.product_needs.activity,
-                        product_kind=r.constraints.product_needs.product_kind,
-                        connection=r.constraints.product_needs.connection,
-                        excluded_connections=r.constraints.product_needs.excluded_connections,
-                        keyboard_type=r.constraints.product_needs.keyboard_type,
-                        exclude_product_ids=list(r.exclusions),
-                    ),
+                    ProductQuery(query=query, **criteria.model_dump()),
                     r.encoder,
+                    unit_price_cents=needs.unit_price_cents,
+                    model_code=needs.model_code,
                 )
                 accepted = [h for h in hits if product_allowed(r, h.product)][:3]
                 data = {"items": [h.model_dump(mode="json") for h in accepted]}
@@ -330,14 +286,15 @@ class SpecialistTools:
                 entities = [ref("product", p.id, "replacement")]
                 evidence = [("product", p.id, data)]
             elif name in {"list_orders", "get_order"}:
-                rows = (
-                    (await orders.list_orders(session, actor, OrderFilters(limit=10))).items
-                    if name == "list_orders"
-                    else [await orders.get_order(session, actor, args.order_id)]
-                )
-                data = {"items": [order_data(o) for o in rows]}
                 if name == "list_orders":
+                    page = await orders.list_orders(session, actor, OrderFilters(limit=10))
+                    rows = page.items
+                    data = {"complete": page.next_cursor is None}
                     evidence.append(("order_list", "current", {"count": len(rows)}))
+                else:
+                    rows = [await orders.get_order(session, actor, args.order_id)]
+                    data = {}
+                data["items"] = [order_data(o) for o in rows]
                 for order in rows:
                     entities.append(ref("order", order.id, "original", order.policy_version))
                     entities.extend(ref("product", i.product_id, "original") for i in order.items)

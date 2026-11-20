@@ -21,6 +21,7 @@ from agentmall.agents.graph import render
 from agentmall.agents.locking import claim_execution, thread_lock
 from agentmall.agents.models import AgentRun, AgentThread, RunEvent
 from agentmall.agents.persistence import checkpoint_config, checkpoint_saver
+from agentmall.agents.request_intents import ADDRESS_FIELD
 from agentmall.agents.resume import validate_confirmation
 from agentmall.agents.runtime import RunContext, fingerprint
 from agentmall.agents.specialist_tools import recover_receipts
@@ -36,7 +37,7 @@ RECOVERABLE_ERRORS = {"EXECUTION_INTERRUPTED", "EXECUTION_TIMEOUT", "DATABASE_UN
 
 def sanitized(message):
     message = re.sub(
-        r"地址\s*[:：=]?\s*(演示宿舍|演示家庭)(?=[，。；;\n\s]|$)",
+        ADDRESS_FIELD + r"(演示宿舍|演示家庭)(?=[^\S\n]*(?:[，。；,;！？!?\n]|$))",
         lambda match: "送" + match[1],
         message,
     )
@@ -508,6 +509,21 @@ async def thread_busy(session, thread_id):
         raise DomainError(409, "THREAD_BUSY", "请先恢复此会话已有运行")
 
 
+def same_run_input(run, digest, submitted, expanded):
+    if run.input_digest != digest:
+        return False
+    # Older runs stored only expanded defaults. The accepted thread snapshot
+    # distinguishes a granted action from an omitted False in that old payload.
+    accepted = run.context_snapshot.get("constraints", {})
+    if submitted and any(
+        submitted.get(field) is False and accepted.get(field) is True
+        for field in ("purchase_requested", "return_requested", "support_requested")
+    ):
+        return False
+    stored = run.request_payload.get("constraints")
+    return stored == submitted or stored == expanded
+
+
 async def start_run(app, actor, thread_id, payload, *, deferred=False):
     from agentmall.agents.memory import accept_context
 
@@ -523,6 +539,11 @@ async def start_run(app, actor, thread_id, payload, *, deferred=False):
         if request_body[key] is None:
             del request_body[key]
     digest = payload_hash(request_body)
+    submitted = (
+        payload.constraints.model_dump(mode="json", exclude_unset=True)
+        if payload.constraints is not None
+        else None
+    )
     async with app.state.sessions.begin() as session:
         thread = await owned_thread(session, actor, thread_id)
         if deferred:
@@ -534,7 +555,7 @@ async def start_run(app, actor, thread_id, payload, *, deferred=False):
                 )
             )
             if previous is not None and await latest_job(session, previous.id) is not None:
-                if previous.input_digest != digest:
+                if not same_run_input(previous, digest, submitted, request_body["constraints"]):
                     raise DomainError(409, "IDEMPOTENCY_CONFLICT", "相同请求ID对应不同输入")
                 if previous.prompt_version != prompt_version(
                     bool(previous.context_snapshot)
@@ -554,7 +575,7 @@ async def start_run(app, actor, thread_id, payload, *, deferred=False):
             )
             created = run is None
             if run:
-                if run.input_digest != digest:
+                if not same_run_input(run, digest, submitted, request_body["constraints"]):
                     raise DomainError(409, "IDEMPOTENCY_CONFLICT", "相同请求ID对应不同输入")
                 if run.prompt_version != prompt_version(bool(run.context_snapshot)):
                     raise DomainError(409, "RUN_VERSION_MISMATCH", "运行提示版本已变化")
@@ -586,6 +607,8 @@ async def start_run(app, actor, thread_id, payload, *, deferred=False):
                     for k, v in request_body.items()
                     if k not in {"expected_context_version", "candidate_set_id", "bundle_revision"}
                 }
+                # Rebuild constraints from the submitted fields at validation and execution.
+                body["constraints"] = submitted
                 body["message"] = sanitized(body["message"])
                 # Validate pure input before the Run/job commit, including the
                 # legacy stateless path which accept_context intentionally skips.
