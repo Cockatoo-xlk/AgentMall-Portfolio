@@ -11,7 +11,7 @@ from agentmall.actions import service as actions
 from agentmall.aftersales import service as aftersales
 from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import HandoffEnvelope, user_constraints
-from agentmall.agents.purchase_intent import purchase_intent
+from agentmall.agents.purchase_intent import current_checkout_text, purchase_intent
 from agentmall.agents.specialist_tools import authenticate, order_data, product_allowed, ref
 from agentmall.catalog import service as catalog
 from agentmall.catalog.schemas import ProductDTO
@@ -170,7 +170,7 @@ class RunContext:
                 re.findall(
                     r"(?<![0-9a-fA-F])[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}"
                     r"[0-9a-fA-F]{12}(?![0-9a-fA-F])",
-                    self.input.message,
+                    current_checkout_text(self.input.message),
                 )
             )
         )[:4]

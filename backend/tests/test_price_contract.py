@@ -325,6 +325,8 @@ async def test_prices_through_sdk_mock_formal_api_and_independent_sql(
             assert not after["proposals"] and not after["confirmations"]
             if blocked:
                 assert "CONSTRAINT_MISMATCH" in run["result"]["error_codes"], run
+                amount = 2 * target["price_cents"]
+                assert f"2件合计{amount}分，超过整单预算{cap}分" in run["result"]["answer"]
             else:
                 assert run["status"] == "COMPLETED", run
                 products = [x for x in run["result"]["facts"] if x["kind"] == "product"]

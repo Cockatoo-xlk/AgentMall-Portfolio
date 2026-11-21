@@ -58,6 +58,19 @@ COUNT = re.compile(
 RANGE = re.compile(NUMBER + r"\s*(?:到|至|[-~～])\s*" + NUMBER)
 
 
+def requests_order_list(clause):
+    """A complete affirmative request for the caller's orders, without write terms."""
+    return (
+        re.fullmatch(
+            r"(?:\s*(?:另外?|并|再|也|请|帮我|给我|顺便|办完|成交后|完成后))*\s*"
+            r"(?:查询|查看|查(?:一?[下遍])?|看(?:一?下)?)\s*"
+            r"(?:(?:本人|自己|我(?:名下)?)的?)?\s*(?:全部|所有)?订单(?:列表)?",
+            clause.strip().rstrip("。！!？?").rstrip(),
+        )
+        is not None
+    )
+
+
 def clarification(message):
     raise DomainError(409, "CONTEXT_CLARIFICATION_REQUIRED", message)
 
@@ -212,7 +225,26 @@ def purchase_quantity(message, *, typed_quantity=None):
             if len(matches) != 1 or RANGE.search(clause):
                 clarification("请明确唯一购买数量和单位")
             values.append(_number(matches[0][1]))
-        elif purchase_seen and COUNT.search(clause) and not INFORMATION.search(clause):
+        elif (
+            purchase_seen
+            and (count := COUNT.match(clause.strip()))
+            and re.fullmatch(r"(?:都)?(?:不能|不可)少", clause.strip()[count.end() :].strip())
+        ):
+            if not values or _number(count[1]) not in values:
+                clarification("购买数量存在冲突")
+        elif (
+            purchase_seen
+            and any(
+                not (
+                    m[2] == "件"
+                    and re.match(
+                        r"事(?:情|项)?(?:分开|分别|单独|都|一起|$)", clause[m.end() :].lstrip()
+                    )
+                )
+                for m in COUNT.finditer(clause)
+            )
+            and not INFORMATION.search(clause)
+        ):
             if not re.search(r"推荐|查看|查询|步骤|订单|历史", clause):
                 clarification("购买动作外的商品数量作用域不明确")
     if len(set(values)) > 1:

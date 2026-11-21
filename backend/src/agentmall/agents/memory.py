@@ -20,7 +20,12 @@ from agentmall.agents.product_preferences import (
     product_requirement_text,
     recommendation_revoked,
 )
-from agentmall.agents.purchase_intent import ORDINAL, purchase_intent, purchase_subjects
+from agentmall.agents.purchase_intent import (
+    ORDINAL,
+    current_checkout_text,
+    purchase_intent,
+    purchase_subjects,
+)
 from agentmall.agents.request_intents import SHIPPING_ADDRESS
 from agentmall.catalog import service as catalog
 from agentmall.catalog.categories import categories_in_text
@@ -105,7 +110,7 @@ def resolve_preferences(previous, payload):
         MultiRequest(
             request_id=payload.request_id,
             thread_id=UUID(int=0),
-            message=SHIPPING_ADDRESS.sub("", text),
+            message=SHIPPING_ADDRESS.sub("", current_checkout_text(text)),
             constraints=(
                 Constraints(purchase_requested=payload.constraints.purchase_requested)
                 if payload.constraints
@@ -300,10 +305,14 @@ async def accept_context(session, actor, thread_id, run_id, payload):
 
 
 async def publish_candidates(session, run, runtime):
-    if not run.context_snapshot:
+    from agentmall.agents.product_preferences import (
+        omit_unsolicited_candidates,
+        recommendation_products,
+    )
+
+    if not run.context_snapshot or omit_unsolicited_candidates(runtime):
         return
     context = await locked_context(session, run.thread_id)
-    from agentmall.agents.product_preferences import recommendation_products
 
     selected = recommendation_products(runtime)
     offered = []

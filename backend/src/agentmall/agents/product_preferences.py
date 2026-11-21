@@ -49,9 +49,21 @@ def product_requirement_text(message):
     consumes the complete original request. Ambiguous or conflicting target
     descriptions remain in scope and must still be clarified.
     """
-    from agentmall.agents.purchase_intent import PRODUCT_ID, purchase_intent
-    from agentmall.agents.request_intents import CLAUSES, return_intent
+    from agentmall.agents.purchase_intent import (
+        PRODUCT_ID,
+        current_checkout_text,
+        purchase_intent,
+    )
+    from agentmall.agents.request_intents import (
+        CLAUSES,
+        SHIPPING_ADDRESS,
+        return_intent,
+    )
     from agentmall.catalog.categories import categories_in_text
+
+    # An explicitly sequenced second checkout has its own terms. Keep the entire
+    # original message on the Run so continuation still sees the later action.
+    message = current_checkout_text(message)
 
     # A short return-object phrase can scope a catalogue quote without granting
     # return authority. Transaction intent is still derived from the full message.
@@ -97,6 +109,13 @@ def product_requirement_text(message):
             if len(categories) > 1:
                 raise clarify()
             connection_choice(clause)
+            clauses[index] = ""
+        elif (
+            describing_original
+            and index > 0
+            and clauses[index - 1] in {"，", ","}
+            and SHIPPING_ADDRESS.fullmatch(clause.strip())
+        ):
             clauses[index] = ""
         elif describing_original and re.fullmatch(
             r"\s*(?:当时|原来|原先)?(?:单价|售价|原价|每件)(?:是|为)?\s*"
@@ -180,6 +199,31 @@ def recommendation_requirements(message, choice):
         return None
     return RecommendationRequirements(
         count=next(iter(counts), None), compare_connections=choice.compare
+    )
+
+
+def only_return_requested(runtime):
+    """An explicit terminal scope limit still permits reads needed for the return."""
+    return (
+        runtime.constraints.return_requested
+        and not runtime.constraints.purchase_requested
+        and re.search(
+            r"(?:^|[，。；,;\n])\s*(?:请)?(?:只|仅)(?:处理|办理)?退货(?:这一?件事)?"
+            r"(?:[，,]\s*(?:不|不要|暂不)换购)?[。！!\s]*$",
+            runtime.input.message,
+        )
+        is not None
+    )
+
+
+def omit_unsolicited_candidates(runtime):
+    """Avoid publishing offers when the user wants to answer a question first."""
+    return only_return_requested(runtime) or (
+        not runtime.constraints.purchase_requested
+        and re.search(
+            r"(?:^|[，。；,;\n])\s*(?:请)?先问我(?:想要|要|需要)哪", runtime.input.message
+        )
+        is not None
     )
 
 
