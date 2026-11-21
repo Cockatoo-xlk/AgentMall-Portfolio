@@ -504,3 +504,26 @@ def test_category_descriptor_cannot_erase_independent_operation():
     message = "请购买一件10000元以内的相机，送演示宿舍。然后帮我摄像。"
     runtime, pid = completed_purchase(message, name="相机 C1", category="camera", quantity=1)
     assert not goal_receipts.completed_single_checkout(runtime, message, {pid})
+
+
+@pytest.mark.parametrize(
+    "prefix,note,expected",
+    [
+        ("两处座位各配一件。", "", True),
+        ("三处座位各配一件。", "", False),
+        ("为会议室补货：", "请在提案中注明总价。", True),
+        ("", "请在提案中注明库存。", False),
+        ("为会议室补货：", "请在提案中注明总价。另查本人的订单。", False),
+        ("", "提案中列出金额，再买一件。", False),
+        ("", "我只核对这笔。另请申请退货。", False),
+    ],
+)
+def test_checkout_explanation_is_bounded_by_receipt_and_remaining_goal(prefix, note, expected):
+    from agentmall.agents.goal_receipts import completed_single_checkout
+
+    message = prefix + "请购买两件宿舍静音 K68，送演示宿舍。" + note
+    # Isolate receipt matching even when the request parser would already
+    # reject an extra purchase before any Run could begin.
+    runtime, pid = completed_purchase("请购买两件宿舍静音 K68，送演示宿舍。")
+    runtime.input = runtime.input.model_copy(update={"message": message})
+    assert bool(completed_single_checkout(runtime, message, {pid})) is expected

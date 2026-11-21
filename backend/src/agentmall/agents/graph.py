@@ -119,8 +119,30 @@ def build_graph(runtime):
     return graph.compile()
 
 
+def clarification_feedback(runtime, proposals):
+    from agentmall.agents.purchase_intent import explicit_followup_checkout
+    from agentmall.agents.request_intents import CLAUSES, requests_order_list
+
+    message = runtime.input.message
+    if any(
+        p["data"]["action_type"] == "CHECKOUT" and p["data"]["status"] == "EXECUTED"
+        for p in proposals
+    ):
+        pending = []
+        if explicit_followup_checkout(message):
+            pending.append("第二笔购买仍待处理，需要单独确认。请核对第二笔商品、数量和收货地址。")
+        if ("order_list", "current") not in runtime.facts and any(
+            requests_order_list(clause) for clause in CLAUSES.split(message)
+        ):
+            pending.append("订单查询仍待核实，尚未查询。")
+        if pending:
+            return "".join(pending)
+    return "尚有需求需要补充或继续核验，请明确商品、数量、演示地址或原订单。"
+
+
 def render(runtime, terminal):
     from agentmall.agents.product_preferences import (
+        omit_unsolicited_candidates,
         recommendation_products,
         recommendation_shortage,
     )
@@ -130,12 +152,20 @@ def render(runtime, terminal):
     selected = recommendation_products(runtime)
     selected_ids = None if selected is None else {str(p.id) for p in selected}
 
-    def presented(kind, ident):
+    omit_candidates = omit_unsolicited_candidates(runtime)
+
+    def presented(kind, ident, relation=None):
+        if omit_candidates:
+            return kind != "retrieval_candidates" and (kind != "product" or relation == "original")
         return kind != "product" or selected_ids is None or str(ident) in selected_ids
 
     # Only the public result is projected. Checkpoint/journal exploration remains intact.
     results = [
-        r.model_copy(update={"entity_refs": [e for e in r.entity_refs if presented(e.kind, e.id)]})
+        r.model_copy(
+            update={
+                "entity_refs": [e for e in r.entity_refs if presented(e.kind, e.id, e.relation)]
+            }
+        )
         for r in runtime.completed.values()
     ]
     facts = [
@@ -173,6 +203,13 @@ def render(runtime, terminal):
                 if connection not in {"有线", "无线", "双模", "三模"}:
                     connection = "未知"
                 lines.append(f"连接方式：{connection}。")
+        elif fact["kind"] == "checkout_budget_conflict" and "CONSTRAINT_MISMATCH" in errors:
+            deficit = data["total_cents"] - data["budget_cents"]
+            lines.append(
+                f"所选商品单价{data['unit_price_cents']}分，{data['quantity']}件"
+                f"合计{data['total_cents']}分，超过整单预算{data['budget_cents']}分，"
+                f"还差{deficit // 100}.{deficit % 100:02d}元。"
+            )
         elif fact["kind"] == "order":
             lines.append(
                 f"本人订单 {fact['id']}：{data['status']}，政策 {data['policy_version']}。"
@@ -208,7 +245,7 @@ def render(runtime, terminal):
     if runtime.citations:
         lines.append("政策引用仅作背景；资格以确定性服务为准。")
     if terminal == "clarify":
-        lines.append("尚有需求需要补充或继续核验，请明确商品、数量、演示地址或原订单。")
+        lines.append(clarification_feedback(runtime, proposals))
     if any(
         code in errors
         for code in (
@@ -219,7 +256,10 @@ def render(runtime, terminal):
     ):
         lines.append("请明确要处理的本人原订单；替代推荐需要先确定原商品。")
     if "PURCHASE_DETAILS_REQUIRED" in errors:
-        lines.append("购买提案需要明确购买意图、数量及演示地址。")
+        if runtime.constraints.purchase_requested:
+            lines.append("请补充要购买的商品、数量及演示收货地址。")
+        else:
+            lines.append("请问您想要哪种商品、需要几件？")
     if "MODEL_RESPONSE_INVALID" in errors:
         lines.append("模型响应解析失败，当前步骤已停止；已有业务以数据库回执为准。")
     if errors:
@@ -250,7 +290,7 @@ def render(runtime, terminal):
         status=status,
         answer="".join(lines) or "需要补充明确需求，尚未产生业务回执。",
         results=results,
-        entity_refs=[e for e in runtime.references.values() if presented(e.kind, e.id)],
+        entity_refs=[e for e in runtime.references.values() if presented(e.kind, e.id, e.relation)],
         proposal_ids=[p["id"] for p in proposals],
         citations=list(runtime.citations.values()),
         facts=facts,

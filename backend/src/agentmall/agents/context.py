@@ -459,9 +459,9 @@ def user_constraints(request):
         values["category"] = category
     if any(x in product_text for x in ("安静", "静音", "低噪声")):
         values["noise_preference"] = "quiet"
-    if "演示宿舍" in message and "演示家庭" not in message:
+    if "演示宿舍" in product_text and "演示家庭" not in product_text:
         values["address_label"] = "demo_dorm"
-    elif "演示家庭" in message and "演示宿舍" not in message:
+    elif "演示家庭" in product_text and "演示宿舍" not in product_text:
         values["address_label"] = "demo_home"
     decisions = {
         "purchase_requested": intent.requested,
@@ -561,9 +561,9 @@ def user_constraints(request):
                 request.constraints.quantity if request.constraints is not None else None
             )
             values["quantity"] = scoped_purchase_quantity(
-                message, typed_quantity=typed_quantity, supplemental=intent.requested is None
+                product_text, typed_quantity=typed_quantity, supplemental=intent.requested is None
             )
-        if "演示宿舍" in message and "演示家庭" in message:
+        if "演示宿舍" in product_text and "演示家庭" in product_text:
             values["address_label"] = None
     if bundle is not None:
         if (

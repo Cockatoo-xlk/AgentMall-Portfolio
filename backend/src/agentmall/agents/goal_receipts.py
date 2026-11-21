@@ -90,6 +90,19 @@ def _verified_read_clause(text, records, product, order_id, facts):
     )
 
 
+def _describes_allocation(clause, quantity):
+    """A distributive use statement accounts for units of the one verified item."""
+    count = r"(?:10|[1-9一二两三四五六七八九十])"
+    allocation = re.fullmatch(
+        rf"({count})(?:张|个|处)?(?:工位|座位|办公桌)各(?:放|配|用)({count})(?:件|把|台|只|个)",
+        clause,
+    )
+    if not allocation:
+        return False
+    places, per_place = (purchase_quantity(f"请购买{number}件") for number in allocation.groups())
+    return places * per_place == quantity
+
+
 def _checkout_only_clauses(message, runtime, item, product, selected, reads, order_id):
     """Prove one bounded purchase while leaving any unexplained work to continuation."""
     constraints = runtime.constraints
@@ -99,6 +112,7 @@ def _checkout_only_clauses(message, runtime, item, product, selected, reads, ord
     address_pattern = SHIPPING_PREFIX + address
     tokens = purchase_tokens(constraints, item["name_snapshot"], product_id=item["product_id"])
     purchase_seen = False
+    allocation_seen = False
     selection_prefix = None
     selection = None
     clauses = [(clause, False) for clause in CLAUSES.split(message)]
@@ -114,6 +128,29 @@ def _checkout_only_clauses(message, runtime, item, product, selected, reads, ord
             action = ACTION.match(text)
             if not action or not COUNT.fullmatch(text[action.end() :]):
                 return False
+        if not purchase_seen and _describes_allocation(text, item["quantity"]):
+            if allocation_seen:
+                return False
+            allocation_seen = True
+            continue
+        # A bounded purpose label may introduce a checkout. The rest of the
+        # clause still has to prove an exact match to the purchased item.
+        text = re.sub(
+            r"^(?:给|为)(?:自习室|办公室|会议室|教室|宿舍|门店|仓库)补货:",
+            "",
+            text,
+        )
+        # The checkout card shows the verified total, unit price and quantity.
+        # Product availability in a separate catalog result is outside the card.
+        if purchase_seen and (
+            re.fullmatch(
+                r"(?:请)?(?:在)?提案(?:里|中)(?:列好|列出|注明)"
+                r"(?:金额|总价|价格|数量)",
+                text,
+            )
+            or re.fullmatch(r"我(?:只)?(?:核对|确认|审查)(?:的就是)?这(?:一)?笔", text)
+        ):
+            continue
         if _verified_read_clause(text, reads, product, order_id, runtime.facts):
             continue
         if not purchase_seen and text.startswith("推荐"):

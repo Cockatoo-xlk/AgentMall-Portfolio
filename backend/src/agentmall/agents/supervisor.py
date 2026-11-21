@@ -11,6 +11,8 @@ from agentmall.agents.budgets import RunStopped
 from agentmall.agents.context import IntentPlan, asks_return_policy
 from agentmall.agents.goal_receipts import action_outcomes
 from agentmall.agents.model_control import model_call, validate_wire
+from agentmall.agents.product_preferences import only_return_requested
+from agentmall.agents.purchase_intent import explicit_followup_checkout
 from agentmall.agents.runtime import fingerprint
 from agentmall.agents.specialist_tools import WRITE_TOOLS_BY_GOAL
 
@@ -57,6 +59,17 @@ def unfinished_goal(runtime, user_goal):
         return "RETURN_GOAL_UNRESOLVED"
     if runtime.constraints.purchase_requested and "CHECKOUT" not in actions:
         return runtime.checkout_blocker() or "PURCHASE_GOAL_UNRESOLVED"
+    if (
+        runtime.constraints.purchase_requested
+        and explicit_followup_checkout(user_goal)
+        and any(
+            kind == "proposal"
+            and receipt["action_type"] == "CHECKOUT"
+            and receipt["status"] == "EXECUTED"
+            for (kind, _), receipt in runtime.facts.items()
+        )
+    ):
+        return "FOLLOWUP_CHECKOUT_UNRESOLVED"
     if asks_return_policy(user_goal) and not (
         runtime.citations and any(kind == "eligibility" for kind, _ in runtime.facts)
     ):
@@ -191,6 +204,10 @@ async def choose_plan(runtime, user_goal=None, *, durable=False):
                 task.goal == "prepare_checkout" for task in plan.tasks
             ):
                 code = checkout_blocker
+            elif only_return_requested(runtime) and any(
+                task.target == "shopping" for task in plan.tasks
+            ):
+                code = "SHOPPING_OUTSIDE_RETURN_SCOPE"
             elif durable and awaits_return_decision(runtime, plan.tasks):
                 code = "RETURN_DECISION_REQUIRED"
             if code:
@@ -212,7 +229,7 @@ async def choose_plan(runtime, user_goal=None, *, durable=False):
                         "重新生成完整TaskSpec，constraints逐字段原样复制当前输入的canonical_constraints。"
                         "不得删除用户要求或修改预算、数量、地址、原商品排除条件；保留已完成任务。"
                         "只读目标必须标记read_only=true。未请求购买或退货时移除相应写任务。"
-                        "组合退货任务中，先处理退货及其独立确认，再安排替代任务。"
+                        "组合退货任务中，先处理退货及其独立确认，再安排替代任务。仅退货时不要派发购物任务。"
                     ),
                 }
                 runtime.event("orchestration_repair", role="supervisor", error_code=code)
@@ -239,6 +256,7 @@ async def choose_plan(runtime, user_goal=None, *, durable=False):
                 "RETURN_DECISION_REQUIRED",
                 "HANDOFF_WRITE_SCOPE_CHANGED",
                 "RETURN_NOT_REQUESTED",
+                "SHOPPING_OUTSIDE_RETURN_SCOPE",
             }:
                 raise
             runtime.event("route_rejected", error_code="INVALID_ROUTE")

@@ -12,13 +12,18 @@ MULTIPLE_IDS = re.compile(
     PRODUCT_ID + r"\s*[，,]?\s*(?:或(?:者)?|还是|和|、|也买|/|／|or|and)\s*" + PRODUCT_ID,
     re.IGNORECASE,
 )
+CHECKOUT_REFERENCE = r"第\s*(?:{position})\s*(?:笔|单)(?:订单)?"
+FIRST_CHECKOUT = re.compile(CHECKOUT_REFERENCE.format(position="一|1") + r"|首(?:笔|单)")
+SECOND_CHECKOUT = re.compile(CHECKOUT_REFERENCE.format(position="二|2"))
+COMBINED_CHECKOUTS = re.compile(r"(?:两|二|2|多)\s*(?:笔|单|次\s*(?:采购|购买|下单))")
+
 MODIFIERS = r"(?:(?:再|要|继续|直接|立即|马上)\s*)*"
 # 改买 is a purchase action; the suffix of 修改/更改 is not a standalone 改.
 # Keep 买家电 legal: a blanket exclusion of 买家 would hide an actual purchase.
 ACTION = re.compile(
     r"(?P<negative>先别|不要|不想|不需要|不打算|不准备|不用|暂不|别|取消|撤销|放弃|不)?\s*"
     + MODIFIERS
-    + r"(?P<prefix>请(?:帮我)?|准备|帮我|我要|我想|就|(?<![修更])改)?"
+    + r"(?P<prefix>请(?:帮我)?|麻烦(?:你)?|准备|帮我|我要|我想|就|(?<![修更])改)?"
     + MODIFIERS
     + r"(?P<action>采购|购买|下单|买)\s*"
     r"(?:(?:最新|刚才)(?:推荐的|那款)?)?"
@@ -36,8 +41,15 @@ class PurchaseIntent:
 
 
 def purchase_intent(message):
-    from agentmall.agents.request_intents import CLAUSES, NEGATIVE, action_decision, action_scope
+    from agentmall.agents.request_intents import (
+        CLAUSES,
+        CONDITION,
+        NEGATIVE,
+        action_decision,
+        action_scope,
+    )
 
+    message = current_checkout_text(message)
     positive, negative = set(), set()
     buying = denying = global_denial = False
     reference = list(message)
@@ -65,6 +77,13 @@ def purchase_intent(message):
         decision = None
         if match["negative"]:
             decision = False
+        elif (
+            match["prefix"] in {"麻烦", "麻烦你"}
+            and prefix.strip()
+            and not (CONDITION.search(prefix) or NEGATIVE.search(prefix))
+        ):
+            # A polite imperative is a command only at the start of its clause.
+            continue
         elif match["prefix"] or target or match["action"] == "采购" or NEGATIVE.search(prefix):
             actor_scope = CLAUSES.split(message[: match.start("action")])[-1]
             decision = action_decision(
@@ -102,6 +121,113 @@ def purchase_intent(message):
         True if buying else False if denying else None,
         "".join(reference),
         next((value for kind, value in positive if kind == "product"), None),
+    )
+
+
+def explicit_followup_checkout(message):
+    """Boundary of a second purchase explicitly deferred until the first completes."""
+    boundary = re.search(
+        r"(?:^|[，。；,;\n])\s*(?:成交|下单|购买|完成|办完|买完)(?:成功)?后"
+        r"\s*(?:再|另(?:外)?)(?:请|帮我)?(?:购买|采购|买)",
+        message,
+    )
+    if boundary is None:
+        return None
+    from agentmall.agents.request_intents import CLAUSES, COUNT, clarification
+
+    current = message[: boundary.start()]
+    intent = purchase_intent(current)
+    if intent.requested is not True:
+        clarification("后续购买需等待当前订单完成，请先明确第一笔")
+    _, first_subject = purchase_subjects(current)
+    if not (
+        intent.product_id
+        or re.search(ORDINAL, intent.reference_text)
+        or COUNT.sub("", first_subject).strip(" ，")
+    ):
+        clarification("请明确第一笔购买的商品")
+
+    # An explicit owner label cannot lend terms to the wrong order. Only
+    # affirmative terms are safe under a first-order label; a correction or
+    # deferral must be resolved before any proposal.
+    for clause in CLAUSES.split(current):
+        if SECOND_CHECKOUT.search(clause) or COMBINED_CHECKOUTS.search(clause):
+            clarification("请分别说明每笔订单的条件")
+        first = FIRST_CHECKOUT.search(clause)
+        if first and (
+            clause[: first.start()].strip()
+            or not _checkout_qualifier(clause[first.end() :].strip(), owned=True)
+        ):
+            clarification("第一笔购买的决定或条件存在变更，请分别确认每笔订单")
+    _validate_followup_scope(message[boundary.end() :])
+    return boundary
+
+
+def current_checkout_text(message):
+    """Deferred checkout details do not bind this turn's transaction or entity reads."""
+    boundary = explicit_followup_checkout(message)
+    return message[: boundary.start()] if boundary else message
+
+
+def _validate_followup_scope(text):
+    """Only detach a fully bounded second object and its adjacent qualifiers."""
+    from agentmall.agents.request_intents import (
+        CLAUSES,
+        COUNT,
+        clarification,
+        requests_order_list,
+    )
+    from agentmall.catalog.categories import KIND_MENTION, MODEL_MENTION, bare_category
+
+    parts = re.split(f"({CLAUSES.pattern})", text.strip())
+    subject = parts[0].strip()
+    if count := COUNT.match(subject):
+        subject = subject[count.end() :]
+    subject = re.sub(r"^(?:相同|同款)(?:的)?", "", subject.strip()).strip()
+    if not (
+        bare_category(subject)
+        or KIND_MENTION.fullmatch(subject)
+        or MODEL_MENTION.fullmatch(subject)
+        or re.fullmatch(PRODUCT_ID, subject)
+    ):
+        clarification("请分别说明两笔订单的商品和限制条件")
+    after_read = False
+    for delimiter, clause in zip(parts[1::2], parts[2::2], strict=True):
+        clause = clause.strip()
+        if not clause:
+            continue
+        if requests_order_list(clause):
+            # The original goal still contains this read. It contributes no terms
+            # to either checkout and cannot swallow a later amendment.
+            after_read = True
+            continue
+        owner = SECOND_CHECKOUT.match(clause)
+        if owner:
+            clause = clause[owner.end() :].strip()
+        if _checkout_qualifier(
+            clause, owned=bool(owner), adjacent=not after_read and delimiter in {"，", ","}
+        ):
+            continue
+        clarification("请分别说明每笔订单的商品、数量、预算和地址")
+
+
+def _checkout_qualifier(clause, *, owned, adjacent=False):
+    from agentmall.agents.request_intents import SHIPPING_ADDRESS
+
+    price = r"(?:价格)?(?:为|是)?(?:最多|至多|最高|不超过)?\s*\d+(?:\.\d{1,2})?\s*元"
+    return bool(
+        owned
+        and (
+            re.fullmatch(
+                r"(?:我|本人)?(?:还)?(?:要|需|需要)?(?:另(?:外|行)?|单独|重新)?确认", clause
+            )
+            or re.fullmatch(r"(?:总预算|预算|总价)" + price, clause)
+        )
+        or (owned or adjacent)
+        and (
+            SHIPPING_ADDRESS.fullmatch(clause)
+            or re.fullmatch(r"(?:单价|每[件只台个把副])" + price, clause)
+        )
     )
 
 

@@ -169,6 +169,22 @@ def product_allowed(runtime, product):
     return c.matches_product(product, exclusions=runtime.exclusions)
 
 
+def record_budget_conflict(runtime, product):
+    c = runtime.constraints
+    if not c.purchase_requested or not c.quantity or c.max_price_cents is None:
+        return False
+    total = product.price_cents * c.quantity
+    if total <= c.max_price_cents:
+        return False
+    runtime.facts[("checkout_budget_conflict", str(product.id))] = {
+        "unit_price_cents": product.price_cents,
+        "quantity": c.quantity,
+        "total_cents": total,
+        "budget_cents": c.max_price_cents,
+    }
+    return True
+
+
 def order_data(order):
     return {
         key: order.model_dump(mode="json")[key]
@@ -281,6 +297,18 @@ class SpecialistTools:
             elif name == "get_product":
                 p = await catalog.get_product(session, actor, args.product_id)
                 if not product_allowed(r, p):
+                    c = r.constraints
+                    # Explain a rejected named item without admitting it as a candidate.
+                    # A model-selected ID alone cannot identify the user's intended item.
+                    named = c.product_needs.model_code or str(p.id) == r.purchase_target_id
+                    if (
+                        named
+                        and not c.bundle
+                        and c.model_copy(update={"max_price_cents": None}).matches_product(
+                            p, exclusions=r.exclusions
+                        )
+                    ):
+                        record_budget_conflict(r, p)
                     raise DomainError(409, "CONSTRAINT_MISMATCH", "商品不满足约束")
                 data = p.model_dump(mode="json")
                 entities = [ref("product", p.id, "replacement")]
@@ -364,12 +392,14 @@ class SpecialistTools:
                         await verify_items(session, actor, selected)
                 seen = r.facts.get(("product", str(args.product_id)))
                 if seen is None:
+                    if ("checkout_budget_conflict", str(args.product_id)) in r.facts:
+                        raise DomainError(409, "CONSTRAINT_MISMATCH", "超过整单预算")
                     raise DomainError(409, "PRODUCT_NOT_OBSERVED", "先读取候选")
                 p = await catalog.get_product(session, actor, args.product_id)
-                if not product_allowed(r, p) or (
-                    c.max_price_cents is not None and p.price_cents * c.quantity > c.max_price_cents
-                ):
+                if not product_allowed(r, p):
                     raise DomainError(409, "CONSTRAINT_MISMATCH", "不符合购买约束")
+                if record_budget_conflict(r, p):
+                    raise DomainError(409, "CONSTRAINT_MISMATCH", "超过整单预算")
                 result, _ = await actions.prepare_checkout(
                     session,
                     actor,
