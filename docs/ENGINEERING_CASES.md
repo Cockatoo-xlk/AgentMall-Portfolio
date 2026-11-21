@@ -1,5 +1,49 @@
 # V2.17 · 把现有系统变成可复现作品集
 
+## PR 10 三目标交易案例
+
+> 请购买一件静音 K68，送演示宿舍。成交后另买相同键盘。另请查询本人订单。
+
+案例的产品版本为合并提交 [`04633f3673ff`](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/commit/04633f3673fff6594882b56b07e4e7d696e8471b)，Tree 为 `a8783904b0e4cc5b9d9e3f82e822a407660d05b2`。本地正式 API 与独立 SQL 的脱敏摘要如下。固定提交链接展示对应的实现和公开回归测试。
+
+| 环节 | 原 Fixture 的实际结果 | 核查入口 |
+|---|---|---|
+| 用户请求 | 首笔为一件 K68、演示宿舍。后续购买和本人订单查询各有独立目标。 | [意图作用域](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/src/agentmall/agents/purchase_intent.py#L127) · [三目标解析测试](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_three_goal_scope.py#L30) |
+| Agent 决策 | Fixture 只提出首笔购买。收到首笔回执后，Run 保持 `WAITING_INPUT`，答复明确第二笔待独立确认、订单尚未查询。 | [待办反馈](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/src/agentmall/agents/graph.py#L122) · [防止回执提前收尾的测试](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_b_post_commit_closeout.py#L262) |
+| 服务端授权 | 审批前订单增量为 0。批准第一份 Proposal 并 Resume 后，服务端按当前提案校验 Confirmation，再执行交易。 | [确认绑定与执行](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/src/agentmall/agents/resume.py#L10) · [订单事务](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/src/agentmall/orders/service.py#L70) |
+| 数据库事实 | 仅新增一笔 **199 元待付款订单**，确认消费 1 次，库存预留 +1，支付和退款均为 0 增量。第二单和查询仍待处理。 | [带持久 Checkpoint 和 SQL 的购买回归](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_b_post_commit_closeout.py#L125) |
+
+**单独的诊断对照。** 在同一隔离的合成数据库中，以新的请求为合成商品 K87 提交购买提案。复用首份确认收到 `409 CONFIRMATION_MISMATCH`，交易增量为 0。新确认消费后才新增第二笔待付款订单。另一个只读 Run 实际调用 `list_orders`，返回的订单 ID 与 SQL 一致，业务写入增量为 0。这些观察只属于诊断对照。公开入口可核查确认复用的拒绝规则和收尾前保留查单任务的测试。[独立确认回归](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_resume_authorization.py#L111) · [查单工具](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/src/agentmall/agents/specialist_tools.py#L316) · [提交订单后继续查单的回归](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_post_holdout_product_fix.py#L307)
+
+### Agent 决策与评分
+
+| 自拟冻结集阶段 | 受测版本 | 通过 / 总数 |
+|---|---|---:|
+| 原始基线 | Commit `2a5ff8ca9e3b1c12a3bcae5b35515a7efb7feb4e` | 2/12 |
+| 第一轮修复 | 未提交 Tree `4d722f1b75c2e811a120c237b20b41165feedf37` | 6/12 |
+| 多目标修复至最终验收 | 首次达到该成绩的 Tree `d00e57fa990719a90e15b90b6852d209af52a1b8`。复审 Tree `f111b8bd4cfc8fb36e77c22d211481dfec839696` 和最终候选 `cd186f2979859da678bf316f700a41b7b7a628a4`（与合并提交同 Tree）均保留该成绩。 | 11/12 |
+
+这 12 题评估固定 Fixture 的离线组合行为，独立盲测数量为 0。正确拒绝、要求澄清或保留待办都可符合题目判据。G2 的查询提示与 G3 的第二单提示只证明待办得到保留。R3 中退货 Case 已提交，服务端在派发前拒绝购物任务，因此没有额外商品读取。Fixture 再次提出购物，Run 最终为 `PARTIAL`，未满足原题的正常结束判据，故仍为 **FAIL**。[退货专用派发守卫](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/src/agentmall/agents/supervisor.py#L207) · [独立目标回归](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_three_goal_scope.py#L128)
+
+### 后端事务与并发
+
+两组实验均使用本地隔离 PostgreSQL。每组并发度为 2，各跑 5 轮，均为 **5/5**。计数只覆盖这些并发场景，生产吞吐量和可用性未测。
+
+| 场景 | 本地 API／SQL 脱敏摘要 | 相关公开回归 |
+|---|---|---|
+| 同份批准并发 Resume | 每轮只有一笔订单、一次确认消费。先读取持久 Run 的 `COMPLETED` 终态，再用原请求 ID 重放，业务快照一致，写入增量为 0。 | [完成回执恢复测试](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_commit_then_crash.py#L97) |
+| 两位买家争最后一件库存 | 每轮均观察到 PostgreSQL 行锁等待。只有一方成功下单，另一方得到库存不足。每轮订单 +1，库存预留 +1。 | [末件库存竞争测试](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/blob/04633f3673fff6594882b56b07e4e7d696e8471b/backend/tests/test_order_concurrency.py#L61) |
+
+### 证据如何核查
+
+- **公开源码和测试**可沿上面的固定提交链接阅读和复跑相应断言。原 Fixture、独立诊断、自拟冻结集及两组五轮并发的结果以本页脱敏摘要公开。
+- **公开主线 CI** 的 Attempt 1 中，Backend 2181 通过、16 跳过（15 项需要真实 BGE 权重，1 项缺少私有历史证据），Vitest 146 通过，Playwright 129 通过，Release Gate 成功，T16 按条件跳过。Ledger 两条参数化用例在本地全量已逐项核实，远端日志只显示对应测试文件及套件汇总。CI 记录覆盖上述公开测试套件，12 题及两组五轮实验的计数来自本地摘要。[主线 CI 44875652802](https://github.com/Cockatoo-xlk/AgentMall-Portfolio/actions/runs/44875652802)
+- **历史真实模型复验**的 B/C Live PASS 归属受测源码 `f8abf931c49f182951f439f3ae2fb644050dd0a3`。当前合并版的真实模型泛化为 `NOT_MEASURED`。Release 为 `ON_HOLD`。[历史运行、版本与证据边界](EVALUATION_RESULTS.md#v217-交易链路复验)
+
+---
+
+## 历史 V2.17 作品集验收
+
 基线main `8e21bdcad3170487626a17ccda0f624457bccd26` 的自动CI已验收。此轮优先验证与展示现有产品，不为历史L8分数增加业务特例，也不重建私有Host框架。
 
 - **跨场景一致性：** 新[连续浏览器回归](../frontend/tests/interview-demo.spec.ts)从同一会话完成推荐、购买、刷新和退换购；每份真实Proposal先检查再合成独立决定，退货确认复用得到409；独立SQL核对库存、Case和订单。

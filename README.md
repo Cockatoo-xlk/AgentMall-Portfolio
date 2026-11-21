@@ -4,6 +4,8 @@ AgentMall 是一个 AI 辅助开发的工程作品集：用户用自然语言比
 
 **Python 3.12 / FastAPI · LangGraph · PostgreSQL 17 / pgvector · React / TypeScript · MCP**
 
+**从一条多目标交易请求读懂项目。** [PR #10 三目标交易案例](docs/ENGINEERING_CASES.md#pr-10-三目标交易案例)沿用户请求、Agent 决策、服务端授权和数据库事实，给出源码、测试与验收入口。
+
 **V2.17 交易链路复验**在源码 `f8abf931c49f182951f439f3ae2fb644050dd0a3` 上完成。单价和订单总预算分别校验，纯购买可凭已提交的待付款订单回执收尾。B 购买与 C 退货后替换购买各真实执行一次，原业务 Oracle 和自动测试策略均 PASS。Release 为 **ON_HOLD**。[修复与验证记录](docs/EVALUATION_RESULTS.md#v217-交易链路复验) · [PR #9 行为修复的离线验证](docs/EVALUATION_RESULTS.md#pr-9-行为修复的离线验证)
 
 **招聘者快速入口：** [3分30秒产品MP4](docs/media/v217/agentmall-v217-demo.mp4) · [讲解稿](docs/media/v217/agentmall-v217-demo-script.md) · [源码架构](docs/ARCHITECTURE.md) · [工程亮点](docs/ENGINEERING_CASES.md) · [12个面试问题](docs/INTERVIEW_TALKING_POINTS.md) · [简历项目描述](docs/RESUME_PROJECT.md) · [真实模型与历史评测](docs/EVALUATION_RESULTS.md) · [已知限制](docs/KNOWN_LIMITATIONS.md)。[原Smoke预注册协议](docs/V217_LIVE_SMOKE.md)是保留的历史冻结文档，不是新的运行授权。
